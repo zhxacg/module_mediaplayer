@@ -102,7 +102,7 @@ dependencies {
     // media3
     api files('libs/lib_player_mediax_full_1.4.1_release_20250516.aar')
     // exo2
-    api files('libs/lib_player_exo_full_2.19.1_release_20250517.aar')
+    api files('libs/lib_player_exo_mini_2.19.1_release_20251021.aar')
     // ijk
     api files('libs/lib_mediaplayer_ijk_k0.8.8_ff4.4.4_mini_release_20240509.aar')
     // ffplayer

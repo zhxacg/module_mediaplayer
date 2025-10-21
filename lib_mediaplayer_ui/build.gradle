@@ -69,7 +69,7 @@ dependencies {
     // ijk
     compileOnly files('libs/lib_mediaplayer_ijk_k0.8.8_ff3.4.13_mini_release_20240430.aar')
     // exo2
-    compileOnly files('libs/lib_player_exo_full_2.19.1_release_20250517.aar')
+    compileOnly files('libs/lib_player_exo_mini_2.19.1_release_20251021.aar')
     // media3
     compileOnly files('libs/lib_player_mediax_full_1.4.1_release_20250516.aar')
     // ffplayer
