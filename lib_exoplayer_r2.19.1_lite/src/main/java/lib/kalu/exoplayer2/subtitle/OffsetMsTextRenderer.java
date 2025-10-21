@@ -15,7 +15,6 @@ public class OffsetMsTextRenderer extends TextRenderer {
 
     private long offsetMs; // 时移偏移量（微秒，内部时间单位）
 
-
     public OffsetMsTextRenderer(TextOutput output, @Nullable Looper outputLooper, SubtitleDecoderFactory decoderFactory) {
         super(output, outputLooper, decoderFactory);
     }
@@ -26,11 +25,12 @@ public class OffsetMsTextRenderer extends TextRenderer {
 
     @Override
     public void render(long positionUs, long elapsedRealtimeUs) {
-        super.render(formatOffsetUs(positionUs), elapsedRealtimeUs);
+        long formatOffsetUs = formatOffsetUs(positionUs);
+        super.render(formatOffsetUs, elapsedRealtimeUs);
     }
 
     public final void setOffsetMs(long offsetMs) {
-        this.offsetMs = offsetMs;
+        this.offsetMs += offsetMs;
     }
 
     private long formatOffsetUs(long positionUs) {

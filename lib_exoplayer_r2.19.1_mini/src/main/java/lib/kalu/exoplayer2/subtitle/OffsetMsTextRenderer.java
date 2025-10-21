@@ -27,20 +27,12 @@ public class OffsetMsTextRenderer extends TextRenderer {
 
     @Override
     public void render(long positionUs, long elapsedRealtimeUs) {
-
         long formatOffsetUs = formatOffsetUs(positionUs);
-        if (ExoLogUtil.DEBUG) {
-            ExoLogUtil.log("OffsetMsTextRenderer -> render -> formatOffsetUs = " + formatOffsetUs + ", offsetMs = " + offsetMs + ", positionUs = " + positionUs + ", elapsedRealtimeUs = " + elapsedRealtimeUs);
-        }
-
         super.render(formatOffsetUs, elapsedRealtimeUs);
     }
 
     public final void setOffsetMs(long offsetMs) {
-        if (ExoLogUtil.DEBUG) {
-            ExoLogUtil.log("OffsetMsTextRenderer -> setOffsetMs -> offsetMs = " + offsetMs);
-        }
-        this.offsetMs = offsetMs;
+        this.offsetMs += offsetMs;
     }
 
     private long formatOffsetUs(long positionUs) {
