@@ -59,7 +59,7 @@ import org.checkerframework.dataflow.qual.SideEffectFree;
  * migration guide</a> for more details, including a script to help with the migration.
  */
 @Deprecated
-public final class TextRenderer extends BaseRenderer implements Callback {
+public class TextRenderer extends BaseRenderer implements Callback {
 
     private static final String TAG = "TextRenderer";
 

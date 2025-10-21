@@ -38,13 +38,13 @@ import com.google.android.exoplayer2.util.MimeTypes;
 import com.google.android.exoplayer2.util.Util;
 import com.google.common.collect.ImmutableList;
 
+import org.checkerframework.checker.nullness.qual.RequiresNonNull;
+import org.checkerframework.dataflow.qual.SideEffectFree;
+
 import java.lang.annotation.Documented;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
-
-import org.checkerframework.checker.nullness.qual.RequiresNonNull;
-import org.checkerframework.dataflow.qual.SideEffectFree;
 
 /**
  * A renderer for text.
@@ -59,7 +59,7 @@ import org.checkerframework.dataflow.qual.SideEffectFree;
  * migration guide</a> for more details, including a script to help with the migration.
  */
 @Deprecated
-public final class TextRenderer extends BaseRenderer implements Callback {
+public class TextRenderer extends BaseRenderer implements Callback {
 
     private static final String TAG = "TextRenderer";
 
