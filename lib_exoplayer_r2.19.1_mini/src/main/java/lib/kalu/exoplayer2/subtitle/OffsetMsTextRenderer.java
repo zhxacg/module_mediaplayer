@@ -8,25 +8,32 @@ import com.google.android.exoplayer2.text.SubtitleDecoderFactory;
 import com.google.android.exoplayer2.text.TextOutput;
 import com.google.android.exoplayer2.text.TextRenderer;
 
+import lib.kalu.exoplayer2.util.ExoLogUtil;
+
 /**
  * 字幕时移， 快进 快退
  */
-public class OffsetSubtitleRenderer extends TextRenderer {
+public class OffsetMsTextRenderer extends TextRenderer {
 
     private long offsetMs; // 时移偏移量（微秒，内部时间单位）
 
-
-    public OffsetSubtitleRenderer(TextOutput output, @Nullable Looper outputLooper, SubtitleDecoderFactory decoderFactory) {
+    public OffsetMsTextRenderer(TextOutput output, @Nullable Looper outputLooper, SubtitleDecoderFactory decoderFactory) {
         super(output, outputLooper, decoderFactory);
     }
 
-    public OffsetSubtitleRenderer(TextOutput output, @Nullable Looper outputLooper) {
+    public OffsetMsTextRenderer(TextOutput output, @Nullable Looper outputLooper) {
         super(output, outputLooper);
     }
 
     @Override
     public void render(long positionUs, long elapsedRealtimeUs) {
-        super.render(formatOffsetUs(positionUs), elapsedRealtimeUs);
+
+        long formatOffsetUs = formatOffsetUs(positionUs);
+        if (ExoLogUtil.DEBUG) {
+            ExoLogUtil.log("OffsetMsTextRenderer -> render -> formatOffsetUs = " + formatOffsetUs + ", offsetMs = " + offsetMs + ", positionUs = " + positionUs + ", elapsedRealtimeUs = " + elapsedRealtimeUs);
+        }
+
+        super.render(formatOffsetUs, elapsedRealtimeUs);
     }
 
     public final void setOffsetMs(long offsetMs) {

@@ -11,16 +11,16 @@ import com.google.android.exoplayer2.text.TextRenderer;
 /**
  * 字幕时移， 快进 快退
  */
-public class OffsetSubtitleRenderer extends TextRenderer {
+public class OffsetMsTextRenderer extends TextRenderer {
 
     private long offsetMs; // 时移偏移量（微秒，内部时间单位）
 
 
-    public OffsetSubtitleRenderer(TextOutput output, @Nullable Looper outputLooper, SubtitleDecoderFactory decoderFactory) {
+    public OffsetMsTextRenderer(TextOutput output, @Nullable Looper outputLooper, SubtitleDecoderFactory decoderFactory) {
         super(output, outputLooper, decoderFactory);
     }
 
-    public OffsetSubtitleRenderer(TextOutput output, @Nullable Looper outputLooper) {
+    public OffsetMsTextRenderer(TextOutput output, @Nullable Looper outputLooper) {
         super(output, outputLooper);
     }
 

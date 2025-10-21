@@ -17,10 +17,10 @@ import com.google.android.exoplayer2.video.VideoRendererEventListener;
 
 import java.util.ArrayList;
 
-import lib.kalu.exoplayer2.subtitle.OffsetSubtitleRenderer;
+import lib.kalu.exoplayer2.subtitle.OffsetMsTextRenderer;
 import lib.kalu.exoplayer2.util.ExoLogUtil;
 
-class BaseRenderersFactory extends com.google.android.exoplayer2.DefaultRenderersFactory {
+public class BaseRenderersFactory extends com.google.android.exoplayer2.DefaultRenderersFactory {
 
     public BaseRenderersFactory(Context context) {
         super(context);
@@ -32,7 +32,7 @@ class BaseRenderersFactory extends com.google.android.exoplayer2.DefaultRenderer
     protected void buildTextRenderers(Context context, TextOutput output, Looper outputLooper, @ExtensionRendererMode int extensionRendererMode, ArrayList<Renderer> out) {
         // super.buildTextRenderers(context, output, outputLooper, extensionRendererMode, out);
         //
-        out.add(new OffsetSubtitleRenderer(output, outputLooper));
+        out.add(new OffsetMsTextRenderer(output, outputLooper));
     }
 
     @Override

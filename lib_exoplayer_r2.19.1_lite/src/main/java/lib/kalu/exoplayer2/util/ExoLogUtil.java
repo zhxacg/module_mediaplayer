@@ -3,34 +3,30 @@ package lib.kalu.exoplayer2.util;
 import android.util.Log;
 
 import androidx.annotation.Keep;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-
-import com.google.android.exoplayer2.ext.ffmpeg.FfmpegLibrary;
 
 @Keep
 public final class ExoLogUtil {
 
     private static String mTag = "MP_EXO";
-    private static boolean mLog = false;
+    static boolean DEBUG = false;
 
-    public static void setLogger(boolean enable) {
-        mLog = enable;
-        FfmpegLibrary.ffmpegLogger(mLog);
+    public static void setDebug(boolean enable) {
+        DEBUG = enable;
     }
 
-    public static void log(@NonNull String message) {
+    public static void log(String message) {
         log(message, null);
     }
 
-    public static void log(@NonNull String message, @Nullable Throwable throwable) {
-
-        if (!mLog)
-            return;
-
-        if (null == message || message.length() == 0)
-            return;
-
-        Log.e(mTag, message, throwable);
+    public static void log(String message, Throwable throwable) {
+        if (DEBUG) {
+            if (null != message && !message.isBlank()) {
+                if (null == throwable) {
+                    Log.e(mTag, message);
+                } else {
+                    Log.e(mTag, message, throwable);
+                }
+            }
+        }
     }
 }
