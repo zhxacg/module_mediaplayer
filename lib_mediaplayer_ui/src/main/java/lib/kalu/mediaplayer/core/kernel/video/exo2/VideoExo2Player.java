@@ -67,6 +67,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.NavigableSet;
 
+import lib.kalu.exoplayer2.subtitle.OffsetMsTextRenderer;
 import lib.kalu.mediaplayer.PlayerSDK;
 import lib.kalu.mediaplayer.bean.args.StartArgs;
 import lib.kalu.mediaplayer.bean.cache.Cache;
@@ -350,7 +351,7 @@ public final class VideoExo2Player extends VideoBasePlayer {
             if (null == args)
                 throw new Exception("error: args null");
             boolean log = args.isLog();
-            lib.kalu.exoplayer2.util.ExoLogUtil.setDebug(log);
+            // lib.kalu.exoplayer2.util.ExoLogUtil.setDebug(log);
         } catch (Exception e) {
             LogUtil.log("VideoExo2Player => initOptions => Exception step3 " + e.getMessage());
         }
@@ -1480,22 +1481,21 @@ public final class VideoExo2Player extends VideoBasePlayer {
     }
 
     @Override
-    public boolean setSubtitleOffsetMs(int offset) {
-
+    public boolean setSubtitleOffsetMs(int offsetMs) {
         try {
             if (null == mExoPlayer)
                 throw new Exception("error: mExoPlayer null");
             int rendererCount = mExoPlayer.getRendererCount();
             for (int i = 0; i < rendererCount; i++) {
                 int rendererType = mExoPlayer.getRendererType(i);
-                LogUtil.log("VideoExo2Player => setSubtitleOffsetMs => i " + i + ", rendererType = " + rendererType);
                 if (rendererType != C.TRACK_TYPE_TEXT)
                     continue;
                 Renderer renderer = mExoPlayer.getRenderer(i);
-                LogUtil.log("VideoExo2Player => setSubtitleOffsetMs => i " + i + ", renderer = " + renderer);
-
-                if(renderer instanceof )
-
+                if (null == renderer)
+                    continue;
+                if (renderer instanceof OffsetMsTextRenderer) {
+                    ((OffsetMsTextRenderer) renderer).setOffsetMs(offsetMs);
+                }
                 break;
             }
             return true;
