@@ -24,7 +24,7 @@
     public <fields>;
     public <methods>;
 }
--keep class lib.kalu.exoplayer2.utils.**{
+-keep class lib.kalu.exoplayer2.util.ExoLogUtil{
     public <methods>;
 }
 -keep class lib.kalu.exoplayer2.subtitle.OffsetMsTextRenderer{
