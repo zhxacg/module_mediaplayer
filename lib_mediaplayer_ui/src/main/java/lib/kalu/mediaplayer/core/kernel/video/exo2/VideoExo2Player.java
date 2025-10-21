@@ -350,7 +350,7 @@ public final class VideoExo2Player extends VideoBasePlayer {
             if (null == args)
                 throw new Exception("error: args null");
             boolean log = args.isLog();
-            lib.kalu.exoplayer2.util.ExoLogUtil.setLogger(log);
+            lib.kalu.exoplayer2.util.ExoLogUtil.setDebug(log);
         } catch (Exception e) {
             LogUtil.log("VideoExo2Player => initOptions => Exception step3 " + e.getMessage());
         }
@@ -1493,6 +1493,9 @@ public final class VideoExo2Player extends VideoBasePlayer {
                     continue;
                 Renderer renderer = mExoPlayer.getRenderer(i);
                 LogUtil.log("VideoExo2Player => setSubtitleOffsetMs => i " + i + ", renderer = " + renderer);
+
+                if(renderer instanceof )
+
                 break;
             }
             return true;
