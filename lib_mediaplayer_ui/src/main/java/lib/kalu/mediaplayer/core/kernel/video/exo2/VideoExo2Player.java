@@ -247,7 +247,7 @@ public final class VideoExo2Player extends VideoBasePlayer {
             // all
             else {
                 LogUtil.log("VideoExo2Player => createDecoder => all");
-                Class<?> clazz = Class.forName("lib.kalu.exoplayer2.renderers.AllRenderersFactory");
+                Class<?> clazz = Class.forName("lib.kalu.exoplayer2.renderers.BaseRenderersFactory");
                 Object newInstance = clazz.getDeclaredConstructor(Context.class).newInstance(context);
                 builder.setRenderersFactory((com.google.android.exoplayer2.RenderersFactory) newInstance);
             }
@@ -1501,45 +1501,4 @@ public final class VideoExo2Player extends VideoBasePlayer {
             return false;
         }
     }
-
-    //    @Override
-//    public void setSubtitleOffsetMs(int offset) {
-//
-//        try {
-//            if (null == mExoPlayer)
-//                throw new Exception("error: mExoPlayer null");
-//
-//            /**
-//             * 在 AndroidX Media3 中，PlaybackParameters 是一个用于配置播放器行为的类，主要用于控制播放速度、音视频同步以及字幕偏移等动态播放参数。它允许你在播放过程中实时调整这些参数，而无需重启播放。
-//             */
-//            PlaybackParameters playbackParameters = mExoPlayer.getPlaybackParameters();
-//
-//            PlaybackParameters.DEFAULT.withSpeed().
-//
-//            // 基于当前参数构建新配置（只修改字幕偏移，其他参数保持不变）
-//                    new PlaybackParameters.(playbackParameters)
-//                    .setSubtitleOffsetMs(offsetMs.toLong()) // 单位：毫秒，Long类型
-//                    .build()
-//
-//            mExoPlayer.setPlaybackParameters();
-//        } catch (Exception e) {
-//            LogUtil.log("VideoExo2Player => setSubtitleOffsetMs => Exception " + e.getMessage());
-//        }
-//    }
-
-    //    private void ss(){
-//        // 提前500ms显示字幕
-//        buttonAdvance.setOnClickListener {
-//            currentSubtitleOffsetMs -= 500
-//        }
-//
-//// 延后500ms显示字幕
-//        buttonDelay.setOnClickListener {
-//            currentSubtitleOffsetMs += 500
-//            exoPlayer.trackSelectionParameters = exoPlayer.trackSelectionParameters
-//                    .buildUpon()
-//                    .setCaptionOffsetMs(currentSubtitleOffsetMs)
-//                    .build()
-//        }
-//    }
 }
