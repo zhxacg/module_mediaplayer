@@ -44,6 +44,11 @@
 #### 更新
 
 ```
+2025-10-21
+1. 新增：exoplayer2 media3 字幕时移api appSuntitleOffsetMs(long offsetMs)
+```
+
+```
 2025-05-16
 1. 新增：exoplayer2 media3 视频多轨道 音频多轨道 字幕多轨道 支持
 ```
