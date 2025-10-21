@@ -1578,6 +1578,7 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
                     continue;
                 if (renderer instanceof OffsetMsTextRenderer) {
                     ((OffsetMsTextRenderer) renderer).appendOffsetMs(offsetMs);
+                    onUpdateSubtitle(PlayerType.KernelType.MEDIA_V3, "");
                 }
                 break;
             }

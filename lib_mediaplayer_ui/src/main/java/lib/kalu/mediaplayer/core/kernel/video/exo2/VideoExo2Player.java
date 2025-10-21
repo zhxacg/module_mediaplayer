@@ -1495,6 +1495,7 @@ public final class VideoExo2Player extends VideoBasePlayer {
                     continue;
                 if (renderer instanceof OffsetMsTextRenderer) {
                     ((OffsetMsTextRenderer) renderer).appendOffsetMs(offsetMs);
+                    onUpdateSubtitle(PlayerType.KernelType.EXO_V2, "");
                 }
                 break;
             }
