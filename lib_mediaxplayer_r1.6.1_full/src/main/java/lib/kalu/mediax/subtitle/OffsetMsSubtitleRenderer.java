@@ -23,11 +23,12 @@ public class OffsetMsSubtitleRenderer extends TextRenderer {
 
     @Override
     public void render(long positionUs, long elapsedRealtimeUs) {
-        super.render(formatOffsetUs(positionUs), elapsedRealtimeUs);
+        long formatOffsetUs = formatOffsetUs(positionUs);
+        super.render(formatOffsetUs, elapsedRealtimeUs);
     }
 
-    public final void setOffsetMs(long offsetMs) {
-        this.offsetMs = offsetMs;
+    public final void appendOffsetMs(long offsetMs) {
+        this.offsetMs += offsetMs;
     }
 
     private long formatOffsetUs(long positionUs) {

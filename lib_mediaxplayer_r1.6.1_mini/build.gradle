@@ -9,8 +9,8 @@ android {
     defaultConfig {
         minSdk = 21 // 5.0
         targetSdk = 33
-        versionCode 161
-        versionName "1.6.1"
+        versionCode 3161
+        versionName "v3_1.6.1"
     }
 
     libraryVariants.all { variant ->

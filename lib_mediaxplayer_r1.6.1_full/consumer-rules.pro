@@ -19,14 +19,6 @@
 
 # kalu
 -dontwarn lib.kalu.mediax.**
--keep class lib.kalu.mediax.renderers.*{
-    public <fields>;
-    public <methods>;
-}
--keep class lib.kalu.mediax.util.MediaLogUtil{
-    public <methods>;
-}
-
 -keepclasseswithmembernames class lib.kalu.mediax.rtmp.RtmpClient {
     native <methods>;
 }

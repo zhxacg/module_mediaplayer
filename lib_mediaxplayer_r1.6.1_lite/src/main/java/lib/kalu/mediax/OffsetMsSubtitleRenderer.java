@@ -1,4 +1,4 @@
-package lib.kalu.mediax.subtitle;
+package lib.kalu.mediax;
 
 import android.os.Looper;
 

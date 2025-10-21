@@ -11,3 +11,15 @@
 -keep class androidx.media3.** {
     *;
 }
+
+-dontwarn lib.kalu.mediax.**
+-keep class lib.kalu.mediax.renderers.*{
+    public <fields>;
+    public <methods>;
+}
+-keep class lib.kalu.mediax.util.MediaLogUtil{
+    public <methods>;
+}
+-keep class lib.kalu.mediax.subtitle.OffsetMsSubtitleRenderer{
+    public <methods>;
+}

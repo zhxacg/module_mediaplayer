@@ -17,15 +17,8 @@
 #    *;
 #}
 
+# kalu
 -dontwarn lib.kalu.mediax.**
--keep class lib.kalu.mediax.renderers.*{
-    public <fields>;
-    public <methods>;
-}
--keep class lib.kalu.mediax.util.MediaLogUtil{
-    public <methods>;
-}
-
 -keepclasseswithmembernames class lib.kalu.mediax.rtmp.RtmpClient {
     native <methods>;
 }
@@ -33,20 +26,7 @@
     native <methods>;
 }
 -keep, includedescriptorclasses class androidx.media3.decoder.ffmpeg.FfmpegAudioDecoder {
-    private java.nio.ByteBuffer growOutputBuffer(androidx.media3.decoder.SimpleDecoderOutputBuffer, int);
-}
-
--dontnote androidx.media3.decoder.ffmpeg.FfmpegVideoRenderer
--keepclassmembers class androidx.media3.decoder.ffmpeg.FfmpegVideoRenderer {
-    <init>(long, android.os.Handler, androidx.media3.exoplayer.video.VideoRendererEventListener, int);
-}
-
--dontnote androidx.media3.decoder.VideoDecoderOutputBuffer
--keepclassmembers class androidx.media3.decoder.VideoDecoderOutputBuffer {
-    public java.nio.ByteBuffer[] yuvPlanes;
-    public void initForPrivateFrame(int, int);
-    public boolean initForYuvFrame(int , int , int , int , int);
-    public void init(long, int, java.nio.ByteBuffer);
+  private java.nio.ByteBuffer growOutputBuffer(androidx.media3.decoder.SimpleDecoderOutputBuffer, int);
 }
 
 #-keep class xx.xx.xx.*   本包下的类名保持
@@ -54,7 +34,7 @@
 #-keep class xx.xx.xx.**{*;} 把本包和所含子包下的类名都保持，同时保持里面的内容不被混淆
 #-keep class xx.xx.xx{*;} 保持类名，同时保持里面的内容不被混淆
 
-# media3 r1.4.1
+# media3 r1.6.1
 -dontwarn androidx.media3.**
 -dontwarn org.checkerframework.**
 -dontwarn kotlin.annotations.jvm.**
@@ -100,13 +80,21 @@
 -keepclassmembers class androidx.media3.decoder.flac.LibflacAudioRenderer {
   <init>(android.os.Handler, androidx.media3.exoplayer.audio.AudioRendererEventListener, androidx.media3.exoplayer.audio.AudioSink);
 }
+-dontnote androidx.media3.decoder.iamf.LibiamfAudioRenderer
+-keepclassmembers class androidx.media3.decoder.iamf.LibiamfAudioRenderer {
+  <init>(android.content.Context, android.os.Handler, androidx.media3.exoplayer.audio.AudioRendererEventListener, androidx.media3.exoplayer.audio.AudioSink);
+}
 -dontnote androidx.media3.decoder.ffmpeg.FfmpegAudioRenderer
 -keepclassmembers class androidx.media3.decoder.ffmpeg.FfmpegAudioRenderer {
   <init>(android.os.Handler, androidx.media3.exoplayer.audio.AudioRendererEventListener, androidx.media3.exoplayer.audio.AudioSink);
 }
 -dontnote androidx.media3.decoder.midi.MidiRenderer
 -keepclassmembers class androidx.media3.decoder.midi.MidiRenderer {
-  <init>(android.content.Context);
+  <init>(android.content.Context, android.os.Handler, androidx.media3.exoplayer.audio.AudioRendererEventListener, androidx.media3.exoplayer.audio.AudioSink);
+}
+-dontnote androidx.media3.decoder.mpegh.MpeghAudioRenderer
+-keepclassmembers class androidx.media3.decoder.mpegh.MpeghAudioRenderer {
+  <init>(android.os.Handler, androidx.media3.exoplayer.audio.AudioRendererEventListener, androidx.media3.exoplayer.audio.AudioSink);
 }
 -dontnote androidx.media3.exoplayer.dash.offline.DashDownloader
 -keepclassmembers class androidx.media3.exoplayer.dash.offline.DashDownloader {

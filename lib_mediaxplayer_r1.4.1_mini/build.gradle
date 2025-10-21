@@ -9,8 +9,8 @@ android {
     defaultConfig {
         minSdk = 19 // 4.4
         targetSdk = 33
-        versionCode 141
-        versionName "1.4.1"
+        versionCode 3141
+        versionName "v3_1.4.1"
     }
 
     libraryVariants.all { variant ->
