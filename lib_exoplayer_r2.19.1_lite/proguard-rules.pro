@@ -6,20 +6,15 @@
 -packageobfuscationdictionary proguard-rules-dict-mini.txt
 
 
--dontwarn lib.kalu.exoplayer2.**
 -dontwarn com.google.android.exoplayer2.**
-
 -keep class com.google.android.exoplayer2.**{
-    public <fields>;
-    public <methods>;
-    protected <methods>;
+    *;
 }
 -keep class com.google.android.exoplayer2.**$**{
-    public <fields>;
-    public <methods>;
-    protected <methods>;
+    *;
 }
 
+-dontwarn lib.kalu.exoplayer2.**
 -keep class lib.kalu.exoplayer2.renderers.**{
     public <fields>;
     public <methods>;
