@@ -17,19 +17,7 @@
 #    *;
 #}
 
--dontwarn lib.kalu.exoplayer2.**
--keep class lib.kalu.exoplayer2.renderers.*{
-    public <fields>;
-    public <methods>;
-}
--keep class lib.kalu.exoplayer2.util.ExoLogUtil{
-    public <methods>;
-}
-
 -keep class lib.kalu.exoplayer2.rtmp.RtmpClient{
-    native <methods>;
-}
--keepclasseswithmembernames class * {
     native <methods>;
 }
 
