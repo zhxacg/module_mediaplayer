@@ -13,7 +13,7 @@ import java.util.ArrayList;
 
 import lib.kalu.exoplayer2.util.ExoLogUtil;
 
-public final class VideoCodecAudioCodecRenderersFactory extends AllRenderersFactory {
+public final class VideoCodecAudioCodecRenderersFactory extends BaseRenderersFactory {
 
     public VideoCodecAudioCodecRenderersFactory(Context context) {
         super(context);

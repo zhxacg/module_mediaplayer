@@ -16,7 +16,7 @@ import java.util.ArrayList;
 
 import lib.kalu.exoplayer2.util.ExoLogUtil;
 
-public final class OnlyVideoCodecRenderersFactory extends AllRenderersFactory {
+public final class OnlyVideoCodecRenderersFactory extends BaseRenderersFactory {
 
     public OnlyVideoCodecRenderersFactory(Context context) {
         super(context);

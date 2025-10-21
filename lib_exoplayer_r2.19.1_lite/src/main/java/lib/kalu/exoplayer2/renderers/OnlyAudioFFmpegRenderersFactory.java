@@ -14,7 +14,7 @@ import java.util.ArrayList;
 
 import lib.kalu.exoplayer2.util.ExoLogUtil;
 
-public final class OnlyAudioFFmpegRenderersFactory extends AllRenderersFactory {
+public final class OnlyAudioFFmpegRenderersFactory extends BaseRenderersFactory {
 
     public OnlyAudioFFmpegRenderersFactory(Context context) {
         super(context);

@@ -4,7 +4,6 @@ import android.content.Context;
 import android.os.Handler;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 
 import com.google.android.exoplayer2.Renderer;
 import com.google.android.exoplayer2.mediacodec.MediaCodecSelector;
@@ -14,7 +13,7 @@ import java.util.ArrayList;
 
 import lib.kalu.exoplayer2.util.ExoLogUtil;
 
-public final class VideoFFmpegAudioCodecRenderersFactory extends AllRenderersFactory {
+public final class VideoFFmpegAudioCodecRenderersFactory extends BaseRenderersFactory {
 
     public VideoFFmpegAudioCodecRenderersFactory(Context context) {
         super(context);

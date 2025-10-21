@@ -2,6 +2,7 @@ package lib.kalu.exoplayer2.renderers;
 
 import android.content.Context;
 import android.os.Handler;
+import android.os.Looper;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -13,16 +14,18 @@ import com.google.android.exoplayer2.audio.MediaCodecAudioRenderer;
 import com.google.android.exoplayer2.ext.ffmpeg.FfmpegAudioRenderer;
 import com.google.android.exoplayer2.ext.ffmpeg.FfmpegVideoRenderer;
 import com.google.android.exoplayer2.mediacodec.MediaCodecSelector;
+import com.google.android.exoplayer2.text.TextOutput;
 import com.google.android.exoplayer2.video.MediaCodecVideoRenderer;
 import com.google.android.exoplayer2.video.VideoRendererEventListener;
 
 import java.util.ArrayList;
 
+import lib.kalu.exoplayer2.subtitle.OffsetSubtitleRenderer;
 import lib.kalu.exoplayer2.util.ExoLogUtil;
 
-public class AllRenderersFactory extends com.google.android.exoplayer2.DefaultRenderersFactory {
+public class BaseRenderersFactory extends com.google.android.exoplayer2.DefaultRenderersFactory {
 
-    public AllRenderersFactory(Context context) {
+    public BaseRenderersFactory(Context context) {
         super(context);
         /**
          * EXTENSION_RENDERER_MODE_OFF, 扩展模块渲染器处于禁用状态。
@@ -34,6 +37,12 @@ public class AllRenderersFactory extends com.google.android.exoplayer2.DefaultRe
         ExoLogUtil.log("DefaultRenderersFactory => AllRenderersFactory =>");
     }
 
+    @Override
+    protected void buildTextRenderers(Context context, TextOutput output, Looper outputLooper, @ExtensionRendererMode int extensionRendererMode, ArrayList<Renderer> out) {
+        // super.buildTextRenderers(context, output, outputLooper, extensionRendererMode, out);
+        //
+        out.add(new OffsetSubtitleRenderer(output, outputLooper));
+    }
 
     @Override
     protected void buildAudioRenderers(@NonNull Context context,
