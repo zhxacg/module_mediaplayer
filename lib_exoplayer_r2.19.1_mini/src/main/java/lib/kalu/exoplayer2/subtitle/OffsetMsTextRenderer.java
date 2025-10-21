@@ -37,6 +37,9 @@ public class OffsetMsTextRenderer extends TextRenderer {
     }
 
     public final void setOffsetMs(long offsetMs) {
+        if (ExoLogUtil.DEBUG) {
+            ExoLogUtil.log("OffsetMsTextRenderer -> setOffsetMs -> offsetMs = " + offsetMs);
+        }
         this.offsetMs = offsetMs;
     }
 

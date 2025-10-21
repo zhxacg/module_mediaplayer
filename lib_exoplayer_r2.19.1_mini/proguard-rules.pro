@@ -20,11 +20,11 @@
     protected <methods>;
 }
 
--keep class lib.kalu.exoplayer2.renderers.*{
+-keep class lib.kalu.exoplayer2.renderers.**{
     public <fields>;
     public <methods>;
 }
--keep class lib.kalu.exoplayer2.utils.*{
+-keep class lib.kalu.exoplayer2.utils.**{
     public <methods>;
 }
 -keep class lib.kalu.exoplayer2.subtitle.OffsetMsTextRenderer{
