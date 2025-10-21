@@ -31,7 +31,7 @@ public class OffsetMsTextRenderer extends TextRenderer {
         super.render(formatOffsetUs, elapsedRealtimeUs);
     }
 
-    public final void setOffsetMs(long offsetMs) {
+    public final void appendOffsetMs(long offsetMs) {
         this.offsetMs += offsetMs;
     }
 

@@ -8,6 +8,8 @@ import com.google.android.exoplayer2.text.SubtitleDecoderFactory;
 import com.google.android.exoplayer2.text.TextOutput;
 import com.google.android.exoplayer2.text.TextRenderer;
 
+import lib.kalu.exoplayer2.util.ExoLogUtil;
+
 /**
  * 字幕时移， 快进 快退
  */
@@ -29,7 +31,7 @@ public class OffsetMsTextRenderer extends TextRenderer {
         super.render(formatOffsetUs, elapsedRealtimeUs);
     }
 
-    public final void setOffsetMs(long offsetMs) {
+    public final void appendOffsetMs(long offsetMs) {
         this.offsetMs += offsetMs;
     }
 
