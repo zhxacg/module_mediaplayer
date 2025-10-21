@@ -1481,7 +1481,7 @@ public final class VideoExo2Player extends VideoBasePlayer {
     }
 
     @Override
-    public boolean setSubtitleOffsetMs(int offsetMs) {
+    public boolean appendSubtitleOffsetMs(int offsetMs) {
         try {
             if (null == mExoPlayer)
                 throw new Exception("error: mExoPlayer null");
@@ -1494,13 +1494,13 @@ public final class VideoExo2Player extends VideoBasePlayer {
                 if (null == renderer)
                     continue;
                 if (renderer instanceof OffsetMsTextRenderer) {
-                    ((OffsetMsTextRenderer) renderer).setOffsetMs(offsetMs);
+                    ((OffsetMsTextRenderer) renderer).appendOffsetMs(offsetMs);
                 }
                 break;
             }
             return true;
         } catch (Exception e) {
-            LogUtil.log("VideoExo2Player => setSubtitleOffsetMs => Exception " + e.getMessage());
+            LogUtil.log("VideoExo2Player => appendSubtitleOffsetMs => Exception " + e.getMessage());
             return false;
         }
     }

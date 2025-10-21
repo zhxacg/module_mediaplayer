@@ -5,7 +5,7 @@ import lib.kalu.mediaplayer.util.LogUtil;
 
 public interface VideoPlayerApiSubtitle extends VideoPlayerApiBase {
 
-    default boolean setSubtitleOffsetMs(int offset) {
+    default boolean appendSubtitleOffsetMs(int offset) {
         try {
             VideoKernelApi kernel = getVideoKernel();
             if (null == kernel)
@@ -13,9 +13,9 @@ public interface VideoPlayerApiSubtitle extends VideoPlayerApiBase {
             boolean playing = kernel.isPlaying();
             if (!playing)
                 throw new Exception("warning: playing false");
-            return kernel.setSubtitleOffsetMs(offset);
+            return kernel.appendSubtitleOffsetMs(offset);
         } catch (Exception e) {
-            LogUtil.log("VideoPlayerApiSubtitle => setSubtitleOffsetMs => " + e.getMessage());
+            LogUtil.log("VideoPlayerApiSubtitle => appendSubtitleOffsetMs => " + e.getMessage());
             return false;
         }
     }

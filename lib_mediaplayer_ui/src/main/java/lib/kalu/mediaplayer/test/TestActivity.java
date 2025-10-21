@@ -94,8 +94,8 @@ public final class TestActivity extends Activity {
             @Override
             public void onClick(View v) {
                 PlayerLayout playerLayout = findViewById(R.id.module_mediaplayer_test_video);
-                boolean result = playerLayout.setSubtitleOffsetMs(5000);
-                LogUtil.log("TestActivity -> setSubtitleOffsetMs -> result = " + result);
+                boolean result = playerLayout.appendSubtitleOffsetMs(5000);
+                LogUtil.log("TestActivity -> appendSubtitleOffsetMs -> result = " + result);
             }
         });
 
@@ -104,8 +104,8 @@ public final class TestActivity extends Activity {
             @Override
             public void onClick(View v) {
                 PlayerLayout playerLayout = findViewById(R.id.module_mediaplayer_test_video);
-                boolean result = playerLayout.setSubtitleOffsetMs(-5000);
-                LogUtil.log("TestActivity -> setSubtitleOffsetMs -> result = " + result);
+                boolean result = playerLayout.appendSubtitleOffsetMs(-5000);
+                LogUtil.log("TestActivity -> appendSubtitleOffsetMs -> result = " + result);
             }
         });
 

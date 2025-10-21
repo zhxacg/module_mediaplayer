@@ -1,7 +1,7 @@
 package lib.kalu.mediaplayer.core.kernel.video;
 
 public interface VideoKernelApiSubtitle {
-    default boolean setSubtitleOffsetMs(int offset) {
+    default boolean appendSubtitleOffsetMs(int offset) {
         return false;
     }
 

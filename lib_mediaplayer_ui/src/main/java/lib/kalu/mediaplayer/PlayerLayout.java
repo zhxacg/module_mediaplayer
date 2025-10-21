@@ -770,14 +770,14 @@ public class PlayerLayout extends RelativeLayout {
         }
     }
 
-    public final boolean setSubtitleOffsetMs(int offset) {
+    public final boolean appendSubtitleOffsetMs(int offset) {
         try {
             PlayerView playerView = getPlayerView();
             if (null == playerView)
                 throw new Exception("playerView error: null");
-            return playerView.setSubtitleOffsetMs(offset);
+            return playerView.appendSubtitleOffsetMs(offset);
         } catch (Exception e) {
-            LogUtil.log("PlayerLayout => setSubtitleOffsetMs => " + e.getMessage());
+            LogUtil.log("PlayerLayout => appendSubtitleOffsetMs => " + e.getMessage());
             return false;
         }
     }

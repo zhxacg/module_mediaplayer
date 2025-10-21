@@ -69,13 +69,14 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.NavigableSet;
 
+import lib.kalu.exoplayer2.subtitle.OffsetMsTextRenderer;
 import lib.kalu.mediaplayer.PlayerSDK;
-import lib.kalu.mediaplayer.bean.info.HlsSpanInfo;
 import lib.kalu.mediaplayer.bean.args.StartArgs;
-import lib.kalu.mediaplayer.bean.info.TrackInfo;
 import lib.kalu.mediaplayer.bean.cache.Cache;
-import lib.kalu.mediaplayer.core.kernel.video.VideoBasePlayer;
+import lib.kalu.mediaplayer.bean.info.HlsSpanInfo;
+import lib.kalu.mediaplayer.bean.info.TrackInfo;
 import lib.kalu.mediaplayer.bean.type.PlayerType;
+import lib.kalu.mediaplayer.core.kernel.video.VideoBasePlayer;
 import lib.kalu.mediaplayer.util.LogUtil;
 
 @UnstableApi
@@ -315,10 +316,6 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
         try {
             if (null == mExoPlayer)
                 throw new Exception("error: mExoPlayer null");
-            //
-            boolean log = args.isLog();
-            lib.kalu.mediax.util.MediaLogUtil.setLogger(log);
-            //
             int seekParameters = args.getSeekType();
             if (seekParameters == PlayerType.SeekType.EXO_CLOSEST_SYNC) {
                 mExoPlayer.setSeekParameters(androidx.media3.exoplayer.SeekParameters.CLOSEST_SYNC);
@@ -342,7 +339,7 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
             if (null == args)
                 throw new Exception("error: args null");
             boolean log = args.isLog();
-            lib.kalu.mediax.util.MediaLogUtil.setLogger(log);
+            lib.kalu.mediax.util.MediaLogUtil.setDebug(log);
         } catch (Exception e) {
             LogUtil.log("VideoMediaxPlayer => initOptions => Exception step3 " + e.getMessage());
         }
@@ -1567,28 +1564,27 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
     }
 
     @Override
-    public boolean setSubtitleOffsetMs(int offset) {
-
-//        try {
-//            if (null == mExoPlayer)
-//                throw new Exception("error: mExoPlayer null");
-//
-//            /**
-//             * 在 AndroidX Media3 中，PlaybackParameters 是一个用于配置播放器行为的类，主要用于控制播放速度、音视频同步以及字幕偏移等动态播放参数。它允许你在播放过程中实时调整这些参数，而无需重启播放。
-//             */
-//            PlaybackParameters playbackParameters = mExoPlayer.getPlaybackParameters();
-//
-//            PlaybackParameters.DEFAULT.
-//
-//                    // 基于当前参数构建新配置（只修改字幕偏移，其他参数保持不变）
-//                    new PlaybackParameters.(playbackParameters)
-//                    .setSubtitleOffsetMs(offsetMs.toLong()) // 单位：毫秒，Long类型
-//                    .build()
-//
-//            mExoPlayer.setPlaybackParameters();
-//        } catch (Exception e) {
-//            LogUtil.log("VideoExo2Player => setSubtitleOffsetMs => Exception " + e.getMessage());
-//        }
-        return false;
+    public boolean appendSubtitleOffsetMs(int offsetMs) {
+        try {
+            if (null == mExoPlayer)
+                throw new Exception("error: mExoPlayer null");
+            int rendererCount = mExoPlayer.getRendererCount();
+            for (int i = 0; i < rendererCount; i++) {
+                int rendererType = mExoPlayer.getRendererType(i);
+                if (rendererType != C.TRACK_TYPE_TEXT)
+                    continue;
+                Renderer renderer = mExoPlayer.getRenderer(i);
+                if (null == renderer)
+                    continue;
+                if (renderer instanceof OffsetMsTextRenderer) {
+                    ((OffsetMsTextRenderer) renderer).appendOffsetMs(offsetMs);
+                }
+                break;
+            }
+            return true;
+        } catch (Exception e) {
+            LogUtil.log("VideoExo2Player => appendSubtitleOffsetMs => Exception " + e.getMessage());
+            return false;
+        }
     }
 }
