@@ -9,19 +9,19 @@ import android.widget.Toast;
 
 import java.util.List;
 
+import lib.kalu.mediaplayer.PlayerLayout;
 import lib.kalu.mediaplayer.R;
-import lib.kalu.mediaplayer.bean.info.HlsSpanInfo;
 import lib.kalu.mediaplayer.bean.args.StartArgs;
+import lib.kalu.mediaplayer.bean.info.HlsSpanInfo;
 import lib.kalu.mediaplayer.bean.info.TrackInfo;
-import lib.kalu.mediaplayer.bean.menu.Menu;
+import lib.kalu.mediaplayer.bean.type.PlayerType;
 import lib.kalu.mediaplayer.core.component.ComponentBuffering;
 import lib.kalu.mediaplayer.core.component.ComponentComplete;
 import lib.kalu.mediaplayer.core.component.ComponentError;
 import lib.kalu.mediaplayer.core.component.ComponentInit;
-import lib.kalu.mediaplayer.core.component.ComponentPrepareGradient;
 import lib.kalu.mediaplayer.core.component.ComponentMenu;
 import lib.kalu.mediaplayer.core.component.ComponentPause;
-import lib.kalu.mediaplayer.core.component.ComponentSeek;
+import lib.kalu.mediaplayer.core.component.ComponentPrepareGradient;
 import lib.kalu.mediaplayer.core.component.ComponentSubtitle;
 import lib.kalu.mediaplayer.core.component.ComponentWarningPlayInfo;
 import lib.kalu.mediaplayer.core.component.ComponentWarningTrySee;
@@ -29,9 +29,7 @@ import lib.kalu.mediaplayer.listener.OnPlayerEpisodeListener;
 import lib.kalu.mediaplayer.listener.OnPlayerEventListener;
 import lib.kalu.mediaplayer.listener.OnPlayerProgressListener;
 import lib.kalu.mediaplayer.listener.OnPlayerWindowListener;
-import lib.kalu.mediaplayer.bean.type.PlayerType;
 import lib.kalu.mediaplayer.util.LogUtil;
-import lib.kalu.mediaplayer.PlayerLayout;
 
 /**
  * @description: 横屏全屏视频播放器
@@ -91,12 +89,22 @@ public final class TestActivity extends Activity {
         });
 
 
-        // module_mediaplayer_subtitle_offset
-        findViewById(R.id.module_mediaplayer_subtitle_offset).setOnClickListener(new View.OnClickListener() {
+        // module_mediaplayer_subtitle_offset1
+        findViewById(R.id.module_mediaplayer_subtitle_offset1).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 PlayerLayout playerLayout = findViewById(R.id.module_mediaplayer_test_video);
-                boolean result = playerLayout.setSubtitleOffsetMs(4000);
+                boolean result = playerLayout.setSubtitleOffsetMs(5000);
+                LogUtil.log("TestActivity -> setSubtitleOffsetMs -> result = " + result);
+            }
+        });
+
+        // module_mediaplayer_subtitle_offset2
+        findViewById(R.id.module_mediaplayer_subtitle_offset2).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                PlayerLayout playerLayout = findViewById(R.id.module_mediaplayer_test_video);
+                boolean result = playerLayout.setSubtitleOffsetMs(-5000);
                 LogUtil.log("TestActivity -> setSubtitleOffsetMs -> result = " + result);
             }
         });

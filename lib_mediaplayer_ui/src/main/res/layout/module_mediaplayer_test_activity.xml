@@ -49,20 +49,30 @@
         android:text="缓存信息" />
 
     <Button
-        android:id="@+id/module_mediaplayer_subtitle_offset"
+        android:id="@+id/module_mediaplayer_subtitle_offset1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignTop="@id/module_mediaplayer_track_text"
         android:layout_toRightOf="@id/module_mediaplayer_hls_span"
         android:focusable="false"
-        android:text="字幕时移" />
+        android:text="字幕时移+5s" />
+
+    <Button
+        android:id="@+id/module_mediaplayer_subtitle_offset2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@id/module_mediaplayer_track_text"
+        android:layout_toRightOf="@id/module_mediaplayer_subtitle_offset1"
+        android:focusable="false"
+        android:text="字幕时移-5s" />
+
 
     <Button
         android:id="@+id/module_mediaplayer_subtitle_add"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignTop="@id/module_mediaplayer_track_text"
-        android:layout_toRightOf="@id/module_mediaplayer_subtitle_offset"
+        android:layout_toRightOf="@id/module_mediaplayer_subtitle_offset2"
         android:focusable="false"
         android:text="字幕增加" />
 

@@ -351,7 +351,7 @@ public final class VideoExo2Player extends VideoBasePlayer {
             if (null == args)
                 throw new Exception("error: args null");
             boolean log = args.isLog();
-            // lib.kalu.exoplayer2.util.ExoLogUtil.setDebug(log);
+            lib.kalu.exoplayer2.util.ExoLogUtil.setDebug(log);
         } catch (Exception e) {
             LogUtil.log("VideoExo2Player => initOptions => Exception step3 " + e.getMessage());
         }
