@@ -100,9 +100,9 @@ dependencies {
     implementation project(path: ':lib_mediaplayer_ui')
 //    api files('libs/lib_player_ui_1.0.0_release_20250508.aar')
     // media3
-    api files('../repo/aar/lib_player_mediax_mini_v3_1.6.1_release_20251021.aar')
+//    api files('../repo/aar/lib_player_mediax_mini_v3_1.6.1_release_20251021.aar')
     // exo2
-//    api files('../repo/aar/lib_player_exo_mini_2.19.1_release_20251021.aar')
+    api files('../repo/aar/lib_player_exo_mini_2.19.1_release_20251021.aar')
     // ijk
     api files('../repo/aar/lib_mediaplayer_ijk_k0.8.8_ff4.4.4_mini_release_20240509.aar')
     // ffplayer
