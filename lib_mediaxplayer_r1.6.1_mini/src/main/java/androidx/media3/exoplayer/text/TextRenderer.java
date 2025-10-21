@@ -51,6 +51,10 @@ import androidx.media3.extractor.text.SubtitleOutputBuffer;
 
 import com.google.common.collect.ImmutableList;
 
+import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
+import org.checkerframework.checker.nullness.qual.RequiresNonNull;
+import org.checkerframework.dataflow.qual.SideEffectFree;
+
 import java.io.IOException;
 import java.lang.annotation.Documented;
 import java.lang.annotation.Retention;
@@ -59,10 +63,6 @@ import java.lang.annotation.Target;
 import java.nio.ByteBuffer;
 import java.util.Objects;
 
-import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
-import org.checkerframework.checker.nullness.qual.RequiresNonNull;
-import org.checkerframework.dataflow.qual.SideEffectFree;
-
 /**
  * A {@link Renderer} for text.
  *
@@ -70,7 +70,7 @@ import org.checkerframework.dataflow.qual.SideEffectFree;
  * delegated to a {@link TextOutput}.
  */
 @UnstableApi
-public final class TextRenderer extends BaseRenderer implements Callback {
+public class TextRenderer extends BaseRenderer implements Callback {
 
     private static final String TAG = "TextRenderer";
 
