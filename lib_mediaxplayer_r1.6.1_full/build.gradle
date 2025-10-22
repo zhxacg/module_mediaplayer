@@ -10,7 +10,7 @@ android {
         minSdk = 21 // 5.0
         targetSdk = 33
         versionCode 3161
-        versionName "v3_1.6.1"
+        versionName "3.1.6.1"
 
         externalNativeBuild {
             cmake {
