@@ -15,15 +15,13 @@ public class OffsetMsTextRenderer extends TextRenderer {
 
     public OffsetMsTextRenderer(TextOutput output, @Nullable Looper outputLooper) {
         super(output, outputLooper);
+        // 开启对旧字幕格式支持（text/vtt）
+        super.experimentalSetLegacyDecodingEnabled(true);
     }
 
     public OffsetMsTextRenderer(TextOutput output, @Nullable Looper outputLooper, SubtitleDecoderFactory subtitleDecoderFactory) {
         super(output, outputLooper, subtitleDecoderFactory);
-    }
-
-    // 开启对旧字幕格式支持（text/vtt）
-    @Override
-    public void experimentalSetLegacyDecodingEnabled(boolean legacyDecodingEnabled) {
+        // 开启对旧字幕格式支持（text/vtt）
         super.experimentalSetLegacyDecodingEnabled(true);
     }
 
