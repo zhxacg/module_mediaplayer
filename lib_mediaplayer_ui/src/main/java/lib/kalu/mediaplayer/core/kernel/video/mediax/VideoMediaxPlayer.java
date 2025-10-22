@@ -77,6 +77,7 @@ import lib.kalu.mediaplayer.bean.info.TrackInfo;
 import lib.kalu.mediaplayer.bean.type.PlayerType;
 import lib.kalu.mediaplayer.core.kernel.video.VideoBasePlayer;
 import lib.kalu.mediaplayer.util.LogUtil;
+import lib.kalu.mediax.subtitle.OffsetMsTextRenderer;
 
 @UnstableApi
 public final class VideoMediaxPlayer extends VideoBasePlayer {
@@ -1575,8 +1576,8 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
                 Renderer renderer = mExoPlayer.getRenderer(i);
                 if (null == renderer)
                     continue;
-                if (renderer instanceof lib.kalu.mediax.subtitle.OffsetMsSubtitleRenderer) {
-                    ((lib.kalu.mediax.subtitle.OffsetMsSubtitleRenderer) renderer).appendOffsetMs(offsetMs);
+                if (renderer instanceof OffsetMsTextRenderer) {
+                    ((OffsetMsTextRenderer) renderer).appendOffsetMs(offsetMs);
                     onUpdateSubtitle(PlayerType.KernelType.MEDIA_V3, "");
                 }
                 break;

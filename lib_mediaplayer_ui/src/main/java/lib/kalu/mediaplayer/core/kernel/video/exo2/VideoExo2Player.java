@@ -67,6 +67,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.NavigableSet;
 
+import lib.kalu.exoplayer2.subtitle.OffsetMsTextRenderer;
 import lib.kalu.mediaplayer.PlayerSDK;
 import lib.kalu.mediaplayer.bean.args.StartArgs;
 import lib.kalu.mediaplayer.bean.cache.Cache;
@@ -1492,8 +1493,8 @@ public final class VideoExo2Player extends VideoBasePlayer {
                 Renderer renderer = mExoPlayer.getRenderer(i);
                 if (null == renderer)
                     continue;
-                if (renderer instanceof lib.kalu.exoplayer2.subtitle.OffsetMsTextRenderer) {
-                    ((lib.kalu.exoplayer2.subtitle.OffsetMsTextRenderer) renderer).appendOffsetMs(offsetMs);
+                if (renderer instanceof OffsetMsTextRenderer) {
+                    ((OffsetMsTextRenderer) renderer).appendOffsetMs(offsetMs);
                     onUpdateSubtitle(PlayerType.KernelType.EXO_V2, "");
                 }
                 break;
