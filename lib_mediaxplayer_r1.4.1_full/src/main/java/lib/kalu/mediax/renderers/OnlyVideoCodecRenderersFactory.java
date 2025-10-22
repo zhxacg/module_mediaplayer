@@ -17,7 +17,7 @@ import java.util.ArrayList;
 import lib.kalu.mediax.util.MediaLogUtil;
 
 @UnstableApi
-public final class OnlyVideoCodecRenderersFactory extends DefaultRenderersFactory {
+public final class OnlyVideoCodecRenderersFactory extends BaseRenderersFactory {
 
     public OnlyVideoCodecRenderersFactory(Context context) {
         super(context);

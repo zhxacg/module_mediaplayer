@@ -2,9 +2,9 @@ package lib.kalu.mediax.renderers;
 
 import android.content.Context;
 import android.os.Handler;
+import android.os.Looper;
 
 import androidx.annotation.NonNull;
-
 import androidx.media3.common.util.UnstableApi;
 import androidx.media3.exoplayer.DefaultRenderersFactory;
 import androidx.media3.exoplayer.Renderer;
@@ -12,16 +12,17 @@ import androidx.media3.exoplayer.audio.AudioRendererEventListener;
 import androidx.media3.exoplayer.audio.AudioSink;
 import androidx.media3.exoplayer.audio.MediaCodecAudioRenderer;
 import androidx.media3.exoplayer.mediacodec.MediaCodecSelector;
+import androidx.media3.exoplayer.text.TextOutput;
 import androidx.media3.exoplayer.video.MediaCodecVideoRenderer;
 import androidx.media3.exoplayer.video.VideoRendererEventListener;
 
 import java.util.ArrayList;
 
+import lib.kalu.mediax.subtitle.OffsetMsSubtitleRenderer;
 import lib.kalu.mediax.util.MediaLogUtil;
 
 @UnstableApi
 public class BaseRenderersFactory extends DefaultRenderersFactory {
-
 
 
     public BaseRenderersFactory(Context context) {
@@ -30,6 +31,11 @@ public class BaseRenderersFactory extends DefaultRenderersFactory {
         MediaLogUtil.log("BaseRenderersFactory => BaseRenderersFactory =>");
     }
 
+    @Override
+    protected void buildTextRenderers(Context context, TextOutput output, Looper outputLooper, @ExtensionRendererMode int extensionRendererMode, ArrayList<Renderer> out) {
+        // super.buildTextRenderers(context, output, outputLooper, extensionRendererMode, out);
+        out.add(new OffsetMsSubtitleRenderer(output, outputLooper));
+    }
 
     @Override
     protected void buildAudioRenderers(@NonNull Context context,

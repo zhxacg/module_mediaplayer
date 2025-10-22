@@ -2,6 +2,7 @@ package lib.kalu.mediax.renderers;
 
 import android.content.Context;
 import android.os.Handler;
+import android.os.Looper;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -13,17 +14,19 @@ import androidx.media3.exoplayer.audio.AudioRendererEventListener;
 import androidx.media3.exoplayer.audio.AudioSink;
 import androidx.media3.exoplayer.audio.MediaCodecAudioRenderer;
 import androidx.media3.exoplayer.mediacodec.MediaCodecSelector;
+import androidx.media3.exoplayer.text.TextOutput;
 import androidx.media3.exoplayer.video.MediaCodecVideoRenderer;
 import androidx.media3.exoplayer.video.VideoRendererEventListener;
 
 import java.util.ArrayList;
 
+import lib.kalu.mediax.subtitle.OffsetMsSubtitleRenderer;
 import lib.kalu.mediax.util.MediaLogUtil;
 
 @UnstableApi
-public class DefaultRenderersFactory extends androidx.media3.exoplayer.DefaultRenderersFactory {
+public class BaseRenderersFactory extends androidx.media3.exoplayer.DefaultRenderersFactory {
 
-    public DefaultRenderersFactory(Context context) {
+    public BaseRenderersFactory(Context context) {
         super(context);
         /**
          * EXTENSION_RENDERER_MODE_OFF, 扩展模块渲染器处于禁用状态。
@@ -35,6 +38,11 @@ public class DefaultRenderersFactory extends androidx.media3.exoplayer.DefaultRe
         MediaLogUtil.log("BaseRenderersFactory => DefaultRenderersFactory =>");
     }
 
+    @Override
+    protected void buildTextRenderers(Context context, TextOutput output, Looper outputLooper, @ExtensionRendererMode int extensionRendererMode, ArrayList<Renderer> out) {
+        // super.buildTextRenderers(context, output, outputLooper, extensionRendererMode, out);
+        out.add(new OffsetMsSubtitleRenderer(output, outputLooper));
+    }
 
     @Override
     protected void buildAudioRenderers(@NonNull Context context,

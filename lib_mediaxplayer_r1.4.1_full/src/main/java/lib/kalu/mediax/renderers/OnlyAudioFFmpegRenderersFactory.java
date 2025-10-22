@@ -15,7 +15,7 @@ import java.util.ArrayList;
 import lib.kalu.mediax.util.MediaLogUtil;
 
 @UnstableApi
-public final class OnlyAudioFFmpegRenderersFactory extends DefaultRenderersFactory {
+public final class OnlyAudioFFmpegRenderersFactory extends BaseRenderersFactory {
 
     public OnlyAudioFFmpegRenderersFactory(Context context) {
         super(context);
