@@ -6,15 +6,26 @@
 -packageobfuscationdictionary proguard-rules-dict-mini.txt
 
 
+-dontwarn java.lang.invoke.*
+-dontwarn **$$Lambda$*
 -dontwarn com.google.android.exoplayer2.**
+-dontwarn lib.kalu.exoplayer2.**
+
+# 保护泛型
+-keepattributes Signature
+# 保护主动抛出异常
+-keepattributes Exceptions
+# 抛出异常时保留代码行号
+-keepattributes SourceFile,LineNumberTable
+# 保护注解
+-keepattributes *Annotation*,InnerClasses,EnclosingMethod
+#-keep @interface * {
+#    *;
+#}
+
 -keep class com.google.android.exoplayer2.**{
     *;
 }
--keep class com.google.android.exoplayer2.**$**{
-    *;
-}
-
--dontwarn lib.kalu.exoplayer2.**
 -keep class lib.kalu.exoplayer2.renderers.**{
     public <fields>;
     public <methods>;

@@ -1,21 +1,7 @@
-# 保护泛型
--keepattributes Signature
-
-# 保护主动抛出异常
--keepattributes Exceptions
-
-# 抛出异常时保留代码行号
--keepattributes SourceFile,LineNumberTable
-
-# Lambda
 -dontwarn java.lang.invoke.*
 -dontwarn **$$Lambda$*
-
-# 保护注解
--keepattributes *Annotation*,InnerClasses,EnclosingMethod
-#-keep @interface * {
-#    *;
-#}
+-dontwarn com.google.android.exoplayer2.**
+-dontwarn lib.kalu.exoplayer2.**
 
 -keep class lib.kalu.exoplayer2.rtmp.RtmpClient{
     native <methods>;
