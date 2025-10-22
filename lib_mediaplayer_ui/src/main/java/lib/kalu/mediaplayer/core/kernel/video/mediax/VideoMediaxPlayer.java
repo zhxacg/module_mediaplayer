@@ -69,7 +69,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.NavigableSet;
 
-import lib.kalu.exoplayer2.subtitle.OffsetMsTextRenderer;
 import lib.kalu.mediaplayer.PlayerSDK;
 import lib.kalu.mediaplayer.bean.args.StartArgs;
 import lib.kalu.mediaplayer.bean.cache.Cache;
@@ -1576,8 +1575,8 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
                 Renderer renderer = mExoPlayer.getRenderer(i);
                 if (null == renderer)
                     continue;
-                if (renderer instanceof OffsetMsTextRenderer) {
-                    ((OffsetMsTextRenderer) renderer).appendOffsetMs(offsetMs);
+                if (renderer instanceof lib.kalu.mediax.subtitle.OffsetMsSubtitleRenderer) {
+                    ((lib.kalu.mediax.subtitle.OffsetMsSubtitleRenderer) renderer).appendOffsetMs(offsetMs);
                     onUpdateSubtitle(PlayerType.KernelType.MEDIA_V3, "");
                 }
                 break;
