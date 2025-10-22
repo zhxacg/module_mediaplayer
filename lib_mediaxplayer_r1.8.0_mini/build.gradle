@@ -1,0 +1,56 @@
+apply plugin: 'com.android.library'
+
+android {
+
+    compileOptions.encoding = "UTF-8"
+    namespace 'lib.kalu.mediaxplayer'
+    compileSdk 35
+
+    defaultConfig {
+        minSdk = 21 // 5.0
+        targetSdk = 33
+        versionCode 3180
+        versionName "3.1.8.0"
+    }
+
+    libraryVariants.all { variant ->
+        variant.outputs.all {
+            def type = new String(buildType.name).toLowerCase()
+            def time = new Date().format("yyyyMMdd", TimeZone.getTimeZone("GMT+08"))
+            outputFileName = "lib_player_mediax_mini_${variant.mergedFlavor.versionName}_${type}_${time}.aar"
+        }
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled true
+            consumerProguardFiles 'consumer-rules.pro'
+            proguardFiles 'proguard-rules.pro', 'consumer-rules.pro'
+        }
+        debug {
+            minifyEnabled false
+            consumerProguardFiles 'consumer-rules.pro'
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+}
+
+dependencies {
+
+    // compileOnly
+    compileOnly("androidx.appcompat:appcompat:1.7.0")
+    compileOnly("androidx.annotation:annotation:1.9.0")
+    compileOnly("androidx.exifinterface:exifinterface:1.4.1")
+    compileOnly("androidx.concurrent:concurrent-futures:1.2.0")
+
+    compileOnly("com.google.guava:guava:33.2.1-android")
+    compileOnly("com.google.guava:failureaccess:1.0.3")
+    compileOnly("com.google.errorprone:error_prone_annotations:2.28.0")
+    compileOnly("org.checkerframework:checker-qual-android:3.49.2")
+    compileOnly("com.google.code.findbugs:jsr305:3.0.2")
+//    compileOnly("com.google.j2objc:j2objc-annotations:3.0.0")
+}

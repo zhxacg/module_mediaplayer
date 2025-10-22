@@ -7,3 +7,6 @@ include ':lib_mediaxplayer_r1.4.1_mini'
 include ':lib_mediaxplayer_r1.6.1_full'
 include ':lib_mediaxplayer_r1.6.1_lite'
 include ':lib_mediaxplayer_r1.6.1_mini'
+
+// 1.8.0
+include ':lib_mediaxplayer_r1.8.0_mini'

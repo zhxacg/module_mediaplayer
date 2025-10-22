@@ -73,12 +73,10 @@ dependencies {
     compileOnly("androidx.exifinterface:exifinterface:1.4.1")
     compileOnly("androidx.concurrent:concurrent-futures:1.2.0")
 
+    compileOnly("com.google.guava:guava:33.2.1-android")
+    compileOnly("com.google.guava:failureaccess:1.0.3")
     compileOnly("com.google.errorprone:error_prone_annotations:2.28.0")
     compileOnly("org.checkerframework:checker-qual-android:3.49.2")
     compileOnly("com.google.code.findbugs:jsr305:3.0.2")
 //    compileOnly("com.google.j2objc:j2objc-annotations:3.0.0")
-
-    // api
-    api files('libs/guava-33.2.1-android.jar')
-    api files('libs/guava-failureaccess-1.0.2.jar')
 }
