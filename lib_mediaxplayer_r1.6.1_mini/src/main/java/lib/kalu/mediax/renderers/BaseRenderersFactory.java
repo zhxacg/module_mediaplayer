@@ -18,7 +18,7 @@ import androidx.media3.exoplayer.video.VideoRendererEventListener;
 
 import java.util.ArrayList;
 
-import lib.kalu.mediax.subtitle.OffsetMsSubtitleRenderer;
+import lib.kalu.mediax.subtitle.OffsetMsTextRenderer;
 import lib.kalu.mediax.util.MediaLogUtil;
 
 @UnstableApi
@@ -34,7 +34,7 @@ public class BaseRenderersFactory extends DefaultRenderersFactory {
     @Override
     protected void buildTextRenderers(Context context, TextOutput output, Looper outputLooper, @ExtensionRendererMode int extensionRendererMode, ArrayList<Renderer> out) {
         // super.buildTextRenderers(context, output, outputLooper, extensionRendererMode, out);
-        out.add(new OffsetMsSubtitleRenderer(output, outputLooper));
+        out.add(new OffsetMsTextRenderer(output, outputLooper));
     }
 
     @Override

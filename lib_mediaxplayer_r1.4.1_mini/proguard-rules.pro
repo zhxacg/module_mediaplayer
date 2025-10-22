@@ -20,6 +20,6 @@
 -keep class lib.kalu.mediax.util.MediaLogUtil{
     public <methods>;
 }
--keep class lib.kalu.mediax.subtitle.OffsetMsSubtitleRenderer{
+-keep class lib.kalu.mediax.subtitle.OffsetMsTextRenderer{
     public <methods>;
 }
