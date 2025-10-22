@@ -10,15 +10,15 @@ import androidx.media3.exoplayer.text.TextRenderer;
 import androidx.media3.extractor.text.SubtitleDecoder;
 
 @UnstableApi
-public class OffsetMsSubtitleRenderer extends TextRenderer {
+public class OffsetMsTextRenderer extends TextRenderer {
 
     private long offsetMs; // 时移偏移量（微秒，内部时间单位）
 
-    public OffsetMsSubtitleRenderer(TextOutput output, @Nullable Looper outputLooper) {
+    public OffsetMsTextRenderer(TextOutput output, @Nullable Looper outputLooper) {
         super(output, outputLooper);
     }
 
-    public OffsetMsSubtitleRenderer(TextOutput output, @Nullable Looper outputLooper, SubtitleDecoderFactory subtitleDecoderFactory) {
+    public OffsetMsTextRenderer(TextOutput output, @Nullable Looper outputLooper, SubtitleDecoderFactory subtitleDecoderFactory) {
         super(output, outputLooper, subtitleDecoderFactory);
     }
 
