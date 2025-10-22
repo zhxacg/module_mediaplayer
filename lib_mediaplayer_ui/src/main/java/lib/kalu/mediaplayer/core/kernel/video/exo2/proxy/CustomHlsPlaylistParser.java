@@ -720,7 +720,7 @@ public class CustomHlsPlaylistParser implements ParsingLoadable.Parser<HlsPlayli
                 }
                 initializationSegment =
                         new HlsMediaPlaylist.Segment(
-                                formatUrl(baseUri, uri),
+                                formatSegmentUrl(baseUri, uri),
                                 segmentByteRangeOffset,
                                 segmentByteRangeLength,
                                 fullSegmentEncryptionKeyUri,
@@ -963,7 +963,7 @@ public class CustomHlsPlaylistParser implements ParsingLoadable.Parser<HlsPlayli
                     // the playlist to provide an initialization vector for it.
                     inferredInitSegment =
                             new HlsMediaPlaylist.Segment(
-                                    formatUrl(baseUri, segmentUri),
+                                    formatSegmentUrl(baseUri, segmentUri),
                                     /* byteRangeOffset= */ 0,
                                     segmentByteRangeOffset,
                                     /* fullSegmentEncryptionKeyUri= */ null,
@@ -981,7 +981,7 @@ public class CustomHlsPlaylistParser implements ParsingLoadable.Parser<HlsPlayli
 
                 segments.add(
                         new HlsMediaPlaylist.Segment(
-                                formatUrl(baseUri, segmentUri),
+                                formatSegmentUrl(baseUri, segmentUri),
                                 initializationSegment != null ? initializationSegment : inferredInitSegment,
                                 segmentTitle,
                                 segmentDurationUs,
@@ -1315,12 +1315,15 @@ public class CustomHlsPlaylistParser implements ParsingLoadable.Parser<HlsPlayli
         }
     }
 
-    private static String formatUrl(String baseUrl, String segmentUrl) {
+    private static String formatSegmentUrl(String baseUrl, String segmentUrl) {
         try {
             ProxyUrl proxyUrl = PlayerSDK.init().getPlayerBuilder().getProxy().getProxyUrl();
             if (null == proxyUrl)
                 throw new Exception("waring: proxyUrl null");
-            return proxyUrl.formatUrl(baseUrl, segmentUrl);
+            String formatSegmentUrl = proxyUrl.formatSegmentUrl(baseUrl, segmentUrl);
+            if (null == formatSegmentUrl || formatSegmentUrl.isEmpty())
+                throw new Exception("waring: formatSegmentUrl null");
+            return formatSegmentUrl;
         } catch (Exception e) {
             return segmentUrl;
         }

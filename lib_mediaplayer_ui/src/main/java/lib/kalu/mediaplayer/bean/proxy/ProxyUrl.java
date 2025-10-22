@@ -1,12 +1,10 @@
 package lib.kalu.mediaplayer.bean.proxy;
 
-import com.google.android.exoplayer2.upstream.DataSpec;
-
 import java.io.Serializable;
 
 public interface ProxyUrl extends Serializable {
 
-    DataSpec formatDataSpec(DataSpec dataSpec);
+    String formatBaseUrl(String url);
 
-    String formatUrl(String baseUrl, String segmentUrl);
+    String formatSegmentUrl(String baseUrl, String segmentUrl);
 }

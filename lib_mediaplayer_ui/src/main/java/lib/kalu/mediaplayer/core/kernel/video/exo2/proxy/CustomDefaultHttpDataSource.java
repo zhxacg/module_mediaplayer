@@ -371,7 +371,7 @@ public final class CustomDefaultHttpDataSource extends BaseDataSource implements
     @Override
     public long open(DataSpec dataSpec) throws HttpDataSourceException {
 
-        this.dataSpec = formatDataSpec(dataSpec);
+        this.dataSpec = formatBaseUrl(dataSpec);
         bytesRead = 0;
         bytesToRead = 0;
         transferInitializing(dataSpec);
@@ -921,12 +921,17 @@ public final class CustomDefaultHttpDataSource extends BaseDataSource implements
         }
     }
 
-    private DataSpec formatDataSpec(DataSpec dataSpec) {
+    private DataSpec formatBaseUrl(DataSpec dataSpec) {
         try {
             ProxyUrl proxyUrl = PlayerSDK.init().getPlayerBuilder().getProxy().getProxyUrl();
             if (null == proxyUrl)
                 throw new Exception("waring: proxyUrl null");
-            return proxyUrl.formatDataSpec(dataSpec);
+            String formatBaseUrl = proxyUrl.formatBaseUrl(dataSpec.uri.toString());
+            if (null == formatBaseUrl || formatBaseUrl.isEmpty())
+                throw new Exception("waring: formatBaseUrl null");
+            return dataSpec.buildUpon()
+                    .setUri(formatBaseUrl)
+                    .build();
         } catch (Exception e) {
             return dataSpec;
         }
