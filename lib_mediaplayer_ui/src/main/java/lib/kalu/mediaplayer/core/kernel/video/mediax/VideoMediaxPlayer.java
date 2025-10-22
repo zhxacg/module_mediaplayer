@@ -246,7 +246,7 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
             // all
             else {
                 LogUtil.log("VideoMediaxPlayer => createDecoder => only_video_codec");
-                Class<?> clazz = Class.forName("lib.kalu.mediax.renderers.DefaultRenderersFactory");
+                Class<?> clazz = Class.forName("lib.kalu.mediax.renderers.BaseRenderersFactory");
                 Object newInstance = clazz.getDeclaredConstructor(Context.class).newInstance(context);
                 builder.setRenderersFactory((RenderersFactory) newInstance);
             }
