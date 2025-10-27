@@ -50,7 +50,7 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-       // initMultiSegmentProgress();
+        initMultiSegmentProgress();
         init();
 
         findViewById(R.id.main_button1).setOnClickListener(new View.OnClickListener() {
