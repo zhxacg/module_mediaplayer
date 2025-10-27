@@ -255,6 +255,12 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
             LogUtil.log("VideoMediaxPlayer => createDecoder => mExoPlayer = " + mExoPlayer);
             registListener();
 
+            onEvent(PlayerType.KernelType.MEDIA_V3, PlayerType.EventType.INIT);
+            long trySeeDuration = args.getTrySeeDuration();
+            if (trySeeDuration > 0L) {
+                onEvent(PlayerType.KernelType.MEDIA_V3, PlayerType.EventType.TRY_SEE_START);
+            }
+
             //播放器日志
 //        if (mExoPlayer.getTrackSelector() instanceof MappingTrackSelector) {
 //            mExoPlayer.addAnalyticsListener(new EventLogger((MappingTrackSelector) mExoPlayer.getTrackSelector(), "ExoPlayer"));
@@ -951,7 +957,6 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
                         // 起播快进
                         if (mPlayWhenReadySeeking) {
                             mPlayWhenReadySeeking = false;
-                            onEvent(PlayerType.KernelType.MEDIA_V3, PlayerType.EventType.START);
                             // 立即播放
                             boolean playWhenReady = isPlayWhenReady();
                             onEvent(PlayerType.KernelType.MEDIA_V3, playWhenReady ? PlayerType.EventType.START_PLAY_WHEN_READY_TRUE : PlayerType.EventType.START_PLAY_WHEN_READY_FALSE);
@@ -959,6 +964,8 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
                                 boolean playing = isPlaying();
                                 if (playing)
                                     throw new Exception("warning: isPlaying true");
+                                onEvent(PlayerType.KernelType.MEDIA_V3, PlayerType.EventType.START);
+                                onEvent(PlayerType.KernelType.MEDIA_V3, PlayerType.EventType.VIDEO_RENDERING_START);
                                 start();
                             } else {
                                 pause();
@@ -1033,11 +1040,11 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
                     throw new Exception("warning: isPrepared true");
                 isPrepared = true;
                 onEvent(PlayerType.KernelType.MEDIA_V3, PlayerType.EventType.PREPARE);
-                onEvent(PlayerType.KernelType.MEDIA_V3, PlayerType.EventType.VIDEO_RENDERING_START);
                 long seek = getPlayWhenReadySeekToPosition();
                 // 立即播放
                 if (seek <= 0L) {
                     onEvent(PlayerType.KernelType.MEDIA_V3, PlayerType.EventType.START);
+                    onEvent(PlayerType.KernelType.MEDIA_V3, PlayerType.EventType.VIDEO_RENDERING_START);
                 }
                 // 起播快进
                 else {
