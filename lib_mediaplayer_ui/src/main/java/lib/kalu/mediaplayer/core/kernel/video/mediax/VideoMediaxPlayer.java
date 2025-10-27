@@ -1040,11 +1040,11 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
                     throw new Exception("warning: isPrepared true");
                 isPrepared = true;
                 onEvent(PlayerType.KernelType.MEDIA_V3, PlayerType.EventType.PREPARE);
+                onEvent(PlayerType.KernelType.MEDIA_V3, PlayerType.EventType.VIDEO_RENDERING_START);
                 long seek = getPlayWhenReadySeekToPosition();
                 // 立即播放
                 if (seek <= 0L) {
                     onEvent(PlayerType.KernelType.MEDIA_V3, PlayerType.EventType.START);
-                    onEvent(PlayerType.KernelType.MEDIA_V3, PlayerType.EventType.VIDEO_RENDERING_START);
                 }
                 // 起播快进
                 else {
