@@ -759,11 +759,28 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
                             //
                             new StandaloneDatabaseProvider(context)
                     );
+                    mSimpleCache.addListener("", new androidx.media3.datasource.cache.Cache.Listener() {
+                        @Override
+                        public void onSpanAdded(androidx.media3.datasource.cache.Cache cache, CacheSpan cacheSpan) {
+                        }
+
+                        @Override
+                        public void onSpanRemoved(androidx.media3.datasource.cache.Cache cache, CacheSpan cacheSpan) {
+                        }
+
+                        @Override
+                        public void onSpanTouched(androidx.media3.datasource.cache.Cache cache, CacheSpan cacheSpan, CacheSpan cacheSpan1) {
+                        }
+                    });
                 }
 
 
                 dataSource = new CacheDataSource.Factory()
                         .setFlags(CacheDataSource.FLAG_IGNORE_CACHE_ON_ERROR)
+//                        .setFlags(
+//                                CacheDataSource.FLAG_IGNORE_CACHE_ON_ERROR | // 错误时跳过缓存
+//                                        CacheDataSource.FLAG_IGNORE_CACHE_FOR_UNSET_LENGTH_REQUESTS // 允许缓存未知长度的资源（如直播流）
+//                        )
                         .setCache(mSimpleCache)
                         // 网络请求工厂
                         .setUpstreamDataSourceFactory(dataSourceFactory)
@@ -911,7 +928,7 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
                 }
             }
 
-            // 字幕轨道
+            // 字幕轨道 - 禁用缓存
             List<TrackInfo> extraTrackSubtitle = args.getExtraTrackSubtitle();
             if (null != extraTrackSubtitle) {
                 for (TrackInfo track : extraTrackSubtitle) {
@@ -933,6 +950,7 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
                         continue;
                     if (language.isEmpty())
                         continue;
+
                     MediaItem.SubtitleConfiguration subtitleConfig = new MediaItem.SubtitleConfiguration.Builder(Uri.parse(sutitleUrl))
                             .setSelectionFlags(C.SELECTION_FLAG_AUTOSELECT)
                             .setMimeType(mimeType) // 也可以用 MimeTypes.APPLICATION_SUBRIP
@@ -942,10 +960,13 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
                             .setId(track.getId())
                             .setSelectionFlags(track.getSelectionFlags())
                             .build();
-                    SingleSampleMediaSource source = new SingleSampleMediaSource.Factory(dataSource)
-                            .createMediaSource(subtitleConfig, C.TIME_UNSET);
+
+//                      .setSubtitleMediaSourceFactory(
+//                            SingleSampleMediaSource.Factory(defaultDataSourceFactory) // 字幕用非缓存数据源
+//                    )
                     //
-                    mediaSources.add(source);
+                    mediaSources.add(new SingleSampleMediaSource.Factory(new DefaultDataSource.Factory(context, dataSourceFactory))
+                            .createMediaSource(subtitleConfig, C.TIME_UNSET));
                 }
             }
 

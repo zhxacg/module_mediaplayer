@@ -751,10 +751,29 @@ public final class VideoExo2Player extends VideoBasePlayer {
                             //
                             new StandaloneDatabaseProvider(context)
                     );
+                    mSimpleCache.addListener("", new com.google.android.exoplayer2.upstream.cache.Cache.Listener() {
+                        @Override
+                        public void onSpanAdded(com.google.android.exoplayer2.upstream.cache.Cache cache, CacheSpan cacheSpan) {
+                        }
+
+                        @Override
+                        public void onSpanRemoved(com.google.android.exoplayer2.upstream.cache.Cache cache, CacheSpan cacheSpan) {
+                        }
+
+                        @Override
+                        public void onSpanTouched(com.google.android.exoplayer2.upstream.cache.Cache cache, CacheSpan cacheSpan, CacheSpan cacheSpan1) {
+                        }
+                    });
                 }
 
                 dataSource = new CacheDataSource.Factory()
-                        .setFlags(CacheDataSource.FLAG_IGNORE_CACHE_ON_ERROR)
+                        .setFlags(
+                                CacheDataSource.FLAG_IGNORE_CACHE_ON_ERROR
+                        )
+//                        .setFlags(
+//                                CacheDataSource.FLAG_IGNORE_CACHE_ON_ERROR | // 错误时跳过缓存
+//                                        CacheDataSource.FLAG_IGNORE_CACHE_FOR_UNSET_LENGTH_REQUESTS // 允许缓存未知长度的资源（如直播流）
+//                        )
                         .setCache(mSimpleCache)
                         // 网络请求工厂
                         .setUpstreamDataSourceFactory(dataSourceFactory)
@@ -954,7 +973,7 @@ public final class VideoExo2Player extends VideoBasePlayer {
                             .setId(track.getId())
                             .setSelectionFlags(track.getSelectionFlags())
                             .build();
-                    SingleSampleMediaSource source = new SingleSampleMediaSource.Factory(dataSource)
+                    SingleSampleMediaSource source = new SingleSampleMediaSource.Factory(new DefaultDataSource.Factory(context, dataSourceFactory))
                             .createMediaSource(subtitleConfig, C.TIME_UNSET);
                     //
                     mediaSources.add(source);
