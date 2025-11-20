@@ -35,7 +35,9 @@ public interface VideoPlayerApiWindow extends VideoPlayerApiBase, VideoPlayerApi
 //                throw new Exception("warning: current not full");
             return true;
         } catch (Exception e) {
-            LogUtil.log("VideoPlayerApiBase => isFull => " + e.getMessage());
+            if (LogUtil.DEBUG) {
+                LogUtil.log("VideoPlayerApiBase => isFull => " + e.getMessage());
+            }
             return false;
         }
     }
@@ -58,7 +60,9 @@ public interface VideoPlayerApiWindow extends VideoPlayerApiBase, VideoPlayerApi
             int height = layoutParams.height;
             return width != ViewGroup.LayoutParams.MATCH_PARENT && height != ViewGroup.LayoutParams.MATCH_PARENT;
         } catch (Exception e) {
-            LogUtil.log("VideoPlayerApiBase => isFloat => " + e.getMessage());
+            if (LogUtil.DEBUG) {
+                LogUtil.log("VideoPlayerApiBase => isFloat => " + e.getMessage());
+            }
             return false;
         }
     }
@@ -67,24 +71,34 @@ public interface VideoPlayerApiWindow extends VideoPlayerApiBase, VideoPlayerApi
         try {
             callEvent(PlayerType.EventType.WINDOW_FULL_START);
             boolean full = isFull();
-            LogUtil.log("VideoPlayerApiRender => startFull => full = " + full);
+            if (LogUtil.DEBUG) {
+                LogUtil.log("VideoPlayerApiRender => startFull => full = " + full);
+            }
             if (full)
                 throw new Exception("warning: full true");
             ViewGroup decorView = findDecorView((View) this);
-            LogUtil.log("VideoPlayerApiRender => startFull => decorView = " + decorView);
+            if (LogUtil.DEBUG) {
+                LogUtil.log("VideoPlayerApiRender => startFull => decorView = " + decorView);
+            }
             if (null == decorView)
                 throw new Exception("error: decorView null");
             ViewGroup rootView = decorView.findViewById(R.id.module_mediaplayer_id_player);
-            LogUtil.log("VideoPlayerApiRender => startFull => rootView = " + rootView);
+            if (LogUtil.DEBUG) {
+                LogUtil.log("VideoPlayerApiRender => startFull => rootView = " + rootView);
+            }
             if (null == rootView)
                 throw new Exception("error: rootView null");
             ViewParent rootViewParent = rootView.getParent();
-            LogUtil.log("VideoPlayerApiRender => startFull => rootViewParent = " + rootViewParent);
+            if (LogUtil.DEBUG) {
+                LogUtil.log("VideoPlayerApiRender => startFull => rootViewParent = " + rootViewParent);
+            }
             if (null == rootViewParent)
                 throw new Exception("error: rootViewParent null");
             // 保存全屏之前的focusId, 退出全屏时需要恢复focusId
             View focusView = decorView.findFocus();
-            LogUtil.log("VideoPlayerApiRender => startFull => focusView = " + focusView);
+            if (LogUtil.DEBUG) {
+                LogUtil.log("VideoPlayerApiRender => startFull => focusView = " + focusView);
+            }
             if (null == focusView)
                 throw new Exception("error: focusView null");
             int parentId = ((View) rootViewParent).getId();
@@ -111,7 +125,9 @@ public interface VideoPlayerApiWindow extends VideoPlayerApiBase, VideoPlayerApi
             rootView.setFocusable(true);
             rootView.setDescendantFocusability(ViewGroup.FOCUS_AFTER_DESCENDANTS);
             rootView.requestFocus();
-            LogUtil.log("VideoPlayerApiRender => startFull => requestFocus");
+            if (LogUtil.DEBUG) {
+                LogUtil.log("VideoPlayerApiRender => startFull => requestFocus");
+            }
             // ...
             initRenderView();
             ((PlayerView) rootView).setDoWindowing(false);
@@ -119,7 +135,9 @@ public interface VideoPlayerApiWindow extends VideoPlayerApiBase, VideoPlayerApi
             callWindow(PlayerType.WindowType.FULL);
             return true;
         } catch (Exception e) {
-            LogUtil.log("VideoPlayerApiRender => startFull => " + e.getMessage());
+            if (LogUtil.DEBUG) {
+                LogUtil.log("VideoPlayerApiRender => startFull => " + e.getMessage());
+            }
             callEvent(PlayerType.EventType.WINDOW_FULL_FAIL);
             return false;
         }
@@ -174,7 +192,9 @@ public interface VideoPlayerApiWindow extends VideoPlayerApiBase, VideoPlayerApi
             callWindow(PlayerType.WindowType.FULL);
             return true;
         } catch (Exception e) {
-            LogUtil.log("VideoPlayerApiRender => stopFull => " + e.getMessage());
+            if (LogUtil.DEBUG) {
+                LogUtil.log("VideoPlayerApiRender => stopFull => " + e.getMessage());
+            }
             callEvent(PlayerType.EventType.WINDOW_FULL_FAIL);
             return false;
         }
@@ -184,19 +204,27 @@ public interface VideoPlayerApiWindow extends VideoPlayerApiBase, VideoPlayerApi
         try {
             callEvent(PlayerType.EventType.WINDOW_FLOAT_START);
             boolean aFloat = isFloat();
-            LogUtil.log("VideoPlayerApiRender => startFloat => aFloat = " + aFloat);
+            if (LogUtil.DEBUG) {
+                LogUtil.log("VideoPlayerApiRender => startFloat => aFloat = " + aFloat);
+            }
             if (aFloat)
                 throw new Exception("warning: aFloat true");
             ViewGroup decorView = findDecorView((View) this);
-            LogUtil.log("VideoPlayerApiRender => startFloat => decorView = " + decorView);
+            if (LogUtil.DEBUG) {
+                LogUtil.log("VideoPlayerApiRender => startFloat => decorView = " + decorView);
+            }
             if (null == decorView)
                 throw new Exception("error: decorView null");
             ViewGroup rootView = decorView.findViewById(R.id.module_mediaplayer_id_player);
-            LogUtil.log("VideoPlayerApiRender => startFloat => rootView = " + rootView);
+            if (LogUtil.DEBUG) {
+                LogUtil.log("VideoPlayerApiRender => startFloat => rootView = " + rootView);
+            }
             if (null == rootView)
                 throw new Exception("error: rootView null");
             ViewParent rootViewParent = rootView.getParent();
-            LogUtil.log("VideoPlayerApiRender => startFloat => rootViewParent = " + rootViewParent);
+            if (LogUtil.DEBUG) {
+                LogUtil.log("VideoPlayerApiRender => startFloat => rootViewParent = " + rootViewParent);
+            }
             if (null == rootViewParent)
                 throw new Exception("error: rootViewParent null");
             int parentId = ((View) rootViewParent).getId();
@@ -221,7 +249,9 @@ public interface VideoPlayerApiWindow extends VideoPlayerApiBase, VideoPlayerApi
             callWindow(PlayerType.WindowType.FLOAT);
             return true;
         } catch (Exception e) {
-            LogUtil.log("VideoPlayerApiRender => startFloat => " + e.getMessage());
+            if (LogUtil.DEBUG) {
+                LogUtil.log("VideoPlayerApiRender => startFloat => " + e.getMessage());
+            }
             callEvent(PlayerType.EventType.WINDOW_FLOAT_FAIL);
             return false;
         }
@@ -260,7 +290,9 @@ public interface VideoPlayerApiWindow extends VideoPlayerApiBase, VideoPlayerApi
             callWindow(PlayerType.WindowType.DEFAULT);
             return true;
         } catch (Exception e) {
-            LogUtil.log("VideoPlayerApiRender => stopFloat => " + e.getMessage());
+            if (LogUtil.DEBUG) {
+                LogUtil.log("VideoPlayerApiRender => stopFloat => " + e.getMessage());
+            }
             callEvent(PlayerType.EventType.WINDOW_FLOAT_FAIL);
             return false;
         }

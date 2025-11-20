@@ -45,7 +45,9 @@ public final class VideoFFmpegPlayer extends VideoBasePlayer {
             unRegistListener();
             release();
         } catch (Exception e) {
-            LogUtil.log("VideoFFmpegPlayer => releaseDecoder => " + e.getMessage());
+            if (LogUtil.DEBUG) {
+                LogUtil.log("VideoFFmpegPlayer => releaseDecoder => " + e.getMessage());
+            }
         }
     }
 
@@ -57,7 +59,9 @@ public final class VideoFFmpegPlayer extends VideoBasePlayer {
             mFFmpegPlayer = new FFmpegPlayer();
             registListener();
         } catch (Exception e) {
-            LogUtil.log("VideoFFmpegPlayer => createDecoder => " + e.getMessage());
+            if (LogUtil.DEBUG) {
+                LogUtil.log("VideoFFmpegPlayer => createDecoder => " + e.getMessage());
+            }
         }
     }
 
@@ -76,7 +80,9 @@ public final class VideoFFmpegPlayer extends VideoBasePlayer {
             mFFmpegPlayer.setDataSource(context, Uri.parse(url), null);
             mFFmpegPlayer.prepare();
         } catch (Exception e) {
-            LogUtil.log("VideoFFmpegPlayer => startDecoder => " + e.getMessage());
+            if (LogUtil.DEBUG) {
+                LogUtil.log("VideoFFmpegPlayer => startDecoder => " + e.getMessage());
+            }
             stop();
             onEvent(PlayerType.KernelType.FFPLAYER, PlayerType.EventType.STOP);
             onEvent(PlayerType.KernelType.FFPLAYER, PlayerType.EventType.ERROR);
@@ -97,7 +103,9 @@ public final class VideoFFmpegPlayer extends VideoBasePlayer {
             boolean looping = args.isLooping();
             mFFmpegPlayer.setLooping(looping);
         } catch (Exception e) {
-            LogUtil.log("VideoFFmpegPlayer => initOptions => Exception " + e.getMessage());
+            if (LogUtil.DEBUG) {
+                LogUtil.log("VideoFFmpegPlayer => initOptions => Exception " + e.getMessage());
+            }
         }
     }
 
@@ -115,7 +123,9 @@ public final class VideoFFmpegPlayer extends VideoBasePlayer {
             mFFmpegPlayer.setOnVideoSizeChangedListener(onVideoSizeChangedListener);
             mFFmpegPlayer.setOnSeekCompleteListener(mOnSeekCompleteListener);
         } catch (Exception e) {
-            LogUtil.log("VideoFFmpegPlayer => registListener => Exception " + e.getMessage());
+            if (LogUtil.DEBUG) {
+                LogUtil.log("VideoFFmpegPlayer => registListener => Exception " + e.getMessage());
+            }
         }
     }
 
@@ -133,7 +143,9 @@ public final class VideoFFmpegPlayer extends VideoBasePlayer {
             mFFmpegPlayer.setOnSeekCompleteListener(null);
             mFFmpegPlayer.setOnBufferingUpdateListener(null);
         } catch (Exception e) {
-            LogUtil.log("VideoFFmpegPlayer => unRegistListener => Exception " + e.getMessage());
+            if (LogUtil.DEBUG) {
+                LogUtil.log("VideoFFmpegPlayer => unRegistListener => Exception " + e.getMessage());
+            }
         }
     }
 
@@ -158,7 +170,9 @@ public final class VideoFFmpegPlayer extends VideoBasePlayer {
             mFFmpegPlayer.release();
             mFFmpegPlayer = null;
         } catch (Exception e) {
-            LogUtil.log("VideoFFmpegPlayer => start => " + e.getMessage());
+            if (LogUtil.DEBUG) {
+                LogUtil.log("VideoFFmpegPlayer => start => " + e.getMessage());
+            }
         }
     }
 
@@ -177,7 +191,9 @@ public final class VideoFFmpegPlayer extends VideoBasePlayer {
                 throw new Exception("mFFmpegPlayer error: null");
             mFFmpegPlayer.start();
         } catch (Exception e) {
-            LogUtil.log("VideoFFmpegPlayer => start => " + e.getMessage());
+            if (LogUtil.DEBUG) {
+                LogUtil.log("VideoFFmpegPlayer => start => " + e.getMessage());
+            }
         }
     }
 
@@ -193,7 +209,9 @@ public final class VideoFFmpegPlayer extends VideoBasePlayer {
                 throw new Exception("mFFmpegPlayer error: null");
             mFFmpegPlayer.pause();
         } catch (Exception e) {
-            LogUtil.log("VideoFFmpegPlayer => pause => " + e.getMessage());
+            if (LogUtil.DEBUG) {
+                LogUtil.log("VideoFFmpegPlayer => pause => " + e.getMessage());
+            }
         }
     }
 
@@ -208,7 +226,9 @@ public final class VideoFFmpegPlayer extends VideoBasePlayer {
                 throw new Exception("mFFmpegPlayer error: null");
             mFFmpegPlayer.stop();
         } catch (Exception e) {
-            LogUtil.log("VideoFFmpegPlayer => stop => " + e.getMessage());
+            if (LogUtil.DEBUG) {
+                LogUtil.log("VideoFFmpegPlayer => stop => " + e.getMessage());
+            }
         }
     }
 
@@ -224,7 +244,9 @@ public final class VideoFFmpegPlayer extends VideoBasePlayer {
                 throw new Exception("mFFmpegPlayer error: null");
             return mFFmpegPlayer.isPlaying();
         } catch (Exception e) {
-            LogUtil.log("VideoFFmpegPlayer => stop => " + e.getMessage());
+            if (LogUtil.DEBUG) {
+                LogUtil.log("VideoFFmpegPlayer => stop => " + e.getMessage());
+            }
             return false;
         }
     }
@@ -251,9 +273,13 @@ public final class VideoFFmpegPlayer extends VideoBasePlayer {
             long position = getPosition();
             onEvent(PlayerType.KernelType.FFPLAYER, seek < position ? PlayerType.EventType.SEEK_START_REWIND : PlayerType.EventType.SEEK_START_FORWARD);
             mFFmpegPlayer.seekTo((int) seek);
-            LogUtil.log("VideoFFmpegPlayer => seekTo =>");
+            if (LogUtil.DEBUG) {
+                LogUtil.log("VideoFFmpegPlayer => seekTo =>");
+            }
         } catch (Exception e) {
-            LogUtil.log("VideoFFmpegPlayer => seekTo => " + e.getMessage());
+            if (LogUtil.DEBUG) {
+                LogUtil.log("VideoFFmpegPlayer => seekTo => " + e.getMessage());
+            }
         }
     }
 
@@ -272,7 +298,9 @@ public final class VideoFFmpegPlayer extends VideoBasePlayer {
                 throw new Exception("currentPosition warning: " + currentPosition);
             return currentPosition;
         } catch (Exception e) {
-//            MPLogUtil.log("VideoFFmpegPlayer => getPosition => " + e.getMessage());
+            if (LogUtil.DEBUG) {
+                LogUtil.log("VideoFFmpegPlayer => getPosition => " + e.getMessage());
+            }
             return 0L;
         }
     }
@@ -292,7 +320,9 @@ public final class VideoFFmpegPlayer extends VideoBasePlayer {
                 throw new Exception("duration warning: " + duration);
             return duration;
         } catch (Exception e) {
-//            MPLogUtil.log("VideoFFmpegPlayer => getDuration => " + e.getMessage());
+            if (LogUtil.DEBUG) {
+                LogUtil.log("VideoFFmpegPlayer => getDuration => " + e.getMessage());
+            }
             return 0L;
         }
     }
@@ -311,7 +341,9 @@ public final class VideoFFmpegPlayer extends VideoBasePlayer {
                 throw new Exception("surface error: null");
             mFFmpegPlayer.setSurface(surface);
         } catch (Exception e) {
-            LogUtil.log("VideoFFmpegPlayer => setSurface => " + e.getMessage());
+            if (LogUtil.DEBUG) {
+                LogUtil.log("VideoFFmpegPlayer => setSurface => " + e.getMessage());
+            }
         }
     }
 
@@ -324,7 +356,9 @@ public final class VideoFFmpegPlayer extends VideoBasePlayer {
 //                throw new Exception("only support above Android M");
             return false;
         } catch (Exception e) {
-            LogUtil.log("VideoFFmpegPlayer => setSpeed => " + e.getMessage());
+            if (LogUtil.DEBUG) {
+                LogUtil.log("VideoFFmpegPlayer => setSpeed => " + e.getMessage());
+            }
             return false;
         }
     }
@@ -332,14 +366,18 @@ public final class VideoFFmpegPlayer extends VideoBasePlayer {
     private OnInfoListener onInfoListener = new OnInfoListener() {
         @Override
         public boolean onInfo(FFmpegPlayer mp, int what, int extra) {
-            LogUtil.log("VideoFFmpegPlayer => onInfo => what = " + what);
+            if (LogUtil.DEBUG) {
+                LogUtil.log("VideoFFmpegPlayer => onInfo => what = " + what);
+            }
             // 缓冲开始
             if (what == MediaPlayer.MEDIA_INFO_BUFFERING_START) {
                 if (isPrepared) {
                     isBuffering = true;
                     onEvent(PlayerType.KernelType.FFPLAYER, PlayerType.EventType.BUFFERING_START);
                 } else {
-                    LogUtil.log("VideoFFmpegPlayer => onInfo => what = " + what + ", mPrepared = false");
+                    if (LogUtil.DEBUG) {
+                        LogUtil.log("VideoFFmpegPlayer => onInfo => what = " + what + ", mPrepared = false");
+                    }
                 }
             }
             // 缓冲结束
@@ -348,7 +386,9 @@ public final class VideoFFmpegPlayer extends VideoBasePlayer {
                     isBuffering = false;
                     onEvent(PlayerType.KernelType.FFPLAYER, PlayerType.EventType.BUFFERING_STOP);
                 } else {
-                    LogUtil.log("VideoFFmpegPlayer => onInfo => what = " + what + ", mPrepared = false");
+                    if (LogUtil.DEBUG) {
+                        LogUtil.log("VideoFFmpegPlayer => onInfo => what = " + what + ", mPrepared = false");
+                    }
                 }
             }
             // 开始播放
@@ -375,7 +415,9 @@ public final class VideoFFmpegPlayer extends VideoBasePlayer {
                         seekTo(seek);
                     }
                 } catch (Exception e) {
-                    LogUtil.log("VideoFFmpegPlayer => onInfo => what = " + what + ", msg = " + e.getMessage());
+                    if (LogUtil.DEBUG) {
+                        LogUtil.log("VideoFFmpegPlayer => onInfo => what = " + what + ", msg = " + e.getMessage());
+                    }
                 }
             }
             return true;
@@ -385,7 +427,9 @@ public final class VideoFFmpegPlayer extends VideoBasePlayer {
     private OnSeekCompleteListener mOnSeekCompleteListener = new OnSeekCompleteListener() {
         @Override
         public void onSeekComplete(FFmpegPlayer mediaPlayer) {
-            LogUtil.log("VideoFFmpegPlayer => onSeekComplete =>");
+            if (LogUtil.DEBUG) {
+                LogUtil.log("VideoFFmpegPlayer => onSeekComplete =>");
+            }
             onEvent(PlayerType.KernelType.FFPLAYER, PlayerType.EventType.SEEK_FINISH);
 
             try {
@@ -410,7 +454,9 @@ public final class VideoFFmpegPlayer extends VideoBasePlayer {
 
                 }
             } catch (Exception e) {
-                LogUtil.log("VideoFFmpegPlayer => onSeekComplete => Exception " + e.getMessage());
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("VideoFFmpegPlayer => onSeekComplete => Exception " + e.getMessage());
+                }
             }
         }
     };
@@ -418,7 +464,9 @@ public final class VideoFFmpegPlayer extends VideoBasePlayer {
     private OnPreparedListener onPreparedListener = new OnPreparedListener() {
         @Override
         public void onPrepared(FFmpegPlayer mp) {
-            LogUtil.log("VideoFFmpegPlayer => onPrepared =>");
+            if (LogUtil.DEBUG) {
+                LogUtil.log("VideoFFmpegPlayer => onPrepared =>");
+            }
             onEvent(PlayerType.KernelType.FFPLAYER, PlayerType.EventType.PREPARE);
             start();
         }
@@ -427,14 +475,18 @@ public final class VideoFFmpegPlayer extends VideoBasePlayer {
     private OnBufferingUpdateListener onBufferingUpdateListener = new OnBufferingUpdateListener() {
         @Override
         public void onBufferingUpdate(FFmpegPlayer mp, int percent) {
-            LogUtil.log("VideoFFmpegPlayer => onBufferingUpdate => percent = " + percent);
+            if (LogUtil.DEBUG) {
+                LogUtil.log("VideoFFmpegPlayer => onBufferingUpdate => percent = " + percent);
+            }
         }
     };
 
     private OnErrorListener onErrorListener = new OnErrorListener() {
         @Override
         public boolean onError(FFmpegPlayer mp, int what, int extra) {
-            LogUtil.log("VideoFFmpegPlayer => onError => what = " + what);
+            if (LogUtil.DEBUG) {
+                LogUtil.log("VideoFFmpegPlayer => onError => what = " + what);
+            }
             // ignore -38
             if (what == -38) {
 
@@ -452,7 +504,9 @@ public final class VideoFFmpegPlayer extends VideoBasePlayer {
     private OnCompletionListener onCompletionListener = new OnCompletionListener() {
         @Override
         public void onCompletion(FFmpegPlayer mp) {
-            LogUtil.log("VideoFFmpegPlayer => onCompletion =>");
+            if (LogUtil.DEBUG) {
+                LogUtil.log("VideoFFmpegPlayer => onCompletion =>");
+            }
             onEvent(PlayerType.KernelType.FFPLAYER, PlayerType.EventType.COMPLETE);
         }
     };
@@ -480,7 +534,9 @@ public final class VideoFFmpegPlayer extends VideoBasePlayer {
                 int rotation = args.getRotation();
                 onVideoFormatChanged(PlayerType.KernelType.FFPLAYER, rotation, scaleType, videoWidth, videoHeight, -1);
             } catch (Exception e) {
-                LogUtil.log("VideoFFmpegPlayer => onVideoSizeChanged => " + e.getMessage());
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("VideoFFmpegPlayer => onVideoSizeChanged => " + e.getMessage());
+                }
             }
         }
     };
@@ -497,7 +553,9 @@ public final class VideoFFmpegPlayer extends VideoBasePlayer {
                 throw new Exception("error: volume < 0");
             mFFmpegPlayer.setVolume(volume, volume);
         } catch (Exception e) {
-            LogUtil.log("VideoFFmpegPlayer => setVolume => " + e.getMessage());
+            if (LogUtil.DEBUG) {
+                LogUtil.log("VideoFFmpegPlayer => setVolume => " + e.getMessage());
+            }
         }
     }
 }

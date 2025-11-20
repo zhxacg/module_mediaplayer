@@ -80,14 +80,18 @@ public class MPLoadingView extends View {
 
     @Override
     protected void onVisibilityChanged(View changedView, int visibility) {
-        LogUtil.log("MPLoadingView => onVisibilityChanged => visibility = " + visibility);
+        if (LogUtil.DEBUG) {
+            LogUtil.log("MPLoadingView => onVisibilityChanged => visibility = " + visibility);
+        }
         super.onVisibilityChanged(changedView, visibility);
         loopingMsg();
     }
 
     @Override
     protected void onWindowVisibilityChanged(int visibility) {
-        LogUtil.log("MPLoadingView => onWindowVisibilityChanged => visibility = " + visibility);
+        if (LogUtil.DEBUG) {
+            LogUtil.log("MPLoadingView => onWindowVisibilityChanged => visibility = " + visibility);
+        }
         super.onWindowVisibilityChanged(visibility);
         loopingMsg();
     }
@@ -170,7 +174,9 @@ public class MPLoadingView extends View {
             // delay
             mLoop = mLoop + 1;
         } catch (Exception e) {
-            LogUtil.log("MPLoadingView => onDraw => " + e.getMessage());
+            if (LogUtil.DEBUG) {
+                LogUtil.log("MPLoadingView => onDraw => " + e.getMessage());
+            }
             try {
                 mPaint.reset();
                 mPaint.setColor(Color.TRANSPARENT);
@@ -188,7 +194,9 @@ public class MPLoadingView extends View {
 //            canvas.drawPaint(paint);
 //            paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC));
             } catch (Exception e1) {
-                LogUtil.log("MPLoadingView => onDraw => " + e.getMessage());
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("MPLoadingView => onDraw => " + e.getMessage());
+                }
             }
         }
     }
@@ -206,7 +214,9 @@ public class MPLoadingView extends View {
                 // looping
                 loopingMsg();
             } catch (Exception e) {
-                LogUtil.log("MPLoadingView => handleMessage => " + e.getMessage());
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("MPLoadingView => handleMessage => " + e.getMessage());
+                }
             }
         }
     };
@@ -217,7 +227,9 @@ public class MPLoadingView extends View {
                 throw new Exception("error: null == mHandler");
             mHandler.removeCallbacksAndMessages(null);
         } catch (Exception e) {
-            LogUtil.log("MPLoadingView => clearMsg => " + e.getMessage());
+            if (LogUtil.DEBUG) {
+                LogUtil.log("MPLoadingView => clearMsg => " + e.getMessage());
+            }
         }
     }
 
@@ -228,7 +240,9 @@ public class MPLoadingView extends View {
                 throw new Exception("error: null == mHandler");
             mHandler.sendEmptyMessageDelayed(9001, mDelayMillis);
         } catch (Exception e) {
-            LogUtil.log("MPLoadingView => loopingMsg => " + e.getMessage());
+            if (LogUtil.DEBUG) {
+                LogUtil.log("MPLoadingView => loopingMsg => " + e.getMessage());
+            }
         }
     }
 
@@ -249,13 +263,14 @@ public class MPLoadingView extends View {
         this.mRate = rate;
     }
 
-
     public void setRadius(@DimenRes int resId) {
         try {
             float dimension = getResources().getDimension(resId);
             this.mRadius = dimension;
         } catch (Exception e) {
-            LogUtil.log("MPLoadingView => setRadius => " + e.getMessage());
+            if (LogUtil.DEBUG) {
+                LogUtil.log("MPLoadingView => setRadius => " + e.getMessage());
+            }
         }
     }
 }

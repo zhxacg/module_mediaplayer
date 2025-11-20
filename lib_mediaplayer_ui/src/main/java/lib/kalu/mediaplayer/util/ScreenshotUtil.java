@@ -10,18 +10,20 @@ import java.io.FileOutputStream;
 
 public final class ScreenshotUtil {
 
-    public static String saveDrawable( Context context,  Drawable drawable) {
+    public static String saveDrawable(Context context, Drawable drawable) {
         try {
             BitmapDrawable bitmapDrawable = (BitmapDrawable) drawable;
             Bitmap bitmap = bitmapDrawable.getBitmap();
             return saveBitmap(context, bitmap);
         } catch (Exception e) {
-            LogUtil.log("BitmapUtil => saveDrawable => " + e.getMessage());
+            if (LogUtil.DEBUG) {
+                LogUtil.log("ScreenshotUtil => saveDrawable => " + e.getMessage());
+            }
             return null;
         }
     }
 
-    public static String saveBitmap( Context context,  Bitmap bitmap) {
+    public static String saveBitmap(Context context, Bitmap bitmap) {
         try {
             // 1
             File dir = context.getFilesDir();
@@ -46,12 +48,14 @@ public final class ScreenshotUtil {
             String path = file.getAbsolutePath();
             return path;
         } catch (Exception e) {
-            LogUtil.log("BitmapUtil => saveBitmap => " + e.getMessage());
+            if (LogUtil.DEBUG) {
+                LogUtil.log("ScreenshotUtil => saveBitmap => " + e.getMessage());
+            }
             return null;
         }
     }
 
-    public static String saveScreenshot( Context context,  Bitmap bitmap) {
+    public static String saveScreenshot(Context context, Bitmap bitmap) {
         try {
             // 1
             File dir = context.getFilesDir();
@@ -76,7 +80,9 @@ public final class ScreenshotUtil {
             String path = file.getAbsolutePath();
             return path;
         } catch (Exception e) {
-            LogUtil.log("BitmapUtil => saveBitmap => " + e.getMessage());
+            if (LogUtil.DEBUG) {
+                LogUtil.log("ScreenshotUtil => saveBitmap => " + e.getMessage());
+            }
             return null;
         }
     }

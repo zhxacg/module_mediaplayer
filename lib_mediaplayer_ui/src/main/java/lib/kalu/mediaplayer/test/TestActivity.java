@@ -22,6 +22,7 @@ import lib.kalu.mediaplayer.core.component.ComponentInit;
 import lib.kalu.mediaplayer.core.component.ComponentMenu;
 import lib.kalu.mediaplayer.core.component.ComponentPause;
 import lib.kalu.mediaplayer.core.component.ComponentPrepareGradient;
+import lib.kalu.mediaplayer.core.component.ComponentSeek2;
 import lib.kalu.mediaplayer.core.component.ComponentSubtitle;
 import lib.kalu.mediaplayer.core.component.ComponentWarningPlayInfo;
 import lib.kalu.mediaplayer.core.component.ComponentWarningTrySee;
@@ -82,7 +83,9 @@ public final class TestActivity extends Activity {
                         long relativeStartTimeUs = span.getRelativeStartTimeUs();
                         String path = span.getPath();
                         String url = span.getUrl();
-                        LogUtil.log("TestActivity -> getSegments -> durationUs = " + durationUs + ", relativeStartTimeUs = " + relativeStartTimeUs + ", path = " + path + ", url = " + url);
+                        if (LogUtil.DEBUG) {
+                            LogUtil.log("TestActivity -> getSegments -> durationUs = " + durationUs + ", relativeStartTimeUs = " + relativeStartTimeUs + ", path = " + path + ", url = " + url);
+                        }
                     }
                 }
             }
@@ -95,7 +98,9 @@ public final class TestActivity extends Activity {
             public void onClick(View v) {
                 PlayerLayout playerLayout = findViewById(R.id.module_mediaplayer_test_video);
                 boolean result = playerLayout.appendSubtitleOffsetMs(5000);
-                LogUtil.log("TestActivity -> appendSubtitleOffsetMs -> result = " + result);
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("TestActivity -> appendSubtitleOffsetMs -> result = " + result);
+                }
             }
         });
 
@@ -105,7 +110,9 @@ public final class TestActivity extends Activity {
             public void onClick(View v) {
                 PlayerLayout playerLayout = findViewById(R.id.module_mediaplayer_test_video);
                 boolean result = playerLayout.appendSubtitleOffsetMs(-5000);
-                LogUtil.log("TestActivity -> appendSubtitleOffsetMs -> result = " + result);
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("TestActivity -> appendSubtitleOffsetMs -> result = " + result);
+                }
             }
         });
 
@@ -115,7 +122,9 @@ public final class TestActivity extends Activity {
             public void onClick(View v) {
                 PlayerLayout playerLayout = findViewById(R.id.module_mediaplayer_test_video);
                 boolean result = playerLayout.addSubtitleTrack("");
-                LogUtil.log("TestActivity -> addSubtitleTrack -> result = " + result);
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("TestActivity -> addSubtitleTrack -> result = " + result);
+                }
             }
         });
     }
@@ -186,6 +195,10 @@ public final class TestActivity extends Activity {
         // 字幕
         ComponentSubtitle subtitle = new ComponentSubtitle(getApplicationContext());
         playerLayout.addComponent(subtitle);
+
+        // 字幕
+        ComponentSeek2 seek2 = new ComponentSeek2(getApplicationContext());
+        playerLayout.addComponent(seek2);
     }
 
     private void initListener() {

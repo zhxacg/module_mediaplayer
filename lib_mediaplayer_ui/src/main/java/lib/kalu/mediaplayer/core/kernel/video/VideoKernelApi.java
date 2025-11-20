@@ -74,7 +74,9 @@ public interface VideoKernelApi extends VideoKernelApiHandler,
             initOptions(context, args);
             startDecoder(context, args);
         } catch (Exception e) {
-            LogUtil.log("VideoKernelApi => callPlayWhenReadyDelayedTimeComplete => Exception " + e.getMessage());
+            if(LogUtil.DEBUG) {
+                LogUtil.log("VideoKernelApi => callPlayWhenReadyDelayedTimeComplete => Exception " + e.getMessage());
+            }
         }
     }
 

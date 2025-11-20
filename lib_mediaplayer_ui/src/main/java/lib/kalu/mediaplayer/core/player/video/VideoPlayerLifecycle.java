@@ -31,7 +31,9 @@ public interface VideoPlayerLifecycle extends VideoPlayerApiBase, VideoPlayerApi
             stop(true, false);
             release(true, true, false);
         } catch (Exception e) {
-            LogUtil.log("VideoPlayerLifecycle => detachedFromWindow => " + e.getMessage());
+            if (LogUtil.DEBUG) {
+                LogUtil.log("VideoPlayerLifecycle => detachedFromWindow => " + e.getMessage());
+            }
         }
     }
 
@@ -57,7 +59,9 @@ public interface VideoPlayerLifecycle extends VideoPlayerApiBase, VideoPlayerApi
                 throw new Exception("warning: mediaUrl null");
             resume(false);
         } catch (Exception e) {
-            LogUtil.log("VideoPlayerLifecycle => attachedToWindow => " + e.getMessage());
+            if (LogUtil.DEBUG) {
+                LogUtil.log("VideoPlayerLifecycle => attachedToWindow => " + e.getMessage());
+            }
         }
     }
 
@@ -87,7 +91,9 @@ public interface VideoPlayerLifecycle extends VideoPlayerApiBase, VideoPlayerApi
                 pause(false);
             }
         } catch (Exception e) {
-            LogUtil.log("VideoPlayerLifecycle => windowVisibilityChanged => " + e.getMessage());
+            if (LogUtil.DEBUG) {
+                LogUtil.log("VideoPlayerLifecycle => windowVisibilityChanged => " + e.getMessage());
+            }
         }
     }
 }

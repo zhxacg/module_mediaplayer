@@ -29,38 +29,58 @@ public class ComponentInit extends RelativeLayout implements ComponentApi {
     public void callEvent(int playState) {
         switch (playState) {
             case PlayerType.EventType.INIT:
-                LogUtil.log("ComponentInit => callEvent => INIT");
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("ComponentInit => callEvent => INIT");
+                }
                 show();
                 break;
             case PlayerType.EventType.INIT_READY:
-                LogUtil.log("ComponentInit => callEvent => INIT_READY");
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("ComponentInit => callEvent => INIT_READY");
+                }
                 hide();
                 break;
             case PlayerType.EventType.VIDEO_RENDERING_START:
-                LogUtil.log("ComponentInit => callEvent => VIDEO_RENDERING_START");
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("ComponentInit => callEvent => VIDEO_RENDERING_START");
+                }
                 hide();
                 break;
             case PlayerType.EventType.ERROR:
-                LogUtil.log("ComponentInit => callEvent => ERROR");
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("ComponentInit => callEvent => ERROR");
+                }
                 hide();
                 break;
             case PlayerType.EventType.INIT_PLAY_WHEN_READY_DELAYED_TIME_START:
-                LogUtil.log("ComponentInit => callEvent => INIT_PLAY_WHEN_READY_DELAYED_TIME_START");
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("ComponentInit => callEvent => INIT_PLAY_WHEN_READY_DELAYED_TIME_START");
+                }
                 break;
             case PlayerType.EventType.INIT_PLAY_WHEN_READY_DELAYED_TIME_COMPLETE:
-                LogUtil.log("ComponentInit => callEvent => INIT_PLAY_WHEN_READY_DELAYED_TIME_COMPLETE");
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("ComponentInit => callEvent => INIT_PLAY_WHEN_READY_DELAYED_TIME_COMPLETE");
+                }
                 break;
             case PlayerType.EventType.START:
-                LogUtil.log("ComponentInit => callEvent => START");
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("ComponentInit => callEvent => START");
+                }
                 break;
             case PlayerType.EventType.PAUSE:
-                LogUtil.log("ComponentInit => callEvent => PAUSE");
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("ComponentInit => callEvent => PAUSE");
+                }
                 break;
             case PlayerType.EventType.START_PLAY_WHEN_READY_TRUE:
-                LogUtil.log("ComponentInit => callEvent => START_PLAY_WHEN_READY_TRUE");
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("ComponentInit => callEvent => START_PLAY_WHEN_READY_TRUE");
+                }
                 break;
             case PlayerType.EventType.START_PLAY_WHEN_READY_FALSE:
-                LogUtil.log("ComponentInit => callEvent => START_PLAY_WHEN_READY_FALSE");
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("ComponentInit => callEvent => START_PLAY_WHEN_READY_FALSE");
+                }
                 break;
         }
     }

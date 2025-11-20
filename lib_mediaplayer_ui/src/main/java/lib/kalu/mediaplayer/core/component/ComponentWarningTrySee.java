@@ -46,7 +46,9 @@ public class ComponentWarningTrySee extends RelativeLayout implements ComponentA
                 toggle();
                 return true;
             } catch (Exception e) {
-                LogUtil.log("ComponentWarningTrySee => dispatchKeyEvent => Exception " + e.getMessage());
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("ComponentWarningTrySee => dispatchKeyEvent => Exception " + e.getMessage());
+                }
             }
         }
         return false;
@@ -60,7 +62,9 @@ public class ComponentWarningTrySee extends RelativeLayout implements ComponentA
                     ImageView imageView = findViewById(R.id.module_mediaplayer_component_warning_try_see_state);
                     imageView.setImageResource(R.drawable.module_mediaplayer_ic_pause);
                 } catch (Exception e) {
-                    LogUtil.log("ComponentWarningTrySee => callEvent => PAUSE => Exception " + e.getMessage());
+                    if (LogUtil.DEBUG) {
+                        LogUtil.log("ComponentWarningTrySee => callEvent => PAUSE => Exception " + e.getMessage());
+                    }
                 }
                 break;
             case PlayerType.EventType.RESUME:
@@ -68,7 +72,9 @@ public class ComponentWarningTrySee extends RelativeLayout implements ComponentA
                     ImageView imageView = findViewById(R.id.module_mediaplayer_component_warning_try_see_state);
                     imageView.setImageResource(R.drawable.module_mediaplayer_ic_resume);
                 } catch (Exception e) {
-                    LogUtil.log("ComponentWarningTrySee => callEvent => RESUME => Exception " + e.getMessage());
+                    if (LogUtil.DEBUG) {
+                        LogUtil.log("ComponentWarningTrySee => callEvent => RESUME => Exception " + e.getMessage());
+                    }
                 }
                 break;
             case PlayerType.EventType.VIDEO_RENDERING_START:
@@ -103,7 +109,10 @@ public class ComponentWarningTrySee extends RelativeLayout implements ComponentA
 
     @Override
     public void onUpdateProgress(boolean isFromUser, long max, long position, long duration) {
-        LogUtil.log("ComponentWarningTrySee => onUpdateProgress");
+
+        if (LogUtil.DEBUG) {
+            LogUtil.log("ComponentWarningTrySee => onUpdateProgress");
+        }
 
         try {
             boolean componentShowing = isComponentShowing();
@@ -119,7 +128,9 @@ public class ComponentWarningTrySee extends RelativeLayout implements ComponentA
             seekBar.setProgress((int) position);
             seekBar.setMax((int) (max > 0 ? max : duration));
         } catch (Exception e) {
-          //  LogUtil.log("ComponentWarningTrySee => onUpdateProgress => Exception " + e.getMessage());
+            if (LogUtil.DEBUG) {
+                LogUtil.log("ComponentWarningTrySee => onUpdateProgress => Exception " + e.getMessage());
+            }
         }
     }
 

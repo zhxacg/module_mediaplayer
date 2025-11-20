@@ -30,7 +30,9 @@ public interface VideoPlayerApiRender extends VideoPlayerApiBase, VideoPlayerApi
                 throw new Exception("render error: null");
             render.setVideoScaleType(scaleType);
         } catch (Exception e) {
-            LogUtil.log("VideoPlayerApiRender => setVideoScaleType => " + e.getMessage());
+            if (LogUtil.DEBUG) {
+                LogUtil.log("VideoPlayerApiRender => setVideoScaleType => " + e.getMessage());
+            }
         }
     }
 
@@ -42,7 +44,9 @@ public interface VideoPlayerApiRender extends VideoPlayerApiBase, VideoPlayerApi
                 throw new Exception("render error: null");
             return render.getVideoScale();
         } catch (Exception e) {
-            LogUtil.log("VideoPlayerApiRender => getVideoScaleType => " + e.getMessage());
+            if (LogUtil.DEBUG) {
+                LogUtil.log("VideoPlayerApiRender => getVideoScaleType => " + e.getMessage());
+            }
             return PlayerType.ScaleType.DEFAULT;
         }
     }
@@ -52,7 +56,9 @@ public interface VideoPlayerApiRender extends VideoPlayerApiBase, VideoPlayerApi
             VideoRenderApi render = getVideoRender();
             render.setVideoFormat(kernel, rotation, scaleType, width, height, bitrate);
         } catch (Exception e) {
-            LogUtil.log("VideoPlayerApiRender => setVideoFormat => " + e.getMessage());
+            if (LogUtil.DEBUG) {
+                LogUtil.log("VideoPlayerApiRender => setVideoFormat => " + e.getMessage());
+            }
         }
     }
 
@@ -61,7 +67,9 @@ public interface VideoPlayerApiRender extends VideoPlayerApiBase, VideoPlayerApi
             VideoRenderApi render = getVideoRender();
             render.setVideoSize(width, height);
         } catch (Exception e) {
-            LogUtil.log("VideoPlayerApiRender => setVideoSize => " + e.getMessage());
+            if (LogUtil.DEBUG) {
+                LogUtil.log("VideoPlayerApiRender => setVideoSize => " + e.getMessage());
+            }
         }
     }
 
@@ -72,7 +80,9 @@ public interface VideoPlayerApiRender extends VideoPlayerApiBase, VideoPlayerApi
             VideoRenderApi render = getVideoRender();
             render.setVideoRotation(rotation);
         } catch (Exception e) {
-            LogUtil.log("VideoPlayerApiRender => setVideoRotation => " + e.getMessage());
+            if (LogUtil.DEBUG) {
+                LogUtil.log("VideoPlayerApiRender => setVideoRotation => " + e.getMessage());
+            }
         }
     }
 
@@ -86,37 +96,11 @@ public interface VideoPlayerApiRender extends VideoPlayerApiBase, VideoPlayerApi
             VideoRenderApi render = getVideoRender();
             render.setScaleX(enable ? -1 : 1);
         } catch (Exception e) {
-            LogUtil.log("VideoPlayerApiRender => setMirrorRotation => " + e.getMessage());
+            if (LogUtil.DEBUG) {
+                LogUtil.log("VideoPlayerApiRender => setMirrorRotation => " + e.getMessage());
+            }
         }
     }
-
-//    default void showVideoView() {
-//        try {
-//            ViewGroup viewGroup = getBaseVideoViewGroup();
-//            viewGroup.setVisibility(View.VISIBLE);
-//            int count = viewGroup.getChildCount();
-//            for (int i = 0; i < count; i++) {
-//                View child = viewGroup.getChildAt(i);
-//                child.setVisibility(View.VISIBLE);
-//            }
-//        } catch (Exception e) {
-//            MPLogUtil.log("VideoPlayerApiRender => showVideoView => " + e.getMessage());
-//        }
-//    }
-//
-//    default void hideVideoView() {
-//        try {
-//            ViewGroup viewGroup = getBaseVideoViewGroup();
-//            int count = viewGroup.getChildCount();
-//            for (int i = 0; i < count; i++) {
-//                View child = viewGroup.getChildAt(i);
-//                child.setVisibility(View.INVISIBLE);
-//            }
-//            viewGroup.setVisibility(View.INVISIBLE);
-//        } catch (Exception e) {
-//            MPLogUtil.log("VideoPlayerApiRender => hideVideoView => " + e.getMessage());
-//        }
-//    }
 
     default VideoRenderApi searchVideoRender() {
         try {
@@ -132,53 +116,16 @@ public interface VideoPlayerApiRender extends VideoPlayerApiBase, VideoPlayerApi
             }
             throw new Exception("not find");
         } catch (Exception e) {
-            LogUtil.log("VideoPlayerApiRender => searchVideoRender => " + e.getMessage());
+            if (LogUtil.DEBUG) {
+                LogUtil.log("VideoPlayerApiRender => searchVideoRender => " + e.getMessage());
+            }
             return null;
         }
-    }
-
-    default void setVideoRender(@PlayerType.RenderType int v) {
-//        try {
-//            PlayerSDK.init().setRender(v);
-//        } catch (Exception e) {
-//        }
     }
 
     VideoRenderApi getVideoRender();
 
     void setVideoRender(VideoRenderApi render);
-
-//    default void releaseVideoRender() {
-//        try {
-//            // 1
-//            int videoRender = PlayerManager.init().getConfig().getRender();
-//            setVideoRender(VideoRenderFactoryManager.createRender(getBaseContext(), videoRender));
-//            // 2
-//            VideoRenderApi render = getVideoRender();
-//            RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(0, 0);
-//            render.setLayoutParams(params);
-//            ViewGroup viewGroup = getBaseVideoViewGroup();
-//            viewGroup.addView((View) render, 0);
-//        } catch (Exception e) {
-//            MPLogUtil.log("VideoPlayerApiRender => initVideoRender => " + e.getMessage());
-//        }
-//    }
-
-//    default void stopRenderUpdateProgress() {
-//        try {
-//            VideoRenderApi videoRender = getVideoRender();
-//            videoRender.stopUpdateProgress();
-//        } catch (Exception e) {
-//        }
-//    }
-//
-//    default void startRenderUpdateProgress() {
-//        try {
-//            VideoRenderApi videoRender = getVideoRender();
-//            videoRender.startUpdateProgress();
-//        } catch (Exception e) {
-//        }
-//    }
 
     default void releaseRender() {
         try {
@@ -198,7 +145,9 @@ public interface VideoPlayerApiRender extends VideoPlayerApiBase, VideoPlayerApi
             }
             renderGroup.removeAllViews();
         } catch (Exception e) {
-            LogUtil.log("VideoPlayerApiRender => releaseRender => " + e.getMessage());
+            if (LogUtil.DEBUG) {
+                LogUtil.log("VideoPlayerApiRender => releaseRender => " + e.getMessage());
+            }
         }
     }
 
@@ -221,7 +170,9 @@ public interface VideoPlayerApiRender extends VideoPlayerApiBase, VideoPlayerApi
             renderGroup.addView((View) videoRender, 0);
             setVideoRender(videoRender);
         } catch (Exception e) {
-            LogUtil.log("VideoPlayerApiRender => checkRenderNull => " + e.getMessage());
+            if (LogUtil.DEBUG) {
+                LogUtil.log("VideoPlayerApiRender => checkRenderNull => " + e.getMessage());
+            }
         }
     }
 
@@ -235,7 +186,9 @@ public interface VideoPlayerApiRender extends VideoPlayerApiBase, VideoPlayerApi
                 throw new Exception("error: null == videoKernel");
             videoRender.setVideoKernel(videoKernel);
         } catch (Exception e) {
-            LogUtil.log("VideoPlayerApiRender => attachRenderKernel => " + e.getMessage());
+            if (LogUtil.DEBUG) {
+                LogUtil.log("VideoPlayerApiRender => attachRenderKernel => " + e.getMessage());
+            }
         }
     }
 
@@ -267,7 +220,9 @@ public interface VideoPlayerApiRender extends VideoPlayerApiBase, VideoPlayerApi
                 throw new Exception("warning: kernel not ijk");
             }
         } catch (Exception e) {
-            LogUtil.log("VideoPlayerApiRender => resetRenderView => " + e.getMessage());
+            if (LogUtil.DEBUG) {
+                LogUtil.log("VideoPlayerApiRender => resetRenderView => " + e.getMessage());
+            }
         }
     }
 

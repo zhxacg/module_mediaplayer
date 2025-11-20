@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:focusable="false">
+
+    <RelativeLayout
+        android:id="@+id/module_mediaplayer_component_seek2_root"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:focusable="false"
+        android:visibility="visible">
+
+        <lib.kalu.mediaplayer.widget.progress.MultiSegmentProgressBar
+            android:id="@+id/module_mediaplayer_component_seek2_pb"
+            android:layout_width="match_parent"
+            android:layout_height="8dp"
+            android:layout_alignParentBottom="true"
+            android:layout_marginLeft="40dp"
+            android:layout_marginRight="40dp"
+            android:paddingTop="4dp"
+            android:paddingBottom="4dp"
+            app:ms_background_color="@color/module_mediaplayer_color_ffffff"
+            app:ms_buffer_color="@color/module_mediaplayer_color_aaf85a55"
+            app:ms_corner="8dp"
+            app:ms_progress_color="#ff482a"
+            app:ms_thumb_color_gradient="@array/thumb_colors"
+            app:ms_thumb_icon="@drawable/module_mediaplayer_shape_thumb"
+            app:ms_thumb_icon_height="10dp"
+            app:ms_thumb_icon_width="10dp"
+            app:ms_thumb_radius="10dp" />
+
+    </RelativeLayout>
+
+</RelativeLayout>

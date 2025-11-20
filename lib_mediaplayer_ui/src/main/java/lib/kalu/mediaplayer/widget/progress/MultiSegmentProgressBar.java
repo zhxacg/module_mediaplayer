@@ -109,7 +109,9 @@ public class MultiSegmentProgressBar extends View {
                 }
             }
         } catch (Exception e) {
-            LogUtil.log("MultiSegmentProgressBar -> init -> Exception " + e.getMessage(), e);
+            if (LogUtil.DEBUG) {
+                LogUtil.log("MultiSegmentProgressBar -> init -> Exception " + e.getMessage(), e);
+            }
         }
         if (null != typed) {
             typed.recycle();
@@ -154,7 +156,9 @@ public class MultiSegmentProgressBar extends View {
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
 
-        LogUtil.log("MultiSegmentProgressBar -> onDraw -> mWidth = " + mWidth + ", mHeight = " + mHeight + ", mRealHeight = " + mRealHeight + ", mProgress = " + mProgress + ", mMax = " + mMax + ", mThumbIcon = " + mThumbIcon);
+        if (LogUtil.DEBUG) {
+            LogUtil.log("MultiSegmentProgressBar -> onDraw -> mWidth = " + mWidth + ", mHeight = " + mHeight + ", mRealHeight = " + mRealHeight + ", mProgress = " + mProgress + ", mMax = " + mMax + ", mThumbIcon = " + mThumbIcon);
+        }
         // 绘制背景
         drawBackground(canvas);
 
@@ -190,6 +194,11 @@ public class MultiSegmentProgressBar extends View {
 
     private void drawBuffer(Canvas canvas) {
         try {
+
+            if (LogUtil.DEBUG) {
+                LogUtil.log("MultiSegmentProgressBar -> drawBuffer -> mWidth = " + mWidth + ", mHeight = " + mHeight);
+            }
+
             if (mWidth <= 0)
                 return;
             if (mHeight <= 0)
@@ -201,6 +210,10 @@ public class MultiSegmentProgressBar extends View {
 
             boolean isDrawLeft = false;
             boolean isDrawRight = false;
+
+            if (LogUtil.DEBUG) {
+                LogUtil.log("MultiSegmentProgressBar -> drawBuffer -> mSegments = " + mSegments);
+            }
 
             // 绘制缓存段
             for (long[] segment : mSegments) {
@@ -215,6 +228,10 @@ public class MultiSegmentProgressBar extends View {
                 float top = mHeight * 0.5F - mRealHeight * 0.5F;
                 float right = end * mWidth / mMax;
                 float bottom = mHeight * 0.5F + mRealHeight * 0.5F;
+
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("MultiSegmentProgressBar -> drawBuffer -> left = " + left + ", top = " + top + ", right = " + right + ", bottom = " + bottom);
+                }
 
                 // 左侧边缘半圆
                 if (left <= mCorner) {
@@ -378,10 +395,18 @@ public class MultiSegmentProgressBar extends View {
     }
 
     public final void addBufferSegments(long[] segments) {
+
+        if (LogUtil.DEBUG) {
+            LogUtil.log("MultiSegmentProgressBar -> addBufferSegments -> segments = " + segments);
+        }
+
         if (null == segments)
             return;
         int length = segments.length;
-        if (length / 2 != 0)
+        if (LogUtil.DEBUG) {
+            LogUtil.log("MultiSegmentProgressBar -> addBufferSegments -> segments.length = " + length);
+        }
+        if (length % 2 != 0)
             return;
         for (int i = 0; i < length; i += 2) {
             long start = segments[i];
@@ -412,6 +437,11 @@ public class MultiSegmentProgressBar extends View {
     }
 
     private void addBuffer(long start, long end) {
+
+        if (LogUtil.DEBUG) {
+            LogUtil.log("MultiSegmentProgressBar -> addBuffer -> start = " + start + ", end = " + end + ", mMax = " + mMax);
+        }
+
         try {
             if (start >= end)
                 return;

@@ -85,7 +85,9 @@ public interface VideoPlayerApiBuried {
             }
             proxyBuried.onCall(name, startArgs, position, duration);
         } catch (Exception e) {
-            LogUtil.log("VideoPlayerApiBuried => callBuried => Exception " + e.getMessage());
+            if (LogUtil.DEBUG) {
+                LogUtil.log("VideoPlayerApiBuried => callBuried => Exception " + e.getMessage());
+            }
         }
     }
 }

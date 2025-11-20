@@ -48,7 +48,10 @@ public class ComponentSeek extends RelativeLayout implements ComponentApi {
 
     @Override
     public boolean dispatchKeyEvent(KeyEvent event) {
-        LogUtil.log("ComponentSeek => dispatchKeyEvent => action =  " + event.getAction() + ", keyCode = " + event.getKeyCode() + ", repeatCount = " + event.getRepeatCount());
+
+        if (LogUtil.DEBUG) {
+            LogUtil.log("ComponentSeek => dispatchKeyEvent => action =  " + event.getAction() + ", keyCode = " + event.getKeyCode() + ", repeatCount = " + event.getRepeatCount());
+        }
 
         try {
             // 试看
@@ -229,7 +232,9 @@ public class ComponentSeek extends RelativeLayout implements ComponentApi {
 
             throw new Exception("warning: not find");
         } catch (Exception e) {
-            LogUtil.log("ComponentSeek => dispatchKeyEvent => Exception " + e.getMessage());
+            if (LogUtil.DEBUG) {
+                LogUtil.log("ComponentSeek => dispatchKeyEvent => Exception " + e.getMessage());
+            }
             return false;
         }
     }
@@ -263,7 +268,10 @@ public class ComponentSeek extends RelativeLayout implements ComponentApi {
 
     @Override
     public void onUpdateProgress(boolean isFromUser, long trySeeDuration, long progress, long duration) {
-        LogUtil.log("ComponentSeek => onUpdateProgress => isFromUser = " + isFromUser + ", trySeeDuration = " + trySeeDuration + ", progress = " + progress + ", duration = " + duration);
+
+        if (LogUtil.DEBUG) {
+            LogUtil.log("ComponentSeek => onUpdateProgress => isFromUser = " + isFromUser + ", trySeeDuration = " + trySeeDuration + ", progress = " + progress + ", duration = " + duration);
+        }
 
         lib.kalu.mediaplayer.widget.seek.SeekBar seekBar = findViewById(R.id.module_mediaplayer_component_seek_sb);
 

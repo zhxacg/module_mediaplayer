@@ -55,28 +55,6 @@ interface VideoKernelApiBase {
 
     boolean isPrepared();
 
-//    boolean isVideoSizeChanged();
-
-//    default boolean toggleTrackLanguageSubtitle(String language) {
-//        return false;
-//    }
-//
-//    default boolean toggleTrackLanguageAudio(String language) {
-//        return false;
-//    }
-//
-//    default boolean toggleTrackRoleFlagSubtitle(int roleFlag) {
-//        return false;
-//    }
-//
-//    default boolean toggleTrackRoleFlagAudio(int roleFlag) {
-//        return false;
-//    }
-//
-//    default boolean toggleTrackRoleFlagVideo(int roleFlag) {
-//        return false;
-//    }
-
     default boolean toggleTrack(TrackInfo trackInfo) {
         return false;
     }

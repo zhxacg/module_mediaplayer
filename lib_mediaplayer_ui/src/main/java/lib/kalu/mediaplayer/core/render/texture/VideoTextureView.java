@@ -4,13 +4,9 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.SurfaceTexture;
 import android.os.Build;
-import android.os.Handler;
-import android.os.Looper;
-import android.os.Message;
 import android.view.KeyEvent;
 import android.view.Surface;
 import android.view.TextureView;
-import android.view.View;
 
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
@@ -53,7 +49,9 @@ public class VideoTextureView extends TextureView implements VideoRenderApi {
         try {
             setSurfaceTextureListener(mListener);
         } catch (Exception e) {
-            LogUtil.log("VideoTextureView => registListener => Exception " + e.getMessage());
+            if (LogUtil.DEBUG) {
+                LogUtil.log("VideoTextureView => registListener => Exception " + e.getMessage());
+            }
         }
     }
 
@@ -62,7 +60,9 @@ public class VideoTextureView extends TextureView implements VideoRenderApi {
         try {
             setSurfaceTextureListener(null);
         } catch (Exception e) {
-            LogUtil.log("VideoTextureView => unRegistListener => Exception " + e.getMessage());
+            if (LogUtil.DEBUG) {
+                LogUtil.log("VideoTextureView => unRegistListener => Exception " + e.getMessage());
+            }
         }
     }
 
@@ -84,7 +84,9 @@ public class VideoTextureView extends TextureView implements VideoRenderApi {
 
     @Override
     public void reset() {
-        LogUtil.log("VideoTextureView => reset =>");
+        if (LogUtil.DEBUG) {
+            LogUtil.log("VideoTextureView => reset =>");
+        }
         setSurface(false);
     }
 
@@ -104,7 +106,9 @@ public class VideoTextureView extends TextureView implements VideoRenderApi {
                 mSurface = null;
             }
         } catch (Exception e) {
-            LogUtil.log("VideoTextureView => release => Exception " + e.getMessage());
+            if (LogUtil.DEBUG) {
+                LogUtil.log("VideoTextureView => release => Exception " + e.getMessage());
+            }
         }
     }
 
@@ -184,7 +188,9 @@ public class VideoTextureView extends TextureView implements VideoRenderApi {
             super.onMeasure(specW, specH);
 //            getHolder().setFixedSize(measureSpec, measureSpec[1]);
         } catch (Exception e) {
-            LogUtil.log("VideoTextureView => onMeasure => Exception " + e.getMessage());
+            if (LogUtil.DEBUG) {
+                LogUtil.log("VideoTextureView => onMeasure => Exception " + e.getMessage());
+            }
             super.onMeasure(widthMeasureSpec, heightMeasureSpec);
         }
     }
@@ -199,7 +205,9 @@ public class VideoTextureView extends TextureView implements VideoRenderApi {
         @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
         @Override
         public void onSurfaceTextureAvailable(SurfaceTexture surfaceTexture, int width, int height) {
-            LogUtil.log("VideoTextureView => onSurfaceTextureAvailable => " + this);
+            if (LogUtil.DEBUG) {
+                LogUtil.log("VideoTextureView => onSurfaceTextureAvailable => " + this);
+            }
 //                VideoRenderTextureView.this.mSurfaceTexture = surfaceTexture;
 //                setSurfaceTexture(VideoRenderTextureView.this.mSurfaceTexture);
 //                setSurface(true);
@@ -213,7 +221,9 @@ public class VideoTextureView extends TextureView implements VideoRenderApi {
          */
         @Override
         public boolean onSurfaceTextureDestroyed(SurfaceTexture surface) {
-            LogUtil.log("VideoTextureView => onSurfaceTextureDestroyed => " + this);
+            if (LogUtil.DEBUG) {
+                LogUtil.log("VideoTextureView => onSurfaceTextureDestroyed => " + this);
+            }
             return false;
         }
 
@@ -225,7 +235,9 @@ public class VideoTextureView extends TextureView implements VideoRenderApi {
          */
         @Override
         public void onSurfaceTextureSizeChanged(SurfaceTexture surface, int width, int height) {
-            LogUtil.log("VideoTextureView => onSurfaceTextureSizeChanged => " + this);
+            if (LogUtil.DEBUG) {
+                LogUtil.log("VideoTextureView => onSurfaceTextureSizeChanged => " + this);
+            }
         }
 
         /**
@@ -234,7 +246,9 @@ public class VideoTextureView extends TextureView implements VideoRenderApi {
          */
         @Override
         public void onSurfaceTextureUpdated(SurfaceTexture surface) {
-            LogUtil.log("VideoTextureView => onSurfaceTextureUpdated => " + this);
+            if (LogUtil.DEBUG) {
+                LogUtil.log("VideoTextureView => onSurfaceTextureUpdated => " + this);
+            }
         }
     };
 }

@@ -66,7 +66,9 @@ public final class PlayerView extends RelativeLayout implements VideoPlayerApi {
 
     @Override
     public boolean dispatchKeyEvent(KeyEvent event) {
-        LogUtil.log("PlayerView => dispatchKeyEvent0 => action = " + event.getAction() + ", ketCode = " + event.getKeyCode() + ", repeatCount = " + event.getRepeatCount());
+        if (LogUtil.DEBUG) {
+            LogUtil.log("PlayerView => dispatchKeyEvent0 => action = " + event.getAction() + ", ketCode = " + event.getKeyCode() + ", repeatCount = " + event.getRepeatCount());
+        }
         try {
 
             // Component step1
@@ -85,7 +87,9 @@ public final class PlayerView extends RelativeLayout implements VideoPlayerApi {
                 boolean dispatchKeyEvent = childAt.dispatchKeyEvent(event);
                 if (!dispatchKeyEvent)
                     continue;
-                LogUtil.log("PlayerView => dispatchKeyEvent1 => i = " + i + ", childAt = " + childAt);
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("PlayerView => dispatchKeyEvent1 => i = " + i + ", childAt = " + childAt);
+                }
                 throw new Exception("warning: dispatchKeyEvent1 true, childAt = " + childAt);
             }
             // Component step2
@@ -99,7 +103,9 @@ public final class PlayerView extends RelativeLayout implements VideoPlayerApi {
                 boolean dispatchKeyEvent = childAt.dispatchKeyEvent(event);
                 if (!dispatchKeyEvent)
                     continue;
-                LogUtil.log("PlayerView => dispatchKeyEvent2 => i = " + i + ", childAt = " + childAt);
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("PlayerView => dispatchKeyEvent2 => i = " + i + ", childAt = " + childAt);
+                }
                 throw new Exception("warning: dispatchKeyEvent2 true, childAt = " + childAt);
             }
 
@@ -138,7 +144,9 @@ public final class PlayerView extends RelativeLayout implements VideoPlayerApi {
                 throw new Exception("warning: visibility == View.VISIBLE");
             pause();
         } catch (Exception e) {
-            LogUtil.log("PlayerView => checkVideoVisibility => Exception " + e.getMessage());
+            if (LogUtil.DEBUG) {
+                LogUtil.log("PlayerView => checkVideoVisibility => Exception " + e.getMessage());
+            }
         }
     }
 

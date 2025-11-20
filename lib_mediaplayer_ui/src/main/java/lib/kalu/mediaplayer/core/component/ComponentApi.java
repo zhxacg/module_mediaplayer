@@ -20,11 +20,11 @@ import androidx.annotation.LayoutRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.StringRes;
 
+import lib.kalu.mediaplayer.PlayerView;
 import lib.kalu.mediaplayer.bean.args.StartArgs;
 import lib.kalu.mediaplayer.bean.menu.Menu;
 import lib.kalu.mediaplayer.bean.type.PlayerType;
 import lib.kalu.mediaplayer.util.LogUtil;
-import lib.kalu.mediaplayer.PlayerView;
 
 public interface ComponentApi {
 
@@ -49,14 +49,6 @@ public interface ComponentApi {
         return -1;
     }
 
-//    default boolean hideDispatchKeyEvent() {
-//        return false;
-//    }
-//
-//    default boolean showDispatchKeyEvent() {
-//        return false;
-//    }
-
     default void inflate() {
         try {
             ViewGroup viewGroup = (ViewGroup) this;
@@ -73,7 +65,9 @@ public interface ComponentApi {
                 throw new Exception("error: viewById null");
             viewById.setVisibility(visibility);
         } catch (Exception e) {
-            LogUtil.log("ComponentApi => setComponentVisibility => " + e.getMessage());
+            if (LogUtil.DEBUG) {
+                LogUtil.log("ComponentApi => setComponentVisibility => " + e.getMessage());
+            }
         }
     }
 
@@ -85,14 +79,12 @@ public interface ComponentApi {
                 throw new Exception("error: viewById null");
             return viewById.getVisibility() == View.VISIBLE;
         } catch (Exception e) {
-            LogUtil.log("ComponentApi => isComponentShowing => " + e.getMessage());
+            if (LogUtil.DEBUG) {
+                LogUtil.log("ComponentApi => isComponentShowing => " + e.getMessage());
+            }
             return false;
         }
     }
-
-//    default boolean checkComponentShowingDispatchKeyEvent() {
-//        return true;
-//    }
 
     /******************/
 
@@ -112,7 +104,9 @@ public interface ComponentApi {
             View view = ((View) this).findViewById(layoutId);
             view.setBackgroundColor(v);
         } catch (Exception e) {
-            LogUtil.log("ComponentApi => setComponentBackgroundColorInt => " + e.getMessage());
+            if (LogUtil.DEBUG) {
+                LogUtil.log("ComponentApi => setComponentBackgroundColorInt => " + e.getMessage());
+            }
         }
     }
 
@@ -125,7 +119,9 @@ public interface ComponentApi {
             int color = ((View) this).getResources().getColor(v);
             view.setBackgroundColor(color);
         } catch (Exception e) {
-            LogUtil.log("ComponentApi => setComponentBackgroundColorRes => " + e.getMessage());
+            if (LogUtil.DEBUG) {
+                LogUtil.log("ComponentApi => setComponentBackgroundColorRes => " + e.getMessage());
+            }
         }
     }
 
@@ -137,7 +133,9 @@ public interface ComponentApi {
             View view = ((View) this).findViewById(layoutId);
             view.setBackgroundResource(v);
         } catch (Exception e) {
-            LogUtil.log("ComponentApi => setComponentBackgroundDrawableRes => " + e.getMessage());
+            if (LogUtil.DEBUG) {
+                LogUtil.log("ComponentApi => setComponentBackgroundDrawableRes => " + e.getMessage());
+            }
         }
     }
 
@@ -151,7 +149,9 @@ public interface ComponentApi {
             ImageView imageView = ((View) this).findViewById(layoutId);
             imageView.setImageResource(v);
         } catch (Exception e) {
-            LogUtil.log("ComponentApi => setComponentImageDrawableRes => " + e.getMessage());
+            if (LogUtil.DEBUG) {
+                LogUtil.log("ComponentApi => setComponentImageDrawableRes => " + e.getMessage());
+            }
         }
     }
 
@@ -163,7 +163,9 @@ public interface ComponentApi {
             ImageView imageView = ((View) this).findViewById(layoutId);
             imageView.setImageDrawable(drawable);
         } catch (Exception e) {
-            LogUtil.log("ComponentApi => setComponentImageDrawable => " + e.getMessage());
+            if (LogUtil.DEBUG) {
+                LogUtil.log("ComponentApi => setComponentImageDrawable => " + e.getMessage());
+            }
         }
     }
 
@@ -175,7 +177,9 @@ public interface ComponentApi {
             ImageView imageView = ((View) this).findViewById(layoutId);
             imageView.setImageBitmap(bitmap);
         } catch (Exception e) {
-            LogUtil.log("ComponentApi => setComponentImageBitmap => " + e.getMessage());
+            if (LogUtil.DEBUG) {
+                LogUtil.log("ComponentApi => setComponentImageBitmap => " + e.getMessage());
+            }
         }
     }
 
@@ -189,7 +193,9 @@ public interface ComponentApi {
             ImageView imageView = ((View) this).findViewById(layoutId);
             imageView.setImageURI(Uri.parse(imgUrl));
         } catch (Exception e) {
-            LogUtil.log("ComponentApi => setComponentImageUrl => " + e.getMessage());
+            if (LogUtil.DEBUG) {
+                LogUtil.log("ComponentApi => setComponentImageUrl => " + e.getMessage());
+            }
         }
     }
 
@@ -203,7 +209,9 @@ public interface ComponentApi {
             TextView textView = ((View) this).findViewById(layoutId);
             textView.setText(v);
         } catch (Exception e) {
-            LogUtil.log("ComponentApi => setComponentText => " + e.getMessage());
+            if (LogUtil.DEBUG) {
+                LogUtil.log("ComponentApi => setComponentText => " + e.getMessage());
+            }
         }
     }
 
@@ -215,7 +223,9 @@ public interface ComponentApi {
             TextView textView = ((View) this).findViewById(layoutId);
             textView.setText(v);
         } catch (Exception e) {
-            LogUtil.log("ComponentApi => setComponentText => " + e.getMessage());
+            if (LogUtil.DEBUG) {
+                LogUtil.log("ComponentApi => setComponentText => " + e.getMessage());
+            }
         }
     }
 
@@ -228,7 +238,9 @@ public interface ComponentApi {
             int offset = ((View) this).getResources().getDimensionPixelOffset(v);
             textView.setTextSize(offset);
         } catch (Exception e) {
-            LogUtil.log("ComponentApi => setComponentTextSize => " + e.getMessage());
+            if (LogUtil.DEBUG) {
+                LogUtil.log("ComponentApi => setComponentTextSize => " + e.getMessage());
+            }
         }
     }
 
@@ -240,7 +252,9 @@ public interface ComponentApi {
             TextView textView = ((View) this).findViewById(layoutId);
             textView.setTextSize(v);
         } catch (Exception e) {
-            LogUtil.log("ComponentApi => setComponentTextSize => " + e.getMessage());
+            if (LogUtil.DEBUG) {
+                LogUtil.log("ComponentApi => setComponentTextSize => " + e.getMessage());
+            }
         }
     }
 
@@ -252,7 +266,9 @@ public interface ComponentApi {
             TextView textView = ((View) this).findViewById(layoutId);
             textView.setTextColor(v);
         } catch (Exception e) {
-            LogUtil.log("ComponentApi => setComponentTextColorInt => " + e.getMessage());
+            if (LogUtil.DEBUG) {
+                LogUtil.log("ComponentApi => setComponentTextColorInt => " + e.getMessage());
+            }
         }
     }
 
@@ -265,7 +281,9 @@ public interface ComponentApi {
             int color = ((View) this).getResources().getColor(v);
             textView.setTextColor(color);
         } catch (Exception e) {
-            LogUtil.log("ComponentApi => setComponentTextColorRes => " + e.getMessage());
+            if (LogUtil.DEBUG) {
+                LogUtil.log("ComponentApi => setComponentTextColorRes => " + e.getMessage());
+            }
         }
     }
 
@@ -277,7 +295,9 @@ public interface ComponentApi {
             int rootId = initViewIdRoot();
             setComponentVisibility(rootId, View.VISIBLE);
         } catch (Exception e) {
-            LogUtil.log("ComponentApi => show => Exception " + e.getMessage());
+            if (LogUtil.DEBUG) {
+                LogUtil.log("ComponentApi => show => Exception " + e.getMessage());
+            }
         }
     }
 
@@ -289,7 +309,9 @@ public interface ComponentApi {
             int rootId = initViewIdRoot();
             setComponentVisibility(rootId, View.GONE);
         } catch (Exception e) {
-            LogUtil.log("ComponentApi => hide => Exception " + e.getMessage());
+            if (LogUtil.DEBUG) {
+                LogUtil.log("ComponentApi => hide => Exception " + e.getMessage());
+            }
         }
     }
 
@@ -325,7 +347,9 @@ public interface ComponentApi {
                 new Exception("not find");
             return playerView;
         } catch (Exception e) {
-            LogUtil.log("ComponentApi => getPlayerView => " + e.getMessage());
+            if (LogUtil.DEBUG) {
+                LogUtil.log("ComponentApi => getPlayerView => " + e.getMessage());
+            }
             return null;
         }
     }
@@ -340,25 +364,12 @@ public interface ComponentApi {
                 throw new Exception("warning: component null");
             return (T) component;
         } catch (Exception e) {
-            LogUtil.log("ComponentApi => findComponent => " + e.getMessage());
+            if (LogUtil.DEBUG) {
+                LogUtil.log("ComponentApi => findComponent => " + e.getMessage());
+            }
             return null;
         }
     }
-
-//    default boolean isComponentShowing(Class<?> cls) {
-//        try {
-//            ComponentApi component = findComponent(cls);
-//            if (null == component)
-//                throw new Exception("warning: component null");
-//            boolean componentShowing = component.isComponentShowing();
-//            if (!componentShowing)
-//                throw new Exception("warning: componentShowing false");
-//            return true;
-//        } catch (Exception e) {
-//            LogUtil.log("ComponentApi => isComponentApiShowing => " + e.getMessage());
-//            return false;
-//        }
-//    }
 
     default void superCallEvent(boolean callPlayer, boolean callComponent, @PlayerType.EventType.Value int state) {
         try {
@@ -367,7 +378,9 @@ public interface ComponentApi {
                 throw new Exception("error: playerView null");
             playerView.callEvent(callPlayer, callComponent, state);
         } catch (Exception e) {
-            LogUtil.log("ComponentApi => superCallEvent => " + e.getMessage());
+            if (LogUtil.DEBUG) {
+                LogUtil.log("ComponentApi => superCallEvent => " + e.getMessage());
+            }
         }
     }
 
@@ -378,7 +391,9 @@ public interface ComponentApi {
                 throw new Exception("playerView error: null");
             return playerView.isFull();
         } catch (Exception e) {
-            LogUtil.log("ComponentApi => isFull => " + e.getMessage());
+            if (LogUtil.DEBUG) {
+                LogUtil.log("ComponentApi => isFull => " + e.getMessage());
+            }
             return false;
         }
     }
@@ -390,7 +405,9 @@ public interface ComponentApi {
                 throw new Exception("playerView error: null");
             return playerView.isFloat();
         } catch (Exception e) {
-            LogUtil.log("ComponentApi => isFloat => " + e.getMessage());
+            if (LogUtil.DEBUG) {
+                LogUtil.log("ComponentApi => isFloat => " + e.getMessage());
+            }
             return false;
         }
     }
@@ -402,7 +419,9 @@ public interface ComponentApi {
                 throw new Exception("playerView error: null");
             return playerView.isPlaying();
         } catch (Exception e) {
-            LogUtil.log("ComponentApi => isPlaying => " + e.getMessage());
+            if (LogUtil.DEBUG) {
+                LogUtil.log("ComponentApi => isPlaying => " + e.getMessage());
+            }
             return false;
         }
     }
@@ -414,7 +433,9 @@ public interface ComponentApi {
                 throw new Exception("playerView error: null");
             return playerView.isPrepared();
         } catch (Exception e) {
-            LogUtil.log("ComponentApi => isPrepared => " + e.getMessage());
+            if (LogUtil.DEBUG) {
+                LogUtil.log("ComponentApi => isPrepared => " + e.getMessage());
+            }
             return false;
         }
     }
@@ -426,7 +447,9 @@ public interface ComponentApi {
                 throw new Exception("playerView error: null");
             playerView.seekTo(position);
         } catch (Exception e) {
-            LogUtil.log("ComponentApi => seekTo => " + e.getMessage());
+            if (LogUtil.DEBUG) {
+                LogUtil.log("ComponentApi => seekTo => " + e.getMessage());
+            }
         }
     }
 
@@ -441,7 +464,9 @@ public interface ComponentApi {
                 throw new Exception("playerView error: null");
             playerView.resume(callEvent);
         } catch (Exception e) {
-            LogUtil.log("ComponentApi => resume => " + e.getMessage());
+            if (LogUtil.DEBUG) {
+                LogUtil.log("ComponentApi => resume => " + e.getMessage());
+            }
         }
     }
 
@@ -456,7 +481,9 @@ public interface ComponentApi {
                 throw new Exception("playerView error: null");
             playerView.pause(callEvent);
         } catch (Exception e) {
-            LogUtil.log("ComponentApi => pause => " + e.getMessage());
+            if (LogUtil.DEBUG) {
+                LogUtil.log("ComponentApi => pause => " + e.getMessage());
+            }
         }
     }
 
@@ -471,7 +498,9 @@ public interface ComponentApi {
                 throw new Exception("playerView error: null");
             playerView.toggle(callEvent);
         } catch (Exception e) {
-            LogUtil.log("ComponentApi => toggle => " + e.getMessage());
+            if (LogUtil.DEBUG) {
+                LogUtil.log("ComponentApi => toggle => " + e.getMessage());
+            }
         }
     }
 
@@ -486,7 +515,9 @@ public interface ComponentApi {
                 throw new Exception("playerView error: null");
             playerView.stop(callEvent, false);
         } catch (Exception e) {
-            LogUtil.log("ComponentApi => toggle => " + e.getMessage());
+            if (LogUtil.DEBUG) {
+                LogUtil.log("ComponentApi => toggle => " + e.getMessage());
+            }
         }
     }
 
@@ -500,7 +531,9 @@ public interface ComponentApi {
                 throw new Exception("warning: duration<0");
             return duration;
         } catch (Exception e) {
-            LogUtil.log("ComponentApi => getDuration => " + e.getMessage());
+            if (LogUtil.DEBUG) {
+                LogUtil.log("ComponentApi => getDuration => " + e.getMessage());
+            }
             return 0L;
         }
     }
@@ -515,7 +548,9 @@ public interface ComponentApi {
                 throw new Exception("warning: position<0");
             return position;
         } catch (Exception e) {
-            LogUtil.log("ComponentApi => getPosition => " + e.getMessage());
+            if (LogUtil.DEBUG) {
+                LogUtil.log("ComponentApi => getPosition => " + e.getMessage());
+            }
             return 0L;
         }
     }
@@ -527,7 +562,9 @@ public interface ComponentApi {
                 throw new Exception("playerView error: null");
             playerView.setSpeed(speed);
         } catch (Exception e) {
-            LogUtil.log("ComponentApi => setVideoSpeed => " + e.getMessage());
+            if (LogUtil.DEBUG) {
+                LogUtil.log("ComponentApi => setVideoSpeed => " + e.getMessage());
+            }
         }
     }
 
@@ -539,7 +576,9 @@ public interface ComponentApi {
                 throw new Exception("playerView error: null");
             return playerView.getSpeed();
         } catch (Exception e) {
-            LogUtil.log("ComponentApi => getVideoSpeed => " + e.getMessage());
+            if (LogUtil.DEBUG) {
+                LogUtil.log("ComponentApi => getVideoSpeed => " + e.getMessage());
+            }
             return PlayerType.SpeedType.DEFAULT;
         }
     }
@@ -551,7 +590,9 @@ public interface ComponentApi {
                 throw new Exception("playerView error: null");
             playerView.setVideoScaleType(scaleType);
         } catch (Exception e) {
-            LogUtil.log("ComponentApi => setVideoScaleType => " + e.getMessage());
+            if (LogUtil.DEBUG) {
+                LogUtil.log("ComponentApi => setVideoScaleType => " + e.getMessage());
+            }
         }
     }
 
@@ -563,7 +604,9 @@ public interface ComponentApi {
                 throw new Exception("playerView error: null");
             return playerView.getVideoScale();
         } catch (Exception e) {
-            LogUtil.log("ComponentApi => getVideoScale => " + e.getMessage());
+            if (LogUtil.DEBUG) {
+                LogUtil.log("ComponentApi => getVideoScale => " + e.getMessage());
+            }
             return PlayerType.ScaleType.DEFAULT;
         }
     }
@@ -578,7 +621,9 @@ public interface ComponentApi {
                 throw new Exception("error: args null");
             return args;
         } catch (Exception e) {
-            LogUtil.log("ComponentApi => getStartArgs => " + e.getMessage());
+            if (LogUtil.DEBUG) {
+                LogUtil.log("ComponentApi => getStartArgs => " + e.getMessage());
+            }
             return null;
         }
     }
@@ -593,7 +638,9 @@ public interface ComponentApi {
                 throw new Exception("error: menu null");
             return menu.getPlayPos();
         } catch (Exception e) {
-            LogUtil.log("ComponentApi => getPlayPos => " + e.getMessage());
+            if (LogUtil.DEBUG) {
+                LogUtil.log("ComponentApi => getPlayPos => " + e.getMessage());
+            }
             return -1;
         }
     }
@@ -608,7 +655,9 @@ public interface ComponentApi {
                 throw new Exception("error: menu null");
             return menu.getPlayCount();
         } catch (Exception e) {
-            LogUtil.log("ComponentApi => getPlayCount => " + e.getMessage());
+            if (LogUtil.DEBUG) {
+                LogUtil.log("ComponentApi => getPlayCount => " + e.getMessage());
+            }
             return -1;
         }
     }
@@ -620,7 +669,9 @@ public interface ComponentApi {
                 throw new Exception("error: args null");
             return args.getTitle();
         } catch (Exception e) {
-            LogUtil.log("ComponentApi => getTitle => " + e.getMessage());
+            if (LogUtil.DEBUG) {
+                LogUtil.log("ComponentApi => getTitle => " + e.getMessage());
+            }
             return null;
         }
     }
@@ -632,7 +683,9 @@ public interface ComponentApi {
                 throw new Exception("error: args null");
             return args.getTrySeeDuration();
         } catch (Exception e) {
-            LogUtil.log("ComponentApi => getTrySeeDuration => " + e.getMessage());
+            if (LogUtil.DEBUG) {
+                LogUtil.log("ComponentApi => getTrySeeDuration => " + e.getMessage());
+            }
             return 0L;
         }
     }
@@ -644,7 +697,9 @@ public interface ComponentApi {
                 throw new Exception("error: args null");
             return args.isPlayWhenReady();
         } catch (Exception e) {
-            LogUtil.log("ComponentApi => isPlayWhenReady => " + e.getMessage());
+            if (LogUtil.DEBUG) {
+                LogUtil.log("ComponentApi => isPlayWhenReady => " + e.getMessage());
+            }
             return true;
         }
     }
@@ -656,7 +711,9 @@ public interface ComponentApi {
                 throw new Exception("error: args null");
             return args.getPlayWhenReadyDelayedTime();
         } catch (Exception e) {
-            LogUtil.log("ComponentApi => getPlayWhenReadyDelayedTime => " + e.getMessage());
+            if (LogUtil.DEBUG) {
+                LogUtil.log("ComponentApi => getPlayWhenReadyDelayedTime => " + e.getMessage());
+            }
             return 0L;
         }
     }
@@ -668,7 +725,9 @@ public interface ComponentApi {
                 throw new Exception("error: args null");
             return args.getPlayWhenReadySeekToPosition();
         } catch (Exception e) {
-            LogUtil.log("ComponentApi => getPlayWhenReadySeekToPosition => " + e.getMessage());
+            if (LogUtil.DEBUG) {
+                LogUtil.log("ComponentApi => getPlayWhenReadySeekToPosition => " + e.getMessage());
+            }
             return 0L;
         }
     }

@@ -15,7 +15,9 @@ public interface VideoPlayerApiSubtitle extends VideoPlayerApiBase {
                 throw new Exception("warning: playing false");
             return kernel.appendSubtitleOffsetMs(offset);
         } catch (Exception e) {
-            LogUtil.log("VideoPlayerApiSubtitle => appendSubtitleOffsetMs => " + e.getMessage());
+            if (LogUtil.DEBUG) {
+                LogUtil.log("VideoPlayerApiSubtitle => appendSubtitleOffsetMs => " + e.getMessage());
+            }
             return false;
         }
     }
@@ -30,7 +32,9 @@ public interface VideoPlayerApiSubtitle extends VideoPlayerApiBase {
                 throw new Exception("warning: playing false");
             return kernel.addSubtitleTrack(url);
         } catch (Exception e) {
-            LogUtil.log("VideoPlayerApiSubtitle => addSubtitleTrack => " + e.getMessage());
+            if (LogUtil.DEBUG) {
+                LogUtil.log("VideoPlayerApiSubtitle => addSubtitleTrack => " + e.getMessage());
+            }
             return false;
         }
     }

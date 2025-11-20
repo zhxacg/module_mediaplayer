@@ -80,7 +80,9 @@ public abstract class VideoBasePlayer implements VideoKernelApi {
                 throw new Exception("eventApi warning: null");
             eventApi.onUpdateProgress();
         } catch (Exception e) {
-            LogUtil.log("VideoBasePlayer => onUpdateProgress => " + e.getMessage());
+            if(LogUtil.DEBUG) {
+                LogUtil.log("VideoBasePlayer => onUpdateProgress => " + e.getMessage());
+            }
         }
     }
 
@@ -91,7 +93,9 @@ public abstract class VideoBasePlayer implements VideoKernelApi {
                 throw new Exception("eventApi error: null");
             eventApi.onUpdateSubtitle(kernel, result);
         } catch (Exception e) {
-            LogUtil.log("VideoBasePlayer => onUpdateSubtitle => " + e.getMessage());
+            if(LogUtil.DEBUG) {
+                LogUtil.log("VideoBasePlayer => onUpdateSubtitle => " + e.getMessage());
+            }
         }
     }
 
@@ -102,7 +106,9 @@ public abstract class VideoBasePlayer implements VideoKernelApi {
                 throw new Exception("eventApi error: null");
             eventApi.onUpdateSpeed(kernel);
         } catch (Exception e) {
-            LogUtil.log("VideoBasePlayer => onUpdateSpeed => " + e.getMessage());
+            if(LogUtil.DEBUG) {
+                LogUtil.log("VideoBasePlayer => onUpdateSpeed => " + e.getMessage());
+            }
         }
     }
 
@@ -113,7 +119,9 @@ public abstract class VideoBasePlayer implements VideoKernelApi {
                 throw new Exception("eventApi error: null");
             eventApi.onEvent(kernel, event);
         } catch (Exception e) {
-            LogUtil.log("VideoBasePlayer => onEvent => " + e.getMessage());
+            if(LogUtil.DEBUG) {
+                LogUtil.log("VideoBasePlayer => onEvent => " + e.getMessage());
+            }
         }
     }
 
@@ -124,14 +132,13 @@ public abstract class VideoBasePlayer implements VideoKernelApi {
                 throw new Exception("eventApi error: null");
             eventApi.onVideoFormatChanged(kernel, rotation, scaleType, width, height, bitrate);
         } catch (Exception e) {
-            LogUtil.log("VideoBasePlayer => onVideoFormatChanged => " + e.getMessage());
+            if(LogUtil.DEBUG) {
+                LogUtil.log("VideoBasePlayer => onVideoFormatChanged => " + e.getMessage());
+            }
         }
     }
 
     public final void setEvent(VideoKernelApiEvent eventApi) {
         this.eventApi = eventApi;
     }
-
-
-
 }

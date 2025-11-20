@@ -3,9 +3,6 @@ package com.kalu.mediaplayer;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
-import android.os.Message;
 import android.text.Editable;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,8 +13,6 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
-
 import com.kalu.mediaplayer.proxy.ProxyBuried;
 import com.kalu.mediaplayer.proxy.ProxyUrl;
 
@@ -26,7 +21,6 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Random;
 
 import lib.kalu.mediaplayer.PlayerSDK;
 import lib.kalu.mediaplayer.bean.args.StartArgs;
@@ -37,7 +31,6 @@ import lib.kalu.mediaplayer.bean.proxy.Proxy;
 import lib.kalu.mediaplayer.bean.type.PlayerType;
 import lib.kalu.mediaplayer.test.TestActivity;
 import lib.kalu.mediaplayer.util.LogUtil;
-import lib.kalu.mediaplayer.widget.progress.MultiSegmentProgressBar;
 
 /**
  * description:
@@ -50,7 +43,6 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        initMultiSegmentProgress();
         init();
 
         findViewById(R.id.main_button1).setOnClickListener(new View.OnClickListener() {
@@ -81,59 +73,6 @@ public class MainActivity extends Activity {
         });
     }
 
-
-    private void initMultiSegmentProgress() {
-
-        //
-        Handler handler = new Handler(Looper.getMainLooper()) {
-            @Override
-            public void handleMessage(@NonNull Message msg) {
-                if (msg.what == 11) {
-                    //
-                    Message message = Message.obtain();
-                    message.what = 12;
-                    message.arg1 = 100;
-                    sendMessageDelayed(message, 100);
-                } else if (msg.what == 12) {
-                    //
-                    MultiSegmentProgressBar progressBar = findViewById(R.id.videoProgressBar);
-                    progressBar.setProgress(msg.arg1, 100_000);
-                    //
-                    Message message = Message.obtain();
-                    message.what = 12;
-                    message.arg1 = (msg.arg1 + 100);
-                    sendMessageDelayed(message, 100);
-                } else if (msg.what == 21) {
-                    //
-                    Message message = Message.obtain();
-                    message.what = 22;
-                    int start = 0;
-                    int end = start + new Random().nextInt(1000);
-                    message.arg1 = start;
-                    message.arg2 = end;
-                    sendMessageDelayed(message, 100);
-                } else if (msg.what == 22) {
-                    //
-                    MultiSegmentProgressBar progressBar = findViewById(R.id.videoProgressBar);
-                    progressBar.addBufferSegment(msg.arg1, msg.arg2);
-                    //
-                    Message message = Message.obtain();
-                    message.what = 22;
-                    int start = msg.arg1 + new Random().nextInt(1000);
-                    int end = start + new Random().nextInt(1000);
-                    message.arg1 = start;
-                    message.arg2 = end;
-                    sendMessageDelayed(message, 100);
-                }
-            }
-        };
-
-        // 模拟缓存进度
-        handler.sendEmptyMessageDelayed(21, 100);
-
-        // 模拟播放进度
-        handler.sendEmptyMessageDelayed(11, 100);
-    }
 
     private void init() {
 
@@ -634,6 +573,16 @@ public class MainActivity extends Activity {
         }
     }
 
+
+    private Boolean isLogEnable() {
+        try {
+            CheckBox checkBox = findViewById(R.id.main_log_yes);
+            return checkBox.isChecked();
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
     private void initPlayer() {
 
         @PlayerType.RenderType
@@ -689,7 +638,7 @@ public class MainActivity extends Activity {
 
         PlayerSDK.init()
                 // 日志开关
-                .setLog(true)
+                .setLog(isLogEnable())
                 // 播放器类型（MediaPlayer Media3Player ExoPlayer IjkPLayer）
                 .setKernelType(getKernelType())
                 // 渲染类型（TextuteView SurafecView）
@@ -712,7 +661,7 @@ public class MainActivity extends Activity {
                 .setCache(new Cache.Builder()
                         .setEnable(cacheChecked)
                         .setExternal(false)
-                        .setSize(1000)
+                        .setSizeMB(1000)
                         .setDir("test_cache")
                         .build())
                 // 代理

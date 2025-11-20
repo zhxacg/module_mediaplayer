@@ -26,7 +26,9 @@ final class GLRender implements GLSurfaceView.Renderer {
                 drawers.get(i).setTextureID(textureIds[i]);
             }
         } catch (Exception e) {
-            LogUtil.log("GLRender => onSurfaceCreated => Exception " + e.getMessage());
+            if (LogUtil.DEBUG) {
+                LogUtil.log("GLRender => onSurfaceCreated => Exception " + e.getMessage());
+            }
         }
     }
 
@@ -38,7 +40,9 @@ final class GLRender implements GLSurfaceView.Renderer {
                 drawer.setWorldSize(width, height);
             }
         } catch (Exception e) {
-            LogUtil.log("GLRender => onSurfaceChanged => Exception " + e.getMessage());
+            if (LogUtil.DEBUG) {
+                LogUtil.log("GLRender => onSurfaceChanged => Exception " + e.getMessage());
+            }
         }
     }
 
@@ -51,7 +55,9 @@ final class GLRender implements GLSurfaceView.Renderer {
                 drawers.get(i).draw();
             }
         } catch (Exception e) {
-            LogUtil.log("GLRender => onDrawFrame => Exception " + e.getMessage());
+            if (LogUtil.DEBUG) {
+                LogUtil.log("GLRender => onDrawFrame => Exception " + e.getMessage());
+            }
         }
     }
 
@@ -64,7 +70,9 @@ final class GLRender implements GLSurfaceView.Renderer {
         try {
             drawers.add(drawer);
         } catch (Exception e) {
-            LogUtil.log("GLRender => addDrawer => Exception " + e.getMessage());
+            if (LogUtil.DEBUG) {
+                LogUtil.log("GLRender => addDrawer => Exception " + e.getMessage());
+            }
         }
     }
 }

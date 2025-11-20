@@ -1,0 +1,13 @@
+<resources>
+
+    <integer-array name="thumb_colors">
+        <item>@color/module_mediaplayer_color_ff3c3c</item>
+        <item>@color/module_mediaplayer_color_ff6200</item>
+    </integer-array>
+
+<!--    <integer-array name="progress_colors">-->
+<!--        <item>@color/color_ff3c3c</item>-->
+<!--        <item>@color/color_ff6200</item>-->
+<!--    </integer-array>-->
+
+</resources>

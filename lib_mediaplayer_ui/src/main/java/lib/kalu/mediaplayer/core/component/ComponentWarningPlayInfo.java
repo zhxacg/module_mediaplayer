@@ -37,11 +37,15 @@ public class ComponentWarningPlayInfo extends RelativeLayout implements Componen
         switch (playState) {
             case PlayerType.EventType.COMPONENT_SEEK_SHOW:
             case PlayerType.EventType.START_PLAY_WHEN_READY_FALSE:
-                LogUtil.log("ComponentWarningPlayInfo => callEvent => START_PLAY_WHEN_READY_FALSE");
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("ComponentWarningPlayInfo => callEvent => START_PLAY_WHEN_READY_FALSE");
+                }
                 hide();
                 break;
             case PlayerType.EventType.VIDEO_RENDERING_START:
-                LogUtil.log("ComponentWarningPlayInfo => callEvent => VIDEO_RENDERING_START");
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("ComponentWarningPlayInfo => callEvent => VIDEO_RENDERING_START");
+                }
                 show();
                 break;
         }
@@ -134,7 +138,9 @@ public class ComponentWarningPlayInfo extends RelativeLayout implements Componen
             TextView recordView = findViewById(R.id.module_mediaplayer_component_warning_play_info_record);
             recordView.setText("");
         } catch (Exception e) {
-            LogUtil.log("ComponentWarningPlayInfo => hide => Exception " + e.getMessage());
+            if (LogUtil.DEBUG) {
+                LogUtil.log("ComponentWarningPlayInfo => hide => Exception " + e.getMessage());
+            }
         }
     }
 

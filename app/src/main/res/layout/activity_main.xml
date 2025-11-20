@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fillViewport="true">
@@ -222,6 +221,7 @@
                     android:id="@+id/main_log_yes"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
+                    android:checked="true"
                     android:text="日志" />
 
                 <CheckBox
@@ -312,24 +312,5 @@
         </LinearLayout>
 
     </ScrollView>
-
-    <lib.kalu.mediaplayer.widget.progress.MultiSegmentProgressBar
-        android:id="@+id/videoProgressBar"
-        android:layout_width="match_parent"
-        android:layout_height="8dp"
-        android:layout_centerInParent="true"
-        android:layout_marginLeft="40dp"
-        android:layout_marginRight="40dp"
-        android:paddingTop="4dp"
-        android:paddingBottom="4dp"
-        app:ms_background_color="#33000000"
-        app:ms_buffer_color="#4d000000"
-        app:ms_corner="8dp"
-        app:ms_progress_color="#ff482a"
-        app:ms_thumb_color_gradient="@array/thumb_colors"
-        app:ms_thumb_icon="@drawable/ic_thumb"
-        app:ms_thumb_icon_height="10dp"
-        app:ms_thumb_icon_width="10dp"
-        app:ms_thumb_radius="10dp" />
 
 </RelativeLayout>

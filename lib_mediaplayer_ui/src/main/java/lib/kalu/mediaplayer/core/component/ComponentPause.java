@@ -23,7 +23,9 @@ public class ComponentPause extends RelativeLayout implements ComponentApi {
 
     @Override
     public boolean dispatchKeyEvent(KeyEvent event) {
-        // LogUtil.log("ComponentPause => dispatchKeyEvent => action =  " + event.getAction() + ", keyCode = " + event.getKeyCode() + ", repeatCount = " + event.getRepeatCount());
+        if (LogUtil.DEBUG) {
+            LogUtil.log("ComponentPause => dispatchKeyEvent => action =  " + event.getAction() + ", keyCode = " + event.getKeyCode() + ", repeatCount = " + event.getRepeatCount());
+        }
         if (event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == KeyEvent.KEYCODE_BACK) {
             try {
                 boolean componentShowing = isComponentShowing();
@@ -38,7 +40,9 @@ public class ComponentPause extends RelativeLayout implements ComponentApi {
                 resume();
                 return true;
             } catch (Exception e) {
-                LogUtil.log("ComponentPause => dispatchKeyEvent => Exception1 " + e.getMessage());
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("ComponentPause => dispatchKeyEvent => Exception1 " + e.getMessage());
+                }
             }
         }
         // keycode_enter
@@ -58,15 +62,21 @@ public class ComponentPause extends RelativeLayout implements ComponentApi {
     public void callEvent(int playState) {
         switch (playState) {
             case PlayerType.EventType.PAUSE:
-                LogUtil.log("ComponentPause[show] => PAUSE");
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("ComponentPause[show] => PAUSE");
+                }
                 show();
                 break;
             case PlayerType.EventType.RESUME:
-                LogUtil.log("ComponentPause[hide] => RESUME");
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("ComponentPause[hide] => RESUME");
+                }
                 hide();
                 break;
             case PlayerType.EventType.COMPONENT_SEEK_SHOW:
-                LogUtil.log("ComponentPause[hide] => COMPONENT_SEEK_SHOW");
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("ComponentPause[hide] => COMPONENT_SEEK_SHOW");
+                }
                 try {
                     boolean componentShowing = isComponentShowing();
                     if (!componentShowing)
@@ -77,10 +87,14 @@ public class ComponentPause extends RelativeLayout implements ComponentApi {
                 }
                 break;
             case PlayerType.EventType.COMPONENT_SEEK_HIDE:
-                LogUtil.log("ComponentPause[show] => COMPONENT_SEEK_HIDE");
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("ComponentPause[show] => COMPONENT_SEEK_HIDE");
+                }
                 break;
             case PlayerType.EventType.SEEK_FINISH:
-                LogUtil.log("ComponentPause[show] => SEEK_FINISH");
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("ComponentPause[show] => SEEK_FINISH");
+                }
                 try {
                     boolean activated = isActivated();
                     if (!activated)
@@ -91,7 +105,9 @@ public class ComponentPause extends RelativeLayout implements ComponentApi {
                 }
                 break;
             case PlayerType.EventType.COMPONENT_MENU_SHOW:
-                LogUtil.log("ComponentPause[show] => playState = " + playState);
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("ComponentPause[show] => playState = " + playState);
+                }
                 try {
                     boolean componentShowing = isComponentShowing();
                     if (!componentShowing)
@@ -99,11 +115,15 @@ public class ComponentPause extends RelativeLayout implements ComponentApi {
                     setActivated(true);
                     hide();
                 } catch (Exception e) {
-                    LogUtil.log("ComponentPause => callEventListener => hide => Exception2 " + playState);
+                    if (LogUtil.DEBUG) {
+                        LogUtil.log("ComponentPause => callEventListener => hide => Exception2 " + playState);
+                    }
                 }
                 break;
             case PlayerType.EventType.COMPONENT_MENU_HIDE:
-                LogUtil.log("ComponentPause[gone] => playState = " + playState);
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("ComponentPause[gone] => playState = " + playState);
+                }
                 try {
                     boolean activated = isActivated();
                     if (!activated)
@@ -145,7 +165,9 @@ public class ComponentPause extends RelativeLayout implements ComponentApi {
                 throw new Exception("warning: componentShowing false");
             ComponentApi.super.hide();
         } catch (Exception e) {
-            LogUtil.log("ComponentPause => hide => Exception " + e.getMessage());
+            if (LogUtil.DEBUG) {
+                LogUtil.log("ComponentPause => hide => Exception " + e.getMessage());
+            }
         }
 
         try {
@@ -194,7 +216,9 @@ public class ComponentPause extends RelativeLayout implements ComponentApi {
                 throw new Exception("warning: componentShowing true");
             ComponentApi.super.show();
         } catch (Exception e) {
-            LogUtil.log("ComponentPause => show => Exception " + e.getMessage());
+            if (LogUtil.DEBUG) {
+                LogUtil.log("ComponentPause => show => Exception " + e.getMessage());
+            }
         }
     }
 

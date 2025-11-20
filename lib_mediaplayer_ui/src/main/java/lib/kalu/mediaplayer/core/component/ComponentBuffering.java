@@ -30,7 +30,9 @@ public class ComponentBuffering extends RelativeLayout implements ComponentApi {
             case PlayerType.EventType.BUFFERING_START:
             case PlayerType.EventType.SEEK_START_FORWARD:
             case PlayerType.EventType.SEEK_START_REWIND:
-                LogUtil.log("ComponentBuffering[show] => callEvent => playState = " + playState);
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("ComponentBuffering[show] => callEvent => playState = " + playState);
+                }
                 show();
                 break;
             case PlayerType.EventType.BUFFERING_STOP:
@@ -38,7 +40,9 @@ public class ComponentBuffering extends RelativeLayout implements ComponentApi {
             case PlayerType.EventType.INIT:
             case PlayerType.EventType.ERROR:
             case PlayerType.EventType.RELEASE:
-                LogUtil.log("ComponentBuffering[hide] => callEvent => playState = " + playState);
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("ComponentBuffering[hide] => callEvent => playState = " + playState);
+                }
                 hide();
                 break;
         }

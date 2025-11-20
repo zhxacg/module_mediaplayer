@@ -67,15 +67,18 @@ public final class SeekBar extends android.widget.SeekBar {
 
             String text = TimeUtil.formatTimeMillis(duration);
             float textWidth = mPaint.measureText(text);
-//            LogUtil.log("SeekBar => onMeasure => text = " + text + ", textWidth = " + textWidth);
-
+            if (LogUtil.DEBUG) {
+                LogUtil.log("SeekBar => onMeasure => text = " + text + ", textWidth = " + textWidth);
+            }
             int left = (int) (textWidth + mTextProgressPaddingLeft + mTextProgressPaddingRight);
             int right = (int) (textWidth + mTextDurationPaddingLeft + mTextDurationPaddingRight);
             int top = getPaddingTop();
             int bottom = getPaddingBottom();
             setPadding(left, top, right, bottom);
         } catch (Exception e) {
-            LogUtil.log("SeekBar => onMeasure => Exception " + e.getMessage());
+            if (LogUtil.DEBUG) {
+                LogUtil.log("SeekBar => onMeasure => Exception " + e.getMessage());
+            }
         }
         super.onMeasure(widthMeasureSpec, -2);
     }
@@ -103,14 +106,17 @@ public final class SeekBar extends android.widget.SeekBar {
                 throw new Exception("warning: duration <= 0");
             super.onDraw(canvas);
         } catch (Exception e) {
-            LogUtil.log("SeekBar => onDraw => Exception1 " + e.getMessage());
+            if (LogUtil.DEBUG) {
+                LogUtil.log("SeekBar => onDraw => Exception1 " + e.getMessage());
+            }
         }
 
         // 文字
         try {
 
-            LogUtil.log("SeekBar => onDraw => mDuration = " + mDuration + ", mPosition = " + mPosition);
-
+            if (LogUtil.DEBUG) {
+                LogUtil.log("SeekBar => onDraw => mDuration = " + mDuration + ", mPosition = " + mPosition);
+            }
 //            if (mDuration <= 0)
 //                throw new Exception("warning: mDuration <= 0");
 //
@@ -129,9 +135,10 @@ public final class SeekBar extends android.widget.SeekBar {
                 if (i == 0) {
 
                     String text = TimeUtil.formatTimeMillis(mPosition, mDuration);
-                    LogUtil.log("SeekBar => onDraw => text = " + text);
+                    if (LogUtil.DEBUG) {
+                        LogUtil.log("SeekBar => onDraw => text = " + text);
+                    }
 
-//            LogUtil.log("SeekBar => onDraw => duration = " + duration + ", progress = " + progress + ", text = " + text + ", progressReal = " + progressReal + ", mMode = " + mMode);
                     Paint.FontMetrics fontMetrics = mPaint.getFontMetrics();
                     float textHeight = fontMetrics.bottom - fontMetrics.top;
 
@@ -157,12 +164,12 @@ public final class SeekBar extends android.widget.SeekBar {
                 } else {
 
                     String text = TimeUtil.formatTimeMillis(mDuration);
-                    LogUtil.log("SeekBar => onDraw => text = " + text);
-//            float textWidth = mPaint.measureText(text);
-//            LogUtil.log("SeekBar => onDraw => duration = " + duration + ", text = " + text + ", textWidth = " + textWidth);
+                    if(LogUtil.DEBUG) {
+                        LogUtil.log("SeekBar => onDraw => text = " + text);
+                    }
+
                     Paint.FontMetrics fontMetrics = mPaint.getFontMetrics();
                     float textHeight = fontMetrics.bottom - fontMetrics.top;
-
 
                     int width = getWidth();
                     int right = getPaddingRight();
@@ -193,7 +200,9 @@ public final class SeekBar extends android.widget.SeekBar {
             }
 
         } catch (Exception e) {
-            LogUtil.log("SeekBar => onDraw => Exception2 " + e.getMessage());
+            if(LogUtil.DEBUG) {
+                LogUtil.log("SeekBar => onDraw => Exception2 " + e.getMessage());
+            }
         }
 
 //        // 快进快退 提示

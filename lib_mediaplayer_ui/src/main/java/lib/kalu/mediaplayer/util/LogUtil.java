@@ -7,28 +7,25 @@ import androidx.annotation.Nullable;
 public final class LogUtil {
 
     private static String mTag = "MP_COMMON";
-    private static boolean mLog = true;
+    public static boolean DEBUG = false;
 
     public static void setLogger(boolean v) {
-        mLog = v;
+        DEBUG = v;
     }
 
     public static boolean isLog() {
-        return mLog;
+        return DEBUG;
     }
 
     public static void log(String message) {
-        log(message, null);
+        if (DEBUG) {
+            Log.e(mTag, message);
+        }
     }
 
     public static void log(String message, @Nullable Throwable throwable) {
-
-        if (!mLog)
-            return;
-
-        if (null == message || message.length() == 0)
-            return;
-
-        Log.e(mTag, message, throwable);
+        if (DEBUG) {
+            Log.e(mTag, message, throwable);
+        }
     }
 }

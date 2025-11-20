@@ -43,8 +43,10 @@ public class ComponentSubtitle extends RelativeLayout implements ComponentApi {
 
     @Override
     public void onUpdateSubtitle(int kernel, CharSequence result) {
-        LogUtil.log("ComponentSubtitle -> onUpdateSubtitle -> kernel = " + kernel + ", result = " + result);
 
+        if (LogUtil.DEBUG) {
+            LogUtil.log("ComponentSubtitle -> onUpdateSubtitle -> kernel = " + kernel + ", result = " + result);
+        }
 
         try {
             if (null == result)

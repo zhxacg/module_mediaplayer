@@ -18,7 +18,7 @@ public final class Cache implements Serializable {
         return external;
     }
 
-    public int getSize() {
+    public int getSizeMB() {
         return size;
     }
 
@@ -49,7 +49,7 @@ public final class Cache implements Serializable {
             return this;
         }
 
-        public Cache.Builder setSize(int v) {
+        public Cache.Builder setSizeMB(int v) {
             this.size = v;
             return this;
         }

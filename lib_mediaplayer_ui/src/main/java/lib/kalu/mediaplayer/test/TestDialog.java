@@ -12,10 +12,10 @@ import androidx.annotation.Nullable;
 
 import java.util.List;
 
+import lib.kalu.mediaplayer.PlayerLayout;
 import lib.kalu.mediaplayer.R;
 import lib.kalu.mediaplayer.bean.info.TrackInfo;
 import lib.kalu.mediaplayer.util.LogUtil;
-import lib.kalu.mediaplayer.PlayerLayout;
 
 public class TestDialog extends DialogFragment {
 
@@ -45,8 +45,9 @@ public class TestDialog extends DialogFragment {
 
             for (TrackInfo track : list) {
 
-
-                LogUtil.log("TestDialog -> showTrackInfo -> type = " + track.toString());
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("TestDialog -> showTrackInfo -> type = " + track.toString());
+                }
 
                 String curName;
                 // 视频轨道
@@ -100,7 +101,9 @@ public class TestDialog extends DialogFragment {
                 });
             }
         } catch (Exception e) {
-            LogUtil.log("TestDialog -> onViewCreated -> error: "+e.getMessage(), e);
+            if (LogUtil.DEBUG) {
+                LogUtil.log("TestDialog -> onViewCreated -> error: " + e.getMessage(), e);
+            }
         }
     }
 }

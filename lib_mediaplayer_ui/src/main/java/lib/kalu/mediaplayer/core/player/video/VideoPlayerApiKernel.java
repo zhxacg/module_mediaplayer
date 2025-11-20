@@ -49,7 +49,9 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
         try {
             ((View) this).setTag(R.id.module_mediaplayer_id_startargs, args);
         } catch (Exception e) {
-            LogUtil.log("VideoPlayerApiKernel => setTags => " + e.getMessage());
+            if (LogUtil.DEBUG) {
+                LogUtil.log("VideoPlayerApiKernel => setTags => " + e.getMessage());
+            }
         }
     }
 
@@ -84,7 +86,9 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
             initDecoder(args);
         } catch (Exception e) {
             callEvent(PlayerType.EventType.ERROR);
-            LogUtil.log("VideoPlayerApiKernel => start => " + e.getMessage());
+            if (LogUtil.DEBUG) {
+                LogUtil.log("VideoPlayerApiKernel => start => " + e.getMessage());
+            }
         }
     }
 
@@ -97,7 +101,9 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
             }
             return duration;
         } catch (Exception e) {
-            LogUtil.log("VideoPlayerApiKernel => getDuration => " + e.getMessage());
+            if (LogUtil.DEBUG) {
+                LogUtil.log("VideoPlayerApiKernel => getDuration => " + e.getMessage());
+            }
             return 0L;
         }
     }
@@ -117,7 +123,9 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
 
     default void setVolume(@FloatRange(from = 0f, to = 1f) float left, @FloatRange(from = 0f, to = 1f) float right) {
         try {
-            LogUtil.log("VideoPlayerApiKernel => setVolume => left = " + left + ", right = " + right);
+            if (LogUtil.DEBUG) {
+                LogUtil.log("VideoPlayerApiKernel => setVolume => left = " + left + ", right = " + right);
+            }
             VideoKernelApi kernel = getVideoKernel();
             kernel.setVolume(left, right);
         } catch (Exception e) {
@@ -126,7 +134,9 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
 
     default void setMute(boolean enable) {
         try {
-            LogUtil.log("VideoPlayerApiKernel => setMute => enable = " + enable);
+            if (LogUtil.DEBUG) {
+                LogUtil.log("VideoPlayerApiKernel => setMute => enable = " + enable);
+            }
             VideoKernelApi kernel = getVideoKernel();
             if (enable) {
                 kernel.setVolume(0f, 0f);
@@ -150,7 +160,9 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
                 resume(callEvent);
             }
         } catch (Exception e) {
-            LogUtil.log("VideoPlayerApiKernel => toggle => " + e.getMessage());
+            if (LogUtil.DEBUG) {
+                LogUtil.log("VideoPlayerApiKernel => toggle => " + e.getMessage());
+            }
         }
     }
 
@@ -194,7 +206,9 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
                 throw new Exception("warning: callEvent false");
             callEvent(PlayerType.EventType.RELEASE);
         } catch (Exception e) {
-            LogUtil.log("VideoPlayerApiKernel => release => " + e.getMessage());
+            if (LogUtil.DEBUG) {
+                LogUtil.log("VideoPlayerApiKernel => release => " + e.getMessage());
+            }
         }
     }
 
@@ -224,7 +238,9 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
             StartArgs newArgs = args.newBuilder().setPlayWhenReadySeekToPosition(position).build();
             start(newArgs);
         } catch (Exception e) {
-            LogUtil.log("VideoPlayerApiKernel => restart => " + e.getMessage());
+            if (LogUtil.DEBUG) {
+                LogUtil.log("VideoPlayerApiKernel => restart => " + e.getMessage());
+            }
         }
     }
 
@@ -257,7 +273,9 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
             kernel.seekTo(position);
             setScreenKeep(true);
         } catch (Exception e) {
-            LogUtil.log("VideoPlayerApiKernel => seekToVideoKernel => " + e.getMessage());
+            if (LogUtil.DEBUG) {
+                LogUtil.log("VideoPlayerApiKernel => seekToVideoKernel => " + e.getMessage());
+            }
         }
     }
 
@@ -316,7 +334,9 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
             Context context = getBaseContext();
             kernel.initDecoder(context, args);
         } catch (Exception e) {
-            LogUtil.log("VideoPlayerApiKernel => initDecoder => " + e.getMessage());
+            if (LogUtil.DEBUG) {
+                LogUtil.log("VideoPlayerApiKernel => initDecoder => " + e.getMessage());
+            }
         }
     }
 
@@ -342,7 +362,9 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
                 throw new Exception("warning: callEvent false");
             callEvent(PlayerType.EventType.STOP);
         } catch (Exception e) {
-            LogUtil.log("VideoPlayerApiKernel => stopKernel => " + e.getMessage());
+            if (LogUtil.DEBUG) {
+                LogUtil.log("VideoPlayerApiKernel => stopKernel => " + e.getMessage());
+            }
         }
     }
 
@@ -365,7 +387,9 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
                 throw new Exception("warning: callEvent false");
             callEvent(PlayerType.EventType.PAUSE);
         } catch (Exception e) {
-            LogUtil.log("VideoPlayerApiKernel => pauseKernel => " + e.getMessage());
+            if (LogUtil.DEBUG) {
+                LogUtil.log("VideoPlayerApiKernel => pauseKernel => " + e.getMessage());
+            }
         }
     }
 
@@ -389,7 +413,9 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
                 throw new Exception("warning: callEvent false");
             callEvent(PlayerType.EventType.RESUME);
         } catch (Exception e) {
-            LogUtil.log("VideoPlayerApiKernel => resumeKernel => " + e.getMessage());
+            if (LogUtil.DEBUG) {
+                LogUtil.log("VideoPlayerApiKernel => resumeKernel => " + e.getMessage());
+            }
         }
     }
 
@@ -407,7 +433,9 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
                 setTags(null);
             }
         } catch (Exception e) {
-            LogUtil.log("VideoPlayerApiKernel => releaseKernel => " + e.getMessage());
+            if (LogUtil.DEBUG) {
+                LogUtil.log("VideoPlayerApiKernel => releaseKernel => " + e.getMessage());
+            }
         }
     }
 
@@ -472,7 +500,10 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
 
                 @Override
                 public void onEvent(@PlayerType.KernelType.Value int kernel, @PlayerType.EventType.Value int event) {
-                    LogUtil.log("VideoPlayerApiKernel => onEvent = " + kernel + ", event = " + event);
+
+                    if (LogUtil.DEBUG) {
+                        LogUtil.log("VideoPlayerApiKernel => onEvent = " + kernel + ", event = " + event);
+                    }
 
                     // 透传
                     callEvent(event);
@@ -593,13 +624,18 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
 //                                    restart();
 //                                }
 //                            }
+
                             break;
                     }
                 }
 
                 @Override
                 public void onVideoFormatChanged(int kernel, int rotation, int scaleType, int width, int height, int bitrate) {
-//                    LogUtil.log("VideoPlayerApiKernel => setKernelEvent => onVideoFormatChanged => kernel = " + kernel + ", videoWidth = " + videoWidth + ", videoHeight = " + videoHeight + ", rotation = " + ", scaleType = " + scaleType);
+
+                    if (LogUtil.DEBUG) {
+                        LogUtil.log("VideoPlayerApiKernel => setKernelEvent => onVideoFormatChanged => kernel = " + kernel + ", width = " + width + ", height = " + height + ", rotation = " + ", scaleType = " + scaleType);
+                    }
+
                     setVideoFormat(kernel, rotation, scaleType, width, height, bitrate);
                 }
             });
@@ -608,74 +644,12 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
             // 解码
             kernelApi.createDecoder(context, args);
         } catch (Exception e) {
-            LogUtil.log("VideoPlayerApiKernel => checkKernelNull => " + e.getMessage());
+            if (LogUtil.DEBUG) {
+                LogUtil.log("VideoPlayerApiKernel => checkKernelNull => " + e.getMessage());
+            }
         }
     }
 
-//    default boolean toggleTrackLanguageSubtitle(String language) {
-//        try {
-//            VideoKernelApi kernel = getVideoKernel();
-//            if (null == kernel)
-//                throw new Exception("warning: kernel null");
-//            return kernel.toggleTrackLanguageSubtitle(language);
-
-    /// /            releaseRender();
-    /// /            StartArgs startArgs = new StartArgs.Builder().setRenderType(PlayerType.RenderType.SURFACE_VIEW).build();
-    /// /            checkRenderNull(startArgs, true);
-    /// /            attachRenderKernel();
-//        } catch (Exception e) {
-//            LogUtil.log("VideoPlayerApiKernel => toggleTrackLanguageSubtitle => " + e.getMessage());
-//            return false;
-//        }
-//    }
-//
-//    default boolean toggleTrackLanguageAudio(String language) {
-//        try {
-//            VideoKernelApi kernel = getVideoKernel();
-//            if (null == kernel)
-//                throw new Exception("warning: kernel null");
-//            return kernel.toggleTrackLanguageAudio(language);
-//        } catch (Exception e) {
-//            LogUtil.log("VideoPlayerApiKernel => toggleTrackLanguageAudio => " + e.getMessage());
-//            return false;
-//        }
-//    }
-//
-//    default boolean toggleTrackRoleFlagSubtitle(int roleFlag) {
-//        try {
-//            VideoKernelApi kernel = getVideoKernel();
-//            if (null == kernel)
-//                throw new Exception("warning: kernel null");
-//            return kernel.toggleTrackRoleFlagSubtitle(roleFlag);
-//        } catch (Exception e) {
-//            LogUtil.log("VideoPlayerApiKernel => toggleTrackRoleFlagSubtitle => " + e.getMessage());
-//            return false;
-//        }
-//    }
-//
-//    default boolean toggleTrackRoleFlagAudio(int roleFlag) {
-//        try {
-//            VideoKernelApi kernel = getVideoKernel();
-//            if (null == kernel)
-//                throw new Exception("warning: kernel null");
-//            return kernel.toggleTrackRoleFlagAudio(roleFlag);
-//        } catch (Exception e) {
-//            LogUtil.log("VideoPlayerApiKernel => toggleTrackRoleFlagAudio => " + e.getMessage());
-//            return false;
-//        }
-//    }
-//
-//    default boolean toggleTrackRoleFlagVideo(int roleFlag) {
-//        try {
-//            VideoKernelApi kernel = getVideoKernel();
-//            if (null == kernel)
-//                throw new Exception("warning: kernel null");
-//            return kernel.toggleTrackRoleFlagVideo(roleFlag);
-//        } catch (Exception e) {
-//            LogUtil.log("VideoPlayerApiKernel => toggleTrackRoleFlagVideo => " + e.getMessage());
-//            return false;
-//        }
-//    }
     default boolean toggleTrack(TrackInfo trackInfo) {
         try {
             VideoKernelApi kernel = getVideoKernel();
@@ -683,7 +657,9 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
                 throw new Exception("warning: kernel null");
             return kernel.toggleTrack(trackInfo);
         } catch (Exception e) {
-            LogUtil.log("VideoPlayerApiKernel => toggleTrack => " + e.getMessage());
+            if (LogUtil.DEBUG) {
+                LogUtil.log("VideoPlayerApiKernel => toggleTrack => " + e.getMessage());
+            }
             return false;
         }
     }
@@ -695,7 +671,9 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
                 throw new Exception("warning: kernel null");
             return kernel.getTrackInfoAll();
         } catch (Exception e) {
-            LogUtil.log("VideoPlayerApiKernel => getTrackInfoAll => " + e.getMessage());
+            if (LogUtil.DEBUG) {
+                LogUtil.log("VideoPlayerApiKernel => getTrackInfoAll => " + e.getMessage());
+            }
             return null;
         }
     }
@@ -707,7 +685,9 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
                 throw new Exception("warning: kernel null");
             return kernel.getTrackInfoVideo();
         } catch (Exception e) {
-            LogUtil.log("VideoPlayerApiKernel => getTrackInfoVideo => " + e.getMessage());
+            if (LogUtil.DEBUG) {
+                LogUtil.log("VideoPlayerApiKernel => getTrackInfoVideo => " + e.getMessage());
+            }
             return null;
         }
     }
@@ -719,7 +699,9 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
                 throw new Exception("warning: kernel null");
             return kernel.getTrackInfoAudio();
         } catch (Exception e) {
-            LogUtil.log("VideoPlayerApiKernel => getTrackInfoAudio => " + e.getMessage());
+            if (LogUtil.DEBUG) {
+                LogUtil.log("VideoPlayerApiKernel => getTrackInfoAudio => " + e.getMessage());
+            }
             return null;
         }
     }
@@ -731,7 +713,9 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
                 throw new Exception("warning: kernel null");
             return kernel.getTrackInfoSubtitle();
         } catch (Exception e) {
-            LogUtil.log("VideoPlayerApiKernel => getTrackInfoSubtitle => " + e.getMessage());
+            if (LogUtil.DEBUG) {
+                LogUtil.log("VideoPlayerApiKernel => getTrackInfoSubtitle => " + e.getMessage());
+            }
             return null;
         }
     }
@@ -743,40 +727,10 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
                 throw new Exception("warning: kernel null");
             return kernel.getSegments();
         } catch (Exception e) {
-            LogUtil.log("VideoPlayerApiKernel => getSegments => " + e.getMessage());
+            if (LogUtil.DEBUG) {
+                LogUtil.log("VideoPlayerApiKernel => getSegments => " + e.getMessage());
+            }
             return null;
         }
     }
-
-//    default String getScreenshotPath() {
-//        try {
-//            String url = getUrl();
-//            MPLogUtil.log("VideoPlayerApiKernel => getScreenshotPath => url => " + url);
-//            if (null == url || url.length() == 0)
-//                throw new Exception("url error: " + url);
-//            long position = getPosition();
-//            if (position < 0)
-//                throw new Exception("position error: " + position);
-//            long duration = getDuration();
-//            if (duration < 0)
-//                throw new Exception("duration error: " + duration);
-//            // android 2.3及其以上版本使用
-//            MediaMetadataRetriever retriever = new MediaMetadataRetriever();
-////            retriever.setDataSource(getBaseContext(), Uri.parse(url));
-//            retriever.setDataSource(url, new HashMap<String, String>());
-//            // 这一句是必须的
-//            String timeString = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION);
-//            // 获取总长度,这一句也是必须的
-//            long titalTime = Long.parseLong(timeString) * 1000;
-//            // 通过这个计算出想截取的画面所在的时间
-//            long videoPosition = titalTime * position / duration;
-//            if (videoPosition < 0)
-//                throw new Exception("videoPosition error: " + videoPosition);
-//            Bitmap bitmap = retriever.getFrameAtTime(videoPosition, MediaMetadataRetriever.OPTION_CLOSEST);
-//            return BitmapUtil.saveScreenshot(getBaseContext(), bitmap);
-//        } catch (Exception e) {
-//            MPLogUtil.log("VideoPlayerApiKernel => getScreenshotPath => " + e.getMessage());
-//            return null;
-//        }
-//    }
 }
