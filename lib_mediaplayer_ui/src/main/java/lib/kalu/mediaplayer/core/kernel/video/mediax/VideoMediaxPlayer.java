@@ -733,10 +733,10 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
                     File dir;
                     if (external) {
                         File externalCacheDir = context.getExternalCacheDir();
-                        dir = new File(externalCacheDir, cache.getDir());
+                        dir = new File(externalCacheDir, cache.getDir(PlayerType.KernelType.MEDIA_V3));
                     } else {
                         File cacheDir = context.getCacheDir();
-                        dir = new File(cacheDir, cache.getDir());
+                        dir = new File(cacheDir, cache.getDir(PlayerType.KernelType.MEDIA_V3));
                     }
 
                     if (!dir.exists()) {

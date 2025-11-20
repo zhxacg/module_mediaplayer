@@ -1,14 +1,16 @@
 package lib.kalu.mediaplayer.bean.cache;
 
 import java.io.Serializable;
+import java.util.LinkedHashMap;
+
+import lib.kalu.mediaplayer.bean.type.PlayerType;
 
 public final class Cache implements Serializable {
 
     private boolean enable;
     private boolean external;
     private int size;
-    private String dir;
-
+    private LinkedHashMap<Integer, String> dirs;
 
     public boolean isEnable() {
         return enable;
@@ -22,22 +24,29 @@ public final class Cache implements Serializable {
         return size;
     }
 
-    public String getDir() {
-        return dir;
+    public String getDir(@PlayerType.KernelType.Value int type) {
+        return dirs.get(type);
     }
 
     private Cache(Cache.Builder builder) {
         enable = builder.enable;
         external = builder.external;
         size = builder.size;
-        dir = builder.dir;
+        dirs = builder.dirs;
     }
 
     public final static class Builder {
         private boolean enable;
         private boolean external;
         private int size = 500;
-        private String dir = "video_cache";
+        private LinkedHashMap<Integer, String> dirs = new LinkedHashMap<Integer, String>() {{
+            put(PlayerType.KernelType.ANDROID, "android_video_cache");
+            put(PlayerType.KernelType.IJK, "ijk_video_cache");
+            put(PlayerType.KernelType.FFPLAYER, "ff_video_cache");
+            put(PlayerType.KernelType.VLC, "vlc_video_cache");
+            put(PlayerType.KernelType.EXO_V2, "exo2_video_cache");
+            put(PlayerType.KernelType.MEDIA_V3, "media3_video_cache");
+        }};
 
         public Cache.Builder setEnable(boolean v) {
             this.enable = v;
@@ -54,11 +63,11 @@ public final class Cache implements Serializable {
             return this;
         }
 
-        public Cache.Builder setDir(String v) {
-            this.dir = v;
+        public Cache.Builder setDir(@PlayerType.KernelType.Value int type, String v) {
+            dirs.remove(type);
+            dirs.put(type, v);
             return this;
         }
-
 
         public Cache build() {
             return new Cache(this);

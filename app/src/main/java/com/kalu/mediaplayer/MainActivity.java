@@ -662,7 +662,6 @@ public class MainActivity extends Activity {
                         .setEnable(cacheChecked)
                         .setExternal(false)
                         .setSizeMB(1000)
-                        .setDir("test_cache")
                         .build())
                 // 代理
                 .setProxy(new Proxy.Builder()

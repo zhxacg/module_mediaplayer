@@ -729,10 +729,10 @@ public final class VideoExo2Player extends VideoBasePlayer {
                     File dir;
                     if (external) {
                         File externalCacheDir = context.getExternalCacheDir();
-                        dir = new File(externalCacheDir, cache.getDir());
+                        dir = new File(externalCacheDir, cache.getDir(PlayerType.KernelType.EXO_V2));
                     } else {
                         File cacheDir = context.getCacheDir();
-                        dir = new File(cacheDir, cache.getDir());
+                        dir = new File(cacheDir, cache.getDir(PlayerType.KernelType.EXO_V2));
                     }
 
                     if (!dir.exists()) {
@@ -760,13 +760,11 @@ public final class VideoExo2Player extends VideoBasePlayer {
                                 .setFragmentSize(CacheDataSink.DEFAULT_FRAGMENT_SIZE)
                                 .setCache(mSimpleCache))
                         // 自定义缓存键
+                        // 自定义缓存键
                         .setCacheKeyFactory(new CacheKeyFactory() {
                             @Override
                             public String buildCacheKey(DataSpec dataSpec) {
                                 String subUrl = dataSpec.uri.toString();
-                                if (LogUtil.DEBUG) {
-                                    LogUtil.log("VideoExo2Player => buildSource => buildCacheKey => subUrl = " + subUrl);
-                                }
                                 if (subUrl.endsWith(PlayerType.MarkType.M3U8)) {
                                     return subUrl;
                                 } else if (subUrl.endsWith(PlayerType.MarkType.TS)) {
@@ -776,6 +774,22 @@ public final class VideoExo2Player extends VideoBasePlayer {
                                 }
                             }
                         });
+//                        .setCacheKeyFactory(new CacheKeyFactory() {
+//                            @Override
+//                            public String buildCacheKey(DataSpec dataSpec) {
+//                                String subUrl = dataSpec.uri.toString();
+//                                if (LogUtil.DEBUG) {
+//                                    LogUtil.log("VideoExo2Player => buildSource => buildCacheKey => subUrl = " + subUrl);
+//                                }
+//                                if (subUrl.endsWith(PlayerType.MarkType.M3U8)) {
+//                                    return subUrl;
+//                                } else if (subUrl.endsWith(PlayerType.MarkType.TS)) {
+//                                    return subUrl;
+//                                } else {
+//                                    return url;
+//                                }
+//                            }
+//                        });
             }
             // 关闭缓存
             else {
