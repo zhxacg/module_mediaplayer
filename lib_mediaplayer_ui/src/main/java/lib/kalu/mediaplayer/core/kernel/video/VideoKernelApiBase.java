@@ -5,8 +5,8 @@ import android.content.Context;
 import java.util.List;
 
 import lib.kalu.mediaplayer.bean.info.TrackInfo;
-import lib.kalu.mediaplayer.core.player.video.VideoPlayerApi;
 import lib.kalu.mediaplayer.bean.type.PlayerType;
+import lib.kalu.mediaplayer.core.player.video.VideoPlayerApi;
 
 
 /**
@@ -54,6 +54,10 @@ interface VideoKernelApiBase {
     long getDuration();
 
     boolean isPrepared();
+
+    default boolean isUseCache() {
+        return false;
+    }
 
     default boolean toggleTrack(TrackInfo trackInfo) {
         return false;

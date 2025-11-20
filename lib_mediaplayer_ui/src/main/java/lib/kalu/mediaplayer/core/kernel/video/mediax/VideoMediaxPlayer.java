@@ -87,6 +87,7 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
     private boolean isBuffering = false;
     private boolean mPlayWhenReadySeeking = false;
     private boolean mSeeking = false;
+    private boolean isUseCache = false;
 
     private HlsManifest mHlsManifest;
     private SimpleCache mSimpleCache;
@@ -518,6 +519,11 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
         return isPrepared;
     }
 
+    @Override
+    public boolean isUseCache() {
+        return isUseCache;
+    }
+
     /**
      * 设置播放速度
      */
@@ -714,18 +720,17 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
                     .setAllowCrossProtocolRedirects(true)
                     .setKeepPostFor302Redirects(true);
 
-            Cache cache = PlayerSDK.init().getPlayerBuilder().getCache();
-            boolean enable = cache.isEnable();
-            if (lowerCase.startsWith(PlayerType.SchemeType.FILE)) {
-                enable = false;
-            } else if (args.isLive()) {
-                enable = false;
-            }
 
+            Cache cache = PlayerSDK.init().getPlayerBuilder().getCache();
+            if (cache.isEnable() && !lowerCase.startsWith(PlayerType.SchemeType.FILE)) {
+                isUseCache = true;
+            } else if (args.isLive()) {
+                isUseCache = false;
+            }
 
             DataSource.Factory dataSource;
             // 开启缓存
-            if (enable) {
+            if (isUseCache) {
 
                 if (null == mSimpleCache) {
 

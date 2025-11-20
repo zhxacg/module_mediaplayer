@@ -288,6 +288,15 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
         }
     }
 
+    default boolean isUseCache() {
+        try {
+            VideoKernelApi kernel = getVideoKernel();
+            return kernel.isUseCache();
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
     default boolean isPlaying() {
         try {
             VideoKernelApi kernel = getVideoKernel();

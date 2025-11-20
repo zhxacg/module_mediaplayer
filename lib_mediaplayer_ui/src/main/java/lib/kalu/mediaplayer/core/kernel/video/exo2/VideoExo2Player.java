@@ -88,6 +88,7 @@ public final class VideoExo2Player extends VideoBasePlayer {
     private boolean mSeeking = false;
     private boolean isBuffering = false;
     private boolean isPrepared = false;
+    private boolean isUseCache = false;
 
 
     private HlsManifest mHlsManifest;
@@ -512,6 +513,11 @@ public final class VideoExo2Player extends VideoBasePlayer {
     }
 
     @Override
+    public boolean isUseCache() {
+        return isUseCache;
+    }
+
+    @Override
     public boolean setSpeed(float speed) {
         try {
             if (null == mExoPlayer)
@@ -714,16 +720,15 @@ public final class VideoExo2Player extends VideoBasePlayer {
 
 
             Cache cache = PlayerSDK.init().getPlayerBuilder().getCache();
-            boolean enable = cache.isEnable();
-            if (lowerCase.startsWith(PlayerType.SchemeType.FILE)) {
-                enable = false;
+            if (cache.isEnable() && !lowerCase.startsWith(PlayerType.SchemeType.FILE)) {
+                isUseCache = true;
             } else if (args.isLive()) {
-                enable = false;
+                isUseCache = false;
             }
 
             // 开启缓存
             DataSource.Factory dataSource;
-            if (enable) {
+            if (isUseCache) {
                 if (null == mSimpleCache) {
                     boolean external = cache.isExternal();
                     File dir;
