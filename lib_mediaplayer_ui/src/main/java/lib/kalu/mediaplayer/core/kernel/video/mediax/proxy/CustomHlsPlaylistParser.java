@@ -586,8 +586,6 @@ public final class CustomHlsPlaylistParser implements ParsingLoadable.Parser<Hls
                 Metadata metadata = new Metadata(hlsMetadataEntry);
                 Format format1 = variant.format.buildUpon()
                         .setMetadata(metadata)
-                        .setLabel("test1")
-                        .setLanguage("test2")
                         .build();
                 deduplicatedVariants.add(variant.copyWithFormat(format1));
             }
