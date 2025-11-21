@@ -825,7 +825,7 @@ public final class VideoExo2Player extends VideoBasePlayer {
             // 视频轨道
             ArrayList<String> vUrls = new ArrayList<>();
             vUrls.add(mainUrl);
-            String[] extraTrackVideo = urlArgs.getExtVideoUrl();
+            String[] extraTrackVideo = null;
             if (null != extraTrackVideo) {
                 for (String vUrl : extraTrackVideo) {
                     vUrls.add(vUrl);
@@ -926,20 +926,20 @@ public final class VideoExo2Player extends VideoBasePlayer {
                 }
             }
 
-            // 音频轨道
-            String[] extraTrackAudio = urlArgs.getExtAudioUrl();
-            if (null != extraTrackAudio) {
-                for (String aUrl : extraTrackAudio) {
-                    MediaSource source = new DefaultMediaSourceFactory(dataSourceFactory)
-                            .createMediaSource(new MediaItem.Builder()
-                                    .setUri(aUrl)
-//                                    .setMimeType(track.getMimeType())
-//                                    .setMediaId(track.getLabel())
-                                    .build());
-                    //
-                    mediaSources.add(source);
-                }
-            }
+//            // 音频轨道
+//            String[] extraTrackAudio = urlArgs.getExtAudioUrl();
+//            if (null != extraTrackAudio) {
+//                for (String aUrl : extraTrackAudio) {
+//                    MediaSource source = new DefaultMediaSourceFactory(dataSourceFactory)
+//                            .createMediaSource(new MediaItem.Builder()
+//                                    .setUri(aUrl)
+////                                    .setMimeType(track.getMimeType())
+////                                    .setMediaId(track.getLabel())
+//                                    .build());
+//                    //
+//                    mediaSources.add(source);
+//                }
+//            }
 
             // 字幕轨道
 //            SubtitleArgs[] extSubtitleUrl = urlArgs.getExtSubtitleUrl();

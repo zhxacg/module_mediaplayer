@@ -26,8 +26,8 @@ import lib.kalu.mediaplayer.PlayerSDK;
 import lib.kalu.mediaplayer.bean.args.StartArgs;
 import lib.kalu.mediaplayer.bean.args.SubtitleArgs;
 import lib.kalu.mediaplayer.bean.args.UrlArgs;
+import lib.kalu.mediaplayer.bean.args.VideoArgs;
 import lib.kalu.mediaplayer.bean.cache.Cache;
-import lib.kalu.mediaplayer.bean.info.TrackInfo;
 import lib.kalu.mediaplayer.bean.menu.Menu;
 import lib.kalu.mediaplayer.bean.proxy.Proxy;
 import lib.kalu.mediaplayer.bean.type.PlayerType;
@@ -297,7 +297,15 @@ public class MainActivity extends Activity {
                     if (!"test_hls".equals(text))
                         continue;
                     String[] urls = getResources().getStringArray(R.array.hls_extra_video_urls);
-                    urlBuilder.setExtVideoUrl(urls);
+                    int length = urls.length;
+                    VideoArgs[] videoArgs = new VideoArgs[length];
+                    for (int i = 0; i < length; i++) {
+                        videoArgs[i] = new VideoArgs.Builder()
+                                .setUrl(urls[0])
+                                .setLanguage("test" + i)
+                                .build();
+                    }
+                    urlBuilder.setExtVideo(videoArgs);
                 }
             } catch (Exception e) {
             }
@@ -327,7 +335,7 @@ public class MainActivity extends Activity {
                                 .setLanguage(languages[i])
                                 .build();
                     }
-                    urlBuilder.setExtSubtitleUrl(subtitleArgs);
+                    urlBuilder.setExtSubtitle(subtitleArgs);
                 }
             } catch (Exception e) {
             }

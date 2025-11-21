@@ -21,7 +21,7 @@ public final class Cache implements Serializable {
     }
 
     public int getSizeMB() {
-        return sizeMB;
+        return sizeMB * 1024 * 1024;
     }
 
     public String getDir(@PlayerType.KernelType.Value int type) {
@@ -43,12 +43,12 @@ public final class Cache implements Serializable {
         // 缓存大小
         private int sizeMB = 1024;
         private LinkedHashMap<Integer, String> dirs = new LinkedHashMap<Integer, String>() {{
-            put(PlayerType.KernelType.ANDROID, "android_cache");
-            put(PlayerType.KernelType.IJK, "ijk_cache");
-            put(PlayerType.KernelType.FFPLAYER, "ff_cache");
-            put(PlayerType.KernelType.VLC, "vlc_cache");
-            put(PlayerType.KernelType.EXO_V2, "exo2_cache");
-            put(PlayerType.KernelType.MEDIA_V3, "media3_cache");
+            put(PlayerType.KernelType.ANDROID, "def_");
+            put(PlayerType.KernelType.IJK, "ijk_");
+            put(PlayerType.KernelType.FFPLAYER, "ff_");
+            put(PlayerType.KernelType.VLC, "vlc_");
+            put(PlayerType.KernelType.EXO_V2, "exo2_");
+            put(PlayerType.KernelType.MEDIA_V3, "media3_");
         }};
 
         public Cache.Builder setEnable(boolean v) {

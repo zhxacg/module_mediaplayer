@@ -3,56 +3,56 @@ package lib.kalu.mediaplayer.bean.args;
 import java.io.Serializable;
 
 public final class UrlArgs implements Serializable {
-    private String mainUrl;
-    private String[] extVideoUrl;
-    private String[] extAudioUrl;
-    private SubtitleArgs[] extSubtitleUrl;
+    private VideoArgs mainVideoArgs;
+    private VideoArgs[] extVideoArgs;
+    private AudioArgs[] extAudioArgs;
+    private SubtitleArgs[] extSubtitleArgs;
 
     public UrlArgs(Builder builder) {
-        this.mainUrl = builder.mainUrl;
-        this.extVideoUrl = builder.extVideoUrl;
-        this.extAudioUrl = builder.extAudioUrl;
-        this.extSubtitleUrl = builder.extSubtitleUrl;
+        this.mainVideoArgs = builder.mainVideoArgs;
+        this.extVideoArgs = builder.extVideoArgs;
+        this.extAudioArgs = builder.extAudioArgs;
+        this.extSubtitleArgs = builder.extSubtitleArgs;
     }
 
     public boolean containsMainUrl() {
-        return null != mainUrl && !mainUrl.isEmpty();
+        return null != mainVideoArgs && mainVideoArgs.containsUrl();
     }
 
     public boolean containsExtUrl() {
-        return (null != extVideoUrl && extVideoUrl.length > 0) || (null != extAudioUrl && extAudioUrl.length > 0) || (null != extSubtitleUrl && extSubtitleUrl.length > 0);
+        return (null != extVideoArgs && extVideoArgs.length > 0) || (null != extAudioArgs && extAudioArgs.length > 0) || (null != extSubtitleArgs && extSubtitleArgs.length > 0);
     }
 
     public int getUrlCount() {
         try {
             int result = 0;
             // mainUrl
-            if (null != mainUrl && !mainUrl.isEmpty()) {
+            if (null != mainVideoArgs && mainVideoArgs.containsUrl()) {
                 result += 1;
             }
             // extVideoUrl
-            if (null != extVideoUrl) {
-                for (String url : extVideoUrl) {
-                    if (null == url)
+            if (null != extVideoArgs) {
+                for (VideoArgs videoArgs : extVideoArgs) {
+                    if (null == videoArgs)
                         continue;
-                    if (url.isEmpty())
+                    if (!videoArgs.containsUrl())
                         continue;
                     result += 1;
                 }
             }
             // extAudioUrl
-            if (null != extAudioUrl) {
-                for (String url : extAudioUrl) {
+            if (null != extAudioArgs) {
+                for (AudioArgs url : extAudioArgs) {
                     if (null == url)
                         continue;
-                    if (url.isEmpty())
+                    if (!url.containsUrl())
                         continue;
                     result += 1;
                 }
             }
             // extVideoUrl
-            if (null != extSubtitleUrl) {
-                for (SubtitleArgs args : extSubtitleUrl) {
+            if (null != extSubtitleArgs) {
+                for (SubtitleArgs args : extSubtitleArgs) {
                     if (null == args)
                         continue;
                     String url = args.getUrl();
@@ -69,46 +69,54 @@ public final class UrlArgs implements Serializable {
         }
     }
 
-    public SubtitleArgs[] getExtSubtitleUrl() {
-        return extSubtitleUrl;
+    public SubtitleArgs[] getExtSubtitle() {
+        return extSubtitleArgs;
     }
 
-    public String[] getExtAudioUrl() {
-        return extAudioUrl;
+    public AudioArgs[] getExtAudio() {
+        return extAudioArgs;
     }
 
-    public String[] getExtVideoUrl() {
-        return extVideoUrl;
+    public VideoArgs[] getExtVideo() {
+        return extVideoArgs;
+    }
+
+    public VideoArgs getMainVideo() {
+        return mainVideoArgs;
     }
 
     public String getMainUrl() {
-        return mainUrl;
+        if (null == mainVideoArgs) {
+            return null;
+        } else {
+            return mainVideoArgs.getUrl();
+        }
     }
 
     public static class Builder implements Serializable {
 
-        private String mainUrl;
-        private String[] extVideoUrl;
-        private String[] extAudioUrl;
-        private SubtitleArgs[] extSubtitleUrl;
+        private VideoArgs mainVideoArgs;
+        private VideoArgs[] extVideoArgs;
+        private AudioArgs[] extAudioArgs;
+        private SubtitleArgs[] extSubtitleArgs;
 
         public UrlArgs.Builder setMainUrl(String v) {
-            this.mainUrl = v;
+            this.mainVideoArgs = new VideoArgs.Builder().setUrl(v).setLanguage("Default").build();
             return this;
         }
 
-        public UrlArgs.Builder setExtVideoUrl(String[] v) {
-            this.extVideoUrl = v;
+        public UrlArgs.Builder setExtVideo(VideoArgs[] v) {
+            this.extVideoArgs = v;
             return this;
         }
 
-        public UrlArgs.Builder setExtAudioUrl(String[] v) {
-            this.extAudioUrl = v;
+        public UrlArgs.Builder setExtAudio(AudioArgs[] v) {
+            this.extAudioArgs = v;
             return this;
         }
 
-        public UrlArgs.Builder setExtSubtitleUrl(SubtitleArgs[] v) {
-            this.extSubtitleUrl = v;
+        public UrlArgs.Builder setExtSubtitle(SubtitleArgs[] v) {
+            this.extSubtitleArgs = v;
             return this;
         }
 
