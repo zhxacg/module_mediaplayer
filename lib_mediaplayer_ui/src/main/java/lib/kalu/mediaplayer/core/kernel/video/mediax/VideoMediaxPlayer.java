@@ -602,6 +602,7 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
         try {
             if (null != mSimpleCache) {
                 mSimpleCache.release();
+                mSimpleCache = null;
             }
             if (null != mHlsManifest) {
                 mHlsManifest = null;
@@ -1055,10 +1056,10 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
 
             // hls
             if (metaType == PlayerType.MetaType.VIDEO_HLS) {
-                Object factory = buildAudioMediaFactory(context, args, item);
                 if (LogUtil.DEBUG) {
                     LogUtil.log("VideoMediaxPlayer => buildAudioMediaSource => hls, dataUrl = " + url);
                 }
+                Object factory = buildAudioMediaFactory(context, args, item);
                 return ((MediaSource.Factory) factory).createMediaSource(new MediaItem.Builder()
                         .setUri(Uri.parse(url))
                         .setMediaId("audio:" + hashCode)
@@ -1239,37 +1240,38 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
             if (sizeMB <= 0)
                 throw new Exception("error: sizeMB <= 0, sizeMB = " + sizeMB);
 
+//            if (null == mSimpleCache) {
+
+//            StringBuilder builder = new StringBuilder();
+//            builder.append(cache.getDir(PlayerType.KernelType.MEDIA_V3));
+//            if (urlType == PlayerType.UrlType.VIDEO) {
+//                builder.append("video");
+//            } else if (urlType == PlayerType.UrlType.AUDIO) {
+//                builder.append("audio");
+//            } else if (urlType == PlayerType.UrlType.SUBTITLE) {
+//                builder.append("subtitle");
+//            } else {
+//                builder.append("other");
+//            }
+
+            String dirName = cache.getDir(PlayerType.KernelType.MEDIA_V3);
+            if (LogUtil.DEBUG) {
+                LogUtil.log("VideoMediaxPlayer => buildDateFactory => dirName = " + dirName + ", dataUrl = " + dataUrl);
+            }
+
+            boolean external = cache.isExternal();
+            File dirFile;
+            if (external) {
+                dirFile = new File(context.getExternalCacheDir(), dirName);
+            } else {
+                dirFile = new File(context.getCacheDir(), dirName);
+            }
+
+            if (!dirFile.exists()) {
+                dirFile.mkdirs();
+            }
+
             if (null == mSimpleCache) {
-
-                StringBuilder builder = new StringBuilder();
-                builder.append(cache.getDir(PlayerType.KernelType.MEDIA_V3));
-                if (urlType == PlayerType.UrlType.VIDEO) {
-                    builder.append("video");
-                } else if (urlType == PlayerType.UrlType.AUDIO) {
-                    builder.append("audio");
-                } else if (urlType == PlayerType.UrlType.SUBTITLE) {
-                    builder.append("audio");
-                } else {
-                    builder.append("other");
-                }
-
-                String dirName = builder.toString();
-                if (LogUtil.DEBUG) {
-                    LogUtil.log("VideoMediaxPlayer => buildDateFactory => dirName =  " + dirName + ", dataUrl = " + dataUrl);
-                }
-
-                boolean external = cache.isExternal();
-                File dirFile;
-                if (external) {
-                    dirFile = new File(context.getExternalCacheDir(), dirName);
-                } else {
-                    dirFile = new File(context.getCacheDir(), dirName);
-                }
-
-                if (!dirFile.exists()) {
-                    dirFile.mkdirs();
-                }
-
                 mSimpleCache = new SimpleCache(dirFile,
                         //
                         new LeastRecentlyUsedCacheEvictor(sizeMB),
@@ -1311,6 +1313,11 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
                         @Override
                         public String buildCacheKey(DataSpec dataSpec) {
                             String subUrl = dataSpec.uri.toString();
+
+                            if (LogUtil.DEBUG) {
+                                LogUtil.log("VideoMediaxPlayer => buildDateFactory => subUrl = " + subUrl);
+                            }
+
                             if (subUrl.endsWith(PlayerType.SchemeType._M3U8)) {
                                 return subUrl;
                             } else if (subUrl.endsWith(PlayerType.SchemeType._TS)) {
@@ -1322,7 +1329,7 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
                     });
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
-                LogUtil.log("VideoMediaxPlayer => buildMediaFactory => Exception: " + e.getMessage());
+                LogUtil.log("VideoMediaxPlayer => buildDateFactory => Exception: " + e.getMessage());
             }
             return new DefaultDataSource.Factory(context, buildHttpFactory(args));
         }

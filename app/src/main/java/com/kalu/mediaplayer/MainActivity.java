@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
+import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Toast;
@@ -252,6 +253,13 @@ public class MainActivity extends Activity {
 
     private UrlArgs getUrl() {
         try {
+
+
+            //
+            EditText editText = findViewById(R.id.main_input);
+            String inputUrl = editText.getEditableText().toString();
+
+            //
             String checkUrl = null;
             RadioGroup radioGroup = findViewById(R.id.main_urls);
             int childCount = radioGroup.getChildCount();
@@ -263,8 +271,10 @@ public class MainActivity extends Activity {
                 checkUrl = radioButton.getTag().toString();
             }
 
-            if (null != checkUrl && !checkUrl.isEmpty()) {
-                return new UrlArgs.Builder().setUrl(checkUrl.toString()).build();
+            if (null != inputUrl && !inputUrl.isEmpty()) {
+                return new UrlArgs.Builder().setUrl(inputUrl).build();
+            } else if (null != checkUrl && !checkUrl.isEmpty()) {
+                return new UrlArgs.Builder().setUrl(checkUrl).build();
             } else {
 
                 UrlArgs.Builder urlBuilder = new UrlArgs.Builder();
@@ -651,8 +661,8 @@ public class MainActivity extends Activity {
                 .setSeekType(PlayerType.SeekType.DEFAULT)
                 // 缓存
                 .setCache(new Cache.Builder()
-                        .setEnable(isCacheEnable())
-                        .setExternal(isCacheExternal())
+                        .setEnable(true)
+                        .setExternal(false)
                         .setSizeMB(1000)
                         .build())
                 // 代理

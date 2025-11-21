@@ -303,11 +303,10 @@
                 android:textSize="14sp" />
 
             <EditText
-                android:id="@+id/main_edit"
+                android:id="@+id/main_input"
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
-                android:hint="输入视频地址"
-                android:text="https://live.tvinterior.com.br/hls/stream.m3u8" />
+                android:hint="输入视频地址: 优先播放此链接" />
 
             <Button
                 android:id="@+id/main_button1"
