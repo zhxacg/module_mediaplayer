@@ -696,7 +696,9 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
 
             // 有 外挂轨道
             if (containsExtUrl) {
-
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("VideoMediaxPlayer => formatMediaSource => 外挂轨道 有");
+                }
 
                 int urlCount = urlArgs.getUrlCount();
                 if (LogUtil.DEBUG) {
@@ -713,6 +715,9 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
                 String[] extraTrackVideo = urlArgs.getExtVideoUrl();
                 if (null != extraTrackVideo) {
                     for (String vUrl : extraTrackVideo) {
+                        if (LogUtil.DEBUG) {
+                            LogUtil.log("VideoMediaxPlayer => formatMediaSource => 外挂视频轨道: vUrl = " + vUrl);
+                        }
                         mediaSources[++index] = buildMediaSource(context, args, vUrl);
                     }
                 }
@@ -721,6 +726,9 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
                 String[] extAudioUrl = urlArgs.getExtAudioUrl();
                 if (null != extAudioUrl) {
                     for (String aUrl : extAudioUrl) {
+                        if (LogUtil.DEBUG) {
+                            LogUtil.log("VideoMediaxPlayer => formatMediaSource => 外挂音频轨道: aUrl = " + aUrl);
+                        }
                         mediaSources[++index] = new DefaultMediaSourceFactory(buildHttpFactory(args))
                                 .createMediaSource(new MediaItem.Builder()
                                         .setUri(aUrl)
@@ -734,6 +742,11 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
                 SubtitleArgs[] extSubtitleUrl = urlArgs.getExtSubtitleUrl();
                 if (null != extSubtitleUrl) {
                     for (SubtitleArgs item : extSubtitleUrl) {
+                        if (null == item)
+                            continue;
+                        if (LogUtil.DEBUG) {
+                            LogUtil.log("VideoMediaxPlayer => formatMediaSource => 外挂字幕轨道: subtitle = " + item);
+                        }
                         String sutitleUrl = item.getUrl();
                         if (null == sutitleUrl)
                             continue;
@@ -788,6 +801,9 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
             }
             // 无 外挂轨道
             else {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("VideoMediaxPlayer => formatMediaSource => 外挂轨道 无");
+                }
                 return buildMediaSource(context, args, mainUrl);
             }
         } catch (Exception e) {

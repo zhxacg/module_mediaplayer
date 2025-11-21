@@ -43,4 +43,12 @@ public final class SubtitleArgs implements Serializable {
             return new SubtitleArgs(this);
         }
     }
+
+    @Override
+    public String toString() {
+        return "SubtitleArgs{" +
+                "language='" + language + '\'' +
+                ", url='" + url + '\'' +
+                '}';
+    }
 }
