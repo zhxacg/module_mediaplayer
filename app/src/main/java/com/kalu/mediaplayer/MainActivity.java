@@ -325,7 +325,6 @@ public class MainActivity extends Activity {
                         subtitleArgs[i] = new SubtitleArgs.Builder()
                                 .setUrl(urls[i])
                                 .setLanguage(languages[i])
-                                .setMimeType(PlayerType.TrackType.TEXT_VTT)
                                 .build();
                     }
                     urlBuilder.setExtSubtitleUrl(subtitleArgs);

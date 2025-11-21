@@ -15,8 +15,8 @@ import lib.kalu.ffplayer.inter.OnPreparedListener;
 import lib.kalu.ffplayer.inter.OnSeekCompleteListener;
 import lib.kalu.ffplayer.inter.OnVideoSizeChangedListener;
 import lib.kalu.mediaplayer.bean.args.StartArgs;
-import lib.kalu.mediaplayer.core.kernel.video.VideoBasePlayer;
 import lib.kalu.mediaplayer.bean.type.PlayerType;
+import lib.kalu.mediaplayer.core.kernel.video.VideoBasePlayer;
 import lib.kalu.mediaplayer.util.LogUtil;
 
 
@@ -73,11 +73,11 @@ public final class VideoFFmpegPlayer extends VideoBasePlayer {
                 throw new Exception("error: mFFmpegPlayer null");
             if (null == args)
                 throw new Exception("error: args null");
-            boolean containsUrl = args.containsUrl();
-            if (!containsUrl)
-                throw new Exception("error: containsUrl false");
+            boolean containsMainUrl = args.containsMainUrl();
+            if (!containsMainUrl)
+                throw new Exception("error: containsMainUrl false");
             onEvent(PlayerType.KernelType.FFPLAYER, PlayerType.EventType.INIT_READY);
-            mFFmpegPlayer.setDataSource(context, Uri.parse(args.getUrl().getMainUrl()), null);
+            mFFmpegPlayer.setDataSource(context, Uri.parse(args.getUrl()), null);
             mFFmpegPlayer.prepare();
         } catch (Exception e) {
             if (LogUtil.DEBUG) {

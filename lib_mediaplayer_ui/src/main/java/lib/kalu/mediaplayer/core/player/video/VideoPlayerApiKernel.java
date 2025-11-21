@@ -60,9 +60,9 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
         try {
             if (null == args)
                 throw new Exception("error: args null");
-            boolean containsUrl = args.containsUrl();
-            if (!containsUrl)
-                throw new Exception("error: containsUrl false");
+            boolean containsMainUrl = args.containsMainUrl();
+            if (!containsMainUrl)
+                throw new Exception("error: containsMainUrl false");
             // 1
             boolean log = args.isLog();
             LogUtil.setLogger(log);
@@ -229,9 +229,9 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
             StartArgs args = getStartArgs();
             if (null == args)
                 throw new Exception("error: args null");
-            boolean containsUrl = args.containsUrl();
-            if (!containsUrl)
-                throw new Exception("error: containsUrl false");
+            boolean containsMainUrl = args.containsMainUrl();
+            if (!containsMainUrl)
+                throw new Exception("error: containsMainUrl false");
             if (cleatTag) {
                 setTags(null);
             }

@@ -85,25 +85,26 @@ public class StartArgs implements Serializable {
     }
 
     // 视频url
-    private UrlArgs url;
+    private UrlArgs urlArgs;
 
-    public boolean containsUrl() {
-        if (null == url) {
-            return false;
-        } else {
-            String mainUrl = url.getMainUrl();
-            if (null == mainUrl) {
-                return false;
-            } else if (mainUrl.isEmpty()) {
-                return false;
-            } else {
-                return true;
-            }
-        }
+    public boolean containsMainUrl() {
+        return null != urlArgs && urlArgs.containsMainUrl();
     }
 
-    public UrlArgs getUrl() {
-        return url;
+    public boolean containsExtUrl() {
+        return null != urlArgs && urlArgs.containsExtUrl();
+    }
+
+    public UrlArgs getUrlArgs() {
+        return urlArgs;
+    }
+
+    public String getUrl() {
+        if (null == urlArgs) {
+            return null;
+        } else {
+            return urlArgs.getMainUrl();
+        }
     }
 
     // 视频title
@@ -214,7 +215,7 @@ public class StartArgs implements Serializable {
                 ", bufferingTimeoutRetry=" + bufferingTimeoutRetry +
                 ", initRelease=" + initRelease +
                 ", supportAutoRelease=" + supportAutoRelease +
-                ", url='" + url + '\'' +
+                ", urlArgs='" + urlArgs + '\'' +
                 ", title='" + title + '\'' +
                 ", trySeeDuration=" + trySeeDuration +
                 ", live=" + live +
@@ -242,7 +243,7 @@ public class StartArgs implements Serializable {
         this.bufferingTimeoutRetry = builder.bufferingTimeoutRetry;
         this.initRelease = builder.initRelease;
         this.supportAutoRelease = builder.supportAutoRelease;
-        this.url = builder.url;
+        this.urlArgs = builder.urlArgs;
         this.title = builder.title;
         this.trySeeDuration = builder.trySeeDuration;
         this.live = builder.live;
@@ -270,7 +271,7 @@ public class StartArgs implements Serializable {
         builder.bufferingTimeoutRetry = bufferingTimeoutRetry;
         builder.initRelease = initRelease;
         builder.supportAutoRelease = supportAutoRelease;
-        builder.url = url;
+        builder.urlArgs = urlArgs;
         builder.title = title;
         builder.trySeeDuration = trySeeDuration;
         builder.live = live;
@@ -336,15 +337,15 @@ public class StartArgs implements Serializable {
         }
 
         // 视频url
-        private UrlArgs url;
+        private UrlArgs urlArgs;
 
         public Builder setUrl(UrlArgs v) {
-            this.url = v;
+            this.urlArgs = v;
             return this;
         }
 
         public Builder setUrl(String v) {
-            this.url = new UrlArgs.Builder().setMainUrl(v).build();
+            this.urlArgs = new UrlArgs.Builder().setMainUrl(v).build();
             return this;
         }
 

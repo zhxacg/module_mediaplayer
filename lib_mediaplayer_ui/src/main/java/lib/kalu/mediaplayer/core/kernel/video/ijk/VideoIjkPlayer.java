@@ -91,11 +91,11 @@ public final class VideoIjkPlayer extends VideoBasePlayer {
             if (LogUtil.DEBUG) {
                 LogUtil.log("VideoIjkPlayer => startDecoder =>");
             }
-            boolean containsUrl = args.containsUrl();
-            if (!containsUrl)
-                throw new Exception("error: containsUrl false");
+            boolean containsMainUrl = args.containsMainUrl();
+            if (!containsMainUrl)
+                throw new Exception("error: containsMainUrl false");
             onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.INIT_READY);
-            mIjkPlayer.setDataSource(context, Uri.parse(args.getUrl().getMainUrl()), null);
+            mIjkPlayer.setDataSource(context, Uri.parse(args.getUrl()), null);
             boolean prepareAsync = args.isPrepareAsync();
             if (prepareAsync) {
                 mIjkPlayer.prepareAsync();

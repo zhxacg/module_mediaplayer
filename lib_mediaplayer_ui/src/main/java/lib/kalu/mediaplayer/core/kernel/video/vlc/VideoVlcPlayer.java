@@ -59,11 +59,11 @@ public final class VideoVlcPlayer extends VideoBasePlayer {
                 throw new Exception("error: mVlcPlayer null");
             if (null == args)
                 throw new Exception("error: args null");
-            boolean containsUrl = args.containsUrl();
-            if (!containsUrl)
-                throw new Exception("error: containsUrl false");
+            boolean containsMainUrl = args.containsMainUrl();
+            if (!containsMainUrl)
+                throw new Exception("error: containsMainUrl false");
             onEvent(PlayerType.KernelType.VLC, PlayerType.EventType.INIT_READY);
-            mVlcPlayer.setDataSource(Uri.parse(args.getUrl().getMainUrl()), isPlayWhenReady());
+            mVlcPlayer.setDataSource(Uri.parse(args.getUrl()), isPlayWhenReady());
             mVlcPlayer.play();
         } catch (Exception e) {
             stop();

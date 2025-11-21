@@ -76,15 +76,15 @@ public final class VideoAndroidPlayer extends VideoBasePlayer {
                 throw new Exception("error: mAndroidPlayer null");
             if (null == args)
                 throw new Exception("error: args null");
-            boolean containsUrl = args.containsUrl();
-            if (!containsUrl)
-                throw new Exception("error: containsUrl false");
+            boolean containsMainUrl = args.containsMainUrl();
+            if (!containsMainUrl)
+                throw new Exception("error: containsMainUrl false");
             if (LogUtil.DEBUG) {
                 LogUtil.log("VideoAndroidPlayer => startDecoder =>");
             }
             onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.INIT_READY);
 
-            mAndroidPlayer.setDataSource(context, Uri.parse(args.getUrl().getMainUrl()), null);
+            mAndroidPlayer.setDataSource(context, Uri.parse(args.getUrl()), null);
             boolean prepareAsync = args.isPrepareAsync();
             if (prepareAsync) {
                 mAndroidPlayer.prepareAsync();

@@ -15,6 +15,60 @@ public final class UrlArgs implements Serializable {
         this.extSubtitleUrl = builder.extSubtitleUrl;
     }
 
+    public boolean containsMainUrl() {
+        return null != mainUrl && !mainUrl.isEmpty();
+    }
+
+    public boolean containsExtUrl() {
+        return (null != extVideoUrl && extVideoUrl.length > 0) || (null != extAudioUrl && extAudioUrl.length > 0) || (null != extSubtitleUrl && extSubtitleUrl.length > 0);
+    }
+
+    public int getUrlCount() {
+        try {
+            int result = 0;
+            // mainUrl
+            if (null != mainUrl && !mainUrl.isEmpty()) {
+                result += 1;
+            }
+            // extVideoUrl
+            if (null != extVideoUrl) {
+                for (String url : extVideoUrl) {
+                    if (null == url)
+                        continue;
+                    if (url.isEmpty())
+                        continue;
+                    result += 1;
+                }
+            }
+            // extAudioUrl
+            if (null != extAudioUrl) {
+                for (String url : extAudioUrl) {
+                    if (null == url)
+                        continue;
+                    if (url.isEmpty())
+                        continue;
+                    result += 1;
+                }
+            }
+            // extVideoUrl
+            if (null != extSubtitleUrl) {
+                for (SubtitleArgs args : extSubtitleUrl) {
+                    if (null == args)
+                        continue;
+                    String url = args.getUrl();
+                    if (null == url)
+                        continue;
+                    if (url.isEmpty())
+                        continue;
+                    result += 1;
+                }
+            }
+            return result;
+        } catch (Exception e) {
+            return 0;
+        }
+    }
+
     public SubtitleArgs[] getExtSubtitleUrl() {
         return extSubtitleUrl;
     }

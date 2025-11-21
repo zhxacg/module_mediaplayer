@@ -312,9 +312,9 @@ public final class VideoExo2Player extends VideoBasePlayer {
                 throw new Exception("warning: mExoPlayer null");
             if (null == args)
                 throw new Exception("error: args null");
-            boolean containsUrl = args.containsUrl();
-            if (!containsUrl)
-                throw new Exception("error: containsUrl false");
+            boolean containsMainUrl = args.containsMainUrl();
+            if (!containsMainUrl)
+                throw new Exception("error: containsMainUrl false");
             onEvent(PlayerType.KernelType.EXO_V2, PlayerType.EventType.INIT_READY);
             MediaSource mediaSource = buildSource(context, args);
             mExoPlayer.setMediaSource(mediaSource);
@@ -673,7 +673,7 @@ public final class VideoExo2Player extends VideoBasePlayer {
     private MediaSource buildSource(Context context, StartArgs args) throws Exception {
 
         try {
-            UrlArgs urlArgs = args.getUrl();
+            UrlArgs urlArgs = args.getUrlArgs();
             String mainUrl = urlArgs.getMainUrl();
 
             int contentType;

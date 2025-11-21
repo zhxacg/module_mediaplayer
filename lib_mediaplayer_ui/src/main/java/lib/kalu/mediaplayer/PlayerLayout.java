@@ -14,6 +14,7 @@ import androidx.annotation.RequiresApi;
 import java.util.List;
 
 import lib.kalu.mediaplayer.bean.args.StartArgs;
+import lib.kalu.mediaplayer.bean.args.UrlArgs;
 import lib.kalu.mediaplayer.bean.info.HlsSpanInfo;
 import lib.kalu.mediaplayer.bean.info.TrackInfo;
 import lib.kalu.mediaplayer.bean.type.PlayerType;
@@ -195,9 +196,9 @@ public class PlayerLayout extends RelativeLayout {
             StartArgs args = getStartArgs();
             if (null == args)
                 throw new Exception("warning: args null");
-            boolean containsUrl = args.containsUrl();
-            if (!containsUrl)
-                throw new Exception("error: containsUrl false");
+            boolean containsMainUrl = args.containsMainUrl();
+            if (!containsMainUrl)
+                throw new Exception("error: containsMainUrl false");
             PlayerView playerView = getPlayerView();
             if (null == playerView)
                 throw new Exception("playerView error: null");
@@ -217,9 +218,9 @@ public class PlayerLayout extends RelativeLayout {
             StartArgs args = getStartArgs();
             if (null == args)
                 throw new Exception("warning: args null");
-            boolean containsUrl = args.containsUrl();
-            if (!containsUrl)
-                throw new Exception("error: containsUrl false");
+            boolean containsMainUrl = args.containsMainUrl();
+            if (!containsMainUrl)
+                throw new Exception("error: containsMainUrl false");
             PlayerView playerView = getPlayerView();
             if (null == playerView)
                 throw new Exception("playerView error: null");
@@ -239,9 +240,9 @@ public class PlayerLayout extends RelativeLayout {
             StartArgs args = getStartArgs();
             if (null == args)
                 throw new Exception("warning: args null");
-            boolean containsUrl = args.containsUrl();
-            if (!containsUrl)
-                throw new Exception("error: containsUrl false");
+            boolean containsMainUrl = args.containsMainUrl();
+            if (!containsMainUrl)
+                throw new Exception("error: containsMainUrl false");
             PlayerView playerView = getPlayerView();
             if (null == playerView)
                 throw new Exception("playerView error: null");
@@ -262,9 +263,9 @@ public class PlayerLayout extends RelativeLayout {
             StartArgs args = getStartArgs();
             if (null == args)
                 throw new Exception("warning: args null");
-            boolean containsUrl = args.containsUrl();
-            if (!containsUrl)
-                throw new Exception("error: containsUrl false");
+            boolean containsMainUrl = args.containsMainUrl();
+            if (!containsMainUrl)
+                throw new Exception("error: containsMainUrl false");
             PlayerView playerView = getPlayerView();
             if (null == playerView)
                 throw new Exception("playerView error: null");
@@ -553,10 +554,24 @@ public class PlayerLayout extends RelativeLayout {
             StartArgs args = getStartArgs();
             if (null == args)
                 throw new Exception("warning: args null");
-            return args.getUrl().getMainUrl();
+            return args.getUrl();
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
-                LogUtil.log("PlayerLayout => getMediaUrl => " + e.getMessage());
+                LogUtil.log("PlayerLayout => getUrl => " + e.getMessage());
+            }
+            return null;
+        }
+    }
+
+    public final UrlArgs getUrlArgs() {
+        try {
+            StartArgs args = getStartArgs();
+            if (null == args)
+                throw new Exception("warning: args null");
+            return args.getUrlArgs();
+        } catch (Exception e) {
+            if (LogUtil.DEBUG) {
+                LogUtil.log("PlayerLayout => getUrlArgs => " + e.getMessage());
             }
             return null;
         }
