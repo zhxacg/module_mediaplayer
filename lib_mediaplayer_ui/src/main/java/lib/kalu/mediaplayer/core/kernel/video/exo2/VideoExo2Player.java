@@ -877,7 +877,7 @@ public final class VideoExo2Player extends VideoBasePlayer {
                     Class<?> cls = Class.forName("com.google.android.exoplayer2.source.hls.HlsMediaSource$Factory");
                     Constructor<?> constructor = cls.getDeclaredConstructor(DataSource.Factory.class);
                     constructor.setAccessible(true);
-                    Method method = cls.getMethod("setPlaylistParserFactory", CustomHlsPlaylistParserFactory.class);
+                    Method method = cls.getMethod("setPlaylistParserFactory", HlsPlaylistParserFactory.class);
                     Object object = method.invoke(constructor.newInstance(dataSource), new CustomHlsPlaylistParserFactory());
 
                     if (LogUtil.DEBUG) {
