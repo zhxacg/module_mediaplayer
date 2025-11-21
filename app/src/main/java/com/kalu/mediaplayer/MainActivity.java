@@ -22,7 +22,9 @@ import java.util.List;
 
 import lib.kalu.mediaplayer.PlayerSDK;
 import lib.kalu.mediaplayer.bean.args.StartArgs;
+import lib.kalu.mediaplayer.bean.args.SubtitleArgs;
 import lib.kalu.mediaplayer.bean.args.UrlArgs;
+import lib.kalu.mediaplayer.bean.args.VideoArgs;
 import lib.kalu.mediaplayer.bean.cache.Cache;
 import lib.kalu.mediaplayer.bean.menu.Menu;
 import lib.kalu.mediaplayer.bean.proxy.Proxy;
@@ -266,7 +268,48 @@ public class MainActivity extends Activity {
             if (null != checkUrl && !checkUrl.isEmpty()) {
                 return new UrlArgs.Builder().setMainUrl(checkUrl.toString()).build();
             } else {
-                return null;
+
+                UrlArgs.Builder urlBuilder = new UrlArgs.Builder();
+
+                // mainUrl
+                try {
+                    String[] urls = getResources().getStringArray(R.array.hls_extra_video_urls);
+                    urlBuilder.setMainUrl(urls[0]);
+                } catch (Exception e) {
+                }
+
+                // extVideoUrl
+                try {
+                    String[] urls = getResources().getStringArray(R.array.hls_extra_video_urls);
+                    int length = urls.length;
+                    VideoArgs[] videoArgs = new VideoArgs[length - 1];
+                    for (int i = 1; i < length; i++) {
+                        videoArgs[i - 1] = new VideoArgs.Builder()
+                                .setUrl(urls[i])
+                                .setLanguage("test" + i)
+                                .build();
+                    }
+                    urlBuilder.setExtVideo(videoArgs);
+                } catch (Exception e) {
+                }
+
+                // extSubtitleUrl
+                try {
+                    String[] urls = getResources().getStringArray(R.array.hls_extra_subtitle_urls);
+                    String[] languages = getResources().getStringArray(R.array.hls_extra_subtitle_languages);
+                    SubtitleArgs[] subtitleArgs = new SubtitleArgs[urls.length];
+                    for (int i = 0; i < urls.length; i++) {
+                        subtitleArgs[i] = new SubtitleArgs.Builder()
+                                .setUrl(urls[i])
+                                .setLanguage(languages[i])
+                                .build();
+                    }
+                    urlBuilder.setExtSubtitle(subtitleArgs);
+                } catch (Exception e) {
+                }
+
+                //
+                return urlBuilder.build();
             }
         } catch (Exception e) {
             LogUtil.log("MainActivity => getUrl => Exception " + e.getMessage(), e);

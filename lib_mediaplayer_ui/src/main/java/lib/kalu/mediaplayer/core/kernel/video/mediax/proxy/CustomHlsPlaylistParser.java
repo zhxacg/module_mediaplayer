@@ -61,6 +61,10 @@ import java.util.TreeMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import lib.kalu.mediaplayer.PlayerSDK;
+import lib.kalu.mediaplayer.bean.proxy.ProxyUrl;
+import lib.kalu.mediaplayer.util.LogUtil;
+
 /**
  * HLS playlists parsing logic.
  */
@@ -317,6 +321,11 @@ public final class CustomHlsPlaylistParser implements ParsingLoadable.Parser<Hls
 
     @Override
     public HlsPlaylist parse(Uri uri, InputStream inputStream) throws IOException {
+
+        if (LogUtil.DEBUG) {
+            LogUtil.log("CustomHlsPlaylistParser -> parse -> uri = " + uri);
+        }
+
         BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
         Queue<String> extraLines = new ArrayDeque<>();
         String line;
@@ -412,6 +421,12 @@ public final class CustomHlsPlaylistParser implements ParsingLoadable.Parser<Hls
 
     private static HlsMultivariantPlaylist parseMultivariantPlaylist(
             LineIterator iterator, String baseUri) throws IOException {
+
+        if (LogUtil.DEBUG) {
+            LogUtil.log("CustomHlsPlaylistParser -> parseMultivariantPlaylist -> baseUri = " + baseUri);
+        }
+
+
         HashMap<Uri, ArrayList<VariantInfo>> urlToVariantInfos = new HashMap<>();
         HashMap<String, String> variableDefinitions = new HashMap<>();
         ArrayList<Variant> variants = new ArrayList<>();
@@ -526,7 +541,7 @@ public final class CustomHlsPlaylistParser implements ParsingLoadable.Parser<Hls
                     uri = UriUtil.resolveToUri(baseUri, line);
                 }
 
-                Format format =
+                Format format1 =
                         new Format.Builder()
                                 .setId(variants.size())
                                 .setContainerMimeType(MimeTypes.APPLICATION_M3U8)
@@ -540,7 +555,7 @@ public final class CustomHlsPlaylistParser implements ParsingLoadable.Parser<Hls
                                 .build();
                 Variant variant =
                         new Variant(
-                                uri, format, videoGroupId, audioGroupId, subtitlesGroupId, closedCaptionsGroupId);
+                                uri, format1, videoGroupId, audioGroupId, subtitlesGroupId, closedCaptionsGroupId);
                 variants.add(variant);
                 @Nullable ArrayList<VariantInfo> variantInfosForUrl = urlToVariantInfos.get(uri);
                 if (variantInfosForUrl == null) {
@@ -571,8 +586,12 @@ public final class CustomHlsPlaylistParser implements ParsingLoadable.Parser<Hls
                                 /* name= */ null,
                                 checkNotNull(urlToVariantInfos.get(variant.url)));
                 Metadata metadata = new Metadata(hlsMetadataEntry);
-                Format format = variant.format.buildUpon().setMetadata(metadata).build();
-                deduplicatedVariants.add(variant.copyWithFormat(format));
+                Format format1 = variant.format.buildUpon()
+                        .setMetadata(metadata)
+                        .setLabel("test1")
+                        .setLanguage("test2")
+                        .build();
+                deduplicatedVariants.add(variant.copyWithFormat(format1));
             }
         }
 
@@ -691,7 +710,7 @@ public final class CustomHlsPlaylistParser implements ParsingLoadable.Parser<Hls
             muxedCaptionFormats = Collections.emptyList();
         }
 
-        return new HlsMultivariantPlaylist(
+        return formatHlsMultivariantPlaylist(new HlsMultivariantPlaylist(
                 baseUri,
                 tags,
                 deduplicatedVariants,
@@ -703,7 +722,7 @@ public final class CustomHlsPlaylistParser implements ParsingLoadable.Parser<Hls
                 muxedCaptionFormats,
                 hasIndependentSegmentsTag,
                 variableDefinitions,
-                sessionKeyDrmInitData);
+                sessionKeyDrmInitData));
     }
 
     @Nullable
@@ -745,6 +764,11 @@ public final class CustomHlsPlaylistParser implements ParsingLoadable.Parser<Hls
             LineIterator iterator,
             String baseUri)
             throws IOException {
+
+        if (LogUtil.DEBUG) {
+            LogUtil.log("CustomHlsPlaylistParser -> parseMediaPlaylist -> baseUri = " + baseUri);
+        }
+
         @HlsMediaPlaylist.PlaylistType int playlistType = HlsMediaPlaylist.PLAYLIST_TYPE_UNKNOWN;
         long startOffsetUs = C.TIME_UNSET;
         long mediaSequence = 0;
@@ -760,7 +784,7 @@ public final class CustomHlsPlaylistParser implements ParsingLoadable.Parser<Hls
         List<Part> trailingParts = new ArrayList<>();
         @Nullable Part preloadPart = null;
         List<RenditionReport> renditionReports = new ArrayList<>();
-        List<String> tags = new ArrayList<>();
+        List<String> tags1 = new ArrayList<>();
         LinkedHashMap<String, Interstitial.Builder> interstitialBuilderMap = new LinkedHashMap<>();
 
         long segmentDurationUs = 0;
@@ -799,7 +823,7 @@ public final class CustomHlsPlaylistParser implements ParsingLoadable.Parser<Hls
 
             if (line.startsWith(TAG_PREFIX)) {
                 // We expose all tags through the playlist.
-                tags.add(line);
+                tags1.add(line);
             }
 
             if (line.startsWith(TAG_PLAYLIST_TYPE)) {
@@ -821,7 +845,7 @@ public final class CustomHlsPlaylistParser implements ParsingLoadable.Parser<Hls
                 double partTargetDurationSeconds = parseDoubleAttr(line, REGEX_PART_TARGET_DURATION);
                 partTargetDurationUs = (long) (partTargetDurationSeconds * C.MICROS_PER_SECOND);
             } else if (line.startsWith(TAG_INIT_SEGMENT)) {
-                String uri = parseStringAttr(line, REGEX_URI, variableDefinitions);
+                String segmentUri = parseStringAttr(line, REGEX_URI, variableDefinitions);
                 String byteRange = parseOptionalStringAttr(line, REGEX_ATTR_BYTERANGE, variableDefinitions);
                 if (byteRange != null) {
                     String[] splitByteRange = Util.split(byteRange, "@");
@@ -843,7 +867,7 @@ public final class CustomHlsPlaylistParser implements ParsingLoadable.Parser<Hls
                 }
                 initializationSegment =
                         new Segment(
-                                uri,
+                                formatSegmentPath(baseUri, segmentUri),
                                 segmentByteRangeOffset,
                                 segmentByteRangeLength,
                                 fullSegmentEncryptionKeyUri,
@@ -1203,6 +1227,11 @@ public final class CustomHlsPlaylistParser implements ParsingLoadable.Parser<Hls
                 Matcher matcher = REGEX_CLIENT_DEFINED_ATTRIBUTE_PREFIX.matcher(attributes);
                 while (matcher.find()) {
                     String attributePrefix = matcher.group();
+
+//                    if (LogUtil.DEBUG) {
+//                        LogUtil.log("UYGUYGUGY -> attributePrefix = " + attributePrefix);
+//                    }
+
                     switch (attributePrefix) {
                         case "X-ASSET-URI=": // fall through
                         case "X-ASSET-LIST=": // fall through
@@ -1265,7 +1294,7 @@ public final class CustomHlsPlaylistParser implements ParsingLoadable.Parser<Hls
                     // the playlist to provide an initialization vector for it.
                     inferredInitSegment =
                             new Segment(
-                                    segmentUri,
+                                    formatSegmentPath(baseUri, segmentUri),
                                     /* byteRangeOffset= */ 0,
                                     segmentByteRangeOffset,
                                     /* fullSegmentEncryptionKeyUri= */ null,
@@ -1283,7 +1312,7 @@ public final class CustomHlsPlaylistParser implements ParsingLoadable.Parser<Hls
 
                 segments.add(
                         new Segment(
-                                segmentUri,
+                                formatSegmentPath(baseUri, segmentUri),
                                 initializationSegment != null ? initializationSegment : inferredInitSegment,
                                 segmentTitle,
                                 segmentDurationUs,
@@ -1339,10 +1368,10 @@ public final class CustomHlsPlaylistParser implements ParsingLoadable.Parser<Hls
             }
         }
 
-        return new HlsMediaPlaylist(
+        return formatHlsMediaPlaylist(new HlsMediaPlaylist(
                 playlistType,
                 baseUri,
-                tags,
+                tags1,
                 startOffsetUs,
                 preciseStart,
                 playlistStartTimeUs,
@@ -1360,7 +1389,7 @@ public final class CustomHlsPlaylistParser implements ParsingLoadable.Parser<Hls
                 trailingParts,
                 serverControl,
                 renditionReportMap,
-                interstitials);
+                interstitials));
     }
 
     private static DrmInitData getPlaylistProtectionSchemes(
@@ -1536,6 +1565,11 @@ public final class CustomHlsPlaylistParser implements ParsingLoadable.Parser<Hls
             Pattern pattern,
             String defaultValue,
             Map<String, String> variableDefinitions) {
+
+        if (LogUtil.DEBUG) {
+            LogUtil.log("GUYGUUIIU -> parseOptionalStringAttr -> line = " + line + ", variableDefinitions = " + variableDefinitions);
+        }
+
         Matcher matcher = pattern.matcher(line);
         String value = matcher.find() ? checkNotNull(matcher.group(1)) : defaultValue;
         return variableDefinitions.isEmpty() || value == null
@@ -1582,6 +1616,11 @@ public final class CustomHlsPlaylistParser implements ParsingLoadable.Parser<Hls
 
     private static String replaceVariableReferences(
             String string, Map<String, String> variableDefinitions) {
+
+        if (LogUtil.DEBUG) {
+            LogUtil.log("GUYGUUIIU -> replaceVariableReferences -> string = " + string + ", variableDefinitions = " + variableDefinitions);
+        }
+
         Matcher matcher = REGEX_VARIABLE_REFERENCE.matcher(string);
         // TODO: Replace StringBuffer with StringBuilder once Java 9 is available.
         StringBuffer stringWithReplacements = new StringBuffer();
@@ -1652,6 +1691,51 @@ public final class CustomHlsPlaylistParser implements ParsingLoadable.Parser<Hls
             } else {
                 throw new NoSuchElementException();
             }
+        }
+    }
+
+    private static HlsMultivariantPlaylist formatHlsMultivariantPlaylist(HlsMultivariantPlaylist hlsMultivariantPlaylist) {
+
+        if (LogUtil.DEBUG) {
+            LogUtil.log("CustomHlsPlaylistParser -> formatHlsMultivariantPlaylist ->");
+        }
+        return hlsMultivariantPlaylist;
+    }
+
+    private static HlsMediaPlaylist formatHlsMediaPlaylist(HlsMediaPlaylist hlsMediaPlaylist) {
+
+        //        /**
+//         * # 新增 EXT-X-STREAM-INF 标签，指定语言（核心修改）
+//         * #EXT-X-STREAM-INF:BANDWIDTH=2000000,CODECS="avc1.4D401F,mp4a.40.2",LANGUAGE="zh-CN"
+//         */
+//        tags1.add("#EXT-X-STREAM-INF:LANGUAGE=\"zh-CN\",LABEL=\"简体中文\"");
+
+        if (LogUtil.DEBUG) {
+            LogUtil.log("CustomHlsPlaylistParser -> formatHlsMediaPlaylist -> hlsMediaPlaylist.tags = " + hlsMediaPlaylist.tags);
+        }
+        return hlsMediaPlaylist;
+    }
+
+    private static String formatSegmentPath(String baseUrl, String segmentPath) {
+        try {
+            ProxyUrl proxyUrl = PlayerSDK.init().getPlayerBuilder().getProxy().getProxyUrl();
+            if (null == proxyUrl)
+                throw new Exception("waring: proxyUrl null");
+            if (LogUtil.DEBUG) {
+                LogUtil.log("CustomHlsPlaylistParser -> formatSegmentPath -> baseUrl = " + baseUrl + ", segmentPath = " + segmentPath);
+            }
+            String formatSegmentPath = proxyUrl.formatSegmentPath(baseUrl, segmentPath);
+            if (LogUtil.DEBUG) {
+                LogUtil.log("CustomHlsPlaylistParser -> formatSegmentPath -> formatSegmentPath = " + formatSegmentPath);
+            }
+            if (null == formatSegmentPath || formatSegmentPath.isEmpty())
+                throw new Exception("waring: formatSegmentPath null");
+            return formatSegmentPath;
+        } catch (Exception e) {
+            if (LogUtil.DEBUG) {
+                LogUtil.log("CustomHlsPlaylistParser -> formatSegmentPath -> Exception: " + e.getMessage());
+            }
+            return segmentPath;
         }
     }
 }

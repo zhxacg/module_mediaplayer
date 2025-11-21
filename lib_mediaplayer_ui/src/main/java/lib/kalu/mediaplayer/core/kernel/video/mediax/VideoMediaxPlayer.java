@@ -27,7 +27,6 @@ import androidx.media3.database.StandaloneDatabaseProvider;
 import androidx.media3.datasource.DataSource;
 import androidx.media3.datasource.DataSpec;
 import androidx.media3.datasource.DefaultDataSource;
-import androidx.media3.datasource.DefaultHttpDataSource;
 import androidx.media3.datasource.FileDataSource;
 import androidx.media3.datasource.cache.CacheDataSink;
 import androidx.media3.datasource.cache.CacheDataSource;
@@ -84,7 +83,8 @@ import lib.kalu.mediaplayer.bean.info.HlsSpanInfo;
 import lib.kalu.mediaplayer.bean.info.TrackInfo;
 import lib.kalu.mediaplayer.bean.type.PlayerType;
 import lib.kalu.mediaplayer.core.kernel.video.VideoBasePlayer;
-import lib.kalu.mediaplayer.core.kernel.video.exo2.proxy.CustomHlsPlaylistParserFactory;
+import lib.kalu.mediaplayer.core.kernel.video.mediax.proxy.CustomDefaultHttpDataSource;
+import lib.kalu.mediaplayer.core.kernel.video.mediax.proxy.CustomHlsPlaylistParserFactory;
 import lib.kalu.mediaplayer.util.LogUtil;
 import lib.kalu.mediax.subtitle.OffsetMsTextRenderer;
 
@@ -983,7 +983,7 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
                 }
                 Method method = cls.getMethod("setPlaylistParserFactory", HlsPlaylistParserFactory.class);
                 return method.invoke(constructor.newInstance(factory), new CustomHlsPlaylistParserFactory());
-//                 constructor.newInstance(factory);
+//                return constructor.newInstance(factory);
             }
             // SmoothStreaming
             else if (metaType == PlayerType.MetaType.VIDEO_SS) {
@@ -1040,6 +1040,7 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
                 return new DefaultMediaSourceFactory((CacheDataSource.Factory) factory)
                         .createMediaSource(new MediaItem.Builder()
                                 .setUri(Uri.parse(url))
+//                                .setMediaMetadata()
                                 .setMediaId(String.valueOf(hashCode))
                                 .build());
             } else {
@@ -1247,7 +1248,7 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
 
     private DataSource.Factory buildHttpFactory(StartArgs args) {
         try {
-            return new DefaultHttpDataSource.Factory()
+            return new CustomDefaultHttpDataSource.Factory()
                     .setUserAgent(MediaLibraryInfo.VERSION_SLASHY)
                     .setConnectTimeoutMs((int) args.getConnectTimout())
                     .setReadTimeoutMs((int) args.getConnectTimout())
@@ -1691,7 +1692,7 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
                     //
                     Format format = group.getTrackFormat(trackIndex);
                     if (LogUtil.DEBUG) {
-                        LogUtil.log("VideoMediaxPlayer => getTrackInfo => format = " + format);
+                        LogUtil.log("VideoMediaxPlayer => getTrackInfo => format.language = " + format.language + ", format = " + format);
                     }
 
 

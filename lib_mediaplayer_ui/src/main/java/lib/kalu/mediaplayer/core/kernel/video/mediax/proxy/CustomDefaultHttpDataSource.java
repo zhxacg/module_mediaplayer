@@ -369,9 +369,18 @@ public final class CustomDefaultHttpDataSource extends BaseDataSource implements
      * Opens the source to read the specified data.
      */
     @Override
-    public long open(DataSpec dataSpec) throws HttpDataSourceException {
+    public long open(DataSpec dataSpec1) throws HttpDataSourceException {
 
-        this.dataSpec = formatBaseUrl(dataSpec);
+        if (LogUtil.DEBUG) {
+            LogUtil.log("CustomDefaultHttpDataSource -> open -> dataSpec1.uri = " + dataSpec1.uri);
+        }
+
+        dataSpec = formatOpenUrl(dataSpec1);
+
+        if (LogUtil.DEBUG) {
+            LogUtil.log("CustomDefaultHttpDataSource -> open -> dataSpec.uri = " + dataSpec.uri);
+        }
+
         bytesRead = 0;
         bytesToRead = 0;
         transferInitializing(dataSpec);
@@ -923,18 +932,33 @@ public final class CustomDefaultHttpDataSource extends BaseDataSource implements
         }
     }
 
-    private DataSpec formatBaseUrl(DataSpec dataSpec) {
+    private DataSpec formatOpenUrl(DataSpec dataSpec) {
         try {
             ProxyUrl proxyUrl = PlayerSDK.init().getPlayerBuilder().getProxy().getProxyUrl();
             if (null == proxyUrl)
                 throw new Exception("waring: proxyUrl null");
-            String formatBaseUrl = proxyUrl.formatBaseUrl(dataSpec.uri.toString());
-            if (null == formatBaseUrl || formatBaseUrl.isEmpty())
-                throw new Exception("waring: formatBaseUrl null");
+            String openUrl = dataSpec.uri.toString();
+            if (LogUtil.DEBUG) {
+                LogUtil.log("CustomDefaultHttpDataSource -> formatOpenUrl -> openUrl =  " + openUrl);
+            }
+            String formatOpenUrl = proxyUrl.formatOpenUrl(openUrl);
+            if (LogUtil.DEBUG) {
+                LogUtil.log("CustomDefaultHttpDataSource -> formatOpenUrl -> formatOpenUrl =  " + formatOpenUrl);
+            }
+            if (null == formatOpenUrl || formatOpenUrl.isEmpty())
+                throw new Exception("waring: formatOpenUrl null");
+
+            if (LogUtil.DEBUG) {
+                LogUtil.log("CustomDefaultHttpDataSource -> formatOpenUrl -> reset completed");
+            }
+
             return dataSpec.buildUpon()
-                    .setUri(formatBaseUrl)
+                    .setUri(formatOpenUrl)
                     .build();
         } catch (Exception e) {
+            if (LogUtil.DEBUG) {
+                LogUtil.log("CustomDefaultHttpDataSource -> formatOpenUrl -> Exception: " + e.getMessage());
+            }
             return dataSpec;
         }
     }

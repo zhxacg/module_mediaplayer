@@ -49,6 +49,7 @@ import java.util.regex.Pattern;
 
 import lib.kalu.mediaplayer.PlayerSDK;
 import lib.kalu.mediaplayer.bean.proxy.ProxyUrl;
+import lib.kalu.mediaplayer.util.LogUtil;
 
 public class CustomHlsPlaylistParser implements ParsingLoadable.Parser<HlsPlaylist> {
 
@@ -241,6 +242,11 @@ public class CustomHlsPlaylistParser implements ParsingLoadable.Parser<HlsPlayli
 
     @Override
     public HlsPlaylist parse(Uri uri, InputStream inputStream) throws IOException {
+
+        if (LogUtil.DEBUG) {
+            LogUtil.log("CustomHlsPlaylistParser -> parse -> uri = " + uri);
+        }
+
         BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
         Queue<String> extraLines = new ArrayDeque<>();
         String line;
@@ -255,7 +261,13 @@ public class CustomHlsPlaylistParser implements ParsingLoadable.Parser<HlsPlayli
                     // Do nothing.
                 } else if (line.startsWith(TAG_STREAM_INF)) {
                     extraLines.add(line);
-                    return parseMultivariantPlaylist(new LineIterator(extraLines, reader), uri.toString());
+                    HlsMultivariantPlaylist hlsMultivariantPlaylist = parseMultivariantPlaylist(new LineIterator(extraLines, reader), uri.toString());
+
+                    if (LogUtil.DEBUG) {
+                        LogUtil.log("CustomHlsPlaylistParser -> parse -> hlsMultivariantPlaylist = " + hlsMultivariantPlaylist);
+                    }
+
+                    return hlsMultivariantPlaylist;
                 } else if (line.startsWith(TAG_TARGET_DURATION)
                         || line.startsWith(TAG_MEDIA_SEQUENCE)
                         || line.startsWith(TAG_MEDIA_DURATION)
@@ -265,11 +277,17 @@ public class CustomHlsPlaylistParser implements ParsingLoadable.Parser<HlsPlayli
                         || line.equals(TAG_DISCONTINUITY_SEQUENCE)
                         || line.equals(TAG_ENDLIST)) {
                     extraLines.add(line);
-                    return parseMediaPlaylist(
+                    HlsMediaPlaylist hlsMediaPlaylist = parseMediaPlaylist(
                             multivariantPlaylist,
                             previousMediaPlaylist,
                             new LineIterator(extraLines, reader),
                             uri.toString());
+
+                    if (LogUtil.DEBUG) {
+                        LogUtil.log("CustomHlsPlaylistParser -> parse -> hlsMediaPlaylist = " + hlsMediaPlaylist);
+                    }
+
+                    return hlsMediaPlaylist;
                 } else {
                     extraLines.add(line);
                 }
@@ -456,6 +474,11 @@ public class CustomHlsPlaylistParser implements ParsingLoadable.Parser<HlsPlayli
 
         for (int i = 0; i < mediaTags.size(); i++) {
             line = mediaTags.get(i);
+
+            if (LogUtil.DEBUG) {
+                LogUtil.log("CustomHlsPlaylistParser -> parseMultivariantPlaylist -> line = " + line);
+            }
+
             String groupId = parseStringAttr(line, REGEX_GROUP_ID, variableDefinitions);
             String name = parseStringAttr(line, REGEX_NAME, variableDefinitions);
             Format.Builder formatBuilder =
@@ -720,7 +743,7 @@ public class CustomHlsPlaylistParser implements ParsingLoadable.Parser<HlsPlayli
                 }
                 initializationSegment =
                         new HlsMediaPlaylist.Segment(
-                                formatSegmentUrl(baseUri, uri),
+                                formatSegmentPath(baseUri, uri),
                                 segmentByteRangeOffset,
                                 segmentByteRangeLength,
                                 fullSegmentEncryptionKeyUri,
@@ -963,7 +986,7 @@ public class CustomHlsPlaylistParser implements ParsingLoadable.Parser<HlsPlayli
                     // the playlist to provide an initialization vector for it.
                     inferredInitSegment =
                             new HlsMediaPlaylist.Segment(
-                                    formatSegmentUrl(baseUri, segmentUri),
+                                    formatSegmentPath(baseUri, segmentUri),
                                     /* byteRangeOffset= */ 0,
                                     segmentByteRangeOffset,
                                     /* fullSegmentEncryptionKeyUri= */ null,
@@ -981,7 +1004,7 @@ public class CustomHlsPlaylistParser implements ParsingLoadable.Parser<HlsPlayli
 
                 segments.add(
                         new HlsMediaPlaylist.Segment(
-                                formatSegmentUrl(baseUri, segmentUri),
+                                formatSegmentPath(baseUri, segmentUri),
                                 initializationSegment != null ? initializationSegment : inferredInitSegment,
                                 segmentTitle,
                                 segmentDurationUs,
@@ -1315,17 +1338,26 @@ public class CustomHlsPlaylistParser implements ParsingLoadable.Parser<HlsPlayli
         }
     }
 
-    private static String formatSegmentUrl(String baseUrl, String segmentUrl) {
+    private static String formatSegmentPath(String baseUrl, String segmentPath) {
         try {
             ProxyUrl proxyUrl = PlayerSDK.init().getPlayerBuilder().getProxy().getProxyUrl();
             if (null == proxyUrl)
                 throw new Exception("waring: proxyUrl null");
-            String formatSegmentUrl = proxyUrl.formatSegmentUrl(baseUrl, segmentUrl);
-            if (null == formatSegmentUrl || formatSegmentUrl.isEmpty())
-                throw new Exception("waring: formatSegmentUrl null");
-            return formatSegmentUrl;
+            if (LogUtil.DEBUG) {
+                LogUtil.log("CustomHlsPlaylistParser -> formatSegmentPath -> baseUrl = " + baseUrl + ", segmentPath = " + segmentPath);
+            }
+            String formatSegmentPath = proxyUrl.formatSegmentPath(baseUrl, segmentPath);
+            if (LogUtil.DEBUG) {
+                LogUtil.log("CustomHlsPlaylistParser -> formatSegmentPath -> formatSegmentPath = " + formatSegmentPath);
+            }
+            if (null == formatSegmentPath || formatSegmentPath.isEmpty())
+                throw new Exception("waring: formatSegmentPath null");
+            return formatSegmentPath;
         } catch (Exception e) {
-            return segmentUrl;
+            if (LogUtil.DEBUG) {
+                LogUtil.log("CustomHlsPlaylistParser -> formatSegmentPath -> Exception: " + e.getMessage());
+            }
+            return segmentPath;
         }
     }
 }

@@ -30,8 +30,8 @@
 
     <string-array name="hls_extra_audio_urls"></string-array>
 
-    <!--    <item>https://media-1347269025.cos.sa-saopaulo.myqcloud.com/movie/5f2751d1/480p/index.m3u8</item>item-->
     <string-array name="hls_extra_video_urls">
+        <item>https://media-1347269025.cos.sa-saopaulo.myqcloud.com/movie/5f2751d1/480p/index.m3u8</item>
         <item>https://media-1347269025.cos.sa-saopaulo.myqcloud.com/movie/5f2751d1/720p/index.m3u8</item>
         <item>https://media-1347269025.cos.sa-saopaulo.myqcloud.com/movie/5f2751d1/1080p/index.m3u8</item>
     </string-array>

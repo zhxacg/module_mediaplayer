@@ -4,7 +4,7 @@ import java.io.Serializable;
 
 public interface ProxyUrl extends Serializable {
 
-    String formatBaseUrl(String url);
+    String formatOpenUrl(String url);
 
-    String formatSegmentUrl(String baseUrl, String segmentUrl);
+    String formatSegmentPath(String baseUrl, String segmentUrl);
 }
