@@ -48,6 +48,12 @@
         <item>pt</item>
     </string-array>
 
+    <string-array name="hls_extra_subtitle_labels">
+        <item>英语</item>
+        <item>西班牙语</item>
+        <item>葡萄牙语</item>
+    </string-array>
+
     <string-array name="kernels">
         <item>android</item>
         <item>exo2</item>

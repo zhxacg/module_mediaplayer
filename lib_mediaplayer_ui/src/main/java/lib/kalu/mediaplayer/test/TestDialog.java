@@ -57,21 +57,21 @@ public class TestDialog extends DialogFragment {
                     int height = track.getHeight();
                     String sampleMimeType = track.getSampleMimeType();
                     int roleFlags = track.getRoleFlags();
-                    String language = track.getLanguage();
-                    curName = "roleFlags = " + roleFlags + ", language = " + language + ", sampleMimeType = " + sampleMimeType + ", bitrate = " + bitrate + ", width = " + width + ", height = " + height;
+                    curName = "roleFlags = " + roleFlags + ", sampleMimeType = " + sampleMimeType + ", bitrate = " + bitrate + ", width = " + width + ", height = " + height;
                 }
                 // 音频轨道
                 else if (type == 2) {
                     String sampleMimeType = track.getSampleMimeType();
-                    int roleFlags = track.getRoleFlags();
                     String language = track.getLanguage();
-                    curName = "roleFlags = " + roleFlags + ", language = " + language + ", sampleMimeType = " + sampleMimeType;
+                    String label = track.getLabel();
+                    curName = "label = " + label + ", language = " + language + ", sampleMimeType = " + sampleMimeType;
                 }
                 // 字幕轨道
                 else if (type == 3) {
-                    int roleFlags = track.getRoleFlags();
+                    String sampleMimeType = track.getSampleMimeType();
                     String language = track.getLanguage();
-                    curName = "roleFlags = " + roleFlags + ", language = " + language;
+                    String label = track.getLabel();
+                    curName = "label = " + label + ", language = " + language + ", sampleMimeType = " + sampleMimeType;
                 } else {
                     continue;
                 }

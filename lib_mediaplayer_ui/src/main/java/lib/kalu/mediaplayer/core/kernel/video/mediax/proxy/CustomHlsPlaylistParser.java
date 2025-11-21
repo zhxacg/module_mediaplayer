@@ -26,8 +26,6 @@ import androidx.media3.common.util.Log;
 import androidx.media3.common.util.UnstableApi;
 import androidx.media3.common.util.UriUtil;
 import androidx.media3.common.util.Util;
-import androidx.media3.exoplayer.hls.HlsTrackMetadataEntry;
-import androidx.media3.exoplayer.hls.HlsTrackMetadataEntry.VariantInfo;
 import androidx.media3.exoplayer.hls.playlist.HlsMediaPlaylist;
 import androidx.media3.exoplayer.hls.playlist.HlsMediaPlaylist.Interstitial;
 import androidx.media3.exoplayer.hls.playlist.HlsMediaPlaylist.Part;
@@ -427,7 +425,7 @@ public final class CustomHlsPlaylistParser implements ParsingLoadable.Parser<Hls
         }
 
 
-        HashMap<Uri, ArrayList<VariantInfo>> urlToVariantInfos = new HashMap<>();
+        HashMap<Uri, ArrayList<CustomHlsTrackMetadataEntry.VariantInfo>> urlToVariantInfos = new HashMap<>();
         HashMap<String, String> variableDefinitions = new HashMap<>();
         ArrayList<Variant> variants = new ArrayList<>();
         ArrayList<Rendition> videos = new ArrayList<>();
@@ -557,13 +555,13 @@ public final class CustomHlsPlaylistParser implements ParsingLoadable.Parser<Hls
                         new Variant(
                                 uri, format1, videoGroupId, audioGroupId, subtitlesGroupId, closedCaptionsGroupId);
                 variants.add(variant);
-                @Nullable ArrayList<VariantInfo> variantInfosForUrl = urlToVariantInfos.get(uri);
+                @Nullable ArrayList<CustomHlsTrackMetadataEntry.VariantInfo> variantInfosForUrl = urlToVariantInfos.get(uri);
                 if (variantInfosForUrl == null) {
                     variantInfosForUrl = new ArrayList<>();
                     urlToVariantInfos.put(uri, variantInfosForUrl);
                 }
                 variantInfosForUrl.add(
-                        new VariantInfo(
+                        new CustomHlsTrackMetadataEntry.VariantInfo(
                                 averageBitrate,
                                 peakBitrate,
                                 videoGroupId,
@@ -580,8 +578,8 @@ public final class CustomHlsPlaylistParser implements ParsingLoadable.Parser<Hls
             Variant variant = variants.get(i);
             if (urlsInDeduplicatedVariants.add(variant.url)) {
                 Assertions.checkState(variant.format.metadata == null);
-                HlsTrackMetadataEntry hlsMetadataEntry =
-                        new HlsTrackMetadataEntry(
+                CustomHlsTrackMetadataEntry hlsMetadataEntry =
+                        new CustomHlsTrackMetadataEntry(
                                 /* groupId= */ null,
                                 /* name= */ null,
                                 checkNotNull(urlToVariantInfos.get(variant.url)));
@@ -611,7 +609,7 @@ public final class CustomHlsPlaylistParser implements ParsingLoadable.Parser<Hls
             @Nullable String referenceUri = parseOptionalStringAttr(line, REGEX_URI, variableDefinitions);
             @Nullable Uri uri = referenceUri == null ? null : UriUtil.resolveToUri(baseUri, referenceUri);
             Metadata metadata =
-                    new Metadata(new HlsTrackMetadataEntry(groupId, name, Collections.emptyList()));
+                    new Metadata(new CustomHlsTrackMetadataEntry(groupId, name, Collections.emptyList()));
             switch (parseStringAttr(line, REGEX_TYPE, variableDefinitions)) {
                 case TYPE_VIDEO:
                     @Nullable Variant variant = getVariantWithVideoGroup(variants, groupId);

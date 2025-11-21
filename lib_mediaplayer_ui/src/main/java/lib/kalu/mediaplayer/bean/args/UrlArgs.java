@@ -3,10 +3,10 @@ package lib.kalu.mediaplayer.bean.args;
 import java.io.Serializable;
 
 public final class UrlArgs implements Serializable {
-    private VideoArgs mainVideoArgs;
-    private VideoArgs[] extVideoArgs;
-    private AudioArgs[] extAudioArgs;
-    private SubtitleArgs[] extSubtitleArgs;
+    private Item mainVideoArgs;
+    private Item[] extVideoArgs;
+    private Item[] extAudioArgs;
+    private Item[] extSubtitleArgs;
 
     public UrlArgs(Builder builder) {
         this.mainVideoArgs = builder.mainVideoArgs;
@@ -32,7 +32,7 @@ public final class UrlArgs implements Serializable {
             }
             // extVideoUrl
             if (null != extVideoArgs) {
-                for (VideoArgs videoArgs : extVideoArgs) {
+                for (Item videoArgs : extVideoArgs) {
                     if (null == videoArgs)
                         continue;
                     if (!videoArgs.containsUrl())
@@ -42,7 +42,7 @@ public final class UrlArgs implements Serializable {
             }
             // extAudioUrl
             if (null != extAudioArgs) {
-                for (AudioArgs url : extAudioArgs) {
+                for (Item url : extAudioArgs) {
                     if (null == url)
                         continue;
                     if (!url.containsUrl())
@@ -52,7 +52,7 @@ public final class UrlArgs implements Serializable {
             }
             // extVideoUrl
             if (null != extSubtitleArgs) {
-                for (SubtitleArgs args : extSubtitleArgs) {
+                for (Item args : extSubtitleArgs) {
                     if (null == args)
                         continue;
                     String url = args.getUrl();
@@ -69,19 +69,19 @@ public final class UrlArgs implements Serializable {
         }
     }
 
-    public SubtitleArgs[] getExtSubtitle() {
+    public Item[] getExtSubtitle() {
         return extSubtitleArgs;
     }
 
-    public AudioArgs[] getExtAudio() {
+    public Item[] getExtAudio() {
         return extAudioArgs;
     }
 
-    public VideoArgs[] getExtVideo() {
+    public Item[] getExtVideo() {
         return extVideoArgs;
     }
 
-    public VideoArgs getMainVideo() {
+    public Item getMainVideo() {
         return mainVideoArgs;
     }
 
@@ -95,27 +95,27 @@ public final class UrlArgs implements Serializable {
 
     public static class Builder implements Serializable {
 
-        private VideoArgs mainVideoArgs;
-        private VideoArgs[] extVideoArgs;
-        private AudioArgs[] extAudioArgs;
-        private SubtitleArgs[] extSubtitleArgs;
+        private Item mainVideoArgs;
+        private Item[] extVideoArgs;
+        private Item[] extAudioArgs;
+        private Item[] extSubtitleArgs;
 
         public UrlArgs.Builder setMainUrl(String v) {
-            this.mainVideoArgs = new VideoArgs.Builder().setUrl(v).setLanguage("Default").build();
+            this.mainVideoArgs = new Item.Builder().setUrl(v).setLanguage("Default").build();
             return this;
         }
 
-        public UrlArgs.Builder setExtVideo(VideoArgs[] v) {
+        public UrlArgs.Builder setExtVideo(Item[] v) {
             this.extVideoArgs = v;
             return this;
         }
 
-        public UrlArgs.Builder setExtAudio(AudioArgs[] v) {
+        public UrlArgs.Builder setExtAudio(Item[] v) {
             this.extAudioArgs = v;
             return this;
         }
 
-        public UrlArgs.Builder setExtSubtitle(SubtitleArgs[] v) {
+        public UrlArgs.Builder setExtSubtitle(Item[] v) {
             this.extSubtitleArgs = v;
             return this;
         }
@@ -125,6 +125,72 @@ public final class UrlArgs implements Serializable {
 
         public UrlArgs build() {
             return new UrlArgs(this);
+        }
+    }
+
+
+    public final static class Item implements Serializable {
+        private String url;
+        private String language;
+        private String label;
+
+        public boolean containsUrl() {
+            return null != url && !url.isEmpty();
+        }
+
+        public Item(Item.Builder builder) {
+            this.url = builder.url;
+            this.language = builder.language;
+            this.label = builder.label;
+        }
+
+        public String getLabel() {
+            return label;
+        }
+
+        public String getLanguage() {
+            return language;
+        }
+
+        public String getUrl() {
+            return url;
+        }
+
+        public static class Builder implements Serializable {
+
+            private String url;
+            private String language;
+            private String label;
+
+            public Item.Builder setUrl(String v) {
+                this.url = v;
+                return this;
+            }
+
+            public Item.Builder setLanguage(String v) {
+                this.language = v;
+                return this;
+            }
+
+            public Item.Builder setLabel(String v) {
+                this.label = v;
+                return this;
+            }
+
+            public Builder() {
+            }
+
+            public Item build() {
+                return new Item(this);
+            }
+        }
+
+        @Override
+        public String toString() {
+            return "Item{" +
+                    "language='" + language + '\'' +
+                    ", url='" + url + '\'' +
+                    '}';
         }
     }
 }
