@@ -349,6 +349,7 @@ public @interface PlayerType {
 
         String TEXT_VTT = "text/vtt";
         String TEXT_SSA = "text/x-ssa";
+        String TEXT_ASS = "text/x-ass";
 
         String AUDIO_MP4 = "audio/mp4";
         String AUDIO_AAC = "audio/mp4a-latm";
@@ -473,6 +474,9 @@ public @interface PlayerType {
         String _TS = ".ts";
         String _MP4 = ".mp4";
         String _MPD = ".mpd";
+        String _VTT = ".vtt";
+        String _SSA = ".ssa";
+        String _ASS = ".ass";
         String _MATCHES = ".*\\.ism(l)?(/manifest(\\(.+\\))?)?";
 
         @Documented
@@ -487,6 +491,9 @@ public @interface PlayerType {
                 SchemeType._M3U8,
                 SchemeType._TS,
                 SchemeType._MP4,
+                SchemeType._VTT,
+                SchemeType._SSA,
+                SchemeType._ASS,
                 SchemeType._MATCHES})
         @interface Value {
         }
@@ -501,19 +508,13 @@ public @interface PlayerType {
         String UNDERLINE = "_";
         //        String HLS_PLAYLIST = "hls_playlist_";
 //        String HLS_SEGMENT = "hls_segment_";
-        String M3U8 = ".m3u8";
-        String TS = ".ts";
 
         @Documented
         @Retention(CLASS)
         @Target({METHOD, PARAMETER, FIELD, LOCAL_VARIABLE, ANNOTATION_TYPE, PACKAGE})
         @StringDef(value = {
                 MarkType.SEPARATOR,
-                MarkType.UNDERLINE,
-//                MarkType.HLS_PLAYLIST,
-//                MarkType.HLS_SEGMENT,
-                MarkType.M3U8,
-                MarkType.TS})
+                MarkType.UNDERLINE})
         @interface Value {
         }
     }

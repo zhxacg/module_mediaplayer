@@ -31,7 +31,6 @@ import com.google.android.exoplayer2.source.MediaLoadData;
 import com.google.android.exoplayer2.source.MediaSource;
 import com.google.android.exoplayer2.source.MergingMediaSource;
 import com.google.android.exoplayer2.source.ProgressiveMediaSource;
-import com.google.android.exoplayer2.source.SingleSampleMediaSource;
 import com.google.android.exoplayer2.source.TrackGroup;
 import com.google.android.exoplayer2.source.hls.HlsManifest;
 import com.google.android.exoplayer2.source.hls.playlist.HlsMediaPlaylist;
@@ -71,7 +70,6 @@ import java.util.NavigableSet;
 import lib.kalu.exoplayer2.subtitle.OffsetMsTextRenderer;
 import lib.kalu.mediaplayer.PlayerSDK;
 import lib.kalu.mediaplayer.bean.args.StartArgs;
-import lib.kalu.mediaplayer.bean.args.SubtitleArgs;
 import lib.kalu.mediaplayer.bean.args.UrlArgs;
 import lib.kalu.mediaplayer.bean.cache.Cache;
 import lib.kalu.mediaplayer.bean.info.HlsSpanInfo;
@@ -790,9 +788,9 @@ public final class VideoExo2Player extends VideoBasePlayer {
                             @Override
                             public String buildCacheKey(DataSpec dataSpec) {
                                 String subUrl = dataSpec.uri.toString();
-                                if (subUrl.endsWith(PlayerType.MarkType.M3U8)) {
+                                if (subUrl.endsWith(PlayerType.SchemeType._M3U8)) {
                                     return subUrl;
-                                } else if (subUrl.endsWith(PlayerType.MarkType.TS)) {
+                                } else if (subUrl.endsWith(PlayerType.SchemeType._TS)) {
                                     return subUrl;
                                 } else {
                                     return mainUrl;

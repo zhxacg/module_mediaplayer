@@ -745,13 +745,13 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
                         if (language.isEmpty())
                             continue;
 
-                        String mimeType;
-                        if (sutitleUrl.endsWith(".vtt")) {
+                        String mimeType = null;
+                        if (sutitleUrl.endsWith(PlayerType.SchemeType._VTT)) {
                             mimeType = PlayerType.TrackType.TEXT_VTT;
-                        } else if (sutitleUrl.endsWith(".ssa")) {
+                        } else if (sutitleUrl.endsWith(PlayerType.SchemeType._SSA)) {
                             mimeType = PlayerType.TrackType.TEXT_SSA;
-                        } else {
-                            mimeType = null;
+                        } else if (sutitleUrl.endsWith(PlayerType.SchemeType._ASS)) {
+                            mimeType = PlayerType.TrackType.TEXT_ASS;
                         }
 
                         if (LogUtil.DEBUG) {
@@ -1091,9 +1091,9 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
                             @Override
                             public String buildCacheKey(DataSpec dataSpec) {
                                 String subUrl = dataSpec.uri.toString();
-                                if (subUrl.endsWith(PlayerType.MarkType.M3U8)) {
+                                if (subUrl.endsWith(PlayerType.SchemeType._M3U8)) {
                                     return subUrl;
-                                } else if (subUrl.endsWith(PlayerType.MarkType.TS)) {
+                                } else if (subUrl.endsWith(PlayerType.SchemeType._TS)) {
                                     return subUrl;
                                 } else {
                                     return dataUrl;
