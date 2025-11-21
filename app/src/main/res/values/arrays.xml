@@ -28,9 +28,13 @@
         <item>http://wxsnsdy.tc.qq.com/105/20210/snsdyvideodownload?filekey=30280201010421301f0201690402534804102ca905ce620b1241b726bc41dcff44e00204012882540400&amp;amp;bizid=1023&amp;amp;hy=SH&amp;amp;fileparam=302c020101042530230204136ffd93020457e3c4ff02024ef202031e8d7f02030f42400204045a320a0201000400</item>
     </string-array>
 
-    <string-array name="hls_extra_audio_urls"></string-array>
-
     <string-array name="hls_extra_video_urls">
+        <item>https://media-1347269025.cos.sa-saopaulo.myqcloud.com/movie/5f2751d1/480p/index.m3u8</item>
+        <item>https://media-1347269025.cos.sa-saopaulo.myqcloud.com/movie/5f2751d1/720p/index.m3u8</item>
+        <item>https://media-1347269025.cos.sa-saopaulo.myqcloud.com/movie/5f2751d1/1080p/index.m3u8</item>
+    </string-array>
+
+    <string-array name="hls_extra_audio_urls">
         <item>https://media-1347269025.cos.sa-saopaulo.myqcloud.com/movie/5f2751d1/480p/index.m3u8</item>
         <item>https://media-1347269025.cos.sa-saopaulo.myqcloud.com/movie/5f2751d1/720p/index.m3u8</item>
         <item>https://media-1347269025.cos.sa-saopaulo.myqcloud.com/movie/5f2751d1/1080p/index.m3u8</item>

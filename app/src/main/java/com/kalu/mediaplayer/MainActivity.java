@@ -264,7 +264,7 @@ public class MainActivity extends Activity {
             }
 
             if (null != checkUrl && !checkUrl.isEmpty()) {
-                return new UrlArgs.Builder().setMainUrl(checkUrl.toString()).build();
+                return new UrlArgs.Builder().setUrl(checkUrl.toString()).build();
             } else {
 
                 UrlArgs.Builder urlBuilder = new UrlArgs.Builder();
@@ -272,7 +272,7 @@ public class MainActivity extends Activity {
                 // mainUrl
                 try {
                     String[] urls = getResources().getStringArray(R.array.hls_extra_video_urls);
-                    urlBuilder.setMainUrl(urls[0]);
+                    urlBuilder.setUrl(new UrlArgs.Item.Builder().setUrl(urls[0]).setOnlyParserVideo(true).build());
                 } catch (Exception e) {
                 }
 
@@ -284,10 +284,24 @@ public class MainActivity extends Activity {
                     for (int i = 1; i < length; i++) {
                         videoArgs[i - 1] = new UrlArgs.Item.Builder()
                                 .setUrl(urls[i])
-                                .setLanguage("test" + i)
+                                .setOnlyParserVideo(true)
                                 .build();
                     }
                     urlBuilder.setExtVideo(videoArgs);
+                } catch (Exception e) {
+                }
+
+                // extAudio
+                try {
+                    String[] urls = getResources().getStringArray(R.array.hls_extra_audio_urls);
+                    int length = urls.length;
+                    UrlArgs.Item[] audioArgs = new UrlArgs.Item[length];
+                    for (int i = 0; i < length; i++) {
+                        audioArgs[i] = new UrlArgs.Item.Builder()
+                                .setUrl(urls[i])
+                                .build();
+                    }
+                    urlBuilder.setExtAudio(audioArgs);
                 } catch (Exception e) {
                 }
 

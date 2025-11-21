@@ -100,8 +100,13 @@ public final class UrlArgs implements Serializable {
         private Item[] extAudioArgs;
         private Item[] extSubtitleArgs;
 
-        public UrlArgs.Builder setMainUrl(String v) {
+        public UrlArgs.Builder setUrl(String v) {
             this.mainVideoArgs = new Item.Builder().setUrl(v).setLanguage("Default").build();
+            return this;
+        }
+
+        public UrlArgs.Builder setUrl(UrlArgs.Item v) {
+            this.mainVideoArgs = v;
             return this;
         }
 
@@ -134,6 +139,10 @@ public final class UrlArgs implements Serializable {
         private String language;
         private String label;
 
+        private boolean onlyParserVideo;
+        private boolean onlyParserAudio;
+        private boolean onlyParserSubtitle;
+
         public boolean containsUrl() {
             return null != url && !url.isEmpty();
         }
@@ -142,6 +151,21 @@ public final class UrlArgs implements Serializable {
             this.url = builder.url;
             this.language = builder.language;
             this.label = builder.label;
+            this.onlyParserVideo = builder.onlyParserVideo;
+            this.onlyParserAudio = builder.onlyParserAudio;
+            this.onlyParserSubtitle = builder.onlyParserSubtitle;
+        }
+
+        public boolean isOnlyParserAudio() {
+            return onlyParserAudio;
+        }
+
+        public boolean isOnlyParserSubtitle() {
+            return onlyParserSubtitle;
+        }
+
+        public boolean isOnlyParserVideo() {
+            return onlyParserVideo;
         }
 
         public String getLabel() {
@@ -161,6 +185,25 @@ public final class UrlArgs implements Serializable {
             private String url;
             private String language;
             private String label;
+
+            private boolean onlyParserVideo;
+            private boolean onlyParserAudio;
+            private boolean onlyParserSubtitle;
+
+            public Item.Builder setOnlyParserVideo(boolean v) {
+                this.onlyParserVideo = v;
+                return this;
+            }
+
+            public Item.Builder setOnlyParserAudio(boolean v) {
+                this.onlyParserAudio = v;
+                return this;
+            }
+
+            public Item.Builder setOnlyParserSubtitle(boolean v) {
+                this.onlyParserSubtitle = v;
+                return this;
+            }
 
             public Item.Builder setUrl(String v) {
                 this.url = v;

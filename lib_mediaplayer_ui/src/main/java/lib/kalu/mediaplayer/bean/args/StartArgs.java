@@ -345,7 +345,7 @@ public class StartArgs implements Serializable {
         }
 
         public Builder setUrl(String v) {
-            this.urlArgs = new UrlArgs.Builder().setMainUrl(v).build();
+            this.urlArgs = new UrlArgs.Builder().setUrl(v).build();
             return this;
         }
 
