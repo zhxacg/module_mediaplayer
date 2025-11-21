@@ -73,11 +73,11 @@ public final class VideoFFmpegPlayer extends VideoBasePlayer {
                 throw new Exception("error: mFFmpegPlayer null");
             if (null == args)
                 throw new Exception("error: args null");
-            String url = args.getUrl();
-            if (url == null)
-                throw new Exception("url error: " + url);
+            boolean containsUrl = args.containsUrl();
+            if (!containsUrl)
+                throw new Exception("error: containsUrl false");
             onEvent(PlayerType.KernelType.FFPLAYER, PlayerType.EventType.INIT_READY);
-            mFFmpegPlayer.setDataSource(context, Uri.parse(url), null);
+            mFFmpegPlayer.setDataSource(context, Uri.parse(args.getUrl().getMainUrl()), null);
             mFFmpegPlayer.prepare();
         } catch (Exception e) {
             if (LogUtil.DEBUG) {

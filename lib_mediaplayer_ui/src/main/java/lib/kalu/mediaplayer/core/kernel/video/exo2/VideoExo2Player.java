@@ -71,6 +71,8 @@ import java.util.NavigableSet;
 import lib.kalu.exoplayer2.subtitle.OffsetMsTextRenderer;
 import lib.kalu.mediaplayer.PlayerSDK;
 import lib.kalu.mediaplayer.bean.args.StartArgs;
+import lib.kalu.mediaplayer.bean.args.SubtitleArgs;
+import lib.kalu.mediaplayer.bean.args.UrlArgs;
 import lib.kalu.mediaplayer.bean.cache.Cache;
 import lib.kalu.mediaplayer.bean.info.HlsSpanInfo;
 import lib.kalu.mediaplayer.bean.info.TrackInfo;
@@ -310,12 +312,10 @@ public final class VideoExo2Player extends VideoBasePlayer {
                 throw new Exception("warning: mExoPlayer null");
             if (null == args)
                 throw new Exception("error: args null");
-            String url = args.getUrl();
-            if (null == url)
-                throw new Exception("error: url null");
-
+            boolean containsUrl = args.containsUrl();
+            if (!containsUrl)
+                throw new Exception("error: containsUrl false");
             onEvent(PlayerType.KernelType.EXO_V2, PlayerType.EventType.INIT_READY);
-
             MediaSource mediaSource = buildSource(context, args);
             mExoPlayer.setMediaSource(mediaSource);
             boolean prepareAsync = args.isPrepareAsync();
@@ -673,10 +673,11 @@ public final class VideoExo2Player extends VideoBasePlayer {
     private MediaSource buildSource(Context context, StartArgs args) throws Exception {
 
         try {
-            String url = args.getUrl();
+            UrlArgs urlArgs = args.getUrl();
+            String mainUrl = urlArgs.getMainUrl();
 
             int contentType;
-            String lowerCase = url.toLowerCase();
+            String lowerCase = mainUrl.toLowerCase();
             // dash
             if (lowerCase.endsWith(PlayerType.SchemeType._MPD)) {
                 contentType = C.CONTENT_TYPE_DASH;
@@ -708,7 +709,7 @@ public final class VideoExo2Player extends VideoBasePlayer {
 
             // 2
             MediaItem.Builder builder = new MediaItem.Builder();
-            builder.setUri(Uri.parse(url));
+            builder.setUri(Uri.parse(mainUrl));
 
 
             CustomDefaultHttpDataSource.Factory dataSourceFactory = new CustomDefaultHttpDataSource.Factory()
@@ -794,7 +795,7 @@ public final class VideoExo2Player extends VideoBasePlayer {
                                 } else if (subUrl.endsWith(PlayerType.MarkType.TS)) {
                                     return subUrl;
                                 } else {
-                                    return url;
+                                    return mainUrl;
                                 }
                             }
                         });
@@ -825,8 +826,8 @@ public final class VideoExo2Player extends VideoBasePlayer {
 
             // 视频轨道
             ArrayList<String> vUrls = new ArrayList<>();
-            vUrls.add(url);
-            List<String> extraTrackVideo = args.getExtraTrackVideo();
+            vUrls.add(mainUrl);
+            String[] extraTrackVideo = urlArgs.getExtVideoUrl();
             if (null != extraTrackVideo) {
                 for (String vUrl : extraTrackVideo) {
                     vUrls.add(vUrl);
@@ -928,7 +929,7 @@ public final class VideoExo2Player extends VideoBasePlayer {
             }
 
             // 音频轨道
-            List<String> extraTrackAudio = args.getExtraTrackAudio();
+            String[] extraTrackAudio = urlArgs.getExtAudioUrl();
             if (null != extraTrackAudio) {
                 for (String aUrl : extraTrackAudio) {
                     MediaSource source = new DefaultMediaSourceFactory(dataSourceFactory)
@@ -943,46 +944,42 @@ public final class VideoExo2Player extends VideoBasePlayer {
             }
 
             // 字幕轨道
-            List<TrackInfo> extraTrackSubtitle = args.getExtraTrackSubtitle();
-            if (null != extraTrackSubtitle) {
-                for (TrackInfo track : extraTrackSubtitle) {
-                    int roleFlags = track.getRoleFlags();
-                    if (roleFlags == -1)
-                        continue;
-                    String sutitleUrl = track.getUrl();
-                    if (null == sutitleUrl)
-                        continue;
-                    if (sutitleUrl.isEmpty())
-                        continue;
-                    String mimeType = track.getMimeType();
-                    if (null == mimeType)
-                        continue;
-                    if (mimeType.isEmpty())
-                        continue;
-                    String language = track.getLanguage();
-                    if (null == language)
-                        continue;
-                    if (language.isEmpty())
-                        continue;
-                    MediaItem.SubtitleConfiguration subtitleConfig = new MediaItem.SubtitleConfiguration.Builder(Uri.parse(sutitleUrl))
-                            .setSelectionFlags(C.SELECTION_FLAG_AUTOSELECT)
-                            .setMimeType(mimeType) // 也可以用 MimeTypes.APPLICATION_SUBRIP
-                            .setLanguage(language)
-                            .setRoleFlags(roleFlags)
-                            .setLabel(track.getLabel())
-                            .setId(track.getId())
-                            .setSelectionFlags(track.getSelectionFlags())
-                            .build();
-                    SingleSampleMediaSource source = new SingleSampleMediaSource.Factory(new DefaultDataSource.Factory(context, dataSourceFactory))
-                            .createMediaSource(subtitleConfig, C.TIME_UNSET);
-                    //
-                    mediaSources.add(source);
-                }
-            }
+//            SubtitleArgs[] extSubtitleUrl = urlArgs.getExtSubtitleUrl();
+//            if (null != extSubtitleUrl) {
+//                for (SubtitleArgs item : extSubtitleUrl) {
+//                        continue;
+//                    String url = item.getUrl();
+//                    if (null == url)
+//                        continue;
+//                    if (url.isEmpty())
+//                        continue;
+//                    String mimeType = item.getMimeType();
+//                    if (null == mimeType)
+//                        continue;
+//                    if (mimeType.isEmpty())
+//                        continue;
+//                    String language = item.getLanguage();
+//                    if (null == language)
+//                        continue;
+//                    if (language.isEmpty())
+//                        continue;
+//                    MediaItem.SubtitleConfiguration subtitleConfig = new MediaItem.SubtitleConfiguration.Builder(Uri.parse(url))
+//                            .setSelectionFlags(C.SELECTION_FLAG_AUTOSELECT)
+//                            .setMimeType(mimeType) // 也可以用 MimeTypes.APPLICATION_SUBRIP
+//                            .setLanguage(language)
+//                            .setRoleFlags((int) System.nanoTime())
+////                            .setLabel(track.getLabel())
+////                            .setId(track.getId())
+////                            .setSelectionFlags(track.getSelectionFlags())
+//                            .build();
+//                    SingleSampleMediaSource source = new SingleSampleMediaSource.Factory(new DefaultDataSource.Factory(context, dataSourceFactory))
+//                            .createMediaSource(subtitleConfig, C.TIME_UNSET);
+//                    //
+//                    mediaSources.add(source);
+//                }
+//            }
 
             return new MergingMediaSource(mediaSources.toArray(new MediaSource[0]));
-
-
         } catch (Exception e) {
             throw e;
         }

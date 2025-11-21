@@ -59,11 +59,11 @@ public final class VideoVlcPlayer extends VideoBasePlayer {
                 throw new Exception("error: mVlcPlayer null");
             if (null == args)
                 throw new Exception("error: args null");
-            String url = args.getUrl();
-            if (url == null)
-                throw new Exception("url error: " + url);
+            boolean containsUrl = args.containsUrl();
+            if (!containsUrl)
+                throw new Exception("error: containsUrl false");
             onEvent(PlayerType.KernelType.VLC, PlayerType.EventType.INIT_READY);
-            mVlcPlayer.setDataSource(Uri.parse(url), isPlayWhenReady());
+            mVlcPlayer.setDataSource(Uri.parse(args.getUrl().getMainUrl()), isPlayWhenReady());
             mVlcPlayer.play();
         } catch (Exception e) {
             stop();
@@ -88,7 +88,7 @@ public final class VideoVlcPlayer extends VideoBasePlayer {
             boolean looping = args.isLooping();
             mVlcPlayer.setLooping(looping);
         } catch (Exception e) {
-            if(LogUtil.DEBUG) {
+            if (LogUtil.DEBUG) {
                 LogUtil.log("VideoVlcPlayer => initOptions => Exception " + e.getMessage());
             }
         }
@@ -114,7 +114,7 @@ public final class VideoVlcPlayer extends VideoBasePlayer {
                 throw new Exception("error: mVlcPlayer null");
             mVlcPlayer.setOnVlcInfoChangeListener(mVlcPlayerListener);
         } catch (Exception e) {
-            if(LogUtil.DEBUG) {
+            if (LogUtil.DEBUG) {
                 LogUtil.log("VideoVlcPlayer => registListener => Exception " + e.getMessage());
             }
         }

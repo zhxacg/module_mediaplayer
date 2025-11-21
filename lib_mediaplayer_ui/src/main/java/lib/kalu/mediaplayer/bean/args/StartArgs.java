@@ -4,13 +4,10 @@ package lib.kalu.mediaplayer.bean.args;
 import org.json.JSONObject;
 
 import java.io.Serializable;
-import java.util.List;
 
 import lib.kalu.mediaplayer.PlayerSDK;
-import lib.kalu.mediaplayer.bean.info.TrackInfo;
 import lib.kalu.mediaplayer.bean.menu.Menu;
 import lib.kalu.mediaplayer.bean.type.PlayerType;
-import lib.kalu.mediaplayer.util.LogUtil;
 
 public class StartArgs implements Serializable {
 
@@ -88,9 +85,24 @@ public class StartArgs implements Serializable {
     }
 
     // 视频url
-    private String url;
+    private UrlArgs url;
 
-    public String getUrl() {
+    public boolean containsUrl() {
+        if (null == url) {
+            return false;
+        } else {
+            String mainUrl = url.getMainUrl();
+            if (null == mainUrl) {
+                return false;
+            } else if (mainUrl.isEmpty()) {
+                return false;
+            } else {
+                return true;
+            }
+        }
+    }
+
+    public UrlArgs getUrl() {
         return url;
     }
 
@@ -167,26 +179,6 @@ public class StartArgs implements Serializable {
         return rotation;
     }
 
-    // 外挂字幕
-    private List<TrackInfo> extraTrackSubtitle;
-
-    public List<TrackInfo> getExtraTrackSubtitle() {
-        return extraTrackSubtitle;
-    }
-
-    // 外挂音轨
-    private List<String> extraTrackAudio;
-
-    public List<String> getExtraTrackAudio() {
-        return extraTrackAudio;
-    }
-
-    // 外挂视频轨道
-    private List<String> extraTrackVideo;
-
-    public List<String> getExtraTrackVideo() {
-        return extraTrackVideo;
-    }
 
     // 透传数据
     private JSONObject extraData;
@@ -233,9 +225,6 @@ public class StartArgs implements Serializable {
                 ", playWhenReadySeekToPosition=" + playWhenReadySeekToPosition +
                 ", prepareAsync=" + prepareAsync +
                 ", rotation=" + rotation +
-                ", extraTrackSubtitle=" + extraTrackSubtitle +
-                ", extraTrackAudio=" + extraTrackAudio +
-                ", extraTrackVideo=" + extraTrackVideo +
                 ", extraData=" + extraData +
                 ", showSpeed=" + showSpeed +
                 ", menu=" + menu +
@@ -264,9 +253,6 @@ public class StartArgs implements Serializable {
         this.playWhenReadySeekToPosition = builder.playWhenReadySeekToPosition;
         this.prepareAsync = builder.prepareAsync;
         this.rotation = builder.rotation;
-        this.extraTrackSubtitle = builder.extraTrackSubtitle;
-        this.extraTrackAudio = builder.extraTrackAudio;
-        this.extraTrackVideo = builder.extraTrackVideo;
         this.extraData = builder.extraData;
         this.showSpeed = builder.showSpeed;
         this.menu = builder.menu;
@@ -295,9 +281,6 @@ public class StartArgs implements Serializable {
         builder.playWhenReadySeekToPosition = playWhenReadySeekToPosition;
         builder.prepareAsync = prepareAsync;
         builder.rotation = rotation;
-        builder.extraTrackSubtitle = extraTrackSubtitle;
-        builder.extraTrackAudio = extraTrackAudio;
-        builder.extraTrackVideo = extraTrackVideo;
         builder.extraData = extraData;
         builder.showSpeed = showSpeed;
         builder.menu = menu;
@@ -353,10 +336,15 @@ public class StartArgs implements Serializable {
         }
 
         // 视频url
-        private String url;
+        private UrlArgs url;
+
+        public Builder setUrl(UrlArgs v) {
+            this.url = v;
+            return this;
+        }
 
         public Builder setUrl(String v) {
-            this.url = v;
+            this.url = new UrlArgs.Builder().setMainUrl(v).build();
             return this;
         }
 
@@ -437,31 +425,6 @@ public class StartArgs implements Serializable {
 
         public Builder setPrepareAsync(boolean prepareAsync) {
             this.prepareAsync = prepareAsync;
-            return this;
-        }
-
-
-        // 外挂字幕
-        private List<TrackInfo> extraTrackSubtitle;
-
-        public Builder setExtraTrackSubtitle(List<TrackInfo> v) {
-            this.extraTrackSubtitle = v;
-            return this;
-        }
-
-        // 外挂音轨
-        private List<String> extraTrackAudio;
-
-        public Builder setExtraTrackAudio(List<String> v) {
-            this.extraTrackAudio = v;
-            return this;
-        }
-
-        // 外挂视频轨道
-        private List<String> extraTrackVideo;
-
-        public Builder setExtraTrackVideo(List<String> v) {
-            this.extraTrackVideo = v;
             return this;
         }
 

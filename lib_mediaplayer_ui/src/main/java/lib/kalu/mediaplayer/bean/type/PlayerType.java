@@ -432,16 +432,47 @@ public @interface PlayerType {
     @Documented
     @Retention(CLASS)
     @Target({METHOD, PARAMETER, FIELD, LOCAL_VARIABLE, ANNOTATION_TYPE, PACKAGE})
+    @interface MetaType {
+        int VIDEO_RTMP = 1;
+        int VIDEO_RTSP = 2;
+        int VIDEO_DASH = 3;
+        int VIDEO_HLS = 4;
+        int VIDEO_SS = 5;
+        int VIDEO_MP4 = 6;
+        int VIDEO_OTHER = 7;
+        int AUDIO = 8;
+        int SUBTITLE = 9;
+
+        @Documented
+        @Retention(CLASS)
+        @Target({METHOD, PARAMETER, FIELD, LOCAL_VARIABLE, ANNOTATION_TYPE, PACKAGE})
+        @IntDef(value = {
+                MetaType.VIDEO_RTMP,
+                MetaType.VIDEO_RTSP,
+                MetaType.VIDEO_DASH,
+                MetaType.VIDEO_HLS,
+                MetaType.VIDEO_SS,
+                MetaType.VIDEO_MP4,
+                MetaType.VIDEO_OTHER,
+                MetaType.AUDIO,
+                MetaType.SUBTITLE})
+        @interface Value {
+        }
+    }
+
+    @Documented
+    @Retention(CLASS)
+    @Target({METHOD, PARAMETER, FIELD, LOCAL_VARIABLE, ANNOTATION_TYPE, PACKAGE})
     @interface SchemeType {
 
         String FILE = "file://";
         String RTMP = "rtmp://";
         String RTSP = "rtsp://";
-        String _MPD = ".mpd";
         String _M3U = ".m3u";
         String _M3U8 = ".m3u8";
         String _TS = ".ts";
         String _MP4 = ".mp4";
+        String _MPD = ".mpd";
         String _MATCHES = ".*\\.ism(l)?(/manifest(\\(.+\\))?)?";
 
         @Documented

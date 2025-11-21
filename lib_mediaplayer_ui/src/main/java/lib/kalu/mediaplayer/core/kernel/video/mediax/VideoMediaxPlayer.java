@@ -71,6 +71,8 @@ import java.util.NavigableSet;
 
 import lib.kalu.mediaplayer.PlayerSDK;
 import lib.kalu.mediaplayer.bean.args.StartArgs;
+import lib.kalu.mediaplayer.bean.args.SubtitleArgs;
+import lib.kalu.mediaplayer.bean.args.UrlArgs;
 import lib.kalu.mediaplayer.bean.cache.Cache;
 import lib.kalu.mediaplayer.bean.info.HlsSpanInfo;
 import lib.kalu.mediaplayer.bean.info.TrackInfo;
@@ -311,13 +313,11 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
                 throw new Exception("mExoPlayer error: null");
             if (null == args)
                 throw new Exception("error: args null");
-            String url = args.getUrl();
-            if (null == url)
-                throw new Exception("error: url null");
-
+            boolean containsUrl = args.containsUrl();
+            if (!containsUrl)
+                throw new Exception("error: containsUrl false");
             onEvent(PlayerType.KernelType.MEDIA_V3, PlayerType.EventType.INIT_READY);
-
-            MediaSource mediaSource = buildSource(context, args);
+            MediaSource mediaSource = formatMediaSource(context, args);
             mExoPlayer.setMediaSource(mediaSource);
             boolean prepareAsync = args.isPrepareAsync();
             if (prepareAsync) {
@@ -671,58 +671,297 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
 
     /************************/
 
-    private MediaSource buildSource(Context context, StartArgs args) throws Exception {
+    private MediaSource formatMediaSource(Context context, StartArgs args) throws Exception {
 
         try {
-            String url = args.getUrl();
-            if (null == url)
-                throw new Exception("warning: url null");
-            if (url.isEmpty())
-                throw new Exception("warning: url isEmpty");
+            UrlArgs urlArgs = args.getUrl();
+            String mainUrl = urlArgs.getMainUrl();
 
-            int contentType;
-            String lowerCase = url.toLowerCase();
-            // dash
-            if (lowerCase.endsWith(PlayerType.SchemeType._MPD)) {
-                contentType = C.CONTENT_TYPE_DASH;
+            //
+            List<MediaSource> mediaSources = new LinkedList<>();
+
+            // 视频轨道
+            ArrayList<String> vUrls = new ArrayList<>();
+            vUrls.add(mainUrl);
+            String[] extraTrackVideo = urlArgs.getExtVideoUrl();
+            if (null != extraTrackVideo) {
+                for (String vUrl : extraTrackVideo) {
+                    vUrls.add(vUrl);
+                }
             }
-            // hls
-            else if (lowerCase.endsWith(PlayerType.SchemeType._M3U) || lowerCase.endsWith(PlayerType.SchemeType._M3U8)) {
-                contentType = C.CONTENT_TYPE_HLS;
+            for (String vUrl : vUrls) {
+                // mp4
+                if (vUrl.endsWith(PlayerType.SchemeType._MP4)) {
+                    mediaSources.add(buildMediaSource(context, args, PlayerType.MetaType.VIDEO_MP4, vUrl));
+                }
+                // rtmp
+                else if (vUrl.startsWith(PlayerType.SchemeType.RTMP)) {
+                    mediaSources.add(buildMediaSource(context, args, PlayerType.MetaType.VIDEO_RTMP, vUrl));
+                }
+                // rtsp
+                else if (vUrl.startsWith(PlayerType.SchemeType.RTSP)) {
+                    mediaSources.add(buildMediaSource(context, args, PlayerType.MetaType.VIDEO_RTSP, vUrl));
+                }
+                // dash
+                else if (vUrl.endsWith(PlayerType.SchemeType._MPD)) {
+                    mediaSources.add(buildMediaSource(context, args, PlayerType.MetaType.VIDEO_DASH, vUrl));
+                }
+                // hls
+                else if (vUrl.endsWith(PlayerType.SchemeType._M3U) || vUrl.endsWith(PlayerType.SchemeType._M3U8)) {
+                    mediaSources.add(buildMediaSource(context, args, PlayerType.MetaType.VIDEO_HLS, vUrl));
+                }
+                // SmoothStreaming
+                else if (vUrl.matches(PlayerType.SchemeType._MATCHES)) {
+                    mediaSources.add(buildMediaSource(context, args, PlayerType.MetaType.VIDEO_SS, vUrl));
+                }
+                // other
+                else {
+                    mediaSources.add(buildMediaSource(context, args, PlayerType.MetaType.VIDEO_OTHER, vUrl));
+                }
             }
-            // SmoothStreaming
-            else if (lowerCase.matches(PlayerType.SchemeType._MATCHES)) {
-                contentType = C.CONTENT_TYPE_SS;
+
+            // 音频轨道
+            String[] extraTrackAudio = urlArgs.getExtAudioUrl();
+            if (null != extraTrackAudio) {
+                for (String aUrl : extraTrackAudio) {
+                    MediaSource source = new DefaultMediaSourceFactory(buildHttpFactory(args))
+                            .createMediaSource(new MediaItem.Builder()
+                                    .setUri(aUrl)
+//                                    .setMimeType(track.getMimeType())
+//                                    .setMediaId(track.getLabel())
+                                    .build());
+                    //
+                    mediaSources.add(source);
+                }
+            }
+
+//                                    TrackInfo subtitleTrack = new TrackInfo();
+//                        subtitleTrack.setLanguage();
+//                        subtitleTrack.setUrl();
+//                        subtitleTrack.setMimeType();
+
+            // 字幕轨道 - 禁用缓存
+            SubtitleArgs[] extSubtitleUrl = urlArgs.getExtSubtitleUrl();
+            if (null != extSubtitleUrl) {
+                for (SubtitleArgs item : extSubtitleUrl) {
+                    String sutitleUrl = item.getUrl();
+                    if (null == sutitleUrl)
+                        continue;
+                    if (sutitleUrl.isEmpty())
+                        continue;
+                    String mimeType = item.getMimeType();
+                    if (null == mimeType)
+                        continue;
+                    if (mimeType.isEmpty())
+                        continue;
+                    String language = item.getLanguage();
+                    if (null == language)
+                        continue;
+                    if (language.isEmpty())
+                        continue;
+
+                    MediaItem.SubtitleConfiguration subtitleConfig = new MediaItem.SubtitleConfiguration.Builder(Uri.parse(sutitleUrl))
+                            .setSelectionFlags(C.SELECTION_FLAG_AUTOSELECT)
+                            .setMimeType(mimeType) // 也可以用 MimeTypes.APPLICATION_SUBRIP
+                            .setLanguage(language)
+                            .setRoleFlags((int) System.nanoTime())
+//                            .setLabel(track.getLabel())
+//                            .setId(track.getId())
+//                            .setSelectionFlags(track.getSelectionFlags())
+                            .build();
+
+//                      .setSubtitleMediaSourceFactory(
+//                            SingleSampleMediaSource.Factory(defaultDataSourceFactory) // 字幕用非缓存数据源
+//                    )
+                    //
+                    mediaSources.add(new SingleSampleMediaSource.Factory(new DefaultDataSource.Factory(context, buildHttpFactory(args)))
+                            .createMediaSource(subtitleConfig, C.TIME_UNSET));
+                }
+            }
+
+            return new MergingMediaSource(mediaSources.toArray(new MediaSource[0]));
+
+        } catch (Exception e) {
+            if (LogUtil.DEBUG) {
+                LogUtil.log("VideoMediaxPlayer => formatMediaSource => Exception: " + e.getMessage());
+            }
+            throw e;
+        }
+    }
+
+    private MediaSource buildMediaSource(Context context, StartArgs args,
+                                         @PlayerType.MetaType.Value int metaType,
+                                         String dataUrl) {
+
+        try {
+
+            // mp4
+            if (metaType == PlayerType.MetaType.VIDEO_MP4) {
+                Object factory = buildMediaFactory(context, args, metaType, dataUrl);
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("VideoMediaxPlayer => buildMediaSource => mp4, dataUrl = " + dataUrl);
+                }
+                return new ProgressiveMediaSource.Factory(((DataSource.Factory) factory)).createMediaSource(new MediaItem.Builder()
+                        .setUri(Uri.parse(dataUrl))
+                        .build());
             }
             // rtmp
-            else if (lowerCase.startsWith(PlayerType.SchemeType.RTMP)) {
-                contentType = -100;
-            }
-            // mp4
-            else if (lowerCase.startsWith(PlayerType.SchemeType._MP4)) {
-                contentType = -200;
+            else if (metaType == PlayerType.MetaType.VIDEO_RTMP) {
+                Object factory = buildMediaFactory(context, args, metaType, dataUrl);
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("VideoMediaxPlayer => buildMediaSource => rtmp, dataUrl = " + dataUrl);
+                }
+                return new ProgressiveMediaSource.Factory(((DataSource.Factory) factory)).createMediaSource(new MediaItem.Builder()
+                        .setUri(Uri.parse(dataUrl))
+                        .build());
             }
             // rtsp
-            else if (lowerCase.startsWith(PlayerType.SchemeType.RTSP)) {
-                contentType = C.CONTENT_TYPE_RTSP;
+            else if (metaType == PlayerType.MetaType.VIDEO_RTSP) {
+                Object factory = buildMediaFactory(context, args, metaType, dataUrl);
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("VideoMediaxPlayer => buildMediaSource => rtsp, dataUrl = " + dataUrl);
+                }
+                return ((MediaSource.Factory) factory).createMediaSource(new MediaItem.Builder()
+                        .setUri(Uri.parse(dataUrl))
+                        .build());
+            }
+            // dash
+            else if (metaType == PlayerType.MetaType.VIDEO_DASH) {
+                Object factory = buildMediaFactory(context, args, metaType, dataUrl);
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("VideoMediaxPlayer => buildMediaSource => dash, dataUrl = " + dataUrl);
+                }
+                return ((MediaSource.Factory) factory).createMediaSource(new MediaItem.Builder()
+                        .setUri(Uri.parse(dataUrl))
+                        .build());
+            }
+            // hls
+            else if (metaType == PlayerType.MetaType.VIDEO_HLS) {
+                Object factory = buildMediaFactory(context, args, metaType, dataUrl);
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("VideoMediaxPlayer => buildMediaSource => hls, dataUrl = " + dataUrl);
+                }
+                return ((MediaSource.Factory) factory).createMediaSource(new MediaItem.Builder()
+                        .setUri(Uri.parse(dataUrl))
+                        .build());
+            }
+            // SmoothStreaming
+            else if (metaType == PlayerType.MetaType.VIDEO_SS) {
+                Object factory = buildMediaFactory(context, args, metaType, dataUrl);
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("VideoMediaxPlayer => buildMediaSource => SmoothStreaming, dataUrl = " + dataUrl);
+                }
+                return ((MediaSource.Factory) factory).createMediaSource(new MediaItem.Builder()
+                        .setUri(Uri.parse(dataUrl))
+                        .build());
             }
             // other
             else {
-                contentType = C.CONTENT_TYPE_OTHER;
+                Object factory = buildMediaFactory(context, args, metaType, dataUrl);
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("VideoMediaxPlayer => buildMediaSource => other, dataUrl = " + dataUrl);
+                }
+                return ((DefaultMediaSourceFactory) factory).createMediaSource(new MediaItem.Builder()
+                        .setUri(Uri.parse(dataUrl))
+                        .build());
             }
 
+        } catch (Exception e) {
+            if (LogUtil.DEBUG) {
+                LogUtil.log("VideoMediaxPlayer => buildMediaSource => Exception: " + e.getMessage());
+            }
+            return null;
+        }
+    }
 
-            // 创建数据源工厂
-            DefaultHttpDataSource.Factory dataSourceFactory = new DefaultHttpDataSource.Factory()
-                    .setUserAgent(MediaLibraryInfo.VERSION_SLASHY)
-                    .setConnectTimeoutMs((int) args.getConnectTimout())
-                    .setReadTimeoutMs((int) args.getConnectTimout())
-                    .setAllowCrossProtocolRedirects(true)
-                    .setKeepPostFor302Redirects(true);
+    private Object buildMediaFactory(Context context, StartArgs args,
+                                     @PlayerType.MetaType.Value int metaType,
+                                     String dataUrl) {
 
+        try {
+            // mp4
+            if (metaType == PlayerType.MetaType.VIDEO_MP4) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("VideoMediaxPlayer => buildMediaFactory => mp4, dataUrl = " + dataUrl);
+                }
+                return buildDateFactory(context, args, dataUrl);
+            }
+            // rtmp
+            else if (metaType == PlayerType.MetaType.VIDEO_RTMP) {
+                Class<?> cls = Class.forName("ext.rtmp.RtmpDataSource");
+                DataSource.Factory factory = (DataSource.Factory) cls.newInstance();
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("VideoMediaxPlayer => buildMediaFactory => rtmp, dataUrl = " + dataUrl);
+                }
+                return factory;
+            }
+            // rtsp
+            else if (metaType == PlayerType.MetaType.VIDEO_RTSP) {
+                Class<?> cls = Class.forName("androidx.media3.exoplayer.rtsp.RtspMediaSource$Factory");
+                Constructor<?> constructor = cls.getDeclaredConstructor(DataSource.Factory.class);
+                constructor.setAccessible(true);
+                DataSource.Factory factory = buildDateFactory(context, args, dataUrl);
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("VideoMediaxPlayer => buildMediaFactory => rtsp, dataUrl = " + dataUrl);
+                }
+                return constructor.newInstance(factory);
+            }
+            // dash
+            else if (metaType == PlayerType.MetaType.VIDEO_DASH) {
+                Class<?> cls = Class.forName("androidx.media3.exoplayer.dash.DashMediaSource$Factory");
+                Constructor<?> constructor = cls.getDeclaredConstructor(DataSource.Factory.class);
+                constructor.setAccessible(true);
+                DataSource.Factory factory = buildDateFactory(context, args, dataUrl);
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("VideoMediaxPlayer => buildMediaFactory => dash, dataUrl = " + dataUrl);
+                }
+                return constructor.newInstance(factory);
+            }
+            // hls
+            else if (metaType == PlayerType.MetaType.VIDEO_HLS) {
+                Class<?> cls = Class.forName("androidx.media3.exoplayer.hls.HlsMediaSource$Factory");
+                Constructor<?> constructor = cls.getDeclaredConstructor(DataSource.Factory.class);
+                constructor.setAccessible(true);
+                DataSource.Factory factory = buildDateFactory(context, args, dataUrl);
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("VideoMediaxPlayer => buildMediaFactory => hls, dataUrl = " + dataUrl);
+                }
+                return constructor.newInstance(factory);
+            }
+            // SmoothStreaming
+            else if (metaType == PlayerType.MetaType.VIDEO_SS) {
+                Class<?> cls = Class.forName("androidx.media3.exoplayer.smoothstreaming.SsMediaSource$Factory");
+                Constructor<?> constructor = cls.getDeclaredConstructor(DataSource.Factory.class);
+                constructor.setAccessible(true);
+                DataSource.Factory factory = buildDateFactory(context, args, dataUrl);
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("VideoMediaxPlayer => buildMediaFactory => SmoothStreaming, dataUrl = " + dataUrl);
+                }
+                return constructor.newInstance(factory);
+            }
+            // other
+            else {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("VideoMediaxPlayer => buildMediaFactory => other, dataUrl = " + dataUrl);
+                }
+                return buildDateFactory(context, args, dataUrl);
+            }
+
+        } catch (Exception e) {
+            if (LogUtil.DEBUG) {
+                LogUtil.log("VideoMediaxPlayer => buildMediaFactory => Exception: " + e.getMessage());
+            }
+            return null;
+        }
+    }
+
+    private DataSource.Factory buildDateFactory(Context context, StartArgs args,
+                                                String dataUrl) {
+
+        try {
 
             Cache cache = PlayerSDK.init().getPlayerBuilder().getCache();
-            if (cache.isEnable() && !lowerCase.startsWith(PlayerType.SchemeType.FILE)) {
+            if (cache.isEnable() && !dataUrl.startsWith(PlayerType.SchemeType.FILE)) {
                 isUseCache = true;
             } else if (args.isLive()) {
                 isUseCache = false;
@@ -783,7 +1022,7 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
 //                        )
                         .setCache(mSimpleCache)
                         // 网络请求工厂
-                        .setUpstreamDataSourceFactory(dataSourceFactory)
+                        .setUpstreamDataSourceFactory(buildHttpFactory(args))
                         // 缓存读取工厂
                         .setCacheReadDataSourceFactory(new FileDataSource.Factory())
                         // 写入数据到缓存
@@ -800,180 +1039,38 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
                                 } else if (subUrl.endsWith(PlayerType.MarkType.TS)) {
                                     return subUrl;
                                 } else {
-                                    return url;
+                                    return dataUrl;
                                 }
                             }
                         });
             }
             // 关闭缓存
             else {
-                dataSource = new DefaultDataSource.Factory(context, dataSourceFactory);
+                dataSource = new DefaultDataSource.Factory(context, buildHttpFactory(args));
             }
 
-            //
-            List<MediaSource> mediaSources = new LinkedList<>();
-
-            // 视频轨道
-            ArrayList<String> vUrls = new ArrayList<>();
-            vUrls.add(url);
-            List<String> extraTrackVideo = args.getExtraTrackVideo();
-            if (null != extraTrackVideo) {
-                for (String vUrl : extraTrackVideo) {
-                    vUrls.add(vUrl);
-                }
-            }
-            for (String vUrl : vUrls) {
-                // rtmp
-                if (contentType == -100) {
-                    Class<?> cls = Class.forName("ext.rtmp.RtmpDataSource");
-                    DataSource.Factory factory = (DataSource.Factory) cls.newInstance();
-                    if (LogUtil.DEBUG) {
-                        LogUtil.log("VideoMediaxPlayer => buildSource => rtmp");
-                    }
-                    ProgressiveMediaSource source = new ProgressiveMediaSource.Factory(factory).createMediaSource(new MediaItem.Builder()
-                            .setUri(Uri.parse(vUrl))
-                            .build());
-                    mediaSources.add(source);
-                }
-                // rtsp
-                else if (contentType == C.CONTENT_TYPE_RTSP) {
-                    Class<?> cls = Class.forName("androidx.media3.exoplayer.rtsp.RtspMediaSource$Factory");
-                    Constructor<?> constructor = cls.getDeclaredConstructor(DataSource.Factory.class);
-                    constructor.setAccessible(true);
-                    Object object = constructor.newInstance(dataSource);
-                    if (LogUtil.DEBUG) {
-                        LogUtil.log("VideoMediaxPlayer => buildSource => rtsp");
-                    }
-                    MediaSource source = ((MediaSource.Factory) object).createMediaSource(new MediaItem.Builder()
-                            .setUri(Uri.parse(vUrl))
-                            .build());
-                    mediaSources.add(source);
-                }
-                // dash
-                else if (contentType == C.CONTENT_TYPE_DASH) {
-                    Class<?> cls = Class.forName("androidx.media3.exoplayer.dash.DashMediaSource$Factory");
-                    Constructor<?> constructor = cls.getDeclaredConstructor(DataSource.Factory.class);
-                    constructor.setAccessible(true);
-                    Object object = constructor.newInstance(dataSource);
-                    if (LogUtil.DEBUG) {
-                        LogUtil.log("VideoMediaxPlayer => buildSource => dash");
-                    }
-                    MediaSource source = ((MediaSource.Factory) object).createMediaSource(new MediaItem.Builder()
-                            .setUri(Uri.parse(vUrl))
-                            .build());
-                    mediaSources.add(source);
-                }
-                // hls
-                else if (contentType == C.CONTENT_TYPE_HLS) {
-                    Class<?> cls = Class.forName("androidx.media3.exoplayer.hls.HlsMediaSource$Factory");
-                    Constructor<?> constructor = cls.getDeclaredConstructor(DataSource.Factory.class);
-                    constructor.setAccessible(true);
-                    Object object = constructor.newInstance(dataSource);
-                    if (LogUtil.DEBUG) {
-                        LogUtil.log("VideoMediaxPlayer => buildSource => hls");
-                    }
-                    MediaSource source = ((MediaSource.Factory) object).createMediaSource(new MediaItem.Builder()
-                            .setUri(Uri.parse(vUrl))
-                            .build());
-                    mediaSources.add(source);
-                }
-                // SmoothStreaming
-                else if (contentType == C.CONTENT_TYPE_SS) {
-                    Class<?> cls = Class.forName("androidx.media3.exoplayer.smoothstreaming.SsMediaSource$Factory");
-                    Constructor<?> constructor = cls.getDeclaredConstructor(DataSource.Factory.class);
-                    constructor.setAccessible(true);
-                    Object object = constructor.newInstance(dataSource);
-                    if (LogUtil.DEBUG) {
-                        LogUtil.log("VideoMediaxPlayer => buildSource => SmoothStreaming");
-                    }
-                    MediaSource source = ((MediaSource.Factory) object).createMediaSource(new MediaItem.Builder()
-                            .setUri(Uri.parse(vUrl))
-                            .build());
-                    mediaSources.add(source);
-                }
-                // mp4
-                else if (contentType == -200) {
-                    if (LogUtil.DEBUG) {
-                        LogUtil.log("VideoMediaxPlayer => buildSource => mp4");
-                    }
-                    ProgressiveMediaSource source = new ProgressiveMediaSource.Factory(dataSource).createMediaSource(new MediaItem.Builder()
-                            .setUri(Uri.parse(vUrl))
-                            .build());
-                    mediaSources.add(source);
-                }
-                // other
-                else {
-                    if (LogUtil.DEBUG) {
-                        LogUtil.log("VideoMediaxPlayer => buildSource => other");
-                    }
-                    MediaSource source = new DefaultMediaSourceFactory(dataSource).createMediaSource(new MediaItem.Builder()
-                            .setUri(Uri.parse(vUrl))
-                            .build());
-                    mediaSources.add(source);
-                }
-            }
-
-            // 音频轨道
-            List<String> extraTrackAudio = args.getExtraTrackAudio();
-            if (null != extraTrackAudio) {
-                for (String aUrl : extraTrackAudio) {
-                    MediaSource source = new DefaultMediaSourceFactory(dataSourceFactory)
-                            .createMediaSource(new MediaItem.Builder()
-                                    .setUri(aUrl)
-//                                    .setMimeType(track.getMimeType())
-//                                    .setMediaId(track.getLabel())
-                                    .build());
-                    //
-                    mediaSources.add(source);
-                }
-            }
-
-            // 字幕轨道 - 禁用缓存
-            List<TrackInfo> extraTrackSubtitle = args.getExtraTrackSubtitle();
-            if (null != extraTrackSubtitle) {
-                for (TrackInfo track : extraTrackSubtitle) {
-                    int roleFlags = track.getRoleFlags();
-                    if (roleFlags == -1)
-                        continue;
-                    String sutitleUrl = track.getUrl();
-                    if (null == sutitleUrl)
-                        continue;
-                    if (sutitleUrl.isEmpty())
-                        continue;
-                    String mimeType = track.getMimeType();
-                    if (null == mimeType)
-                        continue;
-                    if (mimeType.isEmpty())
-                        continue;
-                    String language = track.getLanguage();
-                    if (null == language)
-                        continue;
-                    if (language.isEmpty())
-                        continue;
-
-                    MediaItem.SubtitleConfiguration subtitleConfig = new MediaItem.SubtitleConfiguration.Builder(Uri.parse(sutitleUrl))
-                            .setSelectionFlags(C.SELECTION_FLAG_AUTOSELECT)
-                            .setMimeType(mimeType) // 也可以用 MimeTypes.APPLICATION_SUBRIP
-                            .setLanguage(language)
-                            .setRoleFlags(roleFlags)
-                            .setLabel(track.getLabel())
-                            .setId(track.getId())
-                            .setSelectionFlags(track.getSelectionFlags())
-                            .build();
-
-//                      .setSubtitleMediaSourceFactory(
-//                            SingleSampleMediaSource.Factory(defaultDataSourceFactory) // 字幕用非缓存数据源
-//                    )
-                    //
-                    mediaSources.add(new SingleSampleMediaSource.Factory(new DefaultDataSource.Factory(context, dataSourceFactory))
-                            .createMediaSource(subtitleConfig, C.TIME_UNSET));
-                }
-            }
-
-            return new MergingMediaSource(mediaSources.toArray(new MediaSource[0]));
-
+            return dataSource;
         } catch (Exception e) {
-            throw e;
+            if (LogUtil.DEBUG) {
+                LogUtil.log("VideoMediaxPlayer => buildMediaFactory => Exception: " + e.getMessage());
+            }
+            return null;
+        }
+    }
+
+    private DataSource.Factory buildHttpFactory(StartArgs args) {
+        try {
+            return new DefaultHttpDataSource.Factory()
+                    .setUserAgent(MediaLibraryInfo.VERSION_SLASHY)
+                    .setConnectTimeoutMs((int) args.getConnectTimout())
+                    .setReadTimeoutMs((int) args.getConnectTimout())
+                    .setAllowCrossProtocolRedirects(true)
+                    .setKeepPostFor302Redirects(true);
+        } catch (Exception e) {
+            if (LogUtil.DEBUG) {
+                LogUtil.log("VideoMediaxPlayer => buildHttpFactory => Exception: " + e.getMessage());
+            }
+            return null;
         }
     }
 

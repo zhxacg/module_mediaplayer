@@ -9,7 +9,7 @@ public final class Cache implements Serializable {
 
     private boolean enable;
     private boolean external;
-    private int size;
+    private int sizeMB;
     private LinkedHashMap<Integer, String> dirs;
 
     public boolean isEnable() {
@@ -21,7 +21,7 @@ public final class Cache implements Serializable {
     }
 
     public int getSizeMB() {
-        return size;
+        return sizeMB;
     }
 
     public String getDir(@PlayerType.KernelType.Value int type) {
@@ -31,21 +31,24 @@ public final class Cache implements Serializable {
     private Cache(Cache.Builder builder) {
         enable = builder.enable;
         external = builder.external;
-        size = builder.size;
+        sizeMB = builder.sizeMB;
         dirs = builder.dirs;
     }
 
     public final static class Builder {
+        // 缓存开关
         private boolean enable;
+        // 缓存内部开关
         private boolean external;
-        private int size = 500;
+        // 缓存大小
+        private int sizeMB = 1024;
         private LinkedHashMap<Integer, String> dirs = new LinkedHashMap<Integer, String>() {{
-            put(PlayerType.KernelType.ANDROID, "android_video_cache");
-            put(PlayerType.KernelType.IJK, "ijk_video_cache");
-            put(PlayerType.KernelType.FFPLAYER, "ff_video_cache");
-            put(PlayerType.KernelType.VLC, "vlc_video_cache");
-            put(PlayerType.KernelType.EXO_V2, "exo2_video_cache");
-            put(PlayerType.KernelType.MEDIA_V3, "media3_video_cache");
+            put(PlayerType.KernelType.ANDROID, "android_cache");
+            put(PlayerType.KernelType.IJK, "ijk_cache");
+            put(PlayerType.KernelType.FFPLAYER, "ff_cache");
+            put(PlayerType.KernelType.VLC, "vlc_cache");
+            put(PlayerType.KernelType.EXO_V2, "exo2_cache");
+            put(PlayerType.KernelType.MEDIA_V3, "media3_cache");
         }};
 
         public Cache.Builder setEnable(boolean v) {
@@ -59,15 +62,15 @@ public final class Cache implements Serializable {
         }
 
         public Cache.Builder setSizeMB(int v) {
-            this.size = v;
+            this.sizeMB = v;
             return this;
         }
 
-        public Cache.Builder setDir(@PlayerType.KernelType.Value int type, String v) {
-            dirs.remove(type);
-            dirs.put(type, v);
-            return this;
-        }
+//        public Cache.Builder setDir(@PlayerType.KernelType.Value int type, String v) {
+//            dirs.remove(type);
+//            dirs.put(type, v);
+//            return this;
+//        }
 
         public Cache build() {
             return new Cache(this);

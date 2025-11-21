@@ -25,9 +25,9 @@ public interface VideoPlayerLifecycle extends VideoPlayerApiBase, VideoPlayerApi
             boolean supportAutoRelease = tags.isSupportAutoRelease();
             if (!supportAutoRelease)
                 throw new Exception("warning: supportAutoRelease false");
-            String mediaUrl = tags.getUrl();
-            if (null == mediaUrl)
-                throw new Exception("warning: mediaUrl null");
+            boolean containsUrl = tags.containsUrl();
+            if (!containsUrl)
+                throw new Exception("error: containsUrl false");
             stop(true, false);
             release(true, true, false);
         } catch (Exception e) {
@@ -54,9 +54,9 @@ public interface VideoPlayerLifecycle extends VideoPlayerApiBase, VideoPlayerApi
             boolean supportAutoRelease = tags.isSupportAutoRelease();
             if (!supportAutoRelease)
                 throw new Exception("warning: supportAutoRelease false");
-            String mediaUrl = tags.getUrl();
-            if (null == mediaUrl)
-                throw new Exception("warning: mediaUrl null");
+            boolean containsUrl = tags.containsUrl();
+            if (!containsUrl)
+                throw new Exception("error: containsUrl false");
             resume(false);
         } catch (Exception e) {
             if (LogUtil.DEBUG) {

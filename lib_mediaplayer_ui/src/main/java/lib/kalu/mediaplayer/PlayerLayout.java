@@ -195,9 +195,9 @@ public class PlayerLayout extends RelativeLayout {
             StartArgs args = getStartArgs();
             if (null == args)
                 throw new Exception("warning: args null");
-            String mediaUrl = args.getUrl();
-            if (null == mediaUrl)
-                throw new Exception("warning: mediaUrl null");
+            boolean containsUrl = args.containsUrl();
+            if (!containsUrl)
+                throw new Exception("error: containsUrl false");
             PlayerView playerView = getPlayerView();
             if (null == playerView)
                 throw new Exception("playerView error: null");
@@ -217,9 +217,9 @@ public class PlayerLayout extends RelativeLayout {
             StartArgs args = getStartArgs();
             if (null == args)
                 throw new Exception("warning: args null");
-            String mediaUrl = args.getUrl();
-            if (null == mediaUrl)
-                throw new Exception("warning: mediaUrl null");
+            boolean containsUrl = args.containsUrl();
+            if (!containsUrl)
+                throw new Exception("error: containsUrl false");
             PlayerView playerView = getPlayerView();
             if (null == playerView)
                 throw new Exception("playerView error: null");
@@ -239,9 +239,9 @@ public class PlayerLayout extends RelativeLayout {
             StartArgs args = getStartArgs();
             if (null == args)
                 throw new Exception("warning: args null");
-            String mediaUrl = args.getUrl();
-            if (null == mediaUrl)
-                throw new Exception("warning: mediaUrl null");
+            boolean containsUrl = args.containsUrl();
+            if (!containsUrl)
+                throw new Exception("error: containsUrl false");
             PlayerView playerView = getPlayerView();
             if (null == playerView)
                 throw new Exception("playerView error: null");
@@ -262,9 +262,9 @@ public class PlayerLayout extends RelativeLayout {
             StartArgs args = getStartArgs();
             if (null == args)
                 throw new Exception("warning: args null");
-            String mediaUrl = args.getUrl();
-            if (null == mediaUrl)
-                throw new Exception("warning: mediaUrl null");
+            boolean containsUrl = args.containsUrl();
+            if (!containsUrl)
+                throw new Exception("error: containsUrl false");
             PlayerView playerView = getPlayerView();
             if (null == playerView)
                 throw new Exception("playerView error: null");
@@ -553,7 +553,7 @@ public class PlayerLayout extends RelativeLayout {
             StartArgs args = getStartArgs();
             if (null == args)
                 throw new Exception("warning: args null");
-            return args.getUrl();
+            return args.getUrl().getMainUrl();
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
                 LogUtil.log("PlayerLayout => getMediaUrl => " + e.getMessage());

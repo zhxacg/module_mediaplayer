@@ -24,6 +24,8 @@ import java.util.List;
 
 import lib.kalu.mediaplayer.PlayerSDK;
 import lib.kalu.mediaplayer.bean.args.StartArgs;
+import lib.kalu.mediaplayer.bean.args.SubtitleArgs;
+import lib.kalu.mediaplayer.bean.args.UrlArgs;
 import lib.kalu.mediaplayer.bean.cache.Cache;
 import lib.kalu.mediaplayer.bean.info.TrackInfo;
 import lib.kalu.mediaplayer.bean.menu.Menu;
@@ -53,9 +55,6 @@ public class MainActivity extends Activity {
                 // 2
                 StartArgs args = new StartArgs.Builder()
                         .setUrl(getUrl())
-                        .setExtraTrackSubtitle(getExtraSubtitleUrls())
-                        .setExtraTrackVideo(getExtraVideoUrls())
-                        .setExtraTrackAudio(getExtraAudioUrls())
                         .setTitle("测试视频")
                         .setLive(isLive())
                         .setLooping(isLooping())
@@ -153,10 +152,9 @@ public class MainActivity extends Activity {
             if (i == 0) {
 
                 int count = 24;
-                String url = getUrl();
                 ArrayList<String> strings = new ArrayList<>();
                 for (int j = 0; j < count; j++) {
-                    strings.add(url);
+                    strings.add("");
                 }
 
                 Menu.Episode item = new Menu.Episode();
@@ -256,8 +254,92 @@ public class MainActivity extends Activity {
         return checkBox.isChecked();
     }
 
+    private UrlArgs getUrl() {
+        try {
 
-    private List<TrackInfo> getExtraSubtitleUrls() {
+            UrlArgs.Builder urlBuilder = new UrlArgs.Builder();
+
+            // mainUrl
+            try {
+                boolean contains = false;
+                RadioGroup radioGroup = findViewById(R.id.main_urls);
+                int childCount = radioGroup.getChildCount();
+                for (int i = 0; i < childCount; i++) {
+                    RadioButton radioButton = (RadioButton) radioGroup.getChildAt(i);
+                    boolean checked = radioButton.isChecked();
+                    if (checked) {
+                        urlBuilder.setMainUrl(radioButton.getTag().toString());
+                        contains = true;
+                        break;
+                    }
+                }
+
+                if (!contains) {
+                    EditText editText = findViewById(R.id.main_edit);
+                    Editable editableText = editText.getEditableText();
+                    if (editableText.length() > 0) {
+                        urlBuilder.setMainUrl(editableText.toString());
+                    }
+                }
+            } catch (Exception e) {
+            }
+
+            // extVideoUrl
+            try {
+                RadioGroup radioGroup = findViewById(R.id.main_urls);
+                int childCount = radioGroup.getChildCount();
+                for (int n = 0; n < childCount; n++) {
+                    RadioButton radioButton = (RadioButton) radioGroup.getChildAt(n);
+                    boolean checked = radioButton.isChecked();
+                    if (!checked)
+                        continue;
+                    CharSequence text = radioButton.getText();
+                    if (!"test_hls".equals(text))
+                        continue;
+                    String[] urls = getResources().getStringArray(R.array.hls_extra_video_urls);
+                    urlBuilder.setExtVideoUrl(urls);
+                }
+            } catch (Exception e) {
+            }
+
+            // extSubtitleUrl
+            try {
+                RadioGroup radioGroup = findViewById(R.id.main_urls);
+                int childCount = radioGroup.getChildCount();
+                for (int n = 0; n < childCount; n++) {
+                    RadioButton radioButton = (RadioButton) radioGroup.getChildAt(n);
+                    boolean checked = radioButton.isChecked();
+                    if (!checked)
+                        continue;
+                    CharSequence text = radioButton.getText();
+                    if (!"test_hls".equals(text))
+                        continue;
+
+                    String[] urls = getResources().getStringArray(R.array.hls_extra_subtitle_urls);
+                    String[] languages = getResources().getStringArray(R.array.hls_extra_subtitle_languages);
+                    if (urls.length != languages.length)
+                        continue;
+
+                    SubtitleArgs[] subtitleArgs = new SubtitleArgs[urls.length];
+                    for (int i = 0; i < urls.length; i++) {
+                        subtitleArgs[i] = new SubtitleArgs.Builder()
+                                .setUrl(urls[i])
+                                .setLanguage(languages[i])
+                                .setMimeType(PlayerType.TrackType.TEXT_VTT)
+                                .build();
+                    }
+                    urlBuilder.setExtSubtitleUrl(subtitleArgs);
+                }
+            } catch (Exception e) {
+            }
+
+            //
+            return urlBuilder.build();
+        } catch (Exception e) {
+            LogUtil.log("MainActivity => getUrl => Exception " + e.getMessage(), e);
+            return null;
+        }
+
         /**
          *  2025-04-25 20:01:32.609 25895-25932 PlayerViewModel         com.yyt.zapptv                       D  streamsList = [# com.yyt.zapptv.model.proto.Playback$StreamTrack@37d8a524
          *     format: "hls"
@@ -289,83 +371,7 @@ public class MainActivity extends Activity {
          *     2025-04-25 20:01:32.612 25895-25932 PlayerViewModel         com.yyt.zapptv                       D  audiosList = []
          */
 
-
-        try {
-            RadioGroup radioGroup = findViewById(R.id.main_urls);
-            int childCount = radioGroup.getChildCount();
-            for (int n = 0; n < childCount; n++) {
-                RadioButton radioButton = (RadioButton) radioGroup.getChildAt(n);
-                boolean checked = radioButton.isChecked();
-                if (!checked)
-                    continue;
-                CharSequence text = radioButton.getText();
-                if (!"hls_m3u8_vod_extra".equals(text))
-                    continue;
-
-                ArrayList<TrackInfo> list = new ArrayList<>();
-                String[] urls = getResources().getStringArray(R.array.hls_extra_subtitle_urls);
-                String[] languages = getResources().getStringArray(R.array.hls_extra_subtitle_languages);
-                for (int i = 0; i < 3; i++) {
-                    TrackInfo subtitleTrack = new TrackInfo();
-                    subtitleTrack.setRoleFlags((int) System.nanoTime());
-                    subtitleTrack.setLanguage(languages[i]);
-                    subtitleTrack.setUrl(urls[i]);
-                    subtitleTrack.setMimeType(PlayerType.TrackType.TEXT_VTT);
-                    //
-                    list.add(subtitleTrack);
-                }
-                return list;
-            }
-            throw new Exception();
-        } catch (Exception e) {
-            return null;
-        }
-    }
-
-    private List<String> getExtraAudioUrls() {
-        return null;
-    }
-
-    private List<String> getExtraVideoUrls() {
-
-        try {
-            RadioGroup radioGroup = findViewById(R.id.main_urls);
-            int childCount = radioGroup.getChildCount();
-            for (int n = 0; n < childCount; n++) {
-                RadioButton radioButton = (RadioButton) radioGroup.getChildAt(n);
-                boolean checked = radioButton.isChecked();
-                if (!checked)
-                    continue;
-                CharSequence text = radioButton.getText();
-                if (!"hls_m3u8_vod_extra".equals(text))
-                    continue;
-                ArrayList<String> list = new ArrayList<>();
-                String[] urls = getResources().getStringArray(R.array.hls_extra_video_urls);
-                for (int i = 0; i < urls.length; i++) {
-                    list.add(urls[i]);
-                }
-                return list;
-            }
-            throw new Exception();
-        } catch (Exception e) {
-            return null;
-        }
-    }
-
-    private String getUrl() {
-        try {
-
-            //
-            RadioGroup radioGroup = findViewById(R.id.main_urls);
-            int childCount = radioGroup.getChildCount();
-            for (int i = 0; i < childCount; i++) {
-                RadioButton radioButton = (RadioButton) radioGroup.getChildAt(i);
-                boolean checked = radioButton.isChecked();
-                if (checked) {
-
-                    return radioButton.getTag().toString();
-
-//                    CharSequence text = radioButton.getText();
+        //                    CharSequence text = radioButton.getText();
 //                    if ("hls_m3u8_vod_extra".equals(text)) {
 //
 //
@@ -522,21 +528,6 @@ public class MainActivity extends Activity {
 //                    } else {
 //                        return radioButton.getTag().toString();
 //                    }
-                }
-            }
-
-            //
-            EditText editText = findViewById(R.id.main_edit);
-            Editable editableText = editText.getEditableText();
-            if (editableText.length() > 0)
-                return editableText.toString();
-
-            //
-            throw new Exception();
-        } catch (Exception e) {
-            LogUtil.log("MainActivity => getUrl => Exception " + e.getMessage(), e);
-            return "";
-        }
     }
 
     private int getKernelType() {
@@ -578,6 +569,23 @@ public class MainActivity extends Activity {
         try {
             CheckBox checkBox = findViewById(R.id.main_log_yes);
             return checkBox.isChecked();
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+
+    private Boolean isCacheEnable() {
+        try {
+            return ((CheckBox) findViewById(R.id.main_cache_enable)).isChecked();
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    private Boolean isCacheExternal() {
+        try {
+            return ((CheckBox) findViewById(R.id.main_cache_external)).isChecked();
         } catch (Exception e) {
             return false;
         }
@@ -630,12 +638,6 @@ public class MainActivity extends Activity {
                 break;
         }
 
-        boolean cacheChecked = ((CheckBox) findViewById(R.id.main_cache_yes)).isChecked();
-
-
-        CheckBox checkBox = findViewById(R.id.main_log_yes);
-        boolean checked = checkBox.isChecked();
-
         PlayerSDK.init()
                 // 日志开关
                 .setLog(isLogEnable())
@@ -659,8 +661,8 @@ public class MainActivity extends Activity {
                 .setSeekType(PlayerType.SeekType.DEFAULT)
                 // 缓存
                 .setCache(new Cache.Builder()
-                        .setEnable(cacheChecked)
-                        .setExternal(false)
+                        .setEnable(isCacheEnable())
+                        .setExternal(isCacheExternal())
                         .setSizeMB(1000)
                         .build())
                 // 代理
