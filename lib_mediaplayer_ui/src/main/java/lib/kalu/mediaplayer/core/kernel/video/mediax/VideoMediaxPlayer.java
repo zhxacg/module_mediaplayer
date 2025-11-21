@@ -2,6 +2,7 @@ package lib.kalu.mediaplayer.core.kernel.video.mediax;
 
 import android.content.Context;
 import android.net.Uri;
+import android.os.Bundle;
 import android.os.Looper;
 import android.view.Surface;
 
@@ -10,7 +11,6 @@ import androidx.media3.common.C;
 import androidx.media3.common.Format;
 import androidx.media3.common.MediaItem;
 import androidx.media3.common.MediaLibraryInfo;
-import androidx.media3.common.MediaMetadata;
 import androidx.media3.common.PlaybackException;
 import androidx.media3.common.PlaybackParameters;
 import androidx.media3.common.Player;
@@ -865,6 +865,7 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
                 if (LogUtil.DEBUG) {
                     LogUtil.log("VideoMediaxPlayer => buildVideoMediaSource => mp4, dataUrl = " + url);
                 }
+
                 return new ProgressiveMediaSource.Factory(((DataSource.Factory) factory)).createMediaSource(new MediaItem.Builder()
                         .setUri(Uri.parse(url))
                         .build());
@@ -905,8 +906,14 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
                 if (LogUtil.DEBUG) {
                     LogUtil.log("VideoMediaxPlayer => buildVideoMediaSource => other, dataUrl = " + url);
                 }
+                // 创建 Bundle 并添加额外数据
+                Bundle bundle = new Bundle();
+                bundle.putString("extLanguage", language);
                 return ((DefaultMediaSourceFactory) factory).createMediaSource(new MediaItem.Builder()
                         .setUri(Uri.parse(url))
+                        .setRequestMetadata(new MediaItem.RequestMetadata.Builder()
+                                .setExtras(bundle)
+                                .build())
                         .build());
             }
 
@@ -1024,27 +1031,16 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
                 LogUtil.log("VideoMediaxPlayer => buildAudioMediaSource => hashCode = " + hashCode + ", dataUrl = " + url);
             }
 
-//            MediaMetadata metadata = new MediaMetadata.Builder()
-//                    .setAudioLanguage("en-US")
-//                    .build();
-//
-//            MediaItem mediaItem = new MediaItem.Builder()
-//                    .setUri(videoUri)
-//                    .setMediaMetadata(metadata)
-//                    .build();
-
             if (factory instanceof CacheDataSource.Factory) {
                 return new DefaultMediaSourceFactory((CacheDataSource.Factory) factory)
                         .createMediaSource(new MediaItem.Builder()
                                 .setUri(Uri.parse(url))
-//                            .setMimeType(track.getMimeType())
                                 .setMediaId(String.valueOf(hashCode))
                                 .build());
             } else {
                 return new DefaultMediaSourceFactory((DataSource.Factory) factory)
                         .createMediaSource(new MediaItem.Builder()
                                 .setUri(Uri.parse(url))
-//                            .setMimeType(track.getMimeType())
                                 .setMediaId(String.valueOf(hashCode))
                                 .build());
             }
@@ -1689,6 +1685,11 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
                 for (int trackIndex = 0; trackIndex < trackCount; trackIndex++) {
                     //
                     Format format = group.getTrackFormat(trackIndex);
+                    if (LogUtil.DEBUG) {
+                        LogUtil.log("VideoMediaxPlayer => getTrackInfo => format = " + format);
+                    }
+
+
                     // 轨道是否支持
                     boolean isTrackSupported = group.isTrackSupported(trackIndex);
                     // 轨道是否被选中
@@ -1714,6 +1715,7 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
                     }
                     // 音频轨道
                     else if (type == 2 && trackType == C.TRACK_TYPE_AUDIO) {
+
 //                        object.put("channelCount", format.channelCount);
 //                        object.put("sampleRate", format.sampleRate);
 //                        object.put("pcmEncoding", format.pcmEncoding);
@@ -1722,11 +1724,13 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
                     }
                     // 字幕轨道
                     else if (type == 3 && trackType == C.TRACK_TYPE_TEXT) {
+
 //                        object.put("accessibilityChannel", format.accessibilityChannel);
                         //  object.put("cueReplacementBehavior", format.cueReplacementBehavior);
                     }
                     // 媒体信息
                     else if (type == 4 && trackType == C.TRACK_TYPE_METADATA) {
+
                     }
                     // 视频轨道
                     else if (type == -1 && trackType == C.TRACK_TYPE_VIDEO) {

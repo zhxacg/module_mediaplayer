@@ -1,9 +1,10 @@
 <resources>
 
     <string-array name="names">
+        <item>test_hls_local</item>
+        <item>test_hls</item>
         <item>test_ss</item>
         <item>test_mpd</item>
-        <item>test_hls</item>
         <item>mp4_http</item>
         <item>mp4_https</item>
         <item>mp4_https</item>
@@ -14,13 +15,10 @@
     </string-array>
 
     <string-array name="urls">
+        <item />
+        <item>https://media-1347269025.cos.sa-saopaulo.myqcloud.com/movie/387923cf/720p/index.m3u8</item>
         <item>http://streams.smooth.vertigo.com/elephantsdream/Elephants_Dream_1024 - h264 - st - aac.ism/manifest</item>
         <item>https://bitmovin-a.akamaihd.net/content/MI201109210084_1/mpds/f08e80da-bf1d-4e3d-8899-f0f6155f6efa.mpd</item>
-<!--        <item>https://demo.unified-streaming.com/k8s/features/stable/video/tears-of-steel/tears-of-steel.ism/.m3u8</item>-->
-<!--        <item>https://devstreaming-cdn.apple.com/videos/streaming/examples/img_bipbop_adv_example_ts/master.m3u8</item>-->
-<!--        <item>https://media-1347269025.cos.sa-saopaulo.myqcloud.com/movie/5f2751d1/480p/index.m3u8</item>-->
-        <item>https://media-1347269025.cos.sa-saopaulo.myqcloud.com/movie/387923cf/720p/index.m3u8</item>
-<!--        <item>https://test-1347269025.cos.sa-saopaulo.myqcloud.com/media/movie/foreiowiw/playlist.m3u8</item>-->
         <item>https://www.w3schools.com/html/mov_bbb.mp4</item>
         <item>https://media.w3.org/2010/05/sintel/trailer.mp4</item>
         <item>https://aliyuncdnsaascloud.xjhktv.com/video/A%20Lin%2B%E5%80%AA%E5%AD%90%E5%86%88-%E4%B8%8D%E5%B1%91%E5%AE%8C%E7%BE%8E%5B%E5%9B%BD%5D%5B1080P%5D.mp4</item>
@@ -30,8 +28,7 @@
         <item>http://wxsnsdy.tc.qq.com/105/20210/snsdyvideodownload?filekey=30280201010421301f0201690402534804102ca905ce620b1241b726bc41dcff44e00204012882540400&amp;amp;bizid=1023&amp;amp;hy=SH&amp;amp;fileparam=302c020101042530230204136ffd93020457e3c4ff02024ef202031e8d7f02030f42400204045a320a0201000400</item>
     </string-array>
 
-    <string-array name="hls_extra_audio_urls">
-    </string-array>
+    <string-array name="hls_extra_audio_urls"></string-array>
 
     <!--    <item>https://media-1347269025.cos.sa-saopaulo.myqcloud.com/movie/5f2751d1/480p/index.m3u8</item>item-->
     <string-array name="hls_extra_video_urls">
