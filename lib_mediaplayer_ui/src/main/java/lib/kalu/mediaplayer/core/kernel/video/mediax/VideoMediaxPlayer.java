@@ -1163,14 +1163,6 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
                 return ((MediaSource.Factory) factory).createMediaSource(new MediaItem.Builder()
                         .setUri(Uri.parse(url))
                         .setMediaId("audio:" + hashCode)
-                        .setMediaMetadata(new MediaMetadata.Builder()
-                                .setExtras(Bundle.EMPTY)
-                                .setTitle("歌曲标题")
-                                .setArtist("艺术家名称")
-                                .setAlbumTitle("专辑名称")
-                                .setArtworkUri(Uri.parse("https://example.com/cover.jpg")) // 封面图片
-                                .setReleaseYear(2024)
-                                .build())
                         .build());
             }
             // other
