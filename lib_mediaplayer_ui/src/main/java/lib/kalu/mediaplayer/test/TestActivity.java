@@ -32,6 +32,7 @@ import lib.kalu.mediaplayer.listener.OnPlayerEpisodeListener;
 import lib.kalu.mediaplayer.listener.OnPlayerEventListener;
 import lib.kalu.mediaplayer.listener.OnPlayerProgressListener;
 import lib.kalu.mediaplayer.listener.OnPlayerWindowListener;
+import lib.kalu.mediaplayer.proxy.Proxy;
 import lib.kalu.mediaplayer.proxy.ProxyBuried;
 import lib.kalu.mediaplayer.proxy.ProxyTrack;
 import lib.kalu.mediaplayer.proxy.ProxyUrl;
@@ -275,82 +276,85 @@ public final class TestActivity extends Activity {
                 public void onEpisode(int curIndex) {
                 }
             });
+
             playerLayout.start(args.newBuilder()
-                    .setProxyBuried(new ProxyBuried() {
-                        @Override
-                        public void onCall(String name, StartArgs startArgs, long position, long duration) {
-                            if (LogUtil.DEBUG) {
-                                LogUtil.log("TestActivity -> onCall => name = " + name + ", position = " + position + ", duration = " + duration + ", url = " + startArgs.getUrl());
-                            }
-                        }
-                    })
-                    .setProxyUrl(new ProxyUrl() {
-                        @Override
-                        public String formatOpenUrl(String url) {
-                            if (LogUtil.DEBUG) {
-                                LogUtil.log("TestActivity -> formatOpenUrl -> url = " + url + ", thread = " + Thread.currentThread().getName());
-                            }
-//                            return url + "?key=name";
-                            return url;
-                        }
-
-                        @Override
-                        public String formatSegmentPath(String baseUrl, String segmentUrl) {
-                            if (LogUtil.DEBUG) {
-                                LogUtil.log("TestActivity -> formatSegmentPath -> baseUrl = " + baseUrl + ", segmentUrl = " + segmentUrl + ", thread = " + Thread.currentThread().getName());
-                            }
-//                            String key = Uri.parse(baseUrl).getQueryParameter("key");
-//                            return segmentUrl + "?key=" + key + "&value=zm";
-                            return segmentUrl;
-                        }
-                    })
-                    .setProxyTrack(new ProxyTrack() {
-                        @Override
-                        public void formatVideoTrackInfo(List<TrackInfo> tracksList, StartArgs startArgs) {
-
-                            if (LogUtil.DEBUG) {
-                                LogUtil.log("TestActivity -> formatVideoTrackInfo -> tracksList = " + tracksList);
-                            }
-
-                            try {
-                                UrlArgs urlArgs = startArgs.getUrlArgs();
-                                UrlArgs.Item mainVideo = urlArgs.getMainVideo();
-                                UrlArgs.Item[] extVideo = urlArgs.getExtVideo();
-                                for (TrackInfo item : tracksList) {
-                                    int i = tracksList.indexOf(item);
-                                    if (i == 0) {
-                                        item.setLabel(mainVideo.getLabel());
-                                    } else {
-                                        item.setLabel(extVideo[i - 1].getLabel());
+                    .setProxy(new Proxy.Builder()
+                            .setProxyBuried(new ProxyBuried() {
+                                @Override
+                                public void onCall(String name, StartArgs startArgs, long position, long duration) {
+                                    if (LogUtil.DEBUG) {
+                                        LogUtil.log("TestActivity -> onCall => name = " + name + ", position = " + position + ", duration = " + duration + ", url = " + startArgs.getUrl());
                                     }
                                 }
-                            } catch (Exception e) {
-                            }
-
-                        }
-
-                        @Override
-                        public void formatAudioTrackInfo(List<TrackInfo> tracksList, StartArgs startArgs) {
-                            if (LogUtil.DEBUG) {
-                                LogUtil.log("TestActivity -> formatAudioTrackInfo -> tracksList = " + tracksList);
-                            }
-
-                            try {
-                                UrlArgs urlArgs = startArgs.getUrlArgs();
-                                UrlArgs.Item[] extAudio = urlArgs.getExtAudio();
-                                for (TrackInfo item : tracksList) {
-                                    int i = tracksList.indexOf(item);
-                                    item.setLabel(extAudio[i].getLabel());
-                                    item.setLanguage(extAudio[i].getLanguage());
+                            })
+                            .setProxyUrl(new ProxyUrl() {
+                                @Override
+                                public String formatOpenUrl(String url) {
+                                    if (LogUtil.DEBUG) {
+                                        LogUtil.log("TestActivity -> formatOpenUrl -> url = " + url + ", thread = " + Thread.currentThread().getName());
+                                    }
+//                            return url + "?key=name";
+                                    return url;
                                 }
-                            } catch (Exception e) {
-                            }
-                        }
 
-                        @Override
-                        public void formatSubtitleTrackInfo(List<TrackInfo> tracksList, StartArgs startArgs) {
-                        }
-                    })
+                                @Override
+                                public String formatSegmentPath(String baseUrl, String segmentUrl) {
+                                    if (LogUtil.DEBUG) {
+                                        LogUtil.log("TestActivity -> formatSegmentPath -> baseUrl = " + baseUrl + ", segmentUrl = " + segmentUrl + ", thread = " + Thread.currentThread().getName());
+                                    }
+//                            String key = Uri.parse(baseUrl).getQueryParameter("key");
+//                            return segmentUrl + "?key=" + key + "&value=zm";
+                                    return segmentUrl;
+                                }
+                            })
+                            .setProxyTrack(new ProxyTrack() {
+                                @Override
+                                public void formatVideoTrackInfo(List<TrackInfo> tracksList, StartArgs startArgs) {
+
+                                    if (LogUtil.DEBUG) {
+                                        LogUtil.log("TestActivity -> formatVideoTrackInfo -> tracksList = " + tracksList);
+                                    }
+
+                                    try {
+                                        UrlArgs urlArgs = startArgs.getUrlArgs();
+                                        UrlArgs.Item mainVideo = urlArgs.getMainVideo();
+                                        UrlArgs.Item[] extVideo = urlArgs.getExtVideo();
+                                        for (TrackInfo item : tracksList) {
+                                            int i = tracksList.indexOf(item);
+                                            if (i == 0) {
+                                                item.setLabel(mainVideo.getLabel());
+                                            } else {
+                                                item.setLabel(extVideo[i - 1].getLabel());
+                                            }
+                                        }
+                                    } catch (Exception e) {
+                                    }
+
+                                }
+
+                                @Override
+                                public void formatAudioTrackInfo(List<TrackInfo> tracksList, StartArgs startArgs) {
+                                    if (LogUtil.DEBUG) {
+                                        LogUtil.log("TestActivity -> formatAudioTrackInfo -> tracksList = " + tracksList);
+                                    }
+
+                                    try {
+                                        UrlArgs urlArgs = startArgs.getUrlArgs();
+                                        UrlArgs.Item[] extAudio = urlArgs.getExtAudio();
+                                        for (TrackInfo item : tracksList) {
+                                            int i = tracksList.indexOf(item);
+                                            item.setLabel(extAudio[i].getLabel());
+                                            item.setLanguage(extAudio[i].getLanguage());
+                                        }
+                                    } catch (Exception e) {
+                                    }
+                                }
+
+                                @Override
+                                public void formatSubtitleTrackInfo(List<TrackInfo> tracksList, StartArgs startArgs) {
+                                }
+                            })
+                            .build())
                     .build());
         } catch (
                 Exception e) {

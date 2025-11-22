@@ -86,6 +86,7 @@ import lib.kalu.mediaplayer.core.kernel.video.VideoBasePlayer;
 import lib.kalu.mediaplayer.core.kernel.video.mediax.hls.CustomDefaultHlsExtractorFactory;
 import lib.kalu.mediaplayer.core.kernel.video.mediax.hls.CustomDefaultHttpDataSource;
 import lib.kalu.mediaplayer.core.kernel.video.mediax.hls.CustomHlsPlaylistParserFactory;
+import lib.kalu.mediaplayer.proxy.Proxy;
 import lib.kalu.mediaplayer.util.LogUtil;
 import lib.kalu.mediax.subtitle.OffsetMsTextRenderer;
 
@@ -1371,6 +1372,10 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
 
     private DataSource.Factory buildHttpFactory(StartArgs args) {
         try {
+
+            Proxy proxy = args.getProxy();
+
+
             return new CustomDefaultHttpDataSource.Factory(args.getProxyUrl())
                     .setUserAgent(MediaLibraryInfo.VERSION_SLASHY)
                     .setConnectTimeoutMs((int) args.getConnectTimout())

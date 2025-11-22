@@ -8,8 +8,7 @@ import java.io.Serializable;
 import lib.kalu.mediaplayer.PlayerSDK;
 import lib.kalu.mediaplayer.bean.menu.Menu;
 import lib.kalu.mediaplayer.bean.type.PlayerType;
-import lib.kalu.mediaplayer.proxy.ProxyBuried;
-import lib.kalu.mediaplayer.proxy.ProxyTrack;
+import lib.kalu.mediaplayer.proxy.Proxy;
 import lib.kalu.mediaplayer.proxy.ProxyUrl;
 
 public class StartArgs implements Serializable {
@@ -206,24 +205,18 @@ public class StartArgs implements Serializable {
     }
 
     // 轨道代理
-    private ProxyTrack proxyTrack;
+    private Proxy proxy;
 
-    public ProxyTrack getProxyTrack() {
-        return proxyTrack;
+    public Proxy getProxy() {
+        return proxy;
     }
-
-    // 轨道代理
-    private ProxyUrl proxyUrl;
 
     public ProxyUrl getProxyUrl() {
-        return proxyUrl;
-    }
-
-    // 轨道代理
-    private ProxyBuried proxyBuried;
-
-    public ProxyBuried getProxyBuried() {
-        return proxyBuried;
+        if (null == proxy) {
+            return null;
+        } else {
+            return proxy.getProxyUrl();
+        }
     }
 
     @Override
@@ -253,9 +246,7 @@ public class StartArgs implements Serializable {
                 ", extraData=" + extraData +
                 ", showSpeed=" + showSpeed +
                 ", menu=" + menu +
-                ", proxyTrack=" + proxyTrack +
-                ", proxyUrl=" + proxyUrl +
-                ", proxyBuried=" + proxyBuried +
+                ", proxy=" + proxy +
                 '}';
     }
 
@@ -284,9 +275,7 @@ public class StartArgs implements Serializable {
         this.extraData = builder.extraData;
         this.showSpeed = builder.showSpeed;
         this.menu = builder.menu;
-        this.proxyTrack = builder.proxyTrack;
-        this.proxyUrl = builder.proxyUrl;
-        this.proxyBuried = builder.proxyBuried;
+        this.proxy = builder.proxy;
     }
 
     public Builder newBuilder() {
@@ -315,9 +304,7 @@ public class StartArgs implements Serializable {
         builder.extraData = extraData;
         builder.showSpeed = showSpeed;
         builder.menu = menu;
-        builder.proxyTrack = proxyTrack;
-        builder.proxyUrl = proxyUrl;
-        builder.proxyBuried = proxyBuried;
+        builder.proxy = proxy;
         return builder;
     }
 
@@ -488,26 +475,10 @@ public class StartArgs implements Serializable {
         }
 
         // 轨道代理
-        private ProxyTrack proxyTrack;
+        private Proxy proxy;
 
-        public Builder setProxyTrack(ProxyTrack v) {
-            this.proxyTrack = v;
-            return this;
-        }
-
-        // 轨道代理
-        private ProxyUrl proxyUrl;
-
-        public Builder setProxyUrl(ProxyUrl v) {
-            this.proxyUrl = v;
-            return this;
-        }
-
-        // 轨道代理
-        private ProxyBuried proxyBuried;
-
-        public Builder setProxyBuried(ProxyBuried v) {
-            this.proxyBuried = v;
+        public Builder setProxy(Proxy v) {
+            this.proxy = v;
             return this;
         }
 

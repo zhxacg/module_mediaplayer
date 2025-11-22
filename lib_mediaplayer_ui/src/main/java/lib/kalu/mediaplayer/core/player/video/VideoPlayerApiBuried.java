@@ -2,6 +2,7 @@ package lib.kalu.mediaplayer.core.player.video;
 
 import lib.kalu.mediaplayer.bean.args.StartArgs;
 import lib.kalu.mediaplayer.bean.type.PlayerType;
+import lib.kalu.mediaplayer.proxy.Proxy;
 import lib.kalu.mediaplayer.proxy.ProxyBuried;
 import lib.kalu.mediaplayer.util.LogUtil;
 
@@ -64,7 +65,10 @@ public interface VideoPlayerApiBuried extends VideoPlayerApiBase {
             StartArgs startArgs = getStartArgs();
             if (null == startArgs)
                 throw new Exception("error: startArgs null");
-            ProxyBuried proxyBuried = startArgs.getProxyBuried();
+            Proxy proxy = startArgs.getProxy();
+            if (null == proxy)
+                throw new Exception("error: proxy null");
+            ProxyBuried proxyBuried = proxy.getProxyBuried();
             if (null == proxyBuried)
                 throw new Exception("error: proxyBuried null");
             long position = ((VideoPlayerApi) this).getPosition();

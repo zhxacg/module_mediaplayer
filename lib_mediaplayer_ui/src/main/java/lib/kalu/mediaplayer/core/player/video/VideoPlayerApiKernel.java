@@ -15,6 +15,7 @@ import lib.kalu.mediaplayer.bean.type.PlayerType;
 import lib.kalu.mediaplayer.core.kernel.video.VideoKernelApi;
 import lib.kalu.mediaplayer.core.kernel.video.VideoKernelApiEvent;
 import lib.kalu.mediaplayer.core.kernel.video.VideoKernelFactoryManager;
+import lib.kalu.mediaplayer.proxy.Proxy;
 import lib.kalu.mediaplayer.proxy.ProxyTrack;
 import lib.kalu.mediaplayer.util.LogUtil;
 import lib.kalu.mediaplayer.util.SpeedUtil;
@@ -699,9 +700,12 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
 
             StartArgs startArgs = getStartArgs();
             if (null != startArgs) {
-                ProxyTrack proxyTrack = startArgs.getProxyTrack();
-                if (null != proxyTrack) {
-                    proxyTrack.formatVideoTrackInfo(trackInfoVideo, startArgs);
+                Proxy proxy = startArgs.getProxy();
+                if (null != proxy) {
+                    ProxyTrack proxyTrack = proxy.getProxyTrack();
+                    if (null != proxyTrack) {
+                        proxyTrack.formatVideoTrackInfo(trackInfoVideo, startArgs);
+                    }
                 }
             }
 
@@ -725,15 +729,15 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
 
             StartArgs startArgs = getStartArgs();
             if (LogUtil.DEBUG) {
-                LogUtil.log("VideoPlayerApiKernel => getTrackInfoAudio => startArgs = "+startArgs);
+                LogUtil.log("VideoPlayerApiKernel => getTrackInfoAudio => startArgs = " + startArgs);
             }
             if (null != startArgs) {
-                ProxyTrack proxyTrack = startArgs.getProxyTrack();
-                if (LogUtil.DEBUG) {
-                    LogUtil.log("VideoPlayerApiKernel => getTrackInfoAudio => proxyTrack = "+proxyTrack);
-                }
-                if (null != proxyTrack) {
-                    proxyTrack.formatAudioTrackInfo(trackInfoAudio, startArgs);
+                Proxy proxy = startArgs.getProxy();
+                if (null != proxy) {
+                    ProxyTrack proxyTrack = proxy.getProxyTrack();
+                    if (null != proxyTrack) {
+                        proxyTrack.formatAudioTrackInfo(trackInfoAudio, startArgs);
+                    }
                 }
             }
 
@@ -757,9 +761,12 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
 
             StartArgs startArgs = getStartArgs();
             if (null != startArgs) {
-                ProxyTrack proxyTrack = startArgs.getProxyTrack();
-                if (null != proxyTrack) {
-                    proxyTrack.formatSubtitleTrackInfo(trackInfoSubtitle, startArgs);
+                Proxy proxy = startArgs.getProxy();
+                if (null != proxy) {
+                    ProxyTrack proxyTrack = proxy.getProxyTrack();
+                    if (null != proxyTrack) {
+                        proxyTrack.formatSubtitleTrackInfo(trackInfoSubtitle, startArgs);
+                    }
                 }
             }
 
