@@ -42,8 +42,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.zip.GZIPInputStream;
 
-import lib.kalu.mediaplayer.PlayerSDK;
-import lib.kalu.mediaplayer.proxy.ProxyUrl;
 import lib.kalu.mediaplayer.util.LogUtil;
 
 public final class CustomDefaultHttpDataSource extends BaseDataSource implements HttpDataSource {
@@ -923,28 +921,29 @@ public final class CustomDefaultHttpDataSource extends BaseDataSource implements
     }
 
     private DataSpec formatOpenUrl(DataSpec dataSpec) {
-        try {
-            ProxyUrl proxyUrl = PlayerSDK.init().getPlayerBuilder().getProxy().getProxyUrl();
-            if (null == proxyUrl)
-                throw new Exception("waring: proxyUrl null");
-            String openUrl = dataSpec.uri.toString();
-            if (LogUtil.DEBUG) {
-                LogUtil.log("CustomDefaultHttpDataSource -> formatOpenUrl -> openUrl =  " + openUrl);
-            }
-            String formatOpenUrl = proxyUrl.formatOpenUrl(openUrl);
-            if (LogUtil.DEBUG) {
-                LogUtil.log("CustomDefaultHttpDataSource -> formatOpenUrl -> formatOpenUrl =  " + formatOpenUrl);
-            }
-            if (null == formatOpenUrl || formatOpenUrl.isEmpty())
-                throw new Exception("waring: formatOpenUrl null");
-            return dataSpec.buildUpon()
-                    .setUri(formatOpenUrl)
-                    .build();
-        } catch (Exception e) {
-            if (LogUtil.DEBUG) {
-                LogUtil.log("CustomDefaultHttpDataSource -> formatOpenUrl -> Exception: " + e.getMessage());
-            }
-            return dataSpec;
-        }
+//        try {
+//            ProxyUrl proxyUrl = PlayerSDK.init().getPlayerBuilder().getProxy().getProxyUrl();
+//            if (null == proxyUrl)
+//                throw new Exception("waring: proxyUrl null");
+//            String openUrl = dataSpec.uri.toString();
+//            if (LogUtil.DEBUG) {
+//                LogUtil.log("CustomDefaultHttpDataSource -> formatOpenUrl -> openUrl =  " + openUrl);
+//            }
+//            String formatOpenUrl = proxyUrl.formatOpenUrl(openUrl);
+//            if (LogUtil.DEBUG) {
+//                LogUtil.log("CustomDefaultHttpDataSource -> formatOpenUrl -> formatOpenUrl =  " + formatOpenUrl);
+//            }
+//            if (null == formatOpenUrl || formatOpenUrl.isEmpty())
+//                throw new Exception("waring: formatOpenUrl null");
+//            return dataSpec.buildUpon()
+//                    .setUri(formatOpenUrl)
+//                    .build();
+//        } catch (Exception e) {
+//            if (LogUtil.DEBUG) {
+//                LogUtil.log("CustomDefaultHttpDataSource -> formatOpenUrl -> Exception: " + e.getMessage());
+//            }
+//            return dataSpec;
+//        }
+        return dataSpec;
     }
 }

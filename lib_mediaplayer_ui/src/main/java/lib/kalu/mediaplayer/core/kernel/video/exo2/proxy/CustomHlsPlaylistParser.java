@@ -1339,25 +1339,26 @@ public class CustomHlsPlaylistParser implements ParsingLoadable.Parser<HlsPlayli
     }
 
     private static String formatSegmentPath(String baseUrl, String segmentPath) {
-        try {
-            ProxyUrl proxyUrl = PlayerSDK.init().getPlayerBuilder().getProxy().getProxyUrl();
-            if (null == proxyUrl)
-                throw new Exception("waring: proxyUrl null");
-            if (LogUtil.DEBUG) {
-                LogUtil.log("CustomHlsPlaylistParser -> formatSegmentPath -> baseUrl = " + baseUrl + ", segmentPath = " + segmentPath);
-            }
-            String formatSegmentPath = proxyUrl.formatSegmentPath(baseUrl, segmentPath);
-            if (LogUtil.DEBUG) {
-                LogUtil.log("CustomHlsPlaylistParser -> formatSegmentPath -> formatSegmentPath = " + formatSegmentPath);
-            }
-            if (null == formatSegmentPath || formatSegmentPath.isEmpty())
-                throw new Exception("waring: formatSegmentPath null");
-            return formatSegmentPath;
-        } catch (Exception e) {
-            if (LogUtil.DEBUG) {
-                LogUtil.log("CustomHlsPlaylistParser -> formatSegmentPath -> Exception: " + e.getMessage());
-            }
-            return segmentPath;
-        }
+//        try {
+//            ProxyUrl proxyUrl = PlayerSDK.init().getPlayerBuilder().getProxy().getProxyUrl();
+//            if (null == proxyUrl)
+//                throw new Exception("waring: proxyUrl null");
+//            if (LogUtil.DEBUG) {
+//                LogUtil.log("CustomHlsPlaylistParser -> formatSegmentPath -> baseUrl = " + baseUrl + ", segmentPath = " + segmentPath);
+//            }
+//            String formatSegmentPath = proxyUrl.formatSegmentPath(baseUrl, segmentPath);
+//            if (LogUtil.DEBUG) {
+//                LogUtil.log("CustomHlsPlaylistParser -> formatSegmentPath -> formatSegmentPath = " + formatSegmentPath);
+//            }
+//            if (null == formatSegmentPath || formatSegmentPath.isEmpty())
+//                throw new Exception("waring: formatSegmentPath null");
+//            return formatSegmentPath;
+//        } catch (Exception e) {
+//            if (LogUtil.DEBUG) {
+//                LogUtil.log("CustomHlsPlaylistParser -> formatSegmentPath -> Exception: " + e.getMessage());
+//            }
+//            return segmentPath;
+//        }
+        return segmentPath;
     }
 }

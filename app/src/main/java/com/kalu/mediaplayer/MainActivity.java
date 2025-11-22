@@ -12,9 +12,6 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 
-import com.kalu.mediaplayer.proxy.ProxyBuried;
-import com.kalu.mediaplayer.proxy.ProxyUrl;
-
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -27,7 +24,6 @@ import lib.kalu.mediaplayer.bean.args.UrlArgs;
 import lib.kalu.mediaplayer.bean.cache.Cache;
 import lib.kalu.mediaplayer.bean.menu.Menu;
 import lib.kalu.mediaplayer.bean.type.PlayerType;
-import lib.kalu.mediaplayer.proxy.Proxy;
 import lib.kalu.mediaplayer.test.TestActivity;
 import lib.kalu.mediaplayer.util.LogUtil;
 
@@ -674,11 +670,6 @@ public class MainActivity extends Activity {
                         .setEnable(true)
                         .setExternal(false)
                         .setSizeMB(1000)
-                        .build())
-                // 代理
-                .setProxy(new Proxy.Builder()
-                        .setProxyBuried(new ProxyBuried())
-                        .setProxyUrl(new ProxyUrl())
                         .build())
                 .build();
     }

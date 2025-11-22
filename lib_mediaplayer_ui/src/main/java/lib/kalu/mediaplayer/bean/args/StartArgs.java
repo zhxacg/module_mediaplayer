@@ -8,7 +8,9 @@ import java.io.Serializable;
 import lib.kalu.mediaplayer.PlayerSDK;
 import lib.kalu.mediaplayer.bean.menu.Menu;
 import lib.kalu.mediaplayer.bean.type.PlayerType;
+import lib.kalu.mediaplayer.proxy.ProxyBuried;
 import lib.kalu.mediaplayer.proxy.ProxyTrack;
+import lib.kalu.mediaplayer.proxy.ProxyUrl;
 
 public class StartArgs implements Serializable {
 
@@ -210,6 +212,20 @@ public class StartArgs implements Serializable {
         return proxyTrack;
     }
 
+    // 轨道代理
+    private ProxyUrl proxyUrl;
+
+    public ProxyUrl getProxyUrl() {
+        return proxyUrl;
+    }
+
+    // 轨道代理
+    private ProxyBuried proxyBuried;
+
+    public ProxyBuried getProxyBuried() {
+        return proxyBuried;
+    }
+
     @Override
     public String toString() {
         return "StartArgs{" +
@@ -238,6 +254,8 @@ public class StartArgs implements Serializable {
                 ", showSpeed=" + showSpeed +
                 ", menu=" + menu +
                 ", proxyTrack=" + proxyTrack +
+                ", proxyUrl=" + proxyUrl +
+                ", proxyBuried=" + proxyBuried +
                 '}';
     }
 
@@ -267,6 +285,8 @@ public class StartArgs implements Serializable {
         this.showSpeed = builder.showSpeed;
         this.menu = builder.menu;
         this.proxyTrack = builder.proxyTrack;
+        this.proxyUrl = builder.proxyUrl;
+        this.proxyBuried = builder.proxyBuried;
     }
 
     public Builder newBuilder() {
@@ -296,6 +316,8 @@ public class StartArgs implements Serializable {
         builder.showSpeed = showSpeed;
         builder.menu = menu;
         builder.proxyTrack = proxyTrack;
+        builder.proxyUrl = proxyUrl;
+        builder.proxyBuried = proxyBuried;
         return builder;
     }
 
@@ -470,6 +492,22 @@ public class StartArgs implements Serializable {
 
         public Builder setProxyTrack(ProxyTrack v) {
             this.proxyTrack = v;
+            return this;
+        }
+
+        // 轨道代理
+        private ProxyUrl proxyUrl;
+
+        public Builder setProxyUrl(ProxyUrl v) {
+            this.proxyUrl = v;
+            return this;
+        }
+
+        // 轨道代理
+        private ProxyBuried proxyBuried;
+
+        public Builder setProxyBuried(ProxyBuried v) {
+            this.proxyBuried = v;
             return this;
         }
 

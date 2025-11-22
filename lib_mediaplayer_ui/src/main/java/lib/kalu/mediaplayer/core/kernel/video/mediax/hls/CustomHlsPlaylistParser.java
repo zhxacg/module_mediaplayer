@@ -293,12 +293,14 @@ public final class CustomHlsPlaylistParser implements ParsingLoadable.Parser<Hls
     @Nullable
     private final HlsMediaPlaylist previousMediaPlaylist;
 
+    private final ProxyUrl proxyUrl;
+
     /**
      * Creates an instance where media playlists are parsed without inheriting attributes from a
      * multivariant playlist.
      */
-    public CustomHlsPlaylistParser() {
-        this(HlsMultivariantPlaylist.EMPTY, /* previousMediaPlaylist= */ null);
+    public CustomHlsPlaylistParser(ProxyUrl proxyUrl) {
+        this(proxyUrl, HlsMultivariantPlaylist.EMPTY, /* previousMediaPlaylist= */ null);
     }
 
     /**
@@ -311,8 +313,10 @@ public final class CustomHlsPlaylistParser implements ParsingLoadable.Parser<Hls
      *                              inherit skipped segments.
      */
     public CustomHlsPlaylistParser(
+            ProxyUrl proxyUrl,
             HlsMultivariantPlaylist multivariantPlaylist,
             @Nullable HlsMediaPlaylist previousMediaPlaylist) {
+        this.proxyUrl = proxyUrl;
         this.multivariantPlaylist = multivariantPlaylist;
         this.previousMediaPlaylist = previousMediaPlaylist;
     }
@@ -349,6 +353,7 @@ public final class CustomHlsPlaylistParser implements ParsingLoadable.Parser<Hls
                         || line.equals(TAG_ENDLIST)) {
                     extraLines.add(line);
                     return parseMediaPlaylist(
+                            proxyUrl,
                             multivariantPlaylist,
                             previousMediaPlaylist,
                             new LineIterator(extraLines, reader),
@@ -755,6 +760,7 @@ public final class CustomHlsPlaylistParser implements ParsingLoadable.Parser<Hls
     }
 
     private static HlsMediaPlaylist parseMediaPlaylist(
+            ProxyUrl proxyUrl,
             HlsMultivariantPlaylist multivariantPlaylist,
             @Nullable HlsMediaPlaylist previousMediaPlaylist,
             LineIterator iterator,
@@ -863,7 +869,7 @@ public final class CustomHlsPlaylistParser implements ParsingLoadable.Parser<Hls
                 }
                 initializationSegment =
                         new Segment(
-                                formatSegmentPath(baseUri, segmentUri),
+                                formatSegmentPath(proxyUrl, baseUri, segmentUri),
                                 segmentByteRangeOffset,
                                 segmentByteRangeLength,
                                 fullSegmentEncryptionKeyUri,
@@ -1290,7 +1296,7 @@ public final class CustomHlsPlaylistParser implements ParsingLoadable.Parser<Hls
                     // the playlist to provide an initialization vector for it.
                     inferredInitSegment =
                             new Segment(
-                                    formatSegmentPath(baseUri, segmentUri),
+                                    formatSegmentPath(proxyUrl, baseUri, segmentUri),
                                     /* byteRangeOffset= */ 0,
                                     segmentByteRangeOffset,
                                     /* fullSegmentEncryptionKeyUri= */ null,
@@ -1308,7 +1314,7 @@ public final class CustomHlsPlaylistParser implements ParsingLoadable.Parser<Hls
 
                 segments.add(
                         new Segment(
-                                formatSegmentPath(baseUri, segmentUri),
+                                formatSegmentPath(proxyUrl, baseUri, segmentUri),
                                 initializationSegment != null ? initializationSegment : inferredInitSegment,
                                 segmentTitle,
                                 segmentDurationUs,
@@ -1757,9 +1763,8 @@ public final class CustomHlsPlaylistParser implements ParsingLoadable.Parser<Hls
         return hlsMediaPlaylist;
     }
 
-    private static String formatSegmentPath(String baseUrl, String segmentPath) {
+    private static String formatSegmentPath(ProxyUrl proxyUrl, String baseUrl, String segmentPath) {
         try {
-            ProxyUrl proxyUrl = PlayerSDK.init().getPlayerBuilder().getProxy().getProxyUrl();
             if (null == proxyUrl)
                 throw new Exception("waring: proxyUrl null");
             if (LogUtil.DEBUG) {

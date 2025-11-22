@@ -2,6 +2,7 @@ package lib.kalu.mediaplayer.test;
 
 import android.app.Activity;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.view.WindowManager;
@@ -31,7 +32,9 @@ import lib.kalu.mediaplayer.listener.OnPlayerEpisodeListener;
 import lib.kalu.mediaplayer.listener.OnPlayerEventListener;
 import lib.kalu.mediaplayer.listener.OnPlayerProgressListener;
 import lib.kalu.mediaplayer.listener.OnPlayerWindowListener;
+import lib.kalu.mediaplayer.proxy.ProxyBuried;
 import lib.kalu.mediaplayer.proxy.ProxyTrack;
+import lib.kalu.mediaplayer.proxy.ProxyUrl;
 import lib.kalu.mediaplayer.util.LogUtil;
 
 /**
@@ -273,6 +276,34 @@ public final class TestActivity extends Activity {
                 }
             });
             playerLayout.start(args.newBuilder()
+                    .setProxyBuried(new ProxyBuried() {
+                        @Override
+                        public void onCall(String name, StartArgs startArgs, long position, long duration) {
+                            if (LogUtil.DEBUG) {
+                                LogUtil.log("TestActivity -> onCall => name = " + name + ", position = " + position + ", duration = " + duration + ", url = " + startArgs.getUrl());
+                            }
+                        }
+                    })
+                    .setProxyUrl(new ProxyUrl() {
+                        @Override
+                        public String formatOpenUrl(String url) {
+                            if (LogUtil.DEBUG) {
+                                LogUtil.log("TestActivity -> formatOpenUrl -> url = " + url + ", thread = " + Thread.currentThread().getName());
+                            }
+//                            return url + "?key=name";
+                            return url;
+                        }
+
+                        @Override
+                        public String formatSegmentPath(String baseUrl, String segmentUrl) {
+                            if (LogUtil.DEBUG) {
+                                LogUtil.log("TestActivity -> formatSegmentPath -> baseUrl = " + baseUrl + ", segmentUrl = " + segmentUrl + ", thread = " + Thread.currentThread().getName());
+                            }
+//                            String key = Uri.parse(baseUrl).getQueryParameter("key");
+//                            return segmentUrl + "?key=" + key + "&value=zm";
+                            return segmentUrl;
+                        }
+                    })
                     .setProxyTrack(new ProxyTrack() {
                         @Override
                         public void formatVideoTrackInfo(List<TrackInfo> tracksList, StartArgs startArgs) {
@@ -321,7 +352,8 @@ public final class TestActivity extends Activity {
                         }
                     })
                     .build());
-        } catch (Exception e) {
+        } catch (
+                Exception e) {
             Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
         }
     }

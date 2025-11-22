@@ -42,7 +42,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.zip.GZIPInputStream;
 
-import lib.kalu.mediaplayer.PlayerSDK;
+import lib.kalu.mediaplayer.bean.args.StartArgs;
 import lib.kalu.mediaplayer.proxy.ProxyUrl;
 import lib.kalu.mediaplayer.util.LogUtil;
 
@@ -66,10 +66,14 @@ public final class CustomDefaultHttpDataSource extends BaseDataSource implements
         private boolean allowCrossProtocolRedirects;
         private boolean keepPostFor302Redirects;
 
+
+        private ProxyUrl proxyUrl;
+
         /**
          * Creates an instance.
          */
-        public Factory() {
+        public Factory(ProxyUrl proxy) {
+            proxyUrl = proxy;
             defaultRequestProperties = new RequestProperties();
             connectTimeoutMs = DEFAULT_CONNECT_TIMEOUT_MILLIS;
             readTimeoutMs = DEFAULT_READ_TIMEOUT_MILLIS;
@@ -187,6 +191,7 @@ public final class CustomDefaultHttpDataSource extends BaseDataSource implements
         public CustomDefaultHttpDataSource createDataSource() {
             CustomDefaultHttpDataSource dataSource =
                     new CustomDefaultHttpDataSource(
+                            proxyUrl,
                             userAgent,
                             connectTimeoutMs,
                             readTimeoutMs,
@@ -225,6 +230,8 @@ public final class CustomDefaultHttpDataSource extends BaseDataSource implements
     private final RequestProperties defaultRequestProperties;
     private final RequestProperties requestProperties;
     private final boolean keepPostFor302Redirects;
+
+    private final ProxyUrl proxyUrl;
 
     @Nullable
     private Predicate<String> contentTypePredicate;
@@ -283,6 +290,7 @@ public final class CustomDefaultHttpDataSource extends BaseDataSource implements
             boolean allowCrossProtocolRedirects,
             @Nullable RequestProperties defaultRequestProperties) {
         this(
+                null,
                 userAgent,
                 connectTimeoutMillis,
                 readTimeoutMillis,
@@ -293,6 +301,7 @@ public final class CustomDefaultHttpDataSource extends BaseDataSource implements
     }
 
     private CustomDefaultHttpDataSource(
+            ProxyUrl proxy,
             @Nullable String userAgent,
             int connectTimeoutMillis,
             int readTimeoutMillis,
@@ -301,6 +310,7 @@ public final class CustomDefaultHttpDataSource extends BaseDataSource implements
             @Nullable Predicate<String> contentTypePredicate,
             boolean keepPostFor302Redirects) {
         super(/* isNetwork= */ true);
+        this.proxyUrl = proxy;
         this.userAgent = userAgent;
         this.connectTimeoutMillis = connectTimeoutMillis;
         this.readTimeoutMillis = readTimeoutMillis;
@@ -932,9 +942,10 @@ public final class CustomDefaultHttpDataSource extends BaseDataSource implements
         }
     }
 
+    /****************/
+
     private DataSpec formatOpenUrl(DataSpec dataSpec) {
         try {
-            ProxyUrl proxyUrl = PlayerSDK.init().getPlayerBuilder().getProxy().getProxyUrl();
             if (null == proxyUrl)
                 throw new Exception("waring: proxyUrl null");
             String openUrl = dataSpec.uri.toString();

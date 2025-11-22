@@ -3,7 +3,6 @@ package lib.kalu.mediaplayer;
 
 import lib.kalu.mediaplayer.bean.args.PlayerArgs;
 import lib.kalu.mediaplayer.bean.cache.Cache;
-import lib.kalu.mediaplayer.proxy.Proxy;
 import lib.kalu.mediaplayer.bean.type.PlayerType;
 
 
@@ -86,11 +85,6 @@ public final class PlayerSDK {
 
     public PlayerSDK setCache(Cache v) {
         mPlayerBuilder.setCache(v);
-        return this;
-    }
-
-    public PlayerSDK setProxy(Proxy v) {
-        mPlayerBuilder.setProxy(v);
         return this;
     }
 

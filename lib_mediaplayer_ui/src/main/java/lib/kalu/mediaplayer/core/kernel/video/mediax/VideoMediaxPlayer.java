@@ -1092,7 +1092,7 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
 
                 // setPlaylistParserFactory
                 Method method_setPlaylistParserFactory = cls.getMethod("setPlaylistParserFactory", HlsPlaylistParserFactory.class);
-                method_setPlaylistParserFactory.invoke(object, new CustomHlsPlaylistParserFactory());
+                method_setPlaylistParserFactory.invoke(object, new CustomHlsPlaylistParserFactory(args.getProxyUrl()));
 
                 // setExtractorFactory
                 boolean onlyParserVideo = item.isOnlyParserVideo();
@@ -1230,7 +1230,7 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
 
                 // setPlaylistParserFactory
                 Method method_setPlaylistParserFactory = cls.getMethod("setPlaylistParserFactory", HlsPlaylistParserFactory.class);
-                method_setPlaylistParserFactory.invoke(object, new CustomHlsPlaylistParserFactory());
+                method_setPlaylistParserFactory.invoke(object, new CustomHlsPlaylistParserFactory(args.getProxyUrl()));
 
                 // setExtractorFactory
                 Method method_setExtractorFactory = cls.getMethod("setExtractorFactory", HlsExtractorFactory.class);
@@ -1371,7 +1371,7 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
 
     private DataSource.Factory buildHttpFactory(StartArgs args) {
         try {
-            return new CustomDefaultHttpDataSource.Factory()
+            return new CustomDefaultHttpDataSource.Factory(args.getProxyUrl())
                     .setUserAgent(MediaLibraryInfo.VERSION_SLASHY)
                     .setConnectTimeoutMs((int) args.getConnectTimout())
                     .setReadTimeoutMs((int) args.getConnectTimout())
