@@ -2,8 +2,8 @@ package lib.kalu.mediaplayer.core.player.video;
 
 import lib.kalu.mediaplayer.PlayerSDK;
 import lib.kalu.mediaplayer.bean.args.StartArgs;
-import lib.kalu.mediaplayer.bean.proxy.Proxy;
-import lib.kalu.mediaplayer.bean.proxy.ProxyBuried;
+import lib.kalu.mediaplayer.proxy.Proxy;
+import lib.kalu.mediaplayer.proxy.ProxyBuried;
 import lib.kalu.mediaplayer.bean.type.PlayerType;
 import lib.kalu.mediaplayer.util.LogUtil;
 

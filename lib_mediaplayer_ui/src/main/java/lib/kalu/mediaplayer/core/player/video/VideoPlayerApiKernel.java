@@ -15,6 +15,7 @@ import lib.kalu.mediaplayer.bean.type.PlayerType;
 import lib.kalu.mediaplayer.core.kernel.video.VideoKernelApi;
 import lib.kalu.mediaplayer.core.kernel.video.VideoKernelApiEvent;
 import lib.kalu.mediaplayer.core.kernel.video.VideoKernelFactoryManager;
+import lib.kalu.mediaplayer.proxy.ProxyTrack;
 import lib.kalu.mediaplayer.util.LogUtil;
 import lib.kalu.mediaplayer.util.SpeedUtil;
 
@@ -692,7 +693,19 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
             VideoKernelApi kernel = getVideoKernel();
             if (null == kernel)
                 throw new Exception("warning: kernel null");
-            return kernel.getTrackInfoVideo();
+            List<TrackInfo> trackInfoVideo = kernel.getTrackInfoVideo();
+            if (null == trackInfoVideo)
+                throw new Exception("warning: trackInfoVideo null");
+
+            StartArgs startArgs = getStartArgs();
+            if (null != startArgs) {
+                ProxyTrack proxyTrack = startArgs.getProxyTrack();
+                if (null != proxyTrack) {
+                    proxyTrack.formatVideoTrackInfo(trackInfoVideo, startArgs);
+                }
+            }
+
+            return trackInfoVideo;
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
                 LogUtil.log("VideoPlayerApiKernel => getTrackInfoVideo => " + e.getMessage());
@@ -706,7 +719,25 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
             VideoKernelApi kernel = getVideoKernel();
             if (null == kernel)
                 throw new Exception("warning: kernel null");
-            return kernel.getTrackInfoAudio();
+            List<TrackInfo> trackInfoAudio = kernel.getTrackInfoAudio();
+            if (null == trackInfoAudio)
+                throw new Exception("warning: trackInfoAudio null");
+
+            StartArgs startArgs = getStartArgs();
+            if (LogUtil.DEBUG) {
+                LogUtil.log("VideoPlayerApiKernel => getTrackInfoAudio => startArgs = "+startArgs);
+            }
+            if (null != startArgs) {
+                ProxyTrack proxyTrack = startArgs.getProxyTrack();
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("VideoPlayerApiKernel => getTrackInfoAudio => proxyTrack = "+proxyTrack);
+                }
+                if (null != proxyTrack) {
+                    proxyTrack.formatAudioTrackInfo(trackInfoAudio, startArgs);
+                }
+            }
+
+            return trackInfoAudio;
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
                 LogUtil.log("VideoPlayerApiKernel => getTrackInfoAudio => " + e.getMessage());
@@ -720,7 +751,19 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
             VideoKernelApi kernel = getVideoKernel();
             if (null == kernel)
                 throw new Exception("warning: kernel null");
-            return kernel.getTrackInfoSubtitle();
+            List<TrackInfo> trackInfoSubtitle = kernel.getTrackInfoSubtitle();
+            if (null == trackInfoSubtitle)
+                throw new Exception("warning: trackInfoSubtitle null");
+
+            StartArgs startArgs = getStartArgs();
+            if (null != startArgs) {
+                ProxyTrack proxyTrack = startArgs.getProxyTrack();
+                if (null != proxyTrack) {
+                    proxyTrack.formatSubtitleTrackInfo(trackInfoSubtitle, startArgs);
+                }
+            }
+
+            return trackInfoSubtitle;
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
                 LogUtil.log("VideoPlayerApiKernel => getTrackInfoSubtitle => " + e.getMessage());

@@ -52,12 +52,11 @@ public class TestDialog extends DialogFragment {
                 String curName;
                 // 视频轨道
                 if (type == 1) {
-                    int bitrate = track.getBitrate();
+                    String sampleMimeType = track.getSampleMimeType();
                     int width = track.getWidth();
                     int height = track.getHeight();
-                    String sampleMimeType = track.getSampleMimeType();
-                    int roleFlags = track.getRoleFlags();
-                    curName = "roleFlags = " + roleFlags + ", sampleMimeType = " + sampleMimeType + ", bitrate = " + bitrate + ", width = " + width + ", height = " + height;
+                    String label = track.getLabel();
+                    curName = "label = " + label + ", size = " + width + ":" + height + ", sampleMimeType = " + sampleMimeType;
                 }
                 // 音频轨道
                 else if (type == 2) {

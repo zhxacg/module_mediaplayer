@@ -26,8 +26,8 @@ import lib.kalu.mediaplayer.bean.args.StartArgs;
 import lib.kalu.mediaplayer.bean.args.UrlArgs;
 import lib.kalu.mediaplayer.bean.cache.Cache;
 import lib.kalu.mediaplayer.bean.menu.Menu;
-import lib.kalu.mediaplayer.bean.proxy.Proxy;
 import lib.kalu.mediaplayer.bean.type.PlayerType;
+import lib.kalu.mediaplayer.proxy.Proxy;
 import lib.kalu.mediaplayer.test.TestActivity;
 import lib.kalu.mediaplayer.util.LogUtil;
 
@@ -282,18 +282,24 @@ public class MainActivity extends Activity {
                 // mainUrl
                 try {
                     String[] urls = getResources().getStringArray(R.array.hls_extra_video_urls);
-                    urlBuilder.setUrl(new UrlArgs.Item.Builder().setUrl(urls[0]).setOnlyParserVideo(true).build());
+                    urlBuilder.setUrl(new UrlArgs.Item.Builder()
+                            .setUrl(urls[0])
+                            .setOnlyParserVideo(true)
+                            .setLabel("普清")
+                            .build());
                 } catch (Exception e) {
                 }
 
                 // extVideoUrl
                 try {
                     String[] urls = getResources().getStringArray(R.array.hls_extra_video_urls);
+                    String[] label = new String[]{"高清", "4K"};
                     int length = urls.length;
                     UrlArgs.Item[] videoArgs = new UrlArgs.Item[length - 1];
                     for (int i = 1; i < length; i++) {
                         videoArgs[i - 1] = new UrlArgs.Item.Builder()
                                 .setUrl(urls[i])
+                                .setLabel(label[i - 1])
                                 .setOnlyParserVideo(true)
                                 .build();
                     }
@@ -304,11 +310,15 @@ public class MainActivity extends Activity {
                 // extAudio
                 try {
                     String[] urls = getResources().getStringArray(R.array.hls_extra_audio_urls);
+                    String[] languages = getResources().getStringArray(R.array.hls_extra_languages);
+                    String[] labels = getResources().getStringArray(R.array.hls_extra_labels);
                     int length = urls.length;
                     UrlArgs.Item[] audioArgs = new UrlArgs.Item[length];
                     for (int i = 0; i < length; i++) {
                         audioArgs[i] = new UrlArgs.Item.Builder()
                                 .setUrl(urls[i])
+                                .setLanguage(languages[i])
+                                .setLabel(labels[i])
                                 .build();
                     }
                     urlBuilder.setExtAudio(audioArgs);
@@ -318,8 +328,8 @@ public class MainActivity extends Activity {
                 // extSubtitleUrl
                 try {
                     String[] urls = getResources().getStringArray(R.array.hls_extra_subtitle_urls);
-                    String[] languages = getResources().getStringArray(R.array.hls_extra_subtitle_languages);
-                    String[] labels = getResources().getStringArray(R.array.hls_extra_subtitle_labels);
+                    String[] languages = getResources().getStringArray(R.array.hls_extra_languages);
+                    String[] labels = getResources().getStringArray(R.array.hls_extra_labels);
                     UrlArgs.Item[] subtitleArgs = new UrlArgs.Item[urls.length];
                     for (int i = 0; i < urls.length; i++) {
                         subtitleArgs[i] = new UrlArgs.Item.Builder()

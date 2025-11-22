@@ -4,7 +4,7 @@ import android.net.Uri;
 
 import lib.kalu.mediaplayer.util.LogUtil;
 
-public class ProxyUrl implements lib.kalu.mediaplayer.bean.proxy.ProxyUrl {
+public class ProxyUrl implements lib.kalu.mediaplayer.proxy.ProxyUrl {
 
     @Override
     public String formatOpenUrl(String url) {

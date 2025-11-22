@@ -43,7 +43,7 @@ import java.util.Set;
 import java.util.zip.GZIPInputStream;
 
 import lib.kalu.mediaplayer.PlayerSDK;
-import lib.kalu.mediaplayer.bean.proxy.ProxyUrl;
+import lib.kalu.mediaplayer.proxy.ProxyUrl;
 import lib.kalu.mediaplayer.util.LogUtil;
 
 public final class CustomDefaultHttpDataSource extends BaseDataSource implements HttpDataSource {

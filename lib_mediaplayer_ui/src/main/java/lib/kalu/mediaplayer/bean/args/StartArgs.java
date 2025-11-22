@@ -8,6 +8,7 @@ import java.io.Serializable;
 import lib.kalu.mediaplayer.PlayerSDK;
 import lib.kalu.mediaplayer.bean.menu.Menu;
 import lib.kalu.mediaplayer.bean.type.PlayerType;
+import lib.kalu.mediaplayer.proxy.ProxyTrack;
 
 public class StartArgs implements Serializable {
 
@@ -202,6 +203,13 @@ public class StartArgs implements Serializable {
         return menu;
     }
 
+    // 轨道代理
+    private ProxyTrack proxyTrack;
+
+    public ProxyTrack getProxyTrack() {
+        return proxyTrack;
+    }
+
     @Override
     public String toString() {
         return "StartArgs{" +
@@ -229,6 +237,7 @@ public class StartArgs implements Serializable {
                 ", extraData=" + extraData +
                 ", showSpeed=" + showSpeed +
                 ", menu=" + menu +
+                ", proxyTrack=" + proxyTrack +
                 '}';
     }
 
@@ -257,6 +266,7 @@ public class StartArgs implements Serializable {
         this.extraData = builder.extraData;
         this.showSpeed = builder.showSpeed;
         this.menu = builder.menu;
+        this.proxyTrack = builder.proxyTrack;
     }
 
     public Builder newBuilder() {
@@ -285,6 +295,7 @@ public class StartArgs implements Serializable {
         builder.extraData = extraData;
         builder.showSpeed = showSpeed;
         builder.menu = menu;
+        builder.proxyTrack = proxyTrack;
         return builder;
     }
 
@@ -451,6 +462,14 @@ public class StartArgs implements Serializable {
 
         public Builder setMenu(Menu v) {
             this.menu = v;
+            return this;
+        }
+
+        // 轨道代理
+        private ProxyTrack proxyTrack;
+
+        public Builder setProxyTrack(ProxyTrack v) {
+            this.proxyTrack = v;
             return this;
         }
 

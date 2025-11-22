@@ -46,13 +46,13 @@
         <item>https://media-1347269025.cos.sa-saopaulo.myqcloud.com/movie/5f2751d1/subtitles/Portuguese.vtt</item>
     </string-array>
 
-    <string-array name="hls_extra_subtitle_languages">
+    <string-array name="hls_extra_languages">
         <item>en</item>
         <item>es</item>
         <item>pt</item>
     </string-array>
 
-    <string-array name="hls_extra_subtitle_labels">
+    <string-array name="hls_extra_labels">
         <item>英语</item>
         <item>西班牙语</item>
         <item>葡萄牙语</item>

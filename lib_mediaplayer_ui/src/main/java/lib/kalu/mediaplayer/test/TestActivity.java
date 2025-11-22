@@ -12,6 +12,7 @@ import java.util.List;
 import lib.kalu.mediaplayer.PlayerLayout;
 import lib.kalu.mediaplayer.R;
 import lib.kalu.mediaplayer.bean.args.StartArgs;
+import lib.kalu.mediaplayer.bean.args.UrlArgs;
 import lib.kalu.mediaplayer.bean.info.HlsSpanInfo;
 import lib.kalu.mediaplayer.bean.info.TrackInfo;
 import lib.kalu.mediaplayer.bean.type.PlayerType;
@@ -30,6 +31,7 @@ import lib.kalu.mediaplayer.listener.OnPlayerEpisodeListener;
 import lib.kalu.mediaplayer.listener.OnPlayerEventListener;
 import lib.kalu.mediaplayer.listener.OnPlayerProgressListener;
 import lib.kalu.mediaplayer.listener.OnPlayerWindowListener;
+import lib.kalu.mediaplayer.proxy.ProxyTrack;
 import lib.kalu.mediaplayer.util.LogUtil;
 
 /**
@@ -270,7 +272,55 @@ public final class TestActivity extends Activity {
                 public void onEpisode(int curIndex) {
                 }
             });
-            playerLayout.start(args);
+            playerLayout.start(args.newBuilder()
+                    .setProxyTrack(new ProxyTrack() {
+                        @Override
+                        public void formatVideoTrackInfo(List<TrackInfo> tracksList, StartArgs startArgs) {
+
+                            if (LogUtil.DEBUG) {
+                                LogUtil.log("TestActivity -> formatVideoTrackInfo -> tracksList = " + tracksList);
+                            }
+
+                            try {
+                                UrlArgs urlArgs = startArgs.getUrlArgs();
+                                UrlArgs.Item mainVideo = urlArgs.getMainVideo();
+                                UrlArgs.Item[] extVideo = urlArgs.getExtVideo();
+                                for (TrackInfo item : tracksList) {
+                                    int i = tracksList.indexOf(item);
+                                    if (i == 0) {
+                                        item.setLabel(mainVideo.getLabel());
+                                    } else {
+                                        item.setLabel(extVideo[i - 1].getLabel());
+                                    }
+                                }
+                            } catch (Exception e) {
+                            }
+
+                        }
+
+                        @Override
+                        public void formatAudioTrackInfo(List<TrackInfo> tracksList, StartArgs startArgs) {
+                            if (LogUtil.DEBUG) {
+                                LogUtil.log("TestActivity -> formatAudioTrackInfo -> tracksList = " + tracksList);
+                            }
+
+                            try {
+                                UrlArgs urlArgs = startArgs.getUrlArgs();
+                                UrlArgs.Item[] extAudio = urlArgs.getExtAudio();
+                                for (TrackInfo item : tracksList) {
+                                    int i = tracksList.indexOf(item);
+                                    item.setLabel(extAudio[i].getLabel());
+                                    item.setLanguage(extAudio[i].getLanguage());
+                                }
+                            } catch (Exception e) {
+                            }
+                        }
+
+                        @Override
+                        public void formatSubtitleTrackInfo(List<TrackInfo> tracksList, StartArgs startArgs) {
+                        }
+                    })
+                    .build());
         } catch (Exception e) {
             Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
         }
