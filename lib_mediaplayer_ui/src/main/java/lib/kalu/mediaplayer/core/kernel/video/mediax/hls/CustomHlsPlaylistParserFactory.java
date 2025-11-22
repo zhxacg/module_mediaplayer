@@ -1,4 +1,4 @@
-package lib.kalu.mediaplayer.core.kernel.video.mediax.proxy;
+package lib.kalu.mediaplayer.core.kernel.video.mediax.hls;
 
 import androidx.annotation.Nullable;
 import androidx.media3.exoplayer.hls.playlist.HlsMediaPlaylist;

@@ -1,4 +1,4 @@
-package lib.kalu.mediaplayer.core.kernel.video.mediax.proxy;
+package lib.kalu.mediaplayer.core.kernel.video.mediax.hls;
 
 import static androidx.media3.common.util.Assertions.checkNotNull;
 import static androidx.media3.common.util.Util.castNonNull;

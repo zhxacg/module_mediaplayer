@@ -1,4 +1,4 @@
-package lib.kalu.mediaplayer.core.kernel.video.mediax.proxy;
+package lib.kalu.mediaplayer.core.kernel.video.mediax.hls;
 
 import android.text.TextUtils;
 

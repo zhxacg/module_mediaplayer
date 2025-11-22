@@ -1,4 +1,4 @@
-package lib.kalu.mediaplayer.core.kernel.video.mediax.proxy;
+package lib.kalu.mediaplayer.core.kernel.video.mediax.hls;
 
 import static androidx.media3.common.util.Assertions.checkNotNull;
 import static androidx.media3.common.util.Assertions.checkState;
@@ -1718,6 +1718,42 @@ public final class CustomHlsPlaylistParser implements ParsingLoadable.Parser<Hls
         if (LogUtil.DEBUG) {
             LogUtil.log("CustomHlsPlaylistParser -> formatHlsMediaPlaylist -> hlsMediaPlaylist.tags = " + hlsMediaPlaylist.tags);
         }
+
+        try {
+
+            // 解析 HLS 媒体源的 Manifest
+//            for (HlsMediaPlaylist playlist : hlsMediaPlaylist) {
+//                if (playlist.type == HlsMediaPlaylist.TYPE_AUDIO) {
+//                    // 从 HLS Manifest 中获取语言和标签
+//                    String language = playlist.language;
+//                    String label = playlist.name;
+//
+//                    // 遍历播放器的音频轨道，匹配并补充信息
+//                    TrackGroupArray trackGroups = player.getCurrentTrackGroups();
+//                    for (int i = 0; i < trackGroups.length; i++) {
+//                        TrackGroup group = trackGroups.get(i);
+//                        for (int j = 0; j < group.length; j++) {
+//                            Format format = group.getFormat(j);
+//                            if (format.sampleMimeType.startsWith("audio/")) {
+//                                // 构建新的 Format，补充语言和标签
+//                                Format newFormat = new Format.Builder(format)
+//                                        .setLanguage(language)
+//                                        .setLabel(label)
+//                                        .build();
+//                                // 替换轨道的 Format（需通过自定义 TrackSelector 实现）
+//                                updateTrackFormat(player, i, j, newFormat);
+//                            }
+//                        }
+//                    }
+//                }
+//            }
+        } catch (Exception e) {
+        }
+
+//        if (LogUtil.DEBUG) {
+//            LogUtil.log("CustomHlsPlaylistParser -> formatHlsMediaPlaylist -> hlsMediaPlaylist.tags = " + hlsMediaPlaylist.tags);
+//        }
+
         return hlsMediaPlaylist;
     }
 

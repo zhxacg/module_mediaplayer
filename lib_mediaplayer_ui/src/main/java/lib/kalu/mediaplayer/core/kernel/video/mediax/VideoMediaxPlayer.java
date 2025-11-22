@@ -2,6 +2,7 @@ package lib.kalu.mediaplayer.core.kernel.video.mediax;
 
 import android.content.Context;
 import android.net.Uri;
+import android.os.Bundle;
 import android.os.Looper;
 import android.view.Surface;
 
@@ -10,6 +11,7 @@ import androidx.media3.common.C;
 import androidx.media3.common.Format;
 import androidx.media3.common.MediaItem;
 import androidx.media3.common.MediaLibraryInfo;
+import androidx.media3.common.MediaMetadata;
 import androidx.media3.common.PlaybackException;
 import androidx.media3.common.PlaybackParameters;
 import androidx.media3.common.Player;
@@ -81,9 +83,9 @@ import lib.kalu.mediaplayer.bean.info.HlsSpanInfo;
 import lib.kalu.mediaplayer.bean.info.TrackInfo;
 import lib.kalu.mediaplayer.bean.type.PlayerType;
 import lib.kalu.mediaplayer.core.kernel.video.VideoBasePlayer;
-import lib.kalu.mediaplayer.core.kernel.video.mediax.hls.CusDefaultHlsExtractorFactory;
-import lib.kalu.mediaplayer.core.kernel.video.mediax.proxy.CustomDefaultHttpDataSource;
-import lib.kalu.mediaplayer.core.kernel.video.mediax.proxy.CustomHlsPlaylistParserFactory;
+import lib.kalu.mediaplayer.core.kernel.video.mediax.hls.CustomDefaultHlsExtractorFactory;
+import lib.kalu.mediaplayer.core.kernel.video.mediax.hls.CustomDefaultHttpDataSource;
+import lib.kalu.mediaplayer.core.kernel.video.mediax.hls.CustomHlsPlaylistParserFactory;
 import lib.kalu.mediaplayer.util.LogUtil;
 import lib.kalu.mediax.subtitle.OffsetMsTextRenderer;
 
@@ -95,7 +97,6 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
     private boolean isBuffering = false;
     private boolean mPlayWhenReadySeeking = false;
     private boolean mSeeking = false;
-    private boolean isUseCache = false;
 
     private HlsManifest mHlsManifest;
     private SimpleCache mSimpleCache;
@@ -166,7 +167,7 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
                             // maxBufferMs 限制最大缓冲时长的参数，单位是毫秒
                             // bufferForPlaybackMs 如果设置 bufferForPlaybackMs 为 5000，那么播放器会在开始播放前先缓冲 5 秒钟的媒体数据
                             // bufferForPlaybackAfterRebufferMs 用于指定在播放过程中出现重新缓冲（Rebuffer）后，为了保证后续播放流畅，需要再次缓冲的时长，单位同样是毫秒
-                            .setBufferDurationsMs(10_0000, 10_0000, 5000, 5000)
+                            .setBufferDurationsMs(10_0000, 10_0000, 1000, 5000)
                             .build())
                     // 自适应码率
                     .setTrackSelector(new DefaultTrackSelector(context, DefaultTrackSelector.Parameters.getDefaults(context)
@@ -323,6 +324,10 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
             if (!containsMainUrl)
                 throw new Exception("error: containsMainUrl false");
             onEvent(PlayerType.KernelType.MEDIA_V3, PlayerType.EventType.INIT_READY);
+            boolean initUseCache = initUseCache(context, args);
+            if (LogUtil.DEBUG) {
+                LogUtil.log("VideoMediaxPlayer => startDecoder => initUseCache = " + initUseCache);
+            }
             MediaSource mediaSource = formatMediaSource(context, args);
             mExoPlayer.setMediaSource(mediaSource);
             boolean prepareAsync = args.isPrepareAsync();
@@ -527,7 +532,7 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
 
     @Override
     public boolean isUseCache() {
-        return isUseCache;
+        return null != mSimpleCache;
     }
 
     /**
@@ -677,6 +682,100 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
     }
 
     /************************/
+
+    private boolean initUseCache(Context context, StartArgs args) {
+        try {
+
+            boolean containsMainUrl = args.containsMainUrl();
+            if (!containsMainUrl)
+                throw new Exception("error: containsMainUrl false");
+
+            String url = args.getUrl();
+            if (url.startsWith(PlayerType.SchemeType.FILE))
+                throw new Exception("error: url is file");
+
+            PlayerArgs playerBuilder = PlayerSDK.init().getPlayerBuilder();
+            if (null == playerBuilder)
+                throw new Exception("error: playerBuilder null");
+
+            Cache cache = playerBuilder.getCache();
+            if (null == cache)
+                throw new Exception("error: cache null");
+
+            boolean cacheEnable = cache.isEnable();
+            if (!cacheEnable)
+                throw new Exception("error: cacheEnable false");
+
+            int sizeMB = cache.getSizeMB();
+            if (sizeMB <= 0)
+                throw new Exception("error: sizeMB <= 0, sizeMB = " + sizeMB);
+
+//            if (null == mSimpleCache) {
+
+//            StringBuilder builder = new StringBuilder();
+//            builder.append(cache.getDir(PlayerType.KernelType.MEDIA_V3));
+//            if (urlType == PlayerType.UrlType.VIDEO) {
+//                builder.append("video");
+//            } else if (urlType == PlayerType.UrlType.AUDIO) {
+//                builder.append("audio");
+//            } else if (urlType == PlayerType.UrlType.SUBTITLE) {
+//                builder.append("subtitle");
+//            } else {
+//                builder.append("other");
+//            }
+
+            String dirName = cache.getDir(PlayerType.KernelType.MEDIA_V3);
+            if (LogUtil.DEBUG) {
+                LogUtil.log("VideoMediaxPlayer => initUseCache => dirName = " + dirName + ", url = " + url);
+            }
+
+            boolean external = cache.isExternal();
+            File dirFile;
+            if (external) {
+                dirFile = new File(context.getExternalCacheDir(), dirName);
+            } else {
+                dirFile = new File(context.getCacheDir(), dirName);
+            }
+
+            if (!dirFile.exists()) {
+                dirFile.mkdirs();
+            }
+
+            if (null != mSimpleCache) {
+                mSimpleCache.release();
+                mSimpleCache = null;
+            }
+
+            mSimpleCache = new SimpleCache(dirFile,
+                    //
+                    new LeastRecentlyUsedCacheEvictor(sizeMB),
+                    //
+                    new StandaloneDatabaseProvider(context)
+            );
+            mSimpleCache.addListener("", new androidx.media3.datasource.cache.Cache.Listener() {
+                @Override
+                public void onSpanAdded(androidx.media3.datasource.cache.Cache cache, CacheSpan cacheSpan) {
+                }
+
+                @Override
+                public void onSpanRemoved(androidx.media3.datasource.cache.Cache cache, CacheSpan cacheSpan) {
+                }
+
+                @Override
+                public void onSpanTouched(androidx.media3.datasource.cache.Cache cache, CacheSpan cacheSpan, CacheSpan cacheSpan1) {
+                }
+            });
+            if (LogUtil.DEBUG) {
+                LogUtil.log("VideoMediaxPlayer => initUseCache => useCache completed");
+            }
+            return true;
+        } catch (Exception e) {
+            if (LogUtil.DEBUG) {
+                LogUtil.log("VideoMediaxPlayer => initUseCache => Exception: " + e.getMessage());
+            }
+            return false;
+        }
+    }
 
     private MediaSource formatMediaSource(Context context, StartArgs args) throws Exception {
 
@@ -1002,7 +1101,7 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
                 }
                 if (onlyParserVideo) {
                     Method method_setExtractorFactory = cls.getMethod("setExtractorFactory", HlsExtractorFactory.class);
-                    method_setExtractorFactory.invoke(object, new CusDefaultHlsExtractorFactory(DefaultTsPayloadReaderFactory.FLAG_IGNORE_AAC_STREAM, false));
+                    method_setExtractorFactory.invoke(object, new CustomDefaultHlsExtractorFactory(DefaultTsPayloadReaderFactory.FLAG_IGNORE_AAC_STREAM, false));
                 }
 
                 return object;
@@ -1063,6 +1162,14 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
                 return ((MediaSource.Factory) factory).createMediaSource(new MediaItem.Builder()
                         .setUri(Uri.parse(url))
                         .setMediaId("audio:" + hashCode)
+                        .setMediaMetadata(new MediaMetadata.Builder()
+                                .setExtras(Bundle.EMPTY)
+                                .setTitle("歌曲标题")
+                                .setArtist("艺术家名称")
+                                .setAlbumTitle("专辑名称")
+                                .setArtworkUri(Uri.parse("https://example.com/cover.jpg")) // 封面图片
+                                .setReleaseYear(2024)
+                                .build())
                         .build());
             }
             // other
@@ -1127,7 +1234,7 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
 
                 // setExtractorFactory
                 Method method_setExtractorFactory = cls.getMethod("setExtractorFactory", HlsExtractorFactory.class);
-                method_setExtractorFactory.invoke(object, new CusDefaultHlsExtractorFactory(DefaultTsPayloadReaderFactory.FLAG_IGNORE_H264_STREAM, false));
+                method_setExtractorFactory.invoke(object, new CustomDefaultHlsExtractorFactory(DefaultTsPayloadReaderFactory.FLAG_IGNORE_H264_STREAM, false));
 
                 return object;
             }
@@ -1191,7 +1298,7 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
                     .setLanguage(language)
                     .setLabel(label)
                     .setRoleFlags(hashCode)
-                    .setId(String.valueOf(hashCode))
+                    .setId("subtitle:" + hashCode)
                     .setSelectionFlags(hashCode)
                     .build();
 
@@ -1220,79 +1327,6 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
                                                 String dataUrl) {
 
         try {
-
-            if (dataUrl.startsWith(PlayerType.SchemeType.FILE))
-                throw new Exception("error: dataUrl is file");
-
-            PlayerArgs playerBuilder = PlayerSDK.init().getPlayerBuilder();
-            if (null == playerBuilder)
-                throw new Exception("error: playerBuilder null");
-
-            Cache cache = playerBuilder.getCache();
-            if (null == cache)
-                throw new Exception("error: cache null");
-
-            boolean cacheEnable = cache.isEnable();
-            if (!cacheEnable)
-                throw new Exception("error: cacheEnable false");
-
-            int sizeMB = cache.getSizeMB();
-            if (sizeMB <= 0)
-                throw new Exception("error: sizeMB <= 0, sizeMB = " + sizeMB);
-
-//            if (null == mSimpleCache) {
-
-//            StringBuilder builder = new StringBuilder();
-//            builder.append(cache.getDir(PlayerType.KernelType.MEDIA_V3));
-//            if (urlType == PlayerType.UrlType.VIDEO) {
-//                builder.append("video");
-//            } else if (urlType == PlayerType.UrlType.AUDIO) {
-//                builder.append("audio");
-//            } else if (urlType == PlayerType.UrlType.SUBTITLE) {
-//                builder.append("subtitle");
-//            } else {
-//                builder.append("other");
-//            }
-
-            String dirName = cache.getDir(PlayerType.KernelType.MEDIA_V3);
-            if (LogUtil.DEBUG) {
-                LogUtil.log("VideoMediaxPlayer => buildDateFactory => dirName = " + dirName + ", dataUrl = " + dataUrl);
-            }
-
-            boolean external = cache.isExternal();
-            File dirFile;
-            if (external) {
-                dirFile = new File(context.getExternalCacheDir(), dirName);
-            } else {
-                dirFile = new File(context.getCacheDir(), dirName);
-            }
-
-            if (!dirFile.exists()) {
-                dirFile.mkdirs();
-            }
-
-            if (null == mSimpleCache) {
-                mSimpleCache = new SimpleCache(dirFile,
-                        //
-                        new LeastRecentlyUsedCacheEvictor(sizeMB),
-                        //
-                        new StandaloneDatabaseProvider(context)
-                );
-                mSimpleCache.addListener("", new androidx.media3.datasource.cache.Cache.Listener() {
-                    @Override
-                    public void onSpanAdded(androidx.media3.datasource.cache.Cache cache, CacheSpan cacheSpan) {
-                    }
-
-                    @Override
-                    public void onSpanRemoved(androidx.media3.datasource.cache.Cache cache, CacheSpan cacheSpan) {
-                    }
-
-                    @Override
-                    public void onSpanTouched(androidx.media3.datasource.cache.Cache cache, CacheSpan cacheSpan, CacheSpan cacheSpan1) {
-                    }
-                });
-            }
-
             return new CacheDataSource.Factory()
                     .setFlags(CacheDataSource.FLAG_IGNORE_CACHE_ON_ERROR)
 //                        .setFlags(
@@ -1417,9 +1451,19 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
 
         @Override
         public void onLoadError(EventTime eventTime, LoadEventInfo loadEventInfo, MediaLoadData mediaLoadData, IOException e, boolean b) {
+            if (LogUtil.DEBUG) {
+                LogUtil.log("VideoMediaxPlayer => onLoadError =>");
+            }
             stop();
             onEvent(PlayerType.KernelType.MEDIA_V3, PlayerType.EventType.STOP);
             onEvent(PlayerType.KernelType.MEDIA_V3, PlayerType.EventType.ERROR);
+        }
+
+        @Override
+        public void onLoadCompleted(EventTime eventTime, LoadEventInfo loadEventInfo, MediaLoadData mediaLoadData) {
+            if (LogUtil.DEBUG) {
+                LogUtil.log("VideoMediaxPlayer => onLoadCompleted => mediaLoadData.trackFormat = " + mediaLoadData.trackFormat);
+            }
         }
 
         @Override
@@ -1680,6 +1724,7 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
 
         }
 
+
         /**
          * 切换轨道 完成
          * @param eventTime
@@ -1771,6 +1816,11 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
                 if (null == group)
                     continue;
 
+                if (LogUtil.DEBUG) {
+                    TrackGroup trackGroup = group.getMediaTrackGroup();
+                    LogUtil.log("VideoMediaxPlayer => getTrackInfo => trackGroup.id = " + trackGroup.id + ", trackGroup.length = " + trackGroup.length);
+                }
+
                 int trackType = group.getType();
                 int trackCount = group.length;
                 // 是否支持自适应播放
@@ -1790,7 +1840,7 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
                     //
                     Format format = group.getTrackFormat(trackIndex);
                     if (LogUtil.DEBUG) {
-                        LogUtil.log("VideoMediaxPlayer => getTrackInfo => group = " + group + ", format = " + format);
+                        LogUtil.log("VideoMediaxPlayer => getTrackInfo => format = " + format + ", format.metadata = " + format.metadata);
                     }
 
                     TrackInfo trackInfo = new TrackInfo();
@@ -1865,12 +1915,12 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
                     }
                     // 媒体信息
                     else if (type == -1 && trackType == C.TRACK_TYPE_METADATA) {
-                        // LogUtil.log("VideoExo2Player => getTrackInfo[C.TRACK_TYPE_METADATA] => groupCount = " + groupCount + ", groupIndex = " + groupIndex + ", trackCount = " + trackCount + ", trackIndex = " + trackIndex + ", trackType = " + trackType + ", isGroupAdaptiveSupported = " + isGroupAdaptiveSupported + ", isGroupSelected = " + isGroupSelected + ", isGroupSupported = " + isGroupSupported + ", isTrackSelected = " + isTrackSelected + ", isTrackSupported = " + isTrackSupported);
+                        // LogUtil.log("VideoMediaxPlayer => getTrackInfo[C.TRACK_TYPE_METADATA] => groupCount = " + groupCount + ", groupIndex = " + groupIndex + ", trackCount = " + trackCount + ", trackIndex = " + trackIndex + ", trackType = " + trackType + ", isGroupAdaptiveSupported = " + isGroupAdaptiveSupported + ", isGroupSelected = " + isGroupSelected + ", isGroupSupported = " + isGroupSupported + ", isTrackSelected = " + isTrackSelected + ", isTrackSupported = " + isTrackSupported);
                         continue;
                     }
                     // 未知
                     else {
-                        //  LogUtil.log("VideoExo2Player => getTrackInfo[Unknow] => groupCount = " + groupCount + ", groupIndex = " + groupIndex + ", trackCount = " + trackCount + ", trackIndex = " + trackIndex + ", trackType = " + trackType + ", isGroupAdaptiveSupported = " + isGroupAdaptiveSupported + ", isGroupSelected = " + isGroupSelected + ", isGroupSupported = " + isGroupSupported + ", isTrackSelected = " + isTrackSelected + ", isTrackSupported = " + isTrackSupported);
+                        //  LogUtil.log("VideoMediaxPlayer => getTrackInfo[Unknow] => groupCount = " + groupCount + ", groupIndex = " + groupIndex + ", trackCount = " + trackCount + ", trackIndex = " + trackIndex + ", trackType = " + trackType + ", isGroupAdaptiveSupported = " + isGroupAdaptiveSupported + ", isGroupSelected = " + isGroupSelected + ", isGroupSupported = " + isGroupSupported + ", isTrackSelected = " + isTrackSelected + ", isTrackSupported = " + isTrackSupported);
                         continue;
                     }
 
@@ -1926,7 +1976,7 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
 //                    object.put("subsampleOffsetUs", format.subsampleOffsetUs);
 ////                    object.put("hasPrerollSamples", format.hasPrerollSamples);
 
-                    //   LogUtil.log("VideoExo2Player => getTrackInfo => groupCount = " + groupCount + ", groupIndex = " + groupIndex + ", trackCount = " + trackCount + ", trackIndex = " + trackIndex + ", trackType = " + trackType + ", isGroupAdaptiveSupported = " + isGroupAdaptiveSupported + ", isGroupSelected = " + isGroupSelected + ", isGroupSupported = " + isGroupSupported + ", isTrackSelected = " + isTrackSelected + ", isTrackSupported = " + isTrackSupported + ", isTrackMixed = " + isTrackMixed + ", isTrackMixedSelected = " + isTrackMixedSelected + ", format = " + object);
+                    //   LogUtil.log("VideoMediaxPlayer => getTrackInfo => groupCount = " + groupCount + ", groupIndex = " + groupIndex + ", trackCount = " + trackCount + ", trackIndex = " + trackIndex + ", trackType = " + trackType + ", isGroupAdaptiveSupported = " + isGroupAdaptiveSupported + ", isGroupSelected = " + isGroupSelected + ", isGroupSupported = " + isGroupSupported + ", isTrackSelected = " + isTrackSelected + ", isTrackSupported = " + isTrackSupported + ", isTrackMixed = " + isTrackMixed + ", isTrackMixedSelected = " + isTrackMixedSelected + ", format = " + object);
                     //
                     list.add(trackInfo);
                 }
@@ -2015,7 +2065,7 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
             return true;
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
-                LogUtil.log("VideoExo2Player => appendSubtitleOffsetMs => Exception " + e.getMessage());
+                LogUtil.log("VideoMediaxPlayer => appendSubtitleOffsetMs => Exception " + e.getMessage());
             }
             return false;
         }
