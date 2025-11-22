@@ -1364,10 +1364,6 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
 
     private DataSource.Factory buildHttpFactory(StartArgs args) {
         try {
-
-            Proxy proxy = args.getProxy();
-
-
             return new CustomDefaultHttpDataSource.Factory(args.getProxyUrl())
                     .setUserAgent(MediaLibraryInfo.VERSION_SLASHY)
                     .setConnectTimeoutMs((int) args.getConnectTimout())
