@@ -3,6 +3,7 @@ package com.kalu.mediaplayer;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,8 +25,9 @@ import lib.kalu.mediaplayer.bean.args.UrlArgs;
 import lib.kalu.mediaplayer.bean.cache.Cache;
 import lib.kalu.mediaplayer.bean.menu.Menu;
 import lib.kalu.mediaplayer.bean.type.PlayerType;
+import lib.kalu.mediaplayer.proxy.Proxy;
+import lib.kalu.mediaplayer.proxy.ProxyUrl;
 import lib.kalu.mediaplayer.test.TestActivity;
-import lib.kalu.mediaplayer.util.LogUtil;
 
 /**
  * description:
@@ -342,7 +344,6 @@ public class MainActivity extends Activity {
                 return urlBuilder.build();
             }
         } catch (Exception e) {
-            LogUtil.log("MainActivity => getUrl => Exception " + e.getMessage(), e);
             return null;
         }
 

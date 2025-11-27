@@ -489,10 +489,14 @@ public @interface PlayerType {
         String RTMP = "rtmp://";
         String RTSP = "rtsp://";
         String _M3U = ".m3u";
+        String _M3U_ = ".m3u?";
         String _M3U8 = ".m3u8";
+        String _M3U8_ = ".m3u8?";
         String _TS = ".ts";
         String _MP4 = ".mp4";
+        String _MP4_ = ".mp4?";
         String _MPD = ".mpd";
+        String _MPD_ = ".mpd?";
         String _VTT = ".vtt";
         String _SSA = ".ssa";
         String _ASS = ".ass";

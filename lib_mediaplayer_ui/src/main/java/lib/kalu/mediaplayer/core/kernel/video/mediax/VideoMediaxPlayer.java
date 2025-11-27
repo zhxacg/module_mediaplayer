@@ -2,7 +2,6 @@ package lib.kalu.mediaplayer.core.kernel.video.mediax;
 
 import android.content.Context;
 import android.net.Uri;
-import android.os.Bundle;
 import android.os.Looper;
 import android.view.Surface;
 
@@ -11,7 +10,6 @@ import androidx.media3.common.C;
 import androidx.media3.common.Format;
 import androidx.media3.common.MediaItem;
 import androidx.media3.common.MediaLibraryInfo;
-import androidx.media3.common.MediaMetadata;
 import androidx.media3.common.PlaybackException;
 import androidx.media3.common.PlaybackParameters;
 import androidx.media3.common.Player;
@@ -86,7 +84,6 @@ import lib.kalu.mediaplayer.core.kernel.video.VideoBasePlayer;
 import lib.kalu.mediaplayer.core.kernel.video.mediax.hls.CustomDefaultHlsExtractorFactory;
 import lib.kalu.mediaplayer.core.kernel.video.mediax.hls.CustomDefaultHttpDataSource;
 import lib.kalu.mediaplayer.core.kernel.video.mediax.hls.CustomHlsPlaylistParserFactory;
-import lib.kalu.mediaplayer.proxy.Proxy;
 import lib.kalu.mediaplayer.util.LogUtil;
 import lib.kalu.mediax.subtitle.OffsetMsTextRenderer;
 
@@ -753,19 +750,19 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
                     //
                     new StandaloneDatabaseProvider(context)
             );
-            mSimpleCache.addListener("", new androidx.media3.datasource.cache.Cache.Listener() {
-                @Override
-                public void onSpanAdded(androidx.media3.datasource.cache.Cache cache, CacheSpan cacheSpan) {
-                }
-
-                @Override
-                public void onSpanRemoved(androidx.media3.datasource.cache.Cache cache, CacheSpan cacheSpan) {
-                }
-
-                @Override
-                public void onSpanTouched(androidx.media3.datasource.cache.Cache cache, CacheSpan cacheSpan, CacheSpan cacheSpan1) {
-                }
-            });
+//            mSimpleCache.addListener("", new androidx.media3.datasource.cache.Cache.Listener() {
+//                @Override
+//                public void onSpanAdded(androidx.media3.datasource.cache.Cache cache, CacheSpan cacheSpan) {
+//                }
+//
+//                @Override
+//                public void onSpanRemoved(androidx.media3.datasource.cache.Cache cache, CacheSpan cacheSpan) {
+//                }
+//
+//                @Override
+//                public void onSpanTouched(androidx.media3.datasource.cache.Cache cache, CacheSpan cacheSpan, CacheSpan cacheSpan1) {
+//                }
+//            });
             if (LogUtil.DEBUG) {
                 LogUtil.log("VideoMediaxPlayer => initUseCache => useCache completed");
             }
@@ -895,20 +892,36 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
             else if (url.startsWith(PlayerType.SchemeType.RTSP)) {
                 return PlayerType.MetaType.VIDEO_RTSP;
             }
-            // mp4
+            // mp41
             else if (url.endsWith(PlayerType.SchemeType._MP4)) {
                 return PlayerType.MetaType.VIDEO_MP4;
             }
-            // dash
+            // mp42
+            else if (url.contains(PlayerType.SchemeType._MP4_)) {
+                return PlayerType.MetaType.VIDEO_MP4;
+            }
+            // dash1
             else if (url.endsWith(PlayerType.SchemeType._MPD)) {
                 return PlayerType.MetaType.VIDEO_DASH;
             }
-            // hls
+            // dash2
+            else if (url.contains(PlayerType.SchemeType._MPD_)) {
+                return PlayerType.MetaType.VIDEO_DASH;
+            }
+            // hls1
             else if (url.endsWith(PlayerType.SchemeType._M3U)) {
                 return PlayerType.MetaType.VIDEO_HLS;
             }
-            // hls
+            // hls2
+            else if (url.contains(PlayerType.SchemeType._M3U_)) {
+                return PlayerType.MetaType.VIDEO_HLS;
+            }
+            // hls3
             else if (url.endsWith(PlayerType.SchemeType._M3U8)) {
+                return PlayerType.MetaType.VIDEO_HLS;
+            }
+            // hls4
+            else if (url.contains(PlayerType.SchemeType._M3U8_)) {
                 return PlayerType.MetaType.VIDEO_HLS;
             }
             // SmoothStreaming

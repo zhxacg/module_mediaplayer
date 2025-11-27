@@ -27,6 +27,9 @@
 #    *;
 #}
 
+# libs
+-keep class com.google.*
+
 # sdk
 -keep class lib.kalu.mediaplayer.PlayerSDK {
     public <fields>;
@@ -38,6 +41,23 @@
     public <methods>;
 }
 -keep class lib.kalu.mediaplayer.bean.**$** {
+    public <methods>;
+}
+
+# proxy
+-keep class lib.kalu.mediaplayer.proxy.Proxy {
+    public <methods>;
+}
+-keep class lib.kalu.mediaplayer.proxy.Proxy$Builder {
+    public <methods>;
+}
+-keep class lib.kalu.mediaplayer.proxy.ProxyUrl {
+    public <methods>;
+}
+-keep class lib.kalu.mediaplayer.proxy.ProxyTrack {
+    public <methods>;
+}
+-keep class lib.kalu.mediaplayer.proxy.ProxyBuried {
     public <methods>;
 }
 
