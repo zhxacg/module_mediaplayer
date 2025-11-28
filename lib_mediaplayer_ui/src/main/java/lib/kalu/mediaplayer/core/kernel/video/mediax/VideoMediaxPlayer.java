@@ -1366,21 +1366,9 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
                     .setCacheKeyFactory(new CacheKeyFactory() {
                         @Override
                         public String buildCacheKey(DataSpec dataSpec) {
-
                             try {
                                 String url = dataSpec.uri.toString();
-                                if (!url.endsWith(PlayerType.SchemeType._M3U8) && !url.contains(PlayerType.SchemeType._M3U8_) && !url.endsWith(PlayerType.SchemeType._TS) && !url.contains(PlayerType.SchemeType._TS_))
-                                    throw new Exception("warning: only suppport ts or m3u8");
-                                Uri uri = Uri.parse(url);
-                                String newKey = new StringBuilder().append(uri.getScheme()) // 获取协议（https）
-                                        .append("://")
-                                        .append(uri.getHost())   // 获取主机（www.example.com）
-                                        .append(uri.getPath())// 获取路径（/path/page.html）
-                                        .toString();
-                                if (LogUtil.DEBUG) {
-                                    LogUtil.log("VideoMediaxPlayer => buildDateFactory -> buildCacheKey => url =  " + url + ", newKey = " + newKey);
-                                }
-                                return newKey;
+                                return formatCacheKey(url);
                             } catch (Exception e) {
                                 if (LogUtil.DEBUG) {
                                     LogUtil.log("VideoMediaxPlayer => buildDateFactory -> buildCacheKey => Exception: " + e.getMessage());
@@ -1410,6 +1398,28 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
                 LogUtil.log("VideoMediaxPlayer => buildHttpFactory => Exception: " + e.getMessage());
             }
             return null;
+        }
+    }
+
+    private String formatCacheKey(String url) {
+        try {
+            if (!url.endsWith(PlayerType.SchemeType._M3U8) && !url.contains(PlayerType.SchemeType._M3U8_) && !url.endsWith(PlayerType.SchemeType._TS) && !url.contains(PlayerType.SchemeType._TS_))
+                throw new Exception("warning: only suppport ts or m3u8");
+            Uri uri = Uri.parse(url);
+            String newKey = new StringBuilder().append(uri.getScheme()) // 获取协议（https）
+                    .append("://")
+                    .append(uri.getHost())   // 获取主机（www.example.com）
+                    .append(uri.getPath())// 获取路径（/path/page.html）
+                    .toString();
+            if (LogUtil.DEBUG) {
+                LogUtil.log("VideoMediaxPlayer => formatCacheKey -> buildCacheKey => url =  " + url + ", newKey = " + newKey);
+            }
+            return newKey;
+        } catch (Exception e) {
+            if (LogUtil.DEBUG) {
+                LogUtil.log("VideoMediaxPlayer => formatCacheKey => Exception " + e.getMessage());
+            }
+            return "";
         }
     }
 
@@ -2040,9 +2050,9 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
             String baseUrl = url.substring(0, lastIndexOf);
             //
             for (HlsMediaPlaylist.Segment segment : mediaPlaylist.segments) {
-
                 String segmentUrl = baseUrl + PlayerType.MarkType.SEPARATOR + segment.url;
-                NavigableSet<CacheSpan> cachedSpans = mSimpleCache.getCachedSpans(segmentUrl);
+                String cacheKey = formatCacheKey(segmentUrl);
+                NavigableSet<CacheSpan> cachedSpans = mSimpleCache.getCachedSpans(cacheKey);
                 for (CacheSpan span : cachedSpans) {
                     if (null == span)
                         continue;
