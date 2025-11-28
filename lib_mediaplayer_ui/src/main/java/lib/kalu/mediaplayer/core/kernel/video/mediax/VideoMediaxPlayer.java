@@ -1109,14 +1109,26 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
                 method_setPlaylistParserFactory.invoke(object, new CustomHlsPlaylistParserFactory(args.getProxyUrl()));
 
                 // setExtractorFactory
-                boolean onlyParserVideo = item.isOnlyParserVideo();
+                int parser = item.getParser();
+                int payloadReaderFactoryFlags;
+                if (parser == PlayerType.ParserType.VIDEO) {
+                    payloadReaderFactoryFlags = DefaultTsPayloadReaderFactory.FLAG_IGNORE_AAC_STREAM;
+                } else {
+                    payloadReaderFactoryFlags = 0;
+                }
+                boolean exposeCea608WhenMissingDeclarations;
+                if (parser == PlayerType.ParserType.VIDEO) {
+                    exposeCea608WhenMissingDeclarations = false;
+                } else if (parser == PlayerType.ParserType.AUDIO) {
+                    exposeCea608WhenMissingDeclarations = false;
+                } else {
+                    exposeCea608WhenMissingDeclarations = true;
+                }
                 if (LogUtil.DEBUG) {
-                    LogUtil.log("VideoMediaxPlayer => buildVideoMediaFactory => hls, onlyParserVideo = " + onlyParserVideo);
+                    LogUtil.log("VideoMediaxPlayer => buildVideoMediaFactory => hls, parser = " + parser + ", payloadReaderFactoryFlags = " + payloadReaderFactoryFlags + ", exposeCea608WhenMissingDeclarations = " + exposeCea608WhenMissingDeclarations);
                 }
-                if (onlyParserVideo) {
-                    Method method_setExtractorFactory = cls.getMethod("setExtractorFactory", HlsExtractorFactory.class);
-                    method_setExtractorFactory.invoke(object, new CustomDefaultHlsExtractorFactory(DefaultTsPayloadReaderFactory.FLAG_IGNORE_AAC_STREAM, false));
-                }
+                Method method_setExtractorFactory = cls.getMethod("setExtractorFactory", HlsExtractorFactory.class);
+                method_setExtractorFactory.invoke(object, new CustomDefaultHlsExtractorFactory(payloadReaderFactoryFlags, exposeCea608WhenMissingDeclarations));
 
                 return object;
             }
@@ -1352,18 +1364,26 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
                     .setCacheKeyFactory(new CacheKeyFactory() {
                         @Override
                         public String buildCacheKey(DataSpec dataSpec) {
-                            String subUrl = dataSpec.uri.toString();
 
-                            if (LogUtil.DEBUG) {
-                                LogUtil.log("VideoMediaxPlayer => buildDateFactory => subUrl = " + subUrl);
-                            }
-
-                            if (subUrl.endsWith(PlayerType.SchemeType._M3U8)) {
-                                return subUrl;
-                            } else if (subUrl.endsWith(PlayerType.SchemeType._TS)) {
-                                return subUrl;
-                            } else {
-                                return dataUrl;
+                            try {
+                                String url = dataSpec.uri.toString();
+                                if (!url.endsWith(PlayerType.SchemeType._M3U8) && !url.contains(PlayerType.SchemeType._M3U8_) && !url.endsWith(PlayerType.SchemeType._TS) && !url.contains(PlayerType.SchemeType._TS_))
+                                    throw new Exception("warning: only suppport ts or m3u8");
+                                Uri uri = Uri.parse(url);
+                                String newKey = new StringBuilder().append(uri.getScheme()) // 获取协议（https）
+                                        .append("://")
+                                        .append(uri.getHost())   // 获取主机（www.example.com）
+                                        .append(uri.getPath())// 获取路径（/path/page.html）
+                                        .toString();
+                                if (LogUtil.DEBUG) {
+                                    LogUtil.log("VideoMediaxPlayer => buildDateFactory -> buildCacheKey => url =  " + url + ", newKey = " + newKey);
+                                }
+                                return newKey;
+                            } catch (Exception e) {
+                                if (LogUtil.DEBUG) {
+                                    LogUtil.log("VideoMediaxPlayer => buildDateFactory -> buildCacheKey => Exception: " + e.getMessage());
+                                }
+                                return null;
                             }
                         }
                     });

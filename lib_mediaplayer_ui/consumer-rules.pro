@@ -95,6 +95,9 @@
 -keep @interface lib.kalu.mediaplayer.bean.type.PlayerType$TrackType {
     *;
 }
+-keep @interface lib.kalu.mediaplayer.bean.type.PlayerType$ParserType {
+    *;
+}
 
 # listener
 -keep class lib.kalu.mediaplayer.listener.** {

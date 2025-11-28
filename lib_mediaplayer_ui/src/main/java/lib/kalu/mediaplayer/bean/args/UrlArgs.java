@@ -2,6 +2,8 @@ package lib.kalu.mediaplayer.bean.args;
 
 import java.io.Serializable;
 
+import lib.kalu.mediaplayer.bean.type.PlayerType;
+
 public final class UrlArgs implements Serializable {
     private Item mainVideoArgs;
     private Item[] extVideoArgs;
@@ -138,10 +140,8 @@ public final class UrlArgs implements Serializable {
         private String url;
         private String language;
         private String label;
-
-        private boolean onlyParserVideo;
-        private boolean onlyParserAudio;
-        private boolean onlyParserSubtitle;
+        @PlayerType.ParserType.Value
+        private int parser;
 
         public boolean containsUrl() {
             return null != url && !url.isEmpty();
@@ -151,21 +151,12 @@ public final class UrlArgs implements Serializable {
             this.url = builder.url;
             this.language = builder.language;
             this.label = builder.label;
-            this.onlyParserVideo = builder.onlyParserVideo;
-            this.onlyParserAudio = builder.onlyParserAudio;
-            this.onlyParserSubtitle = builder.onlyParserSubtitle;
+            this.parser = builder.parser;
         }
 
-        public boolean isOnlyParserAudio() {
-            return onlyParserAudio;
-        }
-
-        public boolean isOnlyParserSubtitle() {
-            return onlyParserSubtitle;
-        }
-
-        public boolean isOnlyParserVideo() {
-            return onlyParserVideo;
+        @PlayerType.ParserType.Value
+        public int getParser() {
+            return parser;
         }
 
         public String getLabel() {
@@ -185,23 +176,11 @@ public final class UrlArgs implements Serializable {
             private String url;
             private String language;
             private String label;
+            @PlayerType.ParserType.Value
+            private int parser = PlayerType.ParserType.DEFAULT;
 
-            private boolean onlyParserVideo;
-            private boolean onlyParserAudio;
-            private boolean onlyParserSubtitle;
-
-            public Item.Builder setOnlyParserVideo(boolean v) {
-                this.onlyParserVideo = v;
-                return this;
-            }
-
-            public Item.Builder setOnlyParserAudio(boolean v) {
-                this.onlyParserAudio = v;
-                return this;
-            }
-
-            public Item.Builder setOnlyParserSubtitle(boolean v) {
-                this.onlyParserSubtitle = v;
+            public Item.Builder setParser(@PlayerType.ParserType.Value int v) {
+                this.parser = v;
                 return this;
             }
 
@@ -231,8 +210,10 @@ public final class UrlArgs implements Serializable {
         @Override
         public String toString() {
             return "Item{" +
-                    "language='" + language + '\'' +
+                    "label='" + label + '\'' +
                     ", url='" + url + '\'' +
+                    ", language='" + language + '\'' +
+                    ", parser=" + parser +
                     '}';
         }
     }

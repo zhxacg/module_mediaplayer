@@ -493,6 +493,7 @@ public @interface PlayerType {
         String _M3U8 = ".m3u8";
         String _M3U8_ = ".m3u8?";
         String _TS = ".ts";
+        String _TS_ = ".ts?";
         String _MP4 = ".mp4";
         String _MP4_ = ".mp4?";
         String _MPD = ".mpd";
@@ -538,6 +539,31 @@ public @interface PlayerType {
         @StringDef(value = {
                 MarkType.SEPARATOR,
                 MarkType.UNDERLINE})
+        @interface Value {
+        }
+    }
+
+
+    @Documented
+    @Retention(CLASS)
+    @Target({METHOD, PARAMETER, FIELD, LOCAL_VARIABLE, ANNOTATION_TYPE, PACKAGE})
+    @interface ParserType {
+        int VIDEO_AUDIO_SUBTITLE = 1;
+        int VIDEO_AUDIO = 2;
+        int VIDEO = 3;
+        int AUDIO = 4;
+        int SUBTITLE = 5;
+        int DEFAULT = VIDEO_AUDIO_SUBTITLE;
+
+        @Documented
+        @Retention(CLASS)
+        @Target({METHOD, PARAMETER, FIELD, LOCAL_VARIABLE, ANNOTATION_TYPE, PACKAGE})
+        @IntDef({VIDEO_AUDIO_SUBTITLE,
+                VIDEO_AUDIO,
+                VIDEO,
+                AUDIO,
+                SUBTITLE,
+                DEFAULT})
         @interface Value {
         }
     }
