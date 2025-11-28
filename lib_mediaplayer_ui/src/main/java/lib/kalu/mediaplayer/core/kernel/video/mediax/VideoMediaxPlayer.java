@@ -1121,6 +1121,8 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
                     exposeCea608WhenMissingDeclarations = false;
                 } else if (parser == PlayerType.ParserType.AUDIO) {
                     exposeCea608WhenMissingDeclarations = false;
+                } else if (parser == PlayerType.ParserType.VIDEO_AUDIO) {
+                    exposeCea608WhenMissingDeclarations = false;
                 } else {
                     exposeCea608WhenMissingDeclarations = true;
                 }
