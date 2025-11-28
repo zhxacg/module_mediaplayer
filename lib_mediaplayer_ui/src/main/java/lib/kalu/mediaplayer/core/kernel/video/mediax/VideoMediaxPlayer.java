@@ -1498,11 +1498,47 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
             HlsMediaPlaylist hlsMediaPlaylist = hlsManifest.mediaPlaylist;
             if (null == hlsMediaPlaylist)
                 throw new Exception("warning: hlsMediaPlaylist null");
+
+            String url = hlsMediaPlaylist.baseUri;
+            String baseUrl = formatBaseUrl(url);
+
+            int size = hlsMediaPlaylist.segments.size();
+            if (LogUtil.DEBUG) {
+                LogUtil.log("VideoMediaxPlayer => loadHlsSpanInfo1 => completed, size = " + size + ", baseUrl = " + baseUrl);
+            }
+
             for (HlsMediaPlaylist.Segment segment : hlsMediaPlaylist.segments) {
                 if (null == mHlsSegmentInfo) {
-                    mHlsSegmentInfo = new LinkedList<>();
+                    mHlsSegmentInfo = new ArrayList<>(size);
                 }
                 mHlsSegmentInfo.add(segment);
+
+                //
+                String segmentUrl = baseUrl + PlayerType.MarkType.SEPARATOR + segment.url;
+                NavigableSet<CacheSpan> cachedSpans = mSimpleCache.getCachedSpans(segmentUrl);
+                for (CacheSpan span : cachedSpans) {
+                    if (null == span)
+                        continue;
+                    if (!span.isCached)
+                        continue;
+                    HlsSpanInfo hlsSpanInfo = new HlsSpanInfo();
+                    String segmentPath = span.file.getAbsolutePath();
+                    hlsSpanInfo.setPath(segmentPath);
+                    hlsSpanInfo.setUrl(segmentUrl);
+                    hlsSpanInfo.setRelativeStartTimeUs(segment.relativeStartTimeUs);
+                    hlsSpanInfo.setDurationUs(segment.durationUs);
+                    //
+                    if (null == mHlsSpanInfo) {
+                        mHlsSpanInfo = new ArrayList<>(size);
+                    }
+
+                    if (LogUtil.DEBUG) {
+                        LogUtil.log("VideoMediaxPlayer => loadHlsSpanInfo1 => completed, segmentPath = " + segmentPath + ", segmentUrl = " + segmentUrl + ", mHlsSpanInfo.size = " + mHlsSpanInfo.size());
+                    }
+                    int i = hlsMediaPlaylist.segments.indexOf(segment);
+                    mHlsSpanInfo.set(i, hlsSpanInfo);
+                }
+
             }
             if (LogUtil.DEBUG) {
                 LogUtil.log("VideoMediaxPlayer => loadHlsManifest => completed, mHlsSegmentInfo.size = " + mHlsSegmentInfo.size());
@@ -1525,38 +1561,50 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
             if (null == mediaLoadData)
                 throw new Exception("warning: mediaLoadData null");
 
-            if (mediaLoadData.dataType != C.DATA_TYPE_MEDIA)
-                throw new Exception("warning: mediaLoadData.dataType != C.DATA_TYPE_MEDIA, mediaLoadData.dataType = " + mediaLoadData.dataType);
-            DataSpec dataSpec = loadEventInfo.dataSpec;
-            if (null == dataSpec)
-                throw new Exception("warning: dataSpec null");
-            Uri uri = dataSpec.uri;
-            if (null == uri)
-                throw new Exception("warning: uri null");
-            String segmentUrl = uri.toString();
-            if (segmentUrl.isEmpty())
-                throw new Exception("warning: segmentUrl isEmpty");
-            String cacheKey = formatCacheKey(segmentUrl);
-            if (cacheKey.isEmpty())
-                throw new Exception("warning: cacheKey isEmpty");
-
-            HlsMediaPlaylist.Segment segment = mHlsSegmentInfo.get((int) dataSpec.position);
-            NavigableSet<CacheSpan> cachedSpans = mSimpleCache.getCachedSpans(cacheKey);
-            for (CacheSpan span : cachedSpans) {
-                if (null == span)
-                    continue;
-                if (!span.isCached)
-                    continue;
-                HlsSpanInfo hlsSpanInfo = new HlsSpanInfo();
-                hlsSpanInfo.setPath(span.file.getAbsolutePath());
-                hlsSpanInfo.setUrl(segmentUrl);
-                hlsSpanInfo.setRelativeStartTimeUs(segment.relativeStartTimeUs);
-                hlsSpanInfo.setDurationUs(segment.durationUs);
-                //
-                if (null == mHlsSpanInfo) {
-                    mHlsSpanInfo = new LinkedList<>();
+            if (mediaLoadData.dataType == C.DATA_TYPE_MEDIA) {
+                DataSpec dataSpec = loadEventInfo.dataSpec;
+                if (null == dataSpec)
+                    throw new Exception("warning: dataSpec null");
+                if (null != mHlsSpanInfo) {
+                    HlsSpanInfo hlsSpanInfo = mHlsSpanInfo.get((int) dataSpec.position);
+                    if (null != hlsSpanInfo)
+                        throw new Exception("warning: hlsSpanInfo already cons");
                 }
-                mHlsSpanInfo.add(hlsSpanInfo);
+                Uri uri = dataSpec.uri;
+                if (null == uri)
+                    throw new Exception("warning: uri null");
+                String segmentUrl = uri.toString();
+                if (segmentUrl.isEmpty())
+                    throw new Exception("warning: segmentUrl isEmpty");
+                String cacheKey = formatCacheKey(segmentUrl);
+                if (cacheKey.isEmpty())
+                    throw new Exception("warning: cacheKey isEmpty");
+
+                HlsMediaPlaylist.Segment segment = mHlsSegmentInfo.get((int) dataSpec.position);
+                NavigableSet<CacheSpan> cachedSpans = mSimpleCache.getCachedSpans(cacheKey);
+                for (CacheSpan span : cachedSpans) {
+                    if (null == span)
+                        continue;
+                    if (!span.isCached)
+                        continue;
+                    HlsSpanInfo hlsSpanInfo = new HlsSpanInfo();
+                    String segmentPath = span.file.getAbsolutePath();
+                    hlsSpanInfo.setPath(segmentPath);
+                    hlsSpanInfo.setUrl(segmentUrl);
+                    hlsSpanInfo.setRelativeStartTimeUs(segment.relativeStartTimeUs);
+                    hlsSpanInfo.setDurationUs(segment.durationUs);
+//                    //
+//                    if (null == mHlsSpanInfo) {
+//                        mHlsSpanInfo = new LinkedHashMap<>();
+//                    }
+
+                    if (LogUtil.DEBUG) {
+                        LogUtil.log("VideoMediaxPlayer => loadHlsSpanInfo2 => completed, segmentPath = " + segmentPath + ", segmentUrl = " + segmentUrl + ", mHlsSpanInfo.size = " + mHlsSpanInfo.size());
+                    }
+                    mHlsSpanInfo.set((int) dataSpec.position, hlsSpanInfo);
+                }
+            } else {
+                throw new Exception("warning: not support mediaLoadData.dataType = " + mediaLoadData.dataType);
             }
             return true;
         } catch (Exception e) {
