@@ -1368,7 +1368,7 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
                         public String buildCacheKey(DataSpec dataSpec) {
                             try {
                                 String url = dataSpec.uri.toString();
-                                return formatCacheKey(url);
+                                return formatBaseUrl(url, false);
                             } catch (Exception e) {
                                 if (LogUtil.DEBUG) {
                                     LogUtil.log("VideoMediaxPlayer => buildDateFactory -> buildCacheKey => Exception: " + e.getMessage());
@@ -1401,23 +1401,28 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
         }
     }
 
-    private String formatCacheKey(String url) {
+    private String formatBaseUrl(String url, boolean lastIgnore) {
         try {
-            if (!url.endsWith(PlayerType.SchemeType._M3U8) && !url.contains(PlayerType.SchemeType._M3U8_) && !url.endsWith(PlayerType.SchemeType._TS) && !url.contains(PlayerType.SchemeType._TS_))
-                throw new Exception("warning: only suppport ts or m3u8");
             Uri uri = Uri.parse(url);
-            String newKey = new StringBuilder().append(uri.getScheme()) // 获取协议（https）
+            String path = uri.getPath();
+            if (lastIgnore) {
+                int lastIndexOf = path.lastIndexOf(PlayerType.MarkType.SEPARATOR);
+                if (lastIndexOf > 0) {
+                    path = path.substring(0, lastIndexOf);
+                }
+            }
+            String baseUrl = new StringBuilder().append(uri.getScheme())
                     .append("://")
-                    .append(uri.getHost())   // 获取主机（www.example.com）
-                    .append(uri.getPath())// 获取路径（/path/page.html）
+                    .append(uri.getHost())
+                    .append(path)
                     .toString();
             if (LogUtil.DEBUG) {
-                LogUtil.log("VideoMediaxPlayer => formatCacheKey -> buildCacheKey => url =  " + url + ", newKey = " + newKey);
+                LogUtil.log("VideoMediaxPlayer => formatBaseUrl -> url =  " + url + ", baseUrl = " + baseUrl);
             }
-            return newKey;
+            return baseUrl;
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
-                LogUtil.log("VideoMediaxPlayer => formatCacheKey => Exception " + e.getMessage());
+                LogUtil.log("VideoMediaxPlayer => formatBaseUrl => Exception: " + e.getMessage());
             }
             return "";
         }
@@ -2045,13 +2050,11 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
             ArrayList<HlsSpanInfo> list = null;
             //
             HlsMediaPlaylist mediaPlaylist = mHlsManifest.mediaPlaylist;
-            String url = mediaPlaylist.baseUri;
-            int lastIndexOf = url.lastIndexOf(PlayerType.MarkType.SEPARATOR);
-            String baseUrl = url.substring(0, lastIndexOf);
+            String baseUrl = formatBaseUrl(mediaPlaylist.baseUri, true);
             //
             for (HlsMediaPlaylist.Segment segment : mediaPlaylist.segments) {
                 String segmentUrl = baseUrl + PlayerType.MarkType.SEPARATOR + segment.url;
-                String cacheKey = formatCacheKey(segmentUrl);
+                String cacheKey = formatBaseUrl(segmentUrl, false);
                 NavigableSet<CacheSpan> cachedSpans = mSimpleCache.getCachedSpans(cacheKey);
                 for (CacheSpan span : cachedSpans) {
                     if (null == span)
