@@ -1499,23 +1499,39 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
             if (null == hlsMediaPlaylist)
                 throw new Exception("warning: hlsMediaPlaylist null");
 
+            List<HlsMediaPlaylist.Segment> segments = hlsMediaPlaylist.segments;
+            if (segments.isEmpty())
+                throw new Exception("warning: segments isEmpty");
+
             String url = hlsMediaPlaylist.baseUri;
             String baseUrl = formatBaseUrl(url);
+            int size = segments.size();
 
-            int size = hlsMediaPlaylist.segments.size();
-            if (LogUtil.DEBUG) {
-                LogUtil.log("VideoMediaxPlayer => loadHlsSpanInfo1 => completed, size = " + size + ", baseUrl = " + baseUrl);
+            if (null == mHlsSegmentInfo) {
+                mHlsSegmentInfo = new ArrayList<>(size);
+            }
+            if (null == mHlsSpanInfo) {
+                mHlsSpanInfo = new ArrayList<>(size);
             }
 
-            for (HlsMediaPlaylist.Segment segment : hlsMediaPlaylist.segments) {
-                if (null == mHlsSegmentInfo) {
-                    mHlsSegmentInfo = new ArrayList<>(size);
-                }
+            for (int i = 0; i < size; i++) {
+                HlsMediaPlaylist.Segment segment = segments.get(i);
+                if (null == segment)
+                    continue;
+
                 mHlsSegmentInfo.add(segment);
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("VideoMediaxPlayer => loadHlsManifest => add segment completed, size = " + size + ", baseUrl = " + baseUrl);
+                }
 
                 //
                 String segmentUrl = baseUrl + PlayerType.MarkType.SEPARATOR + segment.url;
-                NavigableSet<CacheSpan> cachedSpans = mSimpleCache.getCachedSpans(segmentUrl);
+                String cacheKey = formatCacheKey(segmentUrl);
+
+                NavigableSet<CacheSpan> cachedSpans = mSimpleCache.getCachedSpans(cacheKey);
+                if (cachedSpans.isEmpty())
+                    continue;
+
                 for (CacheSpan span : cachedSpans) {
                     if (null == span)
                         continue;
@@ -1528,17 +1544,11 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
                     hlsSpanInfo.setRelativeStartTimeUs(segment.relativeStartTimeUs);
                     hlsSpanInfo.setDurationUs(segment.durationUs);
                     //
-                    if (null == mHlsSpanInfo) {
-                        mHlsSpanInfo = new ArrayList<>(size);
-                    }
-
+                    mHlsSpanInfo.add(hlsSpanInfo);
                     if (LogUtil.DEBUG) {
-                        LogUtil.log("VideoMediaxPlayer => loadHlsSpanInfo1 => completed, segmentPath = " + segmentPath + ", segmentUrl = " + segmentUrl + ", mHlsSpanInfo.size = " + mHlsSpanInfo.size());
+                        LogUtil.log("VideoMediaxPlayer => loadHlsManifest => add span completed, i = " + i + ", size = " + size + ", cacheKey = " + cacheKey + ", segmentPath = " + segmentPath + ", segmentUrl = " + segmentUrl);
                     }
-                    int i = hlsMediaPlaylist.segments.indexOf(segment);
-                    mHlsSpanInfo.set(i, hlsSpanInfo);
                 }
-
             }
             if (LogUtil.DEBUG) {
                 LogUtil.log("VideoMediaxPlayer => loadHlsManifest => completed, mHlsSegmentInfo.size = " + mHlsSegmentInfo.size());
@@ -1556,6 +1566,8 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
         try {
             if (null == mSimpleCache)
                 throw new Exception("warning: mSimpleCache null");
+            if (null == mHlsSpanInfo)
+                throw new Exception("warning: mHlsSpanInfo null");
             if (null == loadEventInfo)
                 throw new Exception("warning: loadEventInfo null");
             if (null == mediaLoadData)
@@ -1563,13 +1575,11 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
 
             if (mediaLoadData.dataType == C.DATA_TYPE_MEDIA) {
                 DataSpec dataSpec = loadEventInfo.dataSpec;
-                if (null == dataSpec)
-                    throw new Exception("warning: dataSpec null");
-                if (null != mHlsSpanInfo) {
-                    HlsSpanInfo hlsSpanInfo = mHlsSpanInfo.get((int) dataSpec.position);
-                    if (null != hlsSpanInfo)
-                        throw new Exception("warning: hlsSpanInfo already cons");
-                }
+
+                HlsSpanInfo tempSpanInfo = mHlsSpanInfo.get((int) dataSpec.position);
+                if (null != tempSpanInfo)
+                    throw new Exception("warning: tempSpanInfo already cons");
+
                 Uri uri = dataSpec.uri;
                 if (null == uri)
                     throw new Exception("warning: uri null");
