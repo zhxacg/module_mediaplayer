@@ -282,7 +282,7 @@ public class MainActivity extends Activity {
                     String[] urls = getResources().getStringArray(R.array.hls_extra_video_urls);
                     urlBuilder.setUrl(new UrlArgs.Item.Builder()
                             .setUrl(urls[0])
-                            .setOnlyParserVideo(true)
+                            .setParser(PlayerType.ParserType.VIDEO)
                             .setLabel("普清")
                             .build());
                 } catch (Exception e) {
@@ -298,7 +298,7 @@ public class MainActivity extends Activity {
                         videoArgs[i - 1] = new UrlArgs.Item.Builder()
                                 .setUrl(urls[i])
                                 .setLabel(label[i - 1])
-                                .setOnlyParserVideo(true)
+                                .setParser(PlayerType.ParserType.VIDEO)
                                 .build();
                     }
                     urlBuilder.setExtVideo(videoArgs);

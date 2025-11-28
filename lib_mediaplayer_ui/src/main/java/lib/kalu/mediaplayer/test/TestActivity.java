@@ -2,7 +2,6 @@ package lib.kalu.mediaplayer.test;
 
 import android.app.Activity;
 import android.graphics.Color;
-import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.view.WindowManager;
@@ -293,8 +292,7 @@ public final class TestActivity extends Activity {
                                     if (LogUtil.DEBUG) {
                                         LogUtil.log("TestActivity -> formatOpenUrl -> url = " + url + ", thread = " + Thread.currentThread().getName());
                                     }
-//                            return url + "?key=name";
-                                    return url;
+                                    return url + "?token=1";
                                 }
 
                                 @Override
@@ -302,9 +300,7 @@ public final class TestActivity extends Activity {
                                     if (LogUtil.DEBUG) {
                                         LogUtil.log("TestActivity -> formatSegmentPath -> baseUrl = " + baseUrl + ", segmentUrl = " + segmentUrl + ", thread = " + Thread.currentThread().getName());
                                     }
-//                            String key = Uri.parse(baseUrl).getQueryParameter("key");
-//                            return segmentUrl + "?key=" + key + "&value=zm";
-                                    return segmentUrl;
+                                    return segmentUrl + "?install=2";
                                 }
                             })
                             .setProxyTrack(new ProxyTrack() {
