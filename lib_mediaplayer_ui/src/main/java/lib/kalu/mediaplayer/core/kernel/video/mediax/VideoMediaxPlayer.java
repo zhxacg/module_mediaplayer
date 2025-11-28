@@ -96,9 +96,13 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
     private boolean mPlayWhenReadySeeking = false;
     private boolean mSeeking = false;
 
-    private HlsManifest mHlsManifest;
     private SimpleCache mSimpleCache;
     private ExoPlayer mExoPlayer;
+
+    // 缓存
+    private List<HlsSpanInfo> mHlsSpanInfo;
+    private List<HlsMediaPlaylist.Segment> mHlsSegmentInfo;
+
 
     @Override
     public ExoPlayer getPlayer() {
@@ -322,9 +326,9 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
             if (!containsMainUrl)
                 throw new Exception("error: containsMainUrl false");
             onEvent(PlayerType.KernelType.MEDIA_V3, PlayerType.EventType.INIT_READY);
-            boolean initUseCache = initUseCache(context, args);
+            boolean initSimpleCache = initSimpleCache(context, args);
             if (LogUtil.DEBUG) {
-                LogUtil.log("VideoMediaxPlayer => startDecoder => initUseCache = " + initUseCache);
+                LogUtil.log("VideoMediaxPlayer => startDecoder => initSimpleCache = " + initSimpleCache);
             }
             MediaSource mediaSource = formatMediaSource(context, args);
             mExoPlayer.setMediaSource(mediaSource);
@@ -602,23 +606,156 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
 
     @Override
     public void release() {
+
+        boolean releaseSimpleCache = releaseSimpleCache();
+        if (LogUtil.DEBUG) {
+            LogUtil.log("VideoMediaxPlayer => release => SimpleCache release " + releaseSimpleCache);
+        }
+
+        boolean releaseHlsManifest = releaseHlsManifest();
+        if (LogUtil.DEBUG) {
+            LogUtil.log("VideoMediaxPlayer => release => HlsManifest release " + releaseHlsManifest);
+        }
+
         try {
-            if (null != mSimpleCache) {
-                mSimpleCache.release();
-                mSimpleCache = null;
-            }
-            if (null != mHlsManifest) {
-                mHlsManifest = null;
-            }
             if (null == mExoPlayer)
                 throw new Exception("error: mExoPlayer null");
             mExoPlayer.setVideoSurface(null);
             mExoPlayer.release();
             mExoPlayer = null;
+            if (LogUtil.DEBUG) {
+                LogUtil.log("VideoMediaxPlayer => release => completed");
+            }
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
                 LogUtil.log("VideoMediaxPlayer => release => " + e.getMessage());
             }
+        }
+    }
+
+    private boolean releaseHlsManifest() {
+        try {
+            if (null != mHlsSegmentInfo) {
+                mHlsSegmentInfo.clear();
+                mHlsSegmentInfo = null;
+            }
+
+            if (null != mHlsSpanInfo) {
+                mHlsSpanInfo.clear();
+                mHlsSpanInfo = null;
+            }
+
+            if (LogUtil.DEBUG) {
+                LogUtil.log("VideoMediaxPlayer => releaseHlsManifest => completed");
+            }
+            return true;
+        } catch (Exception e) {
+            if (LogUtil.DEBUG) {
+                LogUtil.log("VideoMediaxPlayer => releaseHlsManifest => Exception: " + e.getMessage());
+            }
+            return false;
+        }
+    }
+
+    private boolean releaseSimpleCache() {
+        try {
+            if (null == mSimpleCache)
+                throw new Exception("warning: mSimpleCache null");
+            mSimpleCache.removeListener("mCacheListener", mCacheListener);
+            mSimpleCache.release();
+            mSimpleCache = null;
+            if (LogUtil.DEBUG) {
+                LogUtil.log("VideoMediaxPlayer => releaseSimpleCache => completed");
+            }
+            return true;
+        } catch (Exception e) {
+            if (LogUtil.DEBUG) {
+                LogUtil.log("VideoMediaxPlayer => releaseSimpleCache => Exception: " + e.getMessage());
+            }
+            return false;
+        }
+    }
+
+    private boolean initSimpleCache(Context context, StartArgs args) {
+
+        //
+        boolean releaseSimpleCache = releaseSimpleCache();
+        if (LogUtil.DEBUG) {
+            LogUtil.log("VideoMediaxPlayer => initSimpleCache => SimpleCache release " + releaseSimpleCache);
+        }
+
+        try {
+
+            boolean containsMainUrl = args.containsMainUrl();
+            if (!containsMainUrl)
+                throw new Exception("error: containsMainUrl false");
+
+            String url = args.getUrl();
+            if (url.startsWith(PlayerType.SchemeType.FILE))
+                throw new Exception("error: url is file");
+
+            PlayerArgs playerBuilder = PlayerSDK.init().getPlayerBuilder();
+            if (null == playerBuilder)
+                throw new Exception("error: playerBuilder null");
+
+            Cache cache = playerBuilder.getCache();
+            if (null == cache)
+                throw new Exception("error: cache null");
+
+            boolean cacheEnable = cache.isEnable();
+            if (!cacheEnable)
+                throw new Exception("error: cacheEnable false");
+
+            int sizeMB = cache.getSizeMB();
+            if (sizeMB <= 0)
+                throw new Exception("error: sizeMB <= 0, sizeMB = " + sizeMB);
+
+//            if (null == mSimpleCache) {
+
+//            StringBuilder builder = new StringBuilder();
+//            builder.append(cache.getDir(PlayerType.KernelType.MEDIA_V3));
+//            if (urlType == PlayerType.UrlType.VIDEO) {
+//                builder.append("video");
+//            } else if (urlType == PlayerType.UrlType.AUDIO) {
+//                builder.append("audio");
+//            } else if (urlType == PlayerType.UrlType.SUBTITLE) {
+//                builder.append("subtitle");
+//            } else {
+//                builder.append("other");
+//            }
+
+            String dirName = cache.getDir(PlayerType.KernelType.MEDIA_V3);
+            if (LogUtil.DEBUG) {
+                LogUtil.log("VideoMediaxPlayer => initSimpleCache => dirName = " + dirName + ", url = " + url);
+            }
+
+            boolean external = cache.isExternal();
+            File dirFile;
+            if (external) {
+                dirFile = new File(context.getExternalCacheDir(), dirName);
+            } else {
+                dirFile = new File(context.getCacheDir(), dirName);
+            }
+
+            if (!dirFile.exists()) {
+                dirFile.mkdirs();
+            }
+            mSimpleCache = new SimpleCache(dirFile,
+                    //
+                    new LeastRecentlyUsedCacheEvictor(sizeMB),
+                    //
+                    new StandaloneDatabaseProvider(context)
+            );
+            mSimpleCache.addListener("mCacheListener", mCacheListener);
+            if (LogUtil.DEBUG) {
+                LogUtil.log("VideoMediaxPlayer => initSimpleCache => useCache completed");
+            }
+            return true;
+        } catch (Exception e) {
+            if (LogUtil.DEBUG) {
+                LogUtil.log("VideoMediaxPlayer => initSimpleCache => Exception: " + e.getMessage());
+            }
+            return false;
         }
     }
 
@@ -680,100 +817,6 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
     }
 
     /************************/
-
-    private boolean initUseCache(Context context, StartArgs args) {
-        try {
-
-            boolean containsMainUrl = args.containsMainUrl();
-            if (!containsMainUrl)
-                throw new Exception("error: containsMainUrl false");
-
-            String url = args.getUrl();
-            if (url.startsWith(PlayerType.SchemeType.FILE))
-                throw new Exception("error: url is file");
-
-            PlayerArgs playerBuilder = PlayerSDK.init().getPlayerBuilder();
-            if (null == playerBuilder)
-                throw new Exception("error: playerBuilder null");
-
-            Cache cache = playerBuilder.getCache();
-            if (null == cache)
-                throw new Exception("error: cache null");
-
-            boolean cacheEnable = cache.isEnable();
-            if (!cacheEnable)
-                throw new Exception("error: cacheEnable false");
-
-            int sizeMB = cache.getSizeMB();
-            if (sizeMB <= 0)
-                throw new Exception("error: sizeMB <= 0, sizeMB = " + sizeMB);
-
-//            if (null == mSimpleCache) {
-
-//            StringBuilder builder = new StringBuilder();
-//            builder.append(cache.getDir(PlayerType.KernelType.MEDIA_V3));
-//            if (urlType == PlayerType.UrlType.VIDEO) {
-//                builder.append("video");
-//            } else if (urlType == PlayerType.UrlType.AUDIO) {
-//                builder.append("audio");
-//            } else if (urlType == PlayerType.UrlType.SUBTITLE) {
-//                builder.append("subtitle");
-//            } else {
-//                builder.append("other");
-//            }
-
-            String dirName = cache.getDir(PlayerType.KernelType.MEDIA_V3);
-            if (LogUtil.DEBUG) {
-                LogUtil.log("VideoMediaxPlayer => initUseCache => dirName = " + dirName + ", url = " + url);
-            }
-
-            boolean external = cache.isExternal();
-            File dirFile;
-            if (external) {
-                dirFile = new File(context.getExternalCacheDir(), dirName);
-            } else {
-                dirFile = new File(context.getCacheDir(), dirName);
-            }
-
-            if (!dirFile.exists()) {
-                dirFile.mkdirs();
-            }
-
-            if (null != mSimpleCache) {
-                mSimpleCache.release();
-                mSimpleCache = null;
-            }
-
-            mSimpleCache = new SimpleCache(dirFile,
-                    //
-                    new LeastRecentlyUsedCacheEvictor(sizeMB),
-                    //
-                    new StandaloneDatabaseProvider(context)
-            );
-//            mSimpleCache.addListener("", new androidx.media3.datasource.cache.Cache.Listener() {
-//                @Override
-//                public void onSpanAdded(androidx.media3.datasource.cache.Cache cache, CacheSpan cacheSpan) {
-//                }
-//
-//                @Override
-//                public void onSpanRemoved(androidx.media3.datasource.cache.Cache cache, CacheSpan cacheSpan) {
-//                }
-//
-//                @Override
-//                public void onSpanTouched(androidx.media3.datasource.cache.Cache cache, CacheSpan cacheSpan, CacheSpan cacheSpan1) {
-//                }
-//            });
-            if (LogUtil.DEBUG) {
-                LogUtil.log("VideoMediaxPlayer => initUseCache => useCache completed");
-            }
-            return true;
-        } catch (Exception e) {
-            if (LogUtil.DEBUG) {
-                LogUtil.log("VideoMediaxPlayer => initUseCache => Exception: " + e.getMessage());
-            }
-            return false;
-        }
-    }
 
     private MediaSource formatMediaSource(Context context, StartArgs args) throws Exception {
 
@@ -1446,6 +1489,104 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
         }
     }
 
+    private boolean loadHlsManifest(HlsManifest hlsManifest) {
+        try {
+            if (null == mSimpleCache)
+                throw new Exception("warning: mSimpleCache null");
+            if (null == hlsManifest)
+                throw new Exception("warning: mHlsManifest null");
+            HlsMediaPlaylist hlsMediaPlaylist = hlsManifest.mediaPlaylist;
+            if (null == hlsMediaPlaylist)
+                throw new Exception("warning: hlsMediaPlaylist null");
+            for (HlsMediaPlaylist.Segment segment : hlsMediaPlaylist.segments) {
+                if (null == mHlsSegmentInfo) {
+                    mHlsSegmentInfo = new LinkedList<>();
+                }
+                mHlsSegmentInfo.add(segment);
+            }
+            if (LogUtil.DEBUG) {
+                LogUtil.log("VideoMediaxPlayer => loadHlsManifest => completed, mHlsSegmentInfo.size = " + mHlsSegmentInfo.size());
+            }
+            return true;
+        } catch (Exception e) {
+            if (LogUtil.DEBUG) {
+                LogUtil.log("VideoMediaxPlayer => loadHlsManifest => Exception " + e.getMessage());
+            }
+            return false;
+        }
+    }
+
+    private boolean loadHlsSpanInfo(LoadEventInfo loadEventInfo, MediaLoadData mediaLoadData) {
+        try {
+            if (null == mSimpleCache)
+                throw new Exception("warning: mSimpleCache null");
+            if (null == loadEventInfo)
+                throw new Exception("warning: loadEventInfo null");
+            if (null == mediaLoadData)
+                throw new Exception("warning: mediaLoadData null");
+
+            if (mediaLoadData.dataType != C.DATA_TYPE_MEDIA)
+                throw new Exception("warning: mediaLoadData.dataType != C.DATA_TYPE_MEDIA, mediaLoadData.dataType = " + mediaLoadData.dataType);
+            DataSpec dataSpec = loadEventInfo.dataSpec;
+            if (null == dataSpec)
+                throw new Exception("warning: dataSpec null");
+            Uri uri = dataSpec.uri;
+            if (null == uri)
+                throw new Exception("warning: uri null");
+            String segmentUrl = uri.toString();
+            if (segmentUrl.isEmpty())
+                throw new Exception("warning: segmentUrl isEmpty");
+            String cacheKey = formatCacheKey(segmentUrl);
+            if (cacheKey.isEmpty())
+                throw new Exception("warning: cacheKey isEmpty");
+
+            HlsMediaPlaylist.Segment segment = mHlsSegmentInfo.get((int) dataSpec.position);
+            NavigableSet<CacheSpan> cachedSpans = mSimpleCache.getCachedSpans(cacheKey);
+            for (CacheSpan span : cachedSpans) {
+                if (null == span)
+                    continue;
+                if (!span.isCached)
+                    continue;
+                HlsSpanInfo hlsSpanInfo = new HlsSpanInfo();
+                hlsSpanInfo.setPath(span.file.getAbsolutePath());
+                hlsSpanInfo.setUrl(segmentUrl);
+                hlsSpanInfo.setRelativeStartTimeUs(segment.relativeStartTimeUs);
+                hlsSpanInfo.setDurationUs(segment.durationUs);
+                //
+                if (null == mHlsSpanInfo) {
+                    mHlsSpanInfo = new LinkedList<>();
+                }
+                mHlsSpanInfo.add(hlsSpanInfo);
+            }
+            return true;
+        } catch (Exception e) {
+            if (LogUtil.DEBUG) {
+                LogUtil.log("VideoMediaxPlayer => loadHlsSpanInfo => Exception " + e.getMessage());
+            }
+            return false;
+        }
+    }
+
+    private final androidx.media3.datasource.cache.Cache.Listener mCacheListener = new androidx.media3.datasource.cache.Cache.Listener() {
+        @Override
+        public void onSpanAdded(androidx.media3.datasource.cache.Cache cache, CacheSpan cacheSpan) {
+            if (LogUtil.DEBUG) {
+                LogUtil.log("VideoMediaxPlayer => Cache.Listener => onSpanAdded -> span = " + cacheSpan);
+            }
+        }
+
+        @Override
+        public void onSpanRemoved(androidx.media3.datasource.cache.Cache cache, CacheSpan cacheSpan) {
+            if (LogUtil.DEBUG) {
+                LogUtil.log("VideoMediaxPlayer => Cache.Listener => onSpanRemoved -> span = " + cacheSpan);
+            }
+        }
+
+        @Override
+        public void onSpanTouched(androidx.media3.datasource.cache.Cache cache, CacheSpan cacheSpan, CacheSpan cacheSpan1) {
+        }
+    };
+
     private final AnalyticsListener mAnalyticsListener = new AnalyticsListener() {
 
         @Override
@@ -1455,7 +1596,7 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
                 LogUtil.log("VideoMediaxPlayer => onTimelineChanged => manifest = " + manifest);
             }
             if (manifest instanceof HlsManifest) {
-                mHlsManifest = (HlsManifest) manifest;
+                loadHlsManifest((HlsManifest) manifest);
             }
         }
 
@@ -1523,8 +1664,10 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
         @Override
         public void onLoadCompleted(EventTime eventTime, LoadEventInfo loadEventInfo, MediaLoadData mediaLoadData) {
             if (LogUtil.DEBUG) {
-                LogUtil.log("VideoMediaxPlayer => onLoadCompleted => mediaLoadData.trackFormat = " + mediaLoadData.trackFormat);
+//                long position = loadEventInfo.dataSpec.position;
+                LogUtil.log("VideoMediaxPlayer => onLoadCompleted => mediaLoadData.dataType = " + mediaLoadData.dataType + ", loadEventInfo.dataSpec.position = " + loadEventInfo.dataSpec.position + ", loadEventInfo.dataSpec.uri = " + loadEventInfo.dataSpec.uri);
             }
+            loadHlsSpanInfo(loadEventInfo, mediaLoadData);
         }
 
         @Override
@@ -2059,41 +2202,9 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
     @Override
     public List<HlsSpanInfo> getSegments() {
         try {
-            if (null == mHlsManifest)
-                throw new Exception("warning: mHlsManifest null");
-            if (null == mSimpleCache)
-                throw new Exception("warning: mSimpleCache null");
-
-            //
-            ArrayList<HlsSpanInfo> list = null;
-            //
-            HlsMediaPlaylist mediaPlaylist = mHlsManifest.mediaPlaylist;
-            String baseUrl = formatBaseUrl(mediaPlaylist.baseUri);
-            //
-            for (HlsMediaPlaylist.Segment segment : mediaPlaylist.segments) {
-                String segmentUrl = baseUrl + PlayerType.MarkType.SEPARATOR + segment.url;
-                String cacheKey = formatCacheKey(segmentUrl);
-                NavigableSet<CacheSpan> cachedSpans = mSimpleCache.getCachedSpans(cacheKey);
-                for (CacheSpan span : cachedSpans) {
-                    if (null == span)
-                        continue;
-                    if (!span.isCached)
-                        continue;
-                    HlsSpanInfo hlsSpanInfo = new HlsSpanInfo();
-                    hlsSpanInfo.setPath(span.file.getAbsolutePath());
-                    hlsSpanInfo.setUrl(segmentUrl);
-                    hlsSpanInfo.setRelativeStartTimeUs(segment.relativeStartTimeUs);
-                    hlsSpanInfo.setDurationUs(segment.durationUs);
-                    //
-                    if (null == list) {
-                        list = new ArrayList<>(0);
-                    }
-                    list.add(hlsSpanInfo);
-                }
-            }
-            if (null == list)
-                throw new Exception("warning: list null");
-            return list;
+            if (null == mHlsSpanInfo)
+                throw new Exception("warning: mHlsSpanInfo null");
+            return mHlsSpanInfo;
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
                 LogUtil.log("VideoMediaxPlayer => getBufferedHlsSpanInfo => Exception " + e.getMessage());
