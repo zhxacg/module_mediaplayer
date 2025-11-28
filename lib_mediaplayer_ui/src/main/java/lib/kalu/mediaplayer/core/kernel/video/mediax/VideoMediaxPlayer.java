@@ -1414,9 +1414,9 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
                     .append(uri.getHost())
                     .append(path)
                     .toString();
-            if (LogUtil.DEBUG) {
-                LogUtil.log("VideoMediaxPlayer => formatBaseUrl -> url =  " + url + ", baseUrl = " + baseUrl);
-            }
+//            if (LogUtil.DEBUG) {
+//                LogUtil.log("VideoMediaxPlayer => formatBaseUrl -> url =  " + url + ", baseUrl = " + baseUrl);
+//            }
             return baseUrl;
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
@@ -1434,9 +1434,9 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
                     .append(uri.getHost())
                     .append(uri.getPath())
                     .toString();
-            if (LogUtil.DEBUG) {
-                LogUtil.log("VideoMediaxPlayer => formatCacheKey -> url =  " + url + ", newKey = " + newKey);
-            }
+//            if (LogUtil.DEBUG) {
+//                LogUtil.log("VideoMediaxPlayer => formatCacheKey -> url =  " + url + ", newKey = " + newKey);
+//            }
             return newKey;
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
