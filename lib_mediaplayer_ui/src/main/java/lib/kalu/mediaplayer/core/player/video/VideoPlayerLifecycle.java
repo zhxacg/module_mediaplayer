@@ -32,7 +32,7 @@ public interface VideoPlayerLifecycle extends VideoPlayerApiBase, VideoPlayerApi
             release(true, true, false);
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
-                LogUtil.log("VideoPlayerLifecycle => detachedFromWindow => " + e.getMessage());
+                LogUtil.log("VideoPlayerLifecycle -> detachedFromWindow -> " + e.getMessage());
             }
         }
     }
@@ -60,7 +60,7 @@ public interface VideoPlayerLifecycle extends VideoPlayerApiBase, VideoPlayerApi
             resume(false);
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
-                LogUtil.log("VideoPlayerLifecycle => attachedToWindow => " + e.getMessage());
+                LogUtil.log("VideoPlayerLifecycle -> attachedToWindow -> " + e.getMessage());
             }
         }
     }
@@ -92,7 +92,7 @@ public interface VideoPlayerLifecycle extends VideoPlayerApiBase, VideoPlayerApi
             }
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
-                LogUtil.log("VideoPlayerLifecycle => windowVisibilityChanged => " + e.getMessage());
+                LogUtil.log("VideoPlayerLifecycle -> windowVisibilityChanged -> " + e.getMessage());
             }
         }
     }

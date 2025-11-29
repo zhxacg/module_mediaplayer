@@ -31,7 +31,7 @@ public class ComponentSeek2 extends RelativeLayout implements ComponentApi {
     public void onUpdateProgress(boolean isFromUser, long trySeeDuration, long progress, long duration) {
 
         if (LogUtil.DEBUG) {
-            LogUtil.log("ComponentSeek2 => onUpdateProgress => isFromUser = " + isFromUser + ", trySeeDuration = " + trySeeDuration + ", progress = " + progress + ", duration = " + duration);
+            LogUtil.log("ComponentSeek2 -> onUpdateProgress -> isFromUser = " + isFromUser + ", trySeeDuration = " + trySeeDuration + ", progress = " + progress + ", duration = " + duration);
         }
 
         MultiSegmentProgressBar progressBar = findViewById(R.id.module_mediaplayer_component_seek2_pb);
@@ -39,19 +39,19 @@ public class ComponentSeek2 extends RelativeLayout implements ComponentApi {
 
         boolean useCache = getPlayerView().isUseCache();
         if (LogUtil.DEBUG) {
-            LogUtil.log("ComponentSeek2 => onUpdateProgress => useCache = " + useCache);
+            LogUtil.log("ComponentSeek2 -> onUpdateProgress -> useCache = " + useCache);
         }
         if (!useCache)
             return;
 
         List<HlsSpanInfo> segments = getPlayerView().getSegments();
         if (LogUtil.DEBUG) {
-            LogUtil.log("ComponentSeek2 => onUpdateProgress => segments = " + segments);
+            LogUtil.log("ComponentSeek2 -> onUpdateProgress -> segments = " + segments);
         }
         if (null != segments) {
             int size = segments.size();
             if (LogUtil.DEBUG) {
-                LogUtil.log("ComponentSeek2 => onUpdateProgress => segments.size = " + size);
+                LogUtil.log("ComponentSeek2 -> onUpdateProgress -> segments.size = " + size);
             }
             int index = -1;
             long[] longs = new long[size * 2];
@@ -59,16 +59,16 @@ public class ComponentSeek2 extends RelativeLayout implements ComponentApi {
                 HlsSpanInfo hlsSpanInfo = segments.get(i);
                 if (null == hlsSpanInfo)
                     continue;
-                long relativeStartTimeUs = hlsSpanInfo.getRelativeStartTimeUs();
-                long durationUs = hlsSpanInfo.getDurationUs();
+                long startTimeMs = hlsSpanInfo.getStartTimeMs();
+                long endTimeMs = hlsSpanInfo.getEndTimeMs();
                 if (LogUtil.DEBUG) {
-                    LogUtil.log("ComponentSeek2 => onUpdateProgress => i = " + i + ", relativeStartTimeUs = " + relativeStartTimeUs + ", durationUs = " + durationUs);
+                    LogUtil.log("ComponentSeek2 -> onUpdateProgress -> i = " + i + ", startTimeMs = " + startTimeMs + ", endTimeMs = " + endTimeMs);
                 }
-                longs[++index] = (relativeStartTimeUs) / 1000;
-                longs[++index] = (relativeStartTimeUs + durationUs) / 1000;
+                longs[++index] = startTimeMs;
+                longs[++index] = endTimeMs;
             }
             if (LogUtil.DEBUG) {
-                LogUtil.log("ComponentSeek2 => onUpdateProgress => longs.length = " + longs.length);
+                LogUtil.log("ComponentSeek2 -> onUpdateProgress -> longs.length = " + longs.length);
             }
             progressBar.addBufferSegments(longs);
         }

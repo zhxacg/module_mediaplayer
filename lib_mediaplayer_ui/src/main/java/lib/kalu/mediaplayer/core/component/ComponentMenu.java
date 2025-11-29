@@ -66,7 +66,7 @@ public class ComponentMenu extends RelativeLayout implements ComponentApi {
     public boolean dispatchKeyEvent(KeyEvent event) {
 
         if (LogUtil.DEBUG) {
-            LogUtil.log("ComponentMenu => dispatchKeyEvent => action =  " + event.getAction() + ", keyCode = " + event.getKeyCode() + ", repeatCount = " + event.getRepeatCount());
+            LogUtil.log("ComponentMenu -> dispatchKeyEvent -> action =  " + event.getAction() + ", keyCode = " + event.getKeyCode() + ", repeatCount = " + event.getRepeatCount());
         }
 
         // keycode_dpad_center
@@ -168,7 +168,7 @@ public class ComponentMenu extends RelativeLayout implements ComponentApi {
                 return true;
             } catch (Exception e) {
                 if (LogUtil.DEBUG) {
-                    LogUtil.log("ComponentMenu => keycodeCenter => keycode_dpad_center => " + e.getMessage());
+                    LogUtil.log("ComponentMenu -> keycodeCenter -> keycode_dpad_center -> " + e.getMessage());
                 }
             }
 
@@ -183,7 +183,7 @@ public class ComponentMenu extends RelativeLayout implements ComponentApi {
                 View focus = findFocus();
 
                 if (LogUtil.DEBUG) {
-                    LogUtil.log("ComponentMenu => dispatchKeyEvent[action_down&keycode_dpad_down] => focus = " + focus);
+                    LogUtil.log("ComponentMenu -> dispatchKeyEvent[action_down&keycode_dpad_down] -> focus = " + focus);
                 }
 
                 if (null == focus) {
@@ -200,7 +200,7 @@ public class ComponentMenu extends RelativeLayout implements ComponentApi {
                 return true;
             } catch (Exception e) {
                 if (LogUtil.DEBUG) {
-                    LogUtil.log("ComponentMenu => dispatchKeyEvent[action_down&keycode_dpad_down] => Exception " + e.getMessage());
+                    LogUtil.log("ComponentMenu -> dispatchKeyEvent[action_down&keycode_dpad_down] -> Exception " + e.getMessage());
                 }
             }
         }
@@ -230,7 +230,7 @@ public class ComponentMenu extends RelativeLayout implements ComponentApi {
                 }
             } catch (Exception e) {
                 if (LogUtil.DEBUG) {
-                    LogUtil.log("ComponentMenu => keycodeUp => Exception " + e.getMessage());
+                    LogUtil.log("ComponentMenu -> keycodeUp -> Exception " + e.getMessage());
                 }
             }
         }
@@ -273,7 +273,7 @@ public class ComponentMenu extends RelativeLayout implements ComponentApi {
                     ViewGroup viewGroup = findViewById(R.id.module_mediaplayer_component_menu_tab_content);
                     int indexOfChild = viewGroup.indexOfChild((View) focus.getParent());
                     if (LogUtil.DEBUG) {
-                        LogUtil.log("ComponentMenu => keycodeUp => indexOfChild = " + indexOfChild);
+                        LogUtil.log("ComponentMenu -> keycodeUp -> indexOfChild = " + indexOfChild);
                     }
                     if (indexOfChild <= 0) {
                         try {
@@ -285,7 +285,7 @@ public class ComponentMenu extends RelativeLayout implements ComponentApi {
                                 throw new Exception("warning: type != TYPE_EPISODE");
                             int _cur = ((int[]) _tag)[2];
                             if (LogUtil.DEBUG) {
-                                LogUtil.log("ComponentMenu => keycodeUp => _cur = " + _cur);
+                                LogUtil.log("ComponentMenu -> keycodeUp -> _cur = " + _cur);
                             }
                             if (_cur <= 0)
                                 throw new Exception("warning: _cur <= 0");
@@ -298,7 +298,7 @@ public class ComponentMenu extends RelativeLayout implements ComponentApi {
                                 int select = tag[1];
                                 int newCur = cur - 1;
                                 if (LogUtil.DEBUG) {
-                                    LogUtil.log("ComponentMenu => keycodeUp => i = " + i + ", select = " + select + ", newCur = " + newCur);
+                                    LogUtil.log("ComponentMenu -> keycodeUp -> i = " + i + ", select = " + select + ", newCur = " + newCur);
                                 }
                                 tag[2] = newCur;
 
@@ -319,7 +319,7 @@ public class ComponentMenu extends RelativeLayout implements ComponentApi {
                 }
             } catch (Exception e) {
                 if (LogUtil.DEBUG) {
-                    LogUtil.log("ComponentMenu => dispatchKeyEvent[action_down&keycode_dpad_left] => Exception " + e.getMessage());
+                    LogUtil.log("ComponentMenu -> dispatchKeyEvent[action_down&keycode_dpad_left] -> Exception " + e.getMessage());
                 }
             }
         }
@@ -374,11 +374,11 @@ public class ComponentMenu extends RelativeLayout implements ComponentApi {
                                 throw new Exception("warning: type != TYPE_EPISODE");
                             int _cur = ((int[]) _tag)[2];
                             if (LogUtil.DEBUG) {
-                                LogUtil.log("ComponentMenu => keycodeUp => _cur = " + _cur);
+                                LogUtil.log("ComponentMenu -> keycodeUp -> _cur = " + _cur);
                             }
                             int _length = ((int[]) _tag)[3];
                             if (LogUtil.DEBUG) {
-                                LogUtil.log("ComponentMenu => keycodeUp => _length = " + _length);
+                                LogUtil.log("ComponentMenu -> keycodeUp -> _length = " + _length);
                             }
                             if (_cur + 1 >= _length)
                                 throw new Exception("warning: _cur + 1 > _length");
@@ -391,7 +391,7 @@ public class ComponentMenu extends RelativeLayout implements ComponentApi {
                                 int select = tag[1];
                                 int newCur = cur + 1;
                                 if (LogUtil.DEBUG) {
-                                    LogUtil.log("ComponentMenu => keycodeUp => i = " + i + ", select = " + select + ", newCur = " + newCur);
+                                    LogUtil.log("ComponentMenu -> keycodeUp -> i = " + i + ", select = " + select + ", newCur = " + newCur);
                                 }
                                 tag[2] = newCur;
 
@@ -420,7 +420,7 @@ public class ComponentMenu extends RelativeLayout implements ComponentApi {
                 }
             } catch (Exception e) {
                 if (LogUtil.DEBUG) {
-                    LogUtil.log("ComponentMenu => dispatchKeyEvent[action_down&keycode_dpad_right] => Exception " + e.getMessage());
+                    LogUtil.log("ComponentMenu -> dispatchKeyEvent[action_down&keycode_dpad_right] -> Exception " + e.getMessage());
                 }
             }
         }
@@ -448,7 +448,7 @@ public class ComponentMenu extends RelativeLayout implements ComponentApi {
 
             int size = list.size();
             if (LogUtil.DEBUG) {
-                LogUtil.log("ComponentMenu => addTabMenu => size =  " + size);
+                LogUtil.log("ComponentMenu -> addTabMenu -> size =  " + size);
             }
             if (index >= size)
                 throw new Exception("error: index >= size");
@@ -469,7 +469,7 @@ public class ComponentMenu extends RelativeLayout implements ComponentApi {
 
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
-                LogUtil.log("ComponentMenu => addTabMenu => Exception " + e.getMessage());
+                LogUtil.log("ComponentMenu -> addTabMenu -> Exception " + e.getMessage());
             }
             throw e;
         }
@@ -490,7 +490,7 @@ public class ComponentMenu extends RelativeLayout implements ComponentApi {
             }
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
-                LogUtil.log("ComponentMenu => requestTabMenu => Exception " + e.getMessage());
+                LogUtil.log("ComponentMenu -> requestTabMenu -> Exception " + e.getMessage());
             }
         }
     }
@@ -519,7 +519,7 @@ public class ComponentMenu extends RelativeLayout implements ComponentApi {
 
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
-                LogUtil.log("ComponentMenu => selectedTabMenu => Exception " + e.getMessage());
+                LogUtil.log("ComponentMenu -> selectedTabMenu -> Exception " + e.getMessage());
             }
             throw e;
         }
@@ -677,7 +677,7 @@ public class ComponentMenu extends RelativeLayout implements ComponentApi {
             }
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
-                LogUtil.log("ComponentMenu => updateTabContent => Exception " + e.getMessage());
+                LogUtil.log("ComponentMenu -> updateTabContent -> Exception " + e.getMessage());
             }
             throw e;
         }

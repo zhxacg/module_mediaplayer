@@ -17,7 +17,7 @@ public final class ScreenshotUtil {
             return saveBitmap(context, bitmap);
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
-                LogUtil.log("ScreenshotUtil => saveDrawable => " + e.getMessage());
+                LogUtil.log("ScreenshotUtil -> saveDrawable -> " + e.getMessage());
             }
             return null;
         }
@@ -49,7 +49,7 @@ public final class ScreenshotUtil {
             return path;
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
-                LogUtil.log("ScreenshotUtil => saveBitmap => " + e.getMessage());
+                LogUtil.log("ScreenshotUtil -> saveBitmap -> " + e.getMessage());
             }
             return null;
         }
@@ -81,7 +81,7 @@ public final class ScreenshotUtil {
             return path;
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
-                LogUtil.log("ScreenshotUtil => saveBitmap => " + e.getMessage());
+                LogUtil.log("ScreenshotUtil -> saveBitmap -> " + e.getMessage());
             }
             return null;
         }

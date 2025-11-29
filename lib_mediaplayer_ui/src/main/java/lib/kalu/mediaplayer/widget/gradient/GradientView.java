@@ -237,7 +237,7 @@ public final class GradientView extends View {
             mValueAnimator.start();
         } catch (Exception e) {
             if(LogUtil.DEBUG) {
-                LogUtil.log("GradientView => start => Exception " + e.getMessage());
+                LogUtil.log("GradientView -> start -> Exception " + e.getMessage());
             }
         }
     }
@@ -252,7 +252,7 @@ public final class GradientView extends View {
             mAccelerateDecelerateInterpolator = null;
         } catch (Exception e) {
             if(LogUtil.DEBUG) {
-                LogUtil.log("GradientView => close => Exception " + e.getMessage());
+                LogUtil.log("GradientView -> close -> Exception " + e.getMessage());
             }
         }
     }

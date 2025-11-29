@@ -50,7 +50,7 @@ public class ComponentSeek extends RelativeLayout implements ComponentApi {
     public boolean dispatchKeyEvent(KeyEvent event) {
 
         if (LogUtil.DEBUG) {
-            LogUtil.log("ComponentSeek => dispatchKeyEvent => action =  " + event.getAction() + ", keyCode = " + event.getKeyCode() + ", repeatCount = " + event.getRepeatCount());
+            LogUtil.log("ComponentSeek -> dispatchKeyEvent -> action =  " + event.getAction() + ", keyCode = " + event.getKeyCode() + ", repeatCount = " + event.getRepeatCount());
         }
 
         try {
@@ -58,7 +58,7 @@ public class ComponentSeek extends RelativeLayout implements ComponentApi {
             long trySeeDuration = getTrySeeDuration();
             if (trySeeDuration > 0L)
                 throw new Exception("warning: trySeeDuration > 0L");
-            // seekForward => start
+            // seekForward -> start
             if (event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == KeyEvent.KEYCODE_DPAD_RIGHT && event.getRepeatCount() == 0) {
                 onUpdateProgress(true, -2, -2, -2);
                 superCallEvent(false, true, PlayerType.EventType.COMPONENT_SEEK_SHOW);
@@ -96,7 +96,7 @@ public class ComponentSeek extends RelativeLayout implements ComponentApi {
                 onUpdateProgress(true, trySeeDuration, progress, duration);
                 return true;
             }
-            // seekForward => longPress
+            // seekForward -> longPress
             else if (event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == KeyEvent.KEYCODE_DPAD_RIGHT) {
                 superCallEvent(false, true, PlayerType.EventType.COMPONENT_SEEK_SHOW);
                 //
@@ -131,7 +131,7 @@ public class ComponentSeek extends RelativeLayout implements ComponentApi {
                 onUpdateProgress(true, trySeeDuration, progress, duration);
                 return true;
             }
-            // seekForward => stop
+            // seekForward -> stop
             else if (event.getAction() == KeyEvent.ACTION_UP && event.getKeyCode() == KeyEvent.KEYCODE_DPAD_RIGHT) {
                 //
                 lib.kalu.mediaplayer.widget.seek.SeekBar seekBar = findViewById(R.id.module_mediaplayer_component_seek_sb);
@@ -143,7 +143,7 @@ public class ComponentSeek extends RelativeLayout implements ComponentApi {
                 hide();
                 return true;
             }
-            // seekRewind => start
+            // seekRewind -> start
             else if (event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == KeyEvent.KEYCODE_DPAD_LEFT && event.getRepeatCount() == 0) {
                 onUpdateProgress(true, -2, -2, -2);
                 superCallEvent(false, true, PlayerType.EventType.COMPONENT_SEEK_SHOW);
@@ -181,7 +181,7 @@ public class ComponentSeek extends RelativeLayout implements ComponentApi {
                 onUpdateProgress(true, trySeeDuration, progress, duration);
                 return true;
             }
-            // seekRewind => longPress
+            // seekRewind -> longPress
             else if (event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == KeyEvent.KEYCODE_DPAD_LEFT) {
                 superCallEvent(false, true, PlayerType.EventType.COMPONENT_SEEK_SHOW);
                 //
@@ -217,7 +217,7 @@ public class ComponentSeek extends RelativeLayout implements ComponentApi {
                 onUpdateProgress(true, trySeeDuration, progress, duration);
                 return true;
             }
-            // seekRewind => stop
+            // seekRewind -> stop
             else if (event.getAction() == KeyEvent.ACTION_UP && event.getKeyCode() == KeyEvent.KEYCODE_DPAD_LEFT) {
                 //
                 lib.kalu.mediaplayer.widget.seek.SeekBar seekBar = findViewById(R.id.module_mediaplayer_component_seek_sb);
@@ -233,7 +233,7 @@ public class ComponentSeek extends RelativeLayout implements ComponentApi {
             throw new Exception("warning: not find");
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
-                LogUtil.log("ComponentSeek => dispatchKeyEvent => Exception " + e.getMessage());
+                LogUtil.log("ComponentSeek -> dispatchKeyEvent -> Exception " + e.getMessage());
             }
             return false;
         }
@@ -243,15 +243,15 @@ public class ComponentSeek extends RelativeLayout implements ComponentApi {
     public void callEvent(int playState) {
         switch (playState) {
 //            case PlayerType.EventType.SEEK_START_FORWARD:
-//                LogUtil.log("ComponentSeek => callEvent => SEEK_START_FORWARD");
+//                LogUtil.log("ComponentSeek -> callEvent -> SEEK_START_FORWARD");
 //                show();
 //                break;
 //            case PlayerType.EventType.SEEK_START_REWIND:
-//                LogUtil.log("ComponentSeek => callEvent => SEEK_START_REWIND");
+//                LogUtil.log("ComponentSeek -> callEvent -> SEEK_START_REWIND");
 //                show();
 //                break;
 //            case PlayerType.EventType.SEEK_FINISH:
-//                LogUtil.log("ComponentSeek => callEvent => SEEK_FINISH");
+//                LogUtil.log("ComponentSeek -> callEvent -> SEEK_FINISH");
 //                hide();
 //                long duration = getDuration();
 //                long position = getPosition();
@@ -270,7 +270,7 @@ public class ComponentSeek extends RelativeLayout implements ComponentApi {
     public void onUpdateProgress(boolean isFromUser, long trySeeDuration, long progress, long duration) {
 
         if (LogUtil.DEBUG) {
-            LogUtil.log("ComponentSeek => onUpdateProgress => isFromUser = " + isFromUser + ", trySeeDuration = " + trySeeDuration + ", progress = " + progress + ", duration = " + duration);
+            LogUtil.log("ComponentSeek -> onUpdateProgress -> isFromUser = " + isFromUser + ", trySeeDuration = " + trySeeDuration + ", progress = " + progress + ", duration = " + duration);
         }
 
         lib.kalu.mediaplayer.widget.seek.SeekBar seekBar = findViewById(R.id.module_mediaplayer_component_seek_sb);

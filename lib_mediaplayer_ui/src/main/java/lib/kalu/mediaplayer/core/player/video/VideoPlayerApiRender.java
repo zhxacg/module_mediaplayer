@@ -31,7 +31,7 @@ public interface VideoPlayerApiRender extends VideoPlayerApiBase, VideoPlayerApi
             render.setVideoScaleType(scaleType);
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
-                LogUtil.log("VideoPlayerApiRender => setVideoScaleType => " + e.getMessage());
+                LogUtil.log("VideoPlayerApiRender -> setVideoScaleType -> " + e.getMessage());
             }
         }
     }
@@ -45,7 +45,7 @@ public interface VideoPlayerApiRender extends VideoPlayerApiBase, VideoPlayerApi
             return render.getVideoScale();
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
-                LogUtil.log("VideoPlayerApiRender => getVideoScaleType => " + e.getMessage());
+                LogUtil.log("VideoPlayerApiRender -> getVideoScaleType -> " + e.getMessage());
             }
             return PlayerType.ScaleType.DEFAULT;
         }
@@ -57,7 +57,7 @@ public interface VideoPlayerApiRender extends VideoPlayerApiBase, VideoPlayerApi
             render.setVideoFormat(kernel, rotation, scaleType, width, height, bitrate);
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
-                LogUtil.log("VideoPlayerApiRender => setVideoFormat => " + e.getMessage());
+                LogUtil.log("VideoPlayerApiRender -> setVideoFormat -> " + e.getMessage());
             }
         }
     }
@@ -68,7 +68,7 @@ public interface VideoPlayerApiRender extends VideoPlayerApiBase, VideoPlayerApi
             render.setVideoSize(width, height);
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
-                LogUtil.log("VideoPlayerApiRender => setVideoSize => " + e.getMessage());
+                LogUtil.log("VideoPlayerApiRender -> setVideoSize -> " + e.getMessage());
             }
         }
     }
@@ -81,7 +81,7 @@ public interface VideoPlayerApiRender extends VideoPlayerApiBase, VideoPlayerApi
             render.setVideoRotation(rotation);
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
-                LogUtil.log("VideoPlayerApiRender => setVideoRotation => " + e.getMessage());
+                LogUtil.log("VideoPlayerApiRender -> setVideoRotation -> " + e.getMessage());
             }
         }
     }
@@ -97,7 +97,7 @@ public interface VideoPlayerApiRender extends VideoPlayerApiBase, VideoPlayerApi
             render.setScaleX(enable ? -1 : 1);
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
-                LogUtil.log("VideoPlayerApiRender => setMirrorRotation => " + e.getMessage());
+                LogUtil.log("VideoPlayerApiRender -> setMirrorRotation -> " + e.getMessage());
             }
         }
     }
@@ -117,7 +117,7 @@ public interface VideoPlayerApiRender extends VideoPlayerApiBase, VideoPlayerApi
             throw new Exception("not find");
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
-                LogUtil.log("VideoPlayerApiRender => searchVideoRender => " + e.getMessage());
+                LogUtil.log("VideoPlayerApiRender -> searchVideoRender -> " + e.getMessage());
             }
             return null;
         }
@@ -146,7 +146,7 @@ public interface VideoPlayerApiRender extends VideoPlayerApiBase, VideoPlayerApi
             renderGroup.removeAllViews();
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
-                LogUtil.log("VideoPlayerApiRender => releaseRender => " + e.getMessage());
+                LogUtil.log("VideoPlayerApiRender -> releaseRender -> " + e.getMessage());
             }
         }
     }
@@ -171,7 +171,7 @@ public interface VideoPlayerApiRender extends VideoPlayerApiBase, VideoPlayerApi
             setVideoRender(videoRender);
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
-                LogUtil.log("VideoPlayerApiRender => checkRenderNull => " + e.getMessage());
+                LogUtil.log("VideoPlayerApiRender -> checkRenderNull -> " + e.getMessage());
             }
         }
     }
@@ -187,7 +187,7 @@ public interface VideoPlayerApiRender extends VideoPlayerApiBase, VideoPlayerApi
             videoRender.setVideoKernel(videoKernel);
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
-                LogUtil.log("VideoPlayerApiRender => attachRenderKernel => " + e.getMessage());
+                LogUtil.log("VideoPlayerApiRender -> attachRenderKernel -> " + e.getMessage());
             }
         }
     }
@@ -221,7 +221,7 @@ public interface VideoPlayerApiRender extends VideoPlayerApiBase, VideoPlayerApi
             }
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
-                LogUtil.log("VideoPlayerApiRender => resetRenderView => " + e.getMessage());
+                LogUtil.log("VideoPlayerApiRender -> resetRenderView -> " + e.getMessage());
             }
         }
     }

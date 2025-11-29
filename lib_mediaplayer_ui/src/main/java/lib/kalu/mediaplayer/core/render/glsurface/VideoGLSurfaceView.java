@@ -61,11 +61,11 @@ public class VideoGLSurfaceView extends GLSurfaceView implements VideoRenderApi 
                 throw new Exception("surfaceHolder error: null");
             surfaceHolder.addCallback(mCallback);
             if (LogUtil.DEBUG) {
-                LogUtil.log("VideoGLSurfaceView => unRegistListener =>");
+                LogUtil.log("VideoGLSurfaceView -> unRegistListener ->");
             }
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
-                LogUtil.log("VideoGLSurfaceView => unRegistListener => Exception " + e.getMessage());
+                LogUtil.log("VideoGLSurfaceView -> unRegistListener -> Exception " + e.getMessage());
             }
         }
     }
@@ -78,11 +78,11 @@ public class VideoGLSurfaceView extends GLSurfaceView implements VideoRenderApi 
                 throw new Exception("surfaceHolder error: null");
             surfaceHolder.removeCallback(mCallback);
             if (LogUtil.DEBUG) {
-                LogUtil.log("VideoGLSurfaceView => unRegistListener =>");
+                LogUtil.log("VideoGLSurfaceView -> unRegistListener ->");
             }
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
-                LogUtil.log("VideoGLSurfaceView => unRegistListener => Exception " + e.getMessage());
+                LogUtil.log("VideoGLSurfaceView -> unRegistListener -> Exception " + e.getMessage());
             }
         }
     }
@@ -100,7 +100,7 @@ public class VideoGLSurfaceView extends GLSurfaceView implements VideoRenderApi 
             }
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
-                LogUtil.log("VideoGLSurfaceView => setSurface => " + e.getMessage());
+                LogUtil.log("VideoGLSurfaceView -> setSurface -> " + e.getMessage());
             }
         }
     }
@@ -108,7 +108,7 @@ public class VideoGLSurfaceView extends GLSurfaceView implements VideoRenderApi 
     @Override
     public void reset() {
         if (LogUtil.DEBUG) {
-            LogUtil.log("VideoGLSurfaceView => reset =>");
+            LogUtil.log("VideoGLSurfaceView -> reset ->");
         }
         setSurface(false);
     }
@@ -123,7 +123,7 @@ public class VideoGLSurfaceView extends GLSurfaceView implements VideoRenderApi 
             mRender = null;
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
-                LogUtil.log("VideoGLSurfaceView => release => Exception2 " + e.getMessage());
+                LogUtil.log("VideoGLSurfaceView -> release -> Exception2 " + e.getMessage());
             }
         }
 
@@ -134,7 +134,7 @@ public class VideoGLSurfaceView extends GLSurfaceView implements VideoRenderApi 
             mDrawer = null;
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
-                LogUtil.log("VideoGLSurfaceView => release => Exception2 " + e.getMessage());
+                LogUtil.log("VideoGLSurfaceView -> release -> Exception2 " + e.getMessage());
             }
         }
 
@@ -148,11 +148,11 @@ public class VideoGLSurfaceView extends GLSurfaceView implements VideoRenderApi 
 //            clearSurface(surface);
             surface.release();
             if (LogUtil.DEBUG) {
-                LogUtil.log("VideoGLSurfaceView => release =>");
+                LogUtil.log("VideoGLSurfaceView -> release ->");
             }
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
-                LogUtil.log("VideoGLSurfaceView => release => Exception3 " + e.getMessage());
+                LogUtil.log("VideoGLSurfaceView -> release -> Exception3 " + e.getMessage());
             }
         }
     }
@@ -246,7 +246,7 @@ public class VideoGLSurfaceView extends GLSurfaceView implements VideoRenderApi 
             requestLayout();
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
-                LogUtil.log("VideoGLSurfaceView => setRotation => " + e.getMessage());
+                LogUtil.log("VideoGLSurfaceView -> setRotation -> " + e.getMessage());
             }
         }
     }
@@ -267,7 +267,7 @@ public class VideoGLSurfaceView extends GLSurfaceView implements VideoRenderApi 
 //                    bitmap.eraseColor(Color.RED);//填充颜色
 //                    canvas.drawBitmap(bitmap, 0, 0, null);
 //                } catch (Exception e) {
-//                    MPLogUtil.log("VideoGLSurfaceView => drawBitmap => " + e.getMessage());
+//                    MPLogUtil.log("VideoGLSurfaceView -> drawBitmap -> " + e.getMessage());
 //                }
 //                try {
 //                    SurfaceHolder holder = getHolder();
@@ -278,7 +278,7 @@ public class VideoGLSurfaceView extends GLSurfaceView implements VideoRenderApi 
 //                    //手动try catch一下这个方法，让程序在4.3的手机上不至于崩溃，部分Android13也会崩溃
 //                    getHolder().unlockCanvasAndPost(canvas);
 //                } catch (Exception e) {
-//                    MPLogUtil.log("VideoGLSurfaceView => drawBitmap => " + e.getMessage());
+//                    MPLogUtil.log("VideoGLSurfaceView -> drawBitmap -> " + e.getMessage());
 //                }
 //            }
 //        }).start();
@@ -302,7 +302,7 @@ public class VideoGLSurfaceView extends GLSurfaceView implements VideoRenderApi 
 //            getHolder().setFixedSize(measureSpec[0], measureSpec[1]);
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
-                LogUtil.log("VideoGLSurfaceView => onMeasure => Exception " + e.getMessage());
+                LogUtil.log("VideoGLSurfaceView -> onMeasure -> Exception " + e.getMessage());
             }
             super.onMeasure(widthMeasureSpec, heightMeasureSpec);
         }
@@ -318,7 +318,7 @@ public class VideoGLSurfaceView extends GLSurfaceView implements VideoRenderApi 
         @Override
         public void surfaceCreated(SurfaceHolder holder) {
             if (LogUtil.DEBUG) {
-                LogUtil.log("VideoGLSurfaceView => surfaceCreated =>");
+                LogUtil.log("VideoGLSurfaceView -> surfaceCreated ->");
             }
             setSurface(false);
         }
@@ -333,7 +333,7 @@ public class VideoGLSurfaceView extends GLSurfaceView implements VideoRenderApi 
         @Override
         public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
             if (LogUtil.DEBUG) {
-                LogUtil.log("VideoGLSurfaceView => surfaceChanged => width = " + width + ", height = " + height + ",surfaceChanged => " + this);
+                LogUtil.log("VideoGLSurfaceView -> surfaceChanged -> width = " + width + ", height = " + height + ",surfaceChanged -> " + this);
             }
         }
 
@@ -344,7 +344,7 @@ public class VideoGLSurfaceView extends GLSurfaceView implements VideoRenderApi 
         @Override
         public void surfaceDestroyed(SurfaceHolder holder) {
             if (LogUtil.DEBUG) {
-                LogUtil.log("VideoGLSurfaceView => surfaceDestroyed => " + this);
+                LogUtil.log("VideoGLSurfaceView -> surfaceDestroyed -> " + this);
             }
             setSurface(true);
         }

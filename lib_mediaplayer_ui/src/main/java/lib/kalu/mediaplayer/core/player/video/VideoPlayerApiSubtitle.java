@@ -16,7 +16,7 @@ public interface VideoPlayerApiSubtitle extends VideoPlayerApiBase {
             return kernel.appendSubtitleOffsetMs(offset);
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
-                LogUtil.log("VideoPlayerApiSubtitle => appendSubtitleOffsetMs => " + e.getMessage());
+                LogUtil.log("VideoPlayerApiSubtitle -> appendSubtitleOffsetMs -> " + e.getMessage());
             }
             return false;
         }
@@ -33,7 +33,7 @@ public interface VideoPlayerApiSubtitle extends VideoPlayerApiBase {
             return kernel.addSubtitleTrack(url);
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
-                LogUtil.log("VideoPlayerApiSubtitle => addSubtitleTrack => " + e.getMessage());
+                LogUtil.log("VideoPlayerApiSubtitle -> addSubtitleTrack -> " + e.getMessage());
             }
             return false;
         }

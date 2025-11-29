@@ -27,7 +27,7 @@ final class GLRender implements GLSurfaceView.Renderer {
             }
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
-                LogUtil.log("GLRender => onSurfaceCreated => Exception " + e.getMessage());
+                LogUtil.log("GLRender -> onSurfaceCreated -> Exception " + e.getMessage());
             }
         }
     }
@@ -41,7 +41,7 @@ final class GLRender implements GLSurfaceView.Renderer {
             }
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
-                LogUtil.log("GLRender => onSurfaceChanged => Exception " + e.getMessage());
+                LogUtil.log("GLRender -> onSurfaceChanged -> Exception " + e.getMessage());
             }
         }
     }
@@ -56,7 +56,7 @@ final class GLRender implements GLSurfaceView.Renderer {
             }
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
-                LogUtil.log("GLRender => onDrawFrame => Exception " + e.getMessage());
+                LogUtil.log("GLRender -> onDrawFrame -> Exception " + e.getMessage());
             }
         }
     }
@@ -71,7 +71,7 @@ final class GLRender implements GLSurfaceView.Renderer {
             drawers.add(drawer);
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
-                LogUtil.log("GLRender => addDrawer => Exception " + e.getMessage());
+                LogUtil.log("GLRender -> addDrawer -> Exception " + e.getMessage());
             }
         }
     }

@@ -25,19 +25,19 @@ public class ComponentPrepare extends RelativeLayout implements ComponentApi {
         switch (playState) {
             case PlayerType.EventType.INIT:
                 if (LogUtil.DEBUG) {
-                    LogUtil.log("ComponentLoading => callEvent => show => INIT");
+                    LogUtil.log("ComponentLoading -> callEvent -> show -> INIT");
                 }
                 show();
                 break;
             case PlayerType.EventType.VIDEO_RENDERING_START:
                 if (LogUtil.DEBUG) {
-                    LogUtil.log("ComponentLoading => callEvent => show => VIDEO_RENDERING_START");
+                    LogUtil.log("ComponentLoading -> callEvent -> show -> VIDEO_RENDERING_START");
                 }
                 hide();
                 break;
             case PlayerType.EventType.ERROR:
                 if (LogUtil.DEBUG) {
-                    LogUtil.log("ComponentLoading => callEvent => show => ERROR");
+                    LogUtil.log("ComponentLoading -> callEvent -> show -> ERROR");
                 }
                 hide();
                 break;
@@ -72,7 +72,7 @@ public class ComponentPrepare extends RelativeLayout implements ComponentApi {
             setComponentText("");
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
-                LogUtil.log("ComponentLoading => gone => " + e.getMessage());
+                LogUtil.log("ComponentLoading -> gone -> " + e.getMessage());
             }
         }
     }

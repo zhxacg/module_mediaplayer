@@ -81,7 +81,7 @@ public class SubtitleLoader {
                     }
 
                 } catch (final Exception e) {
-                    LogUtil.log("SubtitleLoader => loadFromRemoteAsync => "+e.getMessage());
+                    LogUtil.log("SubtitleLoader -> loadFromRemoteAsync -> "+e.getMessage());
                     if (callback != null) {
                         AppTaskExecutor.mainThread().execute(new Runnable() {
                             @Override
@@ -113,7 +113,7 @@ public class SubtitleLoader {
                     }
 
                 } catch (final Exception e) {
-                    LogUtil.log("SubtitleLoader => loadFromLocalAsync => "+e.getMessage());
+                    LogUtil.log("SubtitleLoader -> loadFromLocalAsync -> "+e.getMessage());
                     if (callback != null) {
                         AppTaskExecutor.mainThread().execute(new Runnable() {
                             @Override
@@ -140,7 +140,7 @@ public class SubtitleLoader {
                 return loadFromLocal(path);
             }
         } catch (Exception e) {
-            LogUtil.log("SubtitleLoader => loadSubtitle => "+e.getMessage());
+            LogUtil.log("SubtitleLoader -> loadSubtitle -> "+e.getMessage());
         }
         return null;
     }

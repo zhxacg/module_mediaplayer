@@ -21,7 +21,7 @@ public interface VideoPlayerApiBase {
             return (StartArgs) args;
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
-                LogUtil.log("VideoPlayerApiBase => getStartArgs => " + e.getMessage());
+                LogUtil.log("VideoPlayerApiBase -> getStartArgs -> " + e.getMessage());
             }
             return null;
         }
@@ -32,7 +32,7 @@ public interface VideoPlayerApiBase {
             return (PlayerLayout) ((View) this).getParent();
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
-                LogUtil.log("VideoPlayerApiBase => getPlayerLayout => " + e.getMessage());
+                LogUtil.log("VideoPlayerApiBase -> getPlayerLayout -> " + e.getMessage());
             }
             return null;
         }
@@ -82,7 +82,7 @@ public interface VideoPlayerApiBase {
             return true;
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
-                LogUtil.log("VideoPlayerApiBase => isFull => " + e.getMessage());
+                LogUtil.log("VideoPlayerApiBase -> isFull -> " + e.getMessage());
             }
             return false;
         }
@@ -107,7 +107,7 @@ public interface VideoPlayerApiBase {
             return width != ViewGroup.LayoutParams.MATCH_PARENT && height != ViewGroup.LayoutParams.MATCH_PARENT;
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
-                LogUtil.log("VideoPlayerApiBase => isFloat => " + e.getMessage());
+                LogUtil.log("VideoPlayerApiBase -> isFloat -> " + e.getMessage());
             }
             return false;
         }
@@ -119,7 +119,7 @@ public interface VideoPlayerApiBase {
             return playerGroup.findViewById(R.id.module_mediaplayer_video);
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
-                LogUtil.log("VideoPlayerApiBase => getBaseVideoGroup => " + e.getMessage());
+                LogUtil.log("VideoPlayerApiBase -> getBaseVideoGroup -> " + e.getMessage());
             }
             return null;
         }
@@ -132,7 +132,7 @@ public interface VideoPlayerApiBase {
             return playerGroup.findViewById(R.id.module_mediaplayer_component);
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
-                LogUtil.log("VideoPlayerApiBase => getBaseComponentViewGroup => " + e.getMessage());
+                LogUtil.log("VideoPlayerApiBase -> getBaseComponentViewGroup -> " + e.getMessage());
             }
             return null;
         }

@@ -24,7 +24,7 @@ public class ComponentPause extends RelativeLayout implements ComponentApi {
     @Override
     public boolean dispatchKeyEvent(KeyEvent event) {
         if (LogUtil.DEBUG) {
-            LogUtil.log("ComponentPause => dispatchKeyEvent => action =  " + event.getAction() + ", keyCode = " + event.getKeyCode() + ", repeatCount = " + event.getRepeatCount());
+            LogUtil.log("ComponentPause -> dispatchKeyEvent -> action =  " + event.getAction() + ", keyCode = " + event.getKeyCode() + ", repeatCount = " + event.getRepeatCount());
         }
         if (event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == KeyEvent.KEYCODE_BACK) {
             try {
@@ -41,7 +41,7 @@ public class ComponentPause extends RelativeLayout implements ComponentApi {
                 return true;
             } catch (Exception e) {
                 if (LogUtil.DEBUG) {
-                    LogUtil.log("ComponentPause => dispatchKeyEvent => Exception1 " + e.getMessage());
+                    LogUtil.log("ComponentPause -> dispatchKeyEvent -> Exception1 " + e.getMessage());
                 }
             }
         }
@@ -63,19 +63,19 @@ public class ComponentPause extends RelativeLayout implements ComponentApi {
         switch (playState) {
             case PlayerType.EventType.PAUSE:
                 if (LogUtil.DEBUG) {
-                    LogUtil.log("ComponentPause[show] => PAUSE");
+                    LogUtil.log("ComponentPause[show] -> PAUSE");
                 }
                 show();
                 break;
             case PlayerType.EventType.RESUME:
                 if (LogUtil.DEBUG) {
-                    LogUtil.log("ComponentPause[hide] => RESUME");
+                    LogUtil.log("ComponentPause[hide] -> RESUME");
                 }
                 hide();
                 break;
             case PlayerType.EventType.COMPONENT_SEEK_SHOW:
                 if (LogUtil.DEBUG) {
-                    LogUtil.log("ComponentPause[hide] => COMPONENT_SEEK_SHOW");
+                    LogUtil.log("ComponentPause[hide] -> COMPONENT_SEEK_SHOW");
                 }
                 try {
                     boolean componentShowing = isComponentShowing();
@@ -88,12 +88,12 @@ public class ComponentPause extends RelativeLayout implements ComponentApi {
                 break;
             case PlayerType.EventType.COMPONENT_SEEK_HIDE:
                 if (LogUtil.DEBUG) {
-                    LogUtil.log("ComponentPause[show] => COMPONENT_SEEK_HIDE");
+                    LogUtil.log("ComponentPause[show] -> COMPONENT_SEEK_HIDE");
                 }
                 break;
             case PlayerType.EventType.SEEK_FINISH:
                 if (LogUtil.DEBUG) {
-                    LogUtil.log("ComponentPause[show] => SEEK_FINISH");
+                    LogUtil.log("ComponentPause[show] -> SEEK_FINISH");
                 }
                 try {
                     boolean activated = isActivated();
@@ -106,7 +106,7 @@ public class ComponentPause extends RelativeLayout implements ComponentApi {
                 break;
             case PlayerType.EventType.COMPONENT_MENU_SHOW:
                 if (LogUtil.DEBUG) {
-                    LogUtil.log("ComponentPause[show] => playState = " + playState);
+                    LogUtil.log("ComponentPause[show] -> playState = " + playState);
                 }
                 try {
                     boolean componentShowing = isComponentShowing();
@@ -116,13 +116,13 @@ public class ComponentPause extends RelativeLayout implements ComponentApi {
                     hide();
                 } catch (Exception e) {
                     if (LogUtil.DEBUG) {
-                        LogUtil.log("ComponentPause => callEventListener => hide => Exception2 " + playState);
+                        LogUtil.log("ComponentPause -> callEventListener -> hide -> Exception2 " + playState);
                     }
                 }
                 break;
             case PlayerType.EventType.COMPONENT_MENU_HIDE:
                 if (LogUtil.DEBUG) {
-                    LogUtil.log("ComponentPause[gone] => playState = " + playState);
+                    LogUtil.log("ComponentPause[gone] -> playState = " + playState);
                 }
                 try {
                     boolean activated = isActivated();
@@ -138,7 +138,7 @@ public class ComponentPause extends RelativeLayout implements ComponentApi {
                 }
                 break;
 //            case PlayerType.EventType.START_PLAY_WHEN_READY_FALSE:
-//                LogUtil.log("ComponentPause => callEvent => START_PLAY_WHEN_READY_FALSE");
+//                LogUtil.log("ComponentPause -> callEvent -> START_PLAY_WHEN_READY_FALSE");
 //                try {
 //                    boolean componentShowing = isComponentShowing();
 //                    if (componentShowing)
@@ -146,7 +146,7 @@ public class ComponentPause extends RelativeLayout implements ComponentApi {
 //                    setActivated(true);
 //                    show();
 //                } catch (Exception e) {
-//                    LogUtil.log("ComponentPause => callEvent => Exception[START_PLAY_WHEN_READY_NO] " + e.getMessage());
+//                    LogUtil.log("ComponentPause -> callEvent -> Exception[START_PLAY_WHEN_READY_NO] " + e.getMessage());
 //                }
 //                break;
         }
@@ -166,7 +166,7 @@ public class ComponentPause extends RelativeLayout implements ComponentApi {
             ComponentApi.super.hide();
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
-                LogUtil.log("ComponentPause => hide => Exception " + e.getMessage());
+                LogUtil.log("ComponentPause -> hide -> Exception " + e.getMessage());
             }
         }
 
@@ -181,17 +181,17 @@ public class ComponentPause extends RelativeLayout implements ComponentApi {
 
         try {
             long duration = getDuration();
-//            LogUtil.log("ComponentPause => show => duration = " + duration);
+//            LogUtil.log("ComponentPause -> show -> duration = " + duration);
             if (duration <= 0L) {
                 duration = 0L;
             }
             long position = getPosition();
-//            LogUtil.log("ComponentPause => show => position = " + position);
+//            LogUtil.log("ComponentPause -> show -> position = " + position);
             if (position < 0L) {
                 position = 0L;
             }
             long trySeeDuration = getTrySeeDuration();
-//            LogUtil.log("ComponentPause => show => trySeeDuration = " + trySeeDuration);
+//            LogUtil.log("ComponentPause -> show -> trySeeDuration = " + trySeeDuration);
             if (trySeeDuration < 0L) {
                 trySeeDuration = 0L;
             }
@@ -217,7 +217,7 @@ public class ComponentPause extends RelativeLayout implements ComponentApi {
             ComponentApi.super.show();
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
-                LogUtil.log("ComponentPause => show => Exception " + e.getMessage());
+                LogUtil.log("ComponentPause -> show -> Exception " + e.getMessage());
             }
         }
     }

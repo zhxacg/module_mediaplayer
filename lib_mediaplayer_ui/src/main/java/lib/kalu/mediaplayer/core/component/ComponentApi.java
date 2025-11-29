@@ -66,7 +66,7 @@ public interface ComponentApi {
             viewById.setVisibility(visibility);
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
-                LogUtil.log("ComponentApi => setComponentVisibility => " + e.getMessage());
+                LogUtil.log("ComponentApi -> setComponentVisibility -> " + e.getMessage());
             }
         }
     }
@@ -80,7 +80,7 @@ public interface ComponentApi {
             return viewById.getVisibility() == View.VISIBLE;
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
-                LogUtil.log("ComponentApi => isComponentShowing => " + e.getMessage());
+                LogUtil.log("ComponentApi -> isComponentShowing -> " + e.getMessage());
             }
             return false;
         }
@@ -105,7 +105,7 @@ public interface ComponentApi {
             view.setBackgroundColor(v);
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
-                LogUtil.log("ComponentApi => setComponentBackgroundColorInt => " + e.getMessage());
+                LogUtil.log("ComponentApi -> setComponentBackgroundColorInt -> " + e.getMessage());
             }
         }
     }
@@ -120,7 +120,7 @@ public interface ComponentApi {
             view.setBackgroundColor(color);
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
-                LogUtil.log("ComponentApi => setComponentBackgroundColorRes => " + e.getMessage());
+                LogUtil.log("ComponentApi -> setComponentBackgroundColorRes -> " + e.getMessage());
             }
         }
     }
@@ -134,7 +134,7 @@ public interface ComponentApi {
             view.setBackgroundResource(v);
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
-                LogUtil.log("ComponentApi => setComponentBackgroundDrawableRes => " + e.getMessage());
+                LogUtil.log("ComponentApi -> setComponentBackgroundDrawableRes -> " + e.getMessage());
             }
         }
     }
@@ -150,7 +150,7 @@ public interface ComponentApi {
             imageView.setImageResource(v);
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
-                LogUtil.log("ComponentApi => setComponentImageDrawableRes => " + e.getMessage());
+                LogUtil.log("ComponentApi -> setComponentImageDrawableRes -> " + e.getMessage());
             }
         }
     }
@@ -164,7 +164,7 @@ public interface ComponentApi {
             imageView.setImageDrawable(drawable);
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
-                LogUtil.log("ComponentApi => setComponentImageDrawable => " + e.getMessage());
+                LogUtil.log("ComponentApi -> setComponentImageDrawable -> " + e.getMessage());
             }
         }
     }
@@ -178,7 +178,7 @@ public interface ComponentApi {
             imageView.setImageBitmap(bitmap);
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
-                LogUtil.log("ComponentApi => setComponentImageBitmap => " + e.getMessage());
+                LogUtil.log("ComponentApi -> setComponentImageBitmap -> " + e.getMessage());
             }
         }
     }
@@ -194,7 +194,7 @@ public interface ComponentApi {
             imageView.setImageURI(Uri.parse(imgUrl));
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
-                LogUtil.log("ComponentApi => setComponentImageUrl => " + e.getMessage());
+                LogUtil.log("ComponentApi -> setComponentImageUrl -> " + e.getMessage());
             }
         }
     }
@@ -210,7 +210,7 @@ public interface ComponentApi {
             textView.setText(v);
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
-                LogUtil.log("ComponentApi => setComponentText => " + e.getMessage());
+                LogUtil.log("ComponentApi -> setComponentText -> " + e.getMessage());
             }
         }
     }
@@ -224,7 +224,7 @@ public interface ComponentApi {
             textView.setText(v);
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
-                LogUtil.log("ComponentApi => setComponentText => " + e.getMessage());
+                LogUtil.log("ComponentApi -> setComponentText -> " + e.getMessage());
             }
         }
     }
@@ -239,7 +239,7 @@ public interface ComponentApi {
             textView.setTextSize(offset);
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
-                LogUtil.log("ComponentApi => setComponentTextSize => " + e.getMessage());
+                LogUtil.log("ComponentApi -> setComponentTextSize -> " + e.getMessage());
             }
         }
     }
@@ -253,7 +253,7 @@ public interface ComponentApi {
             textView.setTextSize(v);
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
-                LogUtil.log("ComponentApi => setComponentTextSize => " + e.getMessage());
+                LogUtil.log("ComponentApi -> setComponentTextSize -> " + e.getMessage());
             }
         }
     }
@@ -267,7 +267,7 @@ public interface ComponentApi {
             textView.setTextColor(v);
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
-                LogUtil.log("ComponentApi => setComponentTextColorInt => " + e.getMessage());
+                LogUtil.log("ComponentApi -> setComponentTextColorInt -> " + e.getMessage());
             }
         }
     }
@@ -282,7 +282,7 @@ public interface ComponentApi {
             textView.setTextColor(color);
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
-                LogUtil.log("ComponentApi => setComponentTextColorRes => " + e.getMessage());
+                LogUtil.log("ComponentApi -> setComponentTextColorRes -> " + e.getMessage());
             }
         }
     }
@@ -296,7 +296,7 @@ public interface ComponentApi {
             setComponentVisibility(rootId, View.VISIBLE);
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
-                LogUtil.log("ComponentApi => show => Exception " + e.getMessage());
+                LogUtil.log("ComponentApi -> show -> Exception " + e.getMessage());
             }
         }
     }
@@ -310,7 +310,7 @@ public interface ComponentApi {
             setComponentVisibility(rootId, View.GONE);
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
-                LogUtil.log("ComponentApi => hide => Exception " + e.getMessage());
+                LogUtil.log("ComponentApi -> hide -> Exception " + e.getMessage());
             }
         }
     }
@@ -348,7 +348,7 @@ public interface ComponentApi {
             return playerView;
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
-                LogUtil.log("ComponentApi => getPlayerView => " + e.getMessage());
+                LogUtil.log("ComponentApi -> getPlayerView -> " + e.getMessage());
             }
             return null;
         }
@@ -365,7 +365,7 @@ public interface ComponentApi {
             return (T) component;
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
-                LogUtil.log("ComponentApi => findComponent => " + e.getMessage());
+                LogUtil.log("ComponentApi -> findComponent -> " + e.getMessage());
             }
             return null;
         }
@@ -379,7 +379,7 @@ public interface ComponentApi {
             playerView.callEvent(callPlayer, callComponent, state);
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
-                LogUtil.log("ComponentApi => superCallEvent => " + e.getMessage());
+                LogUtil.log("ComponentApi -> superCallEvent -> " + e.getMessage());
             }
         }
     }
@@ -392,7 +392,7 @@ public interface ComponentApi {
             return playerView.isFull();
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
-                LogUtil.log("ComponentApi => isFull => " + e.getMessage());
+                LogUtil.log("ComponentApi -> isFull -> " + e.getMessage());
             }
             return false;
         }
@@ -406,7 +406,7 @@ public interface ComponentApi {
             return playerView.isFloat();
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
-                LogUtil.log("ComponentApi => isFloat => " + e.getMessage());
+                LogUtil.log("ComponentApi -> isFloat -> " + e.getMessage());
             }
             return false;
         }
@@ -420,7 +420,7 @@ public interface ComponentApi {
             return playerView.isPlaying();
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
-                LogUtil.log("ComponentApi => isPlaying => " + e.getMessage());
+                LogUtil.log("ComponentApi -> isPlaying -> " + e.getMessage());
             }
             return false;
         }
@@ -434,7 +434,7 @@ public interface ComponentApi {
             return playerView.isPrepared();
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
-                LogUtil.log("ComponentApi => isPrepared => " + e.getMessage());
+                LogUtil.log("ComponentApi -> isPrepared -> " + e.getMessage());
             }
             return false;
         }
@@ -448,7 +448,7 @@ public interface ComponentApi {
             playerView.seekTo(position);
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
-                LogUtil.log("ComponentApi => seekTo => " + e.getMessage());
+                LogUtil.log("ComponentApi -> seekTo -> " + e.getMessage());
             }
         }
     }
@@ -465,7 +465,7 @@ public interface ComponentApi {
             playerView.resume(callEvent);
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
-                LogUtil.log("ComponentApi => resume => " + e.getMessage());
+                LogUtil.log("ComponentApi -> resume -> " + e.getMessage());
             }
         }
     }
@@ -482,7 +482,7 @@ public interface ComponentApi {
             playerView.pause(callEvent);
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
-                LogUtil.log("ComponentApi => pause => " + e.getMessage());
+                LogUtil.log("ComponentApi -> pause -> " + e.getMessage());
             }
         }
     }
@@ -499,7 +499,7 @@ public interface ComponentApi {
             playerView.toggle(callEvent);
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
-                LogUtil.log("ComponentApi => toggle => " + e.getMessage());
+                LogUtil.log("ComponentApi -> toggle -> " + e.getMessage());
             }
         }
     }
@@ -516,7 +516,7 @@ public interface ComponentApi {
             playerView.stop(callEvent, false);
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
-                LogUtil.log("ComponentApi => toggle => " + e.getMessage());
+                LogUtil.log("ComponentApi -> toggle -> " + e.getMessage());
             }
         }
     }
@@ -532,7 +532,7 @@ public interface ComponentApi {
             return duration;
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
-                LogUtil.log("ComponentApi => getDuration => " + e.getMessage());
+                LogUtil.log("ComponentApi -> getDuration -> " + e.getMessage());
             }
             return 0L;
         }
@@ -549,7 +549,7 @@ public interface ComponentApi {
             return position;
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
-                LogUtil.log("ComponentApi => getPosition => " + e.getMessage());
+                LogUtil.log("ComponentApi -> getPosition -> " + e.getMessage());
             }
             return 0L;
         }
@@ -563,7 +563,7 @@ public interface ComponentApi {
             playerView.setSpeed(speed);
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
-                LogUtil.log("ComponentApi => setVideoSpeed => " + e.getMessage());
+                LogUtil.log("ComponentApi -> setVideoSpeed -> " + e.getMessage());
             }
         }
     }
@@ -577,7 +577,7 @@ public interface ComponentApi {
             return playerView.getSpeed();
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
-                LogUtil.log("ComponentApi => getVideoSpeed => " + e.getMessage());
+                LogUtil.log("ComponentApi -> getVideoSpeed -> " + e.getMessage());
             }
             return PlayerType.SpeedType.DEFAULT;
         }
@@ -591,7 +591,7 @@ public interface ComponentApi {
             playerView.setVideoScaleType(scaleType);
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
-                LogUtil.log("ComponentApi => setVideoScaleType => " + e.getMessage());
+                LogUtil.log("ComponentApi -> setVideoScaleType -> " + e.getMessage());
             }
         }
     }
@@ -605,7 +605,7 @@ public interface ComponentApi {
             return playerView.getVideoScale();
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
-                LogUtil.log("ComponentApi => getVideoScale => " + e.getMessage());
+                LogUtil.log("ComponentApi -> getVideoScale -> " + e.getMessage());
             }
             return PlayerType.ScaleType.DEFAULT;
         }
@@ -622,7 +622,7 @@ public interface ComponentApi {
             return args;
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
-                LogUtil.log("ComponentApi => getStartArgs => " + e.getMessage());
+                LogUtil.log("ComponentApi -> getStartArgs -> " + e.getMessage());
             }
             return null;
         }
@@ -639,7 +639,7 @@ public interface ComponentApi {
             return menu.getPlayPos();
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
-                LogUtil.log("ComponentApi => getPlayPos => " + e.getMessage());
+                LogUtil.log("ComponentApi -> getPlayPos -> " + e.getMessage());
             }
             return -1;
         }
@@ -656,7 +656,7 @@ public interface ComponentApi {
             return menu.getPlayCount();
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
-                LogUtil.log("ComponentApi => getPlayCount => " + e.getMessage());
+                LogUtil.log("ComponentApi -> getPlayCount -> " + e.getMessage());
             }
             return -1;
         }
@@ -670,7 +670,7 @@ public interface ComponentApi {
             return args.getTitle();
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
-                LogUtil.log("ComponentApi => getTitle => " + e.getMessage());
+                LogUtil.log("ComponentApi -> getTitle -> " + e.getMessage());
             }
             return null;
         }
@@ -684,7 +684,7 @@ public interface ComponentApi {
             return args.getTrySeeDuration();
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
-                LogUtil.log("ComponentApi => getTrySeeDuration => " + e.getMessage());
+                LogUtil.log("ComponentApi -> getTrySeeDuration -> " + e.getMessage());
             }
             return 0L;
         }
@@ -698,7 +698,7 @@ public interface ComponentApi {
             return args.isPlayWhenReady();
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
-                LogUtil.log("ComponentApi => isPlayWhenReady => " + e.getMessage());
+                LogUtil.log("ComponentApi -> isPlayWhenReady -> " + e.getMessage());
             }
             return true;
         }
@@ -712,7 +712,7 @@ public interface ComponentApi {
             return args.getPlayWhenReadyDelayedTime();
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
-                LogUtil.log("ComponentApi => getPlayWhenReadyDelayedTime => " + e.getMessage());
+                LogUtil.log("ComponentApi -> getPlayWhenReadyDelayedTime -> " + e.getMessage());
             }
             return 0L;
         }
@@ -726,7 +726,7 @@ public interface ComponentApi {
             return args.getPlayWhenReadySeekToPosition();
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
-                LogUtil.log("ComponentApi => getPlayWhenReadySeekToPosition => " + e.getMessage());
+                LogUtil.log("ComponentApi -> getPlayWhenReadySeekToPosition -> " + e.getMessage());
             }
             return 0L;
         }

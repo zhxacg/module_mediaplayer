@@ -59,7 +59,7 @@ public class ComponentGesture extends RelativeLayout implements ComponentApi {
 //     */
 //    @Override
 //    public final void onPositionChange(int slidePosition, int currentPosition, int duration) {
-//        MPLogUtil.log("onPositionChange => slidePosition = " + slidePosition + ", currentPosition = " + currentPosition + ", duration = " + duration);
+//        MPLogUtil.log("onPositionChange -> slidePosition = " + slidePosition + ", currentPosition = " + currentPosition + ", duration = " + duration);
 //        TextView viewText = findViewById(R.id.module_mediaplayer_controller_gesture_text);
 //        if (slidePosition > currentPosition) {
 //            viewText.setText("快进\n" + String.format("%s/%s", PlayerUtils.formatTime(slidePosition), PlayerUtils.formatTime(duration)));

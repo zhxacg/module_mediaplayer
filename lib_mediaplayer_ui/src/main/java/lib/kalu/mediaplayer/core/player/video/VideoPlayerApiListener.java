@@ -34,7 +34,7 @@ public interface VideoPlayerApiListener extends VideoPlayerApiBase, VideoPlayerA
             }
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
-                LogUtil.log("VideoPlayerApiBase => callWindow => " + e.getMessage());
+                LogUtil.log("VideoPlayerApiBase -> callWindow -> " + e.getMessage());
             }
         }
 
@@ -46,7 +46,7 @@ public interface VideoPlayerApiListener extends VideoPlayerApiBase, VideoPlayerA
             }
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
-                LogUtil.log("VideoPlayerApiBase => callWindow => " + e.getMessage());
+                LogUtil.log("VideoPlayerApiBase -> callWindow -> " + e.getMessage());
             }
         }
 
@@ -79,7 +79,7 @@ public interface VideoPlayerApiListener extends VideoPlayerApiBase, VideoPlayerA
             }
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
-                LogUtil.log("VideoPlayerApiBase => callEvent => " + e.getMessage());
+                LogUtil.log("VideoPlayerApiBase -> callEvent -> " + e.getMessage());
             }
         }
 
@@ -110,7 +110,7 @@ public interface VideoPlayerApiListener extends VideoPlayerApiBase, VideoPlayerA
             }
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
-                LogUtil.log("VideoPlayerApiBase => callEvent => " + e.getMessage());
+                LogUtil.log("VideoPlayerApiBase -> callEvent -> " + e.getMessage());
             }
         }
     }
@@ -133,7 +133,7 @@ public interface VideoPlayerApiListener extends VideoPlayerApiBase, VideoPlayerA
             }
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
-                LogUtil.log("VideoPlayerApiComponent => callProgress => " + e.getMessage());
+                LogUtil.log("VideoPlayerApiComponent -> callProgress -> " + e.getMessage());
             }
         }
 
@@ -145,7 +145,7 @@ public interface VideoPlayerApiListener extends VideoPlayerApiBase, VideoPlayerA
             }
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
-                LogUtil.log("VideoPlayerApiListener => callProgress => " + e.getMessage());
+                LogUtil.log("VideoPlayerApiListener -> callProgress -> " + e.getMessage());
             }
         }
     }
@@ -168,7 +168,7 @@ public interface VideoPlayerApiListener extends VideoPlayerApiBase, VideoPlayerA
             }
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
-                LogUtil.log("VideoPlayerApiComponent => callSubtitle => " + e.getMessage());
+                LogUtil.log("VideoPlayerApiComponent -> callSubtitle -> " + e.getMessage());
             }
         }
 
@@ -179,7 +179,7 @@ public interface VideoPlayerApiListener extends VideoPlayerApiBase, VideoPlayerA
 //                progressListener.onProgress(position, duration);
 //            }
 //        } catch (Exception e) {
-//            LogUtil.log("VideoPlayerApiListener => callProgress => " + e.getMessage());
+//            LogUtil.log("VideoPlayerApiListener -> callProgress -> " + e.getMessage());
 //        }
     }
 
@@ -201,7 +201,7 @@ public interface VideoPlayerApiListener extends VideoPlayerApiBase, VideoPlayerA
             }
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
-                LogUtil.log("VideoPlayerApiComponent => callSpeed => " + e.getMessage());
+                LogUtil.log("VideoPlayerApiComponent -> callSpeed -> " + e.getMessage());
             }
         }
 
@@ -212,7 +212,7 @@ public interface VideoPlayerApiListener extends VideoPlayerApiBase, VideoPlayerA
 //                progressListener.onProgress(position, duration);
 //            }
 //        } catch (Exception e) {
-//            LogUtil.log("VideoPlayerApiListener => callSpeed => " + e.getMessage());
+//            LogUtil.log("VideoPlayerApiListener -> callSpeed -> " + e.getMessage());
 //        }
     }
 
@@ -236,7 +236,7 @@ public interface VideoPlayerApiListener extends VideoPlayerApiBase, VideoPlayerA
             return listener;
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
-                LogUtil.log("VideoPlayerApiListener => getOnPlayerEventListener => Exception " + e.getMessage());
+                LogUtil.log("VideoPlayerApiListener -> getOnPlayerEventListener -> Exception " + e.getMessage());
             }
             return null;
         }
@@ -259,7 +259,7 @@ public interface VideoPlayerApiListener extends VideoPlayerApiBase, VideoPlayerA
             return listener;
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
-                LogUtil.log("VideoPlayerApiListener => getOnPlayerProgressListener => Exception " + e.getMessage());
+                LogUtil.log("VideoPlayerApiListener -> getOnPlayerProgressListener -> Exception " + e.getMessage());
             }
             return null;
         }
@@ -281,7 +281,7 @@ public interface VideoPlayerApiListener extends VideoPlayerApiBase, VideoPlayerA
             return listener;
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
-                LogUtil.log("VideoPlayerApiListener => getOnPlayerWindowListener => Exception " + e.getMessage());
+                LogUtil.log("VideoPlayerApiListener -> getOnPlayerWindowListener -> Exception " + e.getMessage());
             }
             return null;
         }
@@ -303,7 +303,7 @@ public interface VideoPlayerApiListener extends VideoPlayerApiBase, VideoPlayerA
             return listener;
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
-                LogUtil.log("VideoPlayerApiListener => getOnPlayerEpisodeListener => Exception " + e.getMessage());
+                LogUtil.log("VideoPlayerApiListener -> getOnPlayerEpisodeListener -> Exception " + e.getMessage());
             }
             return null;
         }

@@ -81,7 +81,7 @@ public abstract class VideoBasePlayer implements VideoKernelApi {
             eventApi.onUpdateProgress();
         } catch (Exception e) {
             if(LogUtil.DEBUG) {
-                LogUtil.log("VideoBasePlayer => onUpdateProgress => " + e.getMessage());
+                LogUtil.log("VideoBasePlayer -> onUpdateProgress -> " + e.getMessage());
             }
         }
     }
@@ -94,7 +94,7 @@ public abstract class VideoBasePlayer implements VideoKernelApi {
             eventApi.onUpdateSubtitle(kernel, result);
         } catch (Exception e) {
             if(LogUtil.DEBUG) {
-                LogUtil.log("VideoBasePlayer => onUpdateSubtitle => " + e.getMessage());
+                LogUtil.log("VideoBasePlayer -> onUpdateSubtitle -> " + e.getMessage());
             }
         }
     }
@@ -107,7 +107,7 @@ public abstract class VideoBasePlayer implements VideoKernelApi {
             eventApi.onUpdateSpeed(kernel);
         } catch (Exception e) {
             if(LogUtil.DEBUG) {
-                LogUtil.log("VideoBasePlayer => onUpdateSpeed => " + e.getMessage());
+                LogUtil.log("VideoBasePlayer -> onUpdateSpeed -> " + e.getMessage());
             }
         }
     }
@@ -120,7 +120,7 @@ public abstract class VideoBasePlayer implements VideoKernelApi {
             eventApi.onEvent(kernel, event);
         } catch (Exception e) {
             if(LogUtil.DEBUG) {
-                LogUtil.log("VideoBasePlayer => onEvent => " + e.getMessage());
+                LogUtil.log("VideoBasePlayer -> onEvent -> " + e.getMessage());
             }
         }
     }
@@ -133,7 +133,7 @@ public abstract class VideoBasePlayer implements VideoKernelApi {
             eventApi.onVideoFormatChanged(kernel, rotation, scaleType, width, height, bitrate);
         } catch (Exception e) {
             if(LogUtil.DEBUG) {
-                LogUtil.log("VideoBasePlayer => onVideoFormatChanged => " + e.getMessage());
+                LogUtil.log("VideoBasePlayer -> onVideoFormatChanged -> " + e.getMessage());
             }
         }
     }

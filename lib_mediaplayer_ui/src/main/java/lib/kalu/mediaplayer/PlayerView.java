@@ -67,7 +67,7 @@ public final class PlayerView extends RelativeLayout implements VideoPlayerApi {
     @Override
     public boolean dispatchKeyEvent(KeyEvent event) {
         if (LogUtil.DEBUG) {
-            LogUtil.log("PlayerView => dispatchKeyEvent0 => action = " + event.getAction() + ", ketCode = " + event.getKeyCode() + ", repeatCount = " + event.getRepeatCount());
+            LogUtil.log("PlayerView -> dispatchKeyEvent0 -> action = " + event.getAction() + ", ketCode = " + event.getKeyCode() + ", repeatCount = " + event.getRepeatCount());
         }
         try {
 
@@ -88,7 +88,7 @@ public final class PlayerView extends RelativeLayout implements VideoPlayerApi {
                 if (!dispatchKeyEvent)
                     continue;
                 if (LogUtil.DEBUG) {
-                    LogUtil.log("PlayerView => dispatchKeyEvent1 => i = " + i + ", childAt = " + childAt);
+                    LogUtil.log("PlayerView -> dispatchKeyEvent1 -> i = " + i + ", childAt = " + childAt);
                 }
                 throw new Exception("warning: dispatchKeyEvent1 true, childAt = " + childAt);
             }
@@ -104,7 +104,7 @@ public final class PlayerView extends RelativeLayout implements VideoPlayerApi {
                 if (!dispatchKeyEvent)
                     continue;
                 if (LogUtil.DEBUG) {
-                    LogUtil.log("PlayerView => dispatchKeyEvent2 => i = " + i + ", childAt = " + childAt);
+                    LogUtil.log("PlayerView -> dispatchKeyEvent2 -> i = " + i + ", childAt = " + childAt);
                 }
                 throw new Exception("warning: dispatchKeyEvent2 true, childAt = " + childAt);
             }
@@ -145,7 +145,7 @@ public final class PlayerView extends RelativeLayout implements VideoPlayerApi {
             pause();
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
-                LogUtil.log("PlayerView => checkVideoVisibility => Exception " + e.getMessage());
+                LogUtil.log("PlayerView -> checkVideoVisibility -> Exception " + e.getMessage());
             }
         }
     }

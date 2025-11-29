@@ -4,26 +4,27 @@ import java.io.Serializable;
 
 public final class HlsSpanInfo implements Serializable {
 
-    private long relativeStartTimeUs =0L;
-   private long durationUs = 0L;
+    private int position;
+    private int count;
+    private String url;
+    private String path;
+    private long startTimeMs;
+    private long endTimeMs;
 
-   private String url;
-   private String path;
-
-    public long getRelativeStartTimeUs() {
-        return relativeStartTimeUs;
+    public int getCount() {
+        return count;
     }
 
-    public void setRelativeStartTimeUs(long relativeStartTimeUs) {
-        this.relativeStartTimeUs = relativeStartTimeUs;
+    public void setCount(int count) {
+        this.count = count;
     }
 
-    public long getDurationUs() {
-        return durationUs;
+    public int getPosition() {
+        return position;
     }
 
-    public void setDurationUs(long durationUs) {
-        this.durationUs = durationUs;
+    public void setPosition(int position) {
+        this.position = position;
     }
 
     public String getUrl() {
@@ -40,5 +41,31 @@ public final class HlsSpanInfo implements Serializable {
 
     public void setPath(String path) {
         this.path = path;
+    }
+
+    public long getEndTimeMs() {
+        return endTimeMs;
+    }
+
+    public void setEndTimeMs(long endTimeMs) {
+        this.endTimeMs = endTimeMs;
+    }
+
+    public long getStartTimeMs() {
+        return startTimeMs;
+    }
+
+    public void setStartTimeMs(long startTimeMs) {
+        this.startTimeMs = startTimeMs;
+    }
+
+    @Override
+    public String toString() {
+        return "HlsSpanInfo{" +
+                "endTimeMs=" + endTimeMs +
+                ", url='" + url + '\'' +
+                ", path='" + path + '\'' +
+                ", startTimeMs=" + startTimeMs +
+                '}';
     }
 }

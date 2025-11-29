@@ -52,7 +52,7 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
             ((View) this).setTag(R.id.module_mediaplayer_id_startargs, args);
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
-                LogUtil.log("VideoPlayerApiKernel => setTags => " + e.getMessage());
+                LogUtil.log("VideoPlayerApiKernel -> setTags -> " + e.getMessage());
             }
         }
     }
@@ -89,7 +89,7 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
         } catch (Exception e) {
             callEvent(PlayerType.EventType.ERROR);
             if (LogUtil.DEBUG) {
-                LogUtil.log("VideoPlayerApiKernel => start => " + e.getMessage());
+                LogUtil.log("VideoPlayerApiKernel -> start -> " + e.getMessage());
             }
         }
     }
@@ -104,7 +104,7 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
             return duration;
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
-                LogUtil.log("VideoPlayerApiKernel => getDuration => " + e.getMessage());
+                LogUtil.log("VideoPlayerApiKernel -> getDuration -> " + e.getMessage());
             }
             return 0L;
         }
@@ -126,7 +126,7 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
     default void setVolume(@FloatRange(from = 0f, to = 1f) float left, @FloatRange(from = 0f, to = 1f) float right) {
         try {
             if (LogUtil.DEBUG) {
-                LogUtil.log("VideoPlayerApiKernel => setVolume => left = " + left + ", right = " + right);
+                LogUtil.log("VideoPlayerApiKernel -> setVolume -> left = " + left + ", right = " + right);
             }
             VideoKernelApi kernel = getVideoKernel();
             kernel.setVolume(left, right);
@@ -137,7 +137,7 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
     default void setMute(boolean enable) {
         try {
             if (LogUtil.DEBUG) {
-                LogUtil.log("VideoPlayerApiKernel => setMute => enable = " + enable);
+                LogUtil.log("VideoPlayerApiKernel -> setMute -> enable = " + enable);
             }
             VideoKernelApi kernel = getVideoKernel();
             if (enable) {
@@ -163,7 +163,7 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
             }
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
-                LogUtil.log("VideoPlayerApiKernel => toggle => " + e.getMessage());
+                LogUtil.log("VideoPlayerApiKernel -> toggle -> " + e.getMessage());
             }
         }
     }
@@ -209,7 +209,7 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
             callEvent(PlayerType.EventType.RELEASE);
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
-                LogUtil.log("VideoPlayerApiKernel => release => " + e.getMessage());
+                LogUtil.log("VideoPlayerApiKernel -> release -> " + e.getMessage());
             }
         }
     }
@@ -241,7 +241,7 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
             start(newArgs);
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
-                LogUtil.log("VideoPlayerApiKernel => restart => " + e.getMessage());
+                LogUtil.log("VideoPlayerApiKernel -> restart -> " + e.getMessage());
             }
         }
     }
@@ -276,7 +276,7 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
             setScreenKeep(true);
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
-                LogUtil.log("VideoPlayerApiKernel => seekToVideoKernel => " + e.getMessage());
+                LogUtil.log("VideoPlayerApiKernel -> seekToVideoKernel -> " + e.getMessage());
             }
         }
     }
@@ -346,7 +346,7 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
             kernel.initDecoder(context, args);
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
-                LogUtil.log("VideoPlayerApiKernel => initDecoder => " + e.getMessage());
+                LogUtil.log("VideoPlayerApiKernel -> initDecoder -> " + e.getMessage());
             }
         }
     }
@@ -374,7 +374,7 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
             callEvent(PlayerType.EventType.STOP);
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
-                LogUtil.log("VideoPlayerApiKernel => stopKernel => " + e.getMessage());
+                LogUtil.log("VideoPlayerApiKernel -> stopKernel -> " + e.getMessage());
             }
         }
     }
@@ -399,7 +399,7 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
             callEvent(PlayerType.EventType.PAUSE);
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
-                LogUtil.log("VideoPlayerApiKernel => pauseKernel => " + e.getMessage());
+                LogUtil.log("VideoPlayerApiKernel -> pauseKernel -> " + e.getMessage());
             }
         }
     }
@@ -425,7 +425,7 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
             callEvent(PlayerType.EventType.RESUME);
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
-                LogUtil.log("VideoPlayerApiKernel => resumeKernel => " + e.getMessage());
+                LogUtil.log("VideoPlayerApiKernel -> resumeKernel -> " + e.getMessage());
             }
         }
     }
@@ -445,7 +445,7 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
             }
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
-                LogUtil.log("VideoPlayerApiKernel => releaseKernel => " + e.getMessage());
+                LogUtil.log("VideoPlayerApiKernel -> releaseKernel -> " + e.getMessage());
             }
         }
     }
@@ -482,7 +482,7 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
                         if (position < trySeeDuration)
                             throw new Exception("waning: position<trySeeDuration");
                         // 试看结束
-//                        LogUtil.log("VideoPlayerApiKernel => setKernelEvent => onUpdateProgress => TRY_SEE_FINISH");
+//                        LogUtil.log("VideoPlayerApiKernel -> setKernelEvent -> onUpdateProgress -> TRY_SEE_FINISH");
                         stop(false, false);
                         callEvent(PlayerType.EventType.TRY_SEE_FINISH);
                     } catch (Exception e) {
@@ -513,7 +513,7 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
                 public void onEvent(@PlayerType.KernelType.Value int kernel, @PlayerType.EventType.Value int event) {
 
                     if (LogUtil.DEBUG) {
-                        LogUtil.log("VideoPlayerApiKernel => onEvent = " + kernel + ", event = " + event);
+                        LogUtil.log("VideoPlayerApiKernel -> onEvent = " + kernel + ", event = " + event);
                     }
 
                     // 透传
@@ -644,7 +644,7 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
                 public void onVideoFormatChanged(int kernel, int rotation, int scaleType, int width, int height, int bitrate) {
 
                     if (LogUtil.DEBUG) {
-                        LogUtil.log("VideoPlayerApiKernel => setKernelEvent => onVideoFormatChanged => kernel = " + kernel + ", width = " + width + ", height = " + height + ", rotation = " + ", scaleType = " + scaleType);
+                        LogUtil.log("VideoPlayerApiKernel -> setKernelEvent -> onVideoFormatChanged -> kernel = " + kernel + ", width = " + width + ", height = " + height + ", rotation = " + ", scaleType = " + scaleType);
                     }
 
                     setVideoFormat(kernel, rotation, scaleType, width, height, bitrate);
@@ -656,7 +656,7 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
             kernelApi.createDecoder(context, args);
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
-                LogUtil.log("VideoPlayerApiKernel => checkKernelNull => " + e.getMessage());
+                LogUtil.log("VideoPlayerApiKernel -> checkKernelNull -> " + e.getMessage());
             }
         }
     }
@@ -669,7 +669,7 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
             return kernel.toggleTrack(trackInfo);
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
-                LogUtil.log("VideoPlayerApiKernel => toggleTrack => " + e.getMessage());
+                LogUtil.log("VideoPlayerApiKernel -> toggleTrack -> " + e.getMessage());
             }
             return false;
         }
@@ -683,7 +683,7 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
             return kernel.getTrackInfoAll();
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
-                LogUtil.log("VideoPlayerApiKernel => getTrackInfoAll => " + e.getMessage());
+                LogUtil.log("VideoPlayerApiKernel -> getTrackInfoAll -> " + e.getMessage());
             }
             return null;
         }
@@ -712,7 +712,7 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
             return trackInfoVideo;
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
-                LogUtil.log("VideoPlayerApiKernel => getTrackInfoVideo => " + e.getMessage());
+                LogUtil.log("VideoPlayerApiKernel -> getTrackInfoVideo -> " + e.getMessage());
             }
             return null;
         }
@@ -729,7 +729,7 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
 
             StartArgs startArgs = getStartArgs();
             if (LogUtil.DEBUG) {
-                LogUtil.log("VideoPlayerApiKernel => getTrackInfoAudio => startArgs = " + startArgs);
+                LogUtil.log("VideoPlayerApiKernel -> getTrackInfoAudio -> startArgs = " + startArgs);
             }
             if (null != startArgs) {
                 Proxy proxy = startArgs.getProxy();
@@ -744,7 +744,7 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
             return trackInfoAudio;
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
-                LogUtil.log("VideoPlayerApiKernel => getTrackInfoAudio => " + e.getMessage());
+                LogUtil.log("VideoPlayerApiKernel -> getTrackInfoAudio -> " + e.getMessage());
             }
             return null;
         }
@@ -773,7 +773,7 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
             return trackInfoSubtitle;
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
-                LogUtil.log("VideoPlayerApiKernel => getTrackInfoSubtitle => " + e.getMessage());
+                LogUtil.log("VideoPlayerApiKernel -> getTrackInfoSubtitle -> " + e.getMessage());
             }
             return null;
         }
@@ -787,7 +787,7 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
             return kernel.getSegments();
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
-                LogUtil.log("VideoPlayerApiKernel => getSegments => " + e.getMessage());
+                LogUtil.log("VideoPlayerApiKernel -> getSegments -> " + e.getMessage());
             }
             return null;
         }

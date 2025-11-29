@@ -82,7 +82,7 @@ public interface VideoPlayerApiBuried extends VideoPlayerApiBase {
             proxyBuried.onCall(name, startArgs, position, duration);
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
-                LogUtil.log("VideoPlayerApiBuried => callBuried => Exception " + e.getMessage());
+                LogUtil.log("VideoPlayerApiBuried -> callBuried -> Exception " + e.getMessage());
             }
         }
     }

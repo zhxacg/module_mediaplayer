@@ -100,9 +100,7 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
     private ExoPlayer mExoPlayer;
 
     // 缓存
-    private List<HlsSpanInfo> mHlsSpanInfo;
-    private List<HlsMediaPlaylist.Segment> mHlsSegmentInfo;
-
+    private List<HlsSpanInfo> mHlsSpanInfos;
 
     @Override
     public ExoPlayer getPlayer() {
@@ -121,11 +119,11 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
             unRegistListener();
             release();
             if (LogUtil.DEBUG) {
-                LogUtil.log("VideoMediaxPlayer => releaseDecoder => completed");
+                LogUtil.log("VideoMediaxPlayer -> releaseDecoder -> completed");
             }
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
-                LogUtil.log("VideoMediaxPlayer => releaseDecoder => " + e.getMessage());
+                LogUtil.log("VideoMediaxPlayer -> releaseDecoder -> " + e.getMessage());
             }
         }
     }
@@ -138,7 +136,7 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
             if (null == args)
                 throw new Exception("error: args null");
             if (LogUtil.DEBUG) {
-                LogUtil.log("VideoMediaxPlayer => createDecoder =>");
+                LogUtil.log("VideoMediaxPlayer -> createDecoder ->");
             }
             ExoPlayer.Builder builder = new ExoPlayer.Builder(context)
                     // 播放器调试和诊断相关的配置项
@@ -205,12 +203,12 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
 
             int decoderType = args.getDecoderType();
             if (LogUtil.DEBUG) {
-                LogUtil.log("VideoMediaxPlayer => createDecoder => decoderType = " + decoderType);
+                LogUtil.log("VideoMediaxPlayer -> createDecoder -> decoderType = " + decoderType);
             }
             // only_ffmpeg
             if (decoderType == PlayerType.DecoderType.ONLY_FFMPEG) {
                 if (LogUtil.DEBUG) {
-                    LogUtil.log("VideoMediaxPlayer => createDecoder => only_ffmpeg");
+                    LogUtil.log("VideoMediaxPlayer -> createDecoder -> only_ffmpeg");
                 }
                 Class<?> clazz = Class.forName("lib.kalu.mediax.renderers.VideoFFmpegAudioFFmpegRenderersFactory");
                 Object newInstance = clazz.getDeclaredConstructor(Context.class).newInstance(context);
@@ -219,7 +217,7 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
             // only_codec
             else if (decoderType == PlayerType.DecoderType.ONLY_CODEC) {
                 if (LogUtil.DEBUG) {
-                    LogUtil.log("VideoMediaxPlayer => createDecoder => only_codec");
+                    LogUtil.log("VideoMediaxPlayer -> createDecoder -> only_codec");
                 }
                 Class<?> clazz = Class.forName("lib.kalu.mediax.renderers.VideoCodecAudioCodecRenderersFactory");
                 Object newInstance = clazz.getDeclaredConstructor(Context.class).newInstance(context);
@@ -228,7 +226,7 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
             // video_codec_audio_ffmpeg
             else if (decoderType == PlayerType.DecoderType.ONLY_VIDEO_CODEC_AUDIO_FFMPEG) {
                 if (LogUtil.DEBUG) {
-                    LogUtil.log("VideoMediaxPlayer => createDecoder => only_video_codec_audio_ffmpeg");
+                    LogUtil.log("VideoMediaxPlayer -> createDecoder -> only_video_codec_audio_ffmpeg");
                 }
                 Class<?> clazz = Class.forName("lib.kalu.mediax.renderers.VideoCodecAudioFFmpegRenderersFactory");
                 Object newInstance = clazz.getDeclaredConstructor(Context.class).newInstance(context);
@@ -237,7 +235,7 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
             // only_video_ffmpeg_audio_codec
             else if (decoderType == PlayerType.DecoderType.ONLY_VIDEO_FFMPEG_AUDIO_CODEC) {
                 if (LogUtil.DEBUG) {
-                    LogUtil.log("VideoMediaxPlayer => createDecoder => only_video_ffmpeg_audio_codec");
+                    LogUtil.log("VideoMediaxPlayer -> createDecoder -> only_video_ffmpeg_audio_codec");
                 }
                 Class<?> clazz = Class.forName("lib.kalu.mediax.renderers.VideoFFmpegAudioCodecRenderersFactory");
                 Object newInstance = clazz.getDeclaredConstructor(Context.class).newInstance(context);
@@ -246,7 +244,7 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
             // only_audio_ffmpeg
             else if (decoderType == PlayerType.DecoderType.ONLY_AUDIO_FFMPEG) {
                 if (LogUtil.DEBUG) {
-                    LogUtil.log("VideoMediaxPlayer => createDecoder => only_audio_ffmpeg");
+                    LogUtil.log("VideoMediaxPlayer -> createDecoder -> only_audio_ffmpeg");
                 }
                 Class<?> clazz = Class.forName("lib.kalu.mediax.renderers.OnlyAudioFFmpegRenderersFactory");
                 Object newInstance = clazz.getDeclaredConstructor(Context.class).newInstance(context);
@@ -255,7 +253,7 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
             // only_video_ffmpeg
             else if (decoderType == PlayerType.DecoderType.ONLY_VIDEO_FFMPEG) {
                 if (LogUtil.DEBUG) {
-                    LogUtil.log("VideoMediaxPlayer => createDecoder => only_video_ffmpeg");
+                    LogUtil.log("VideoMediaxPlayer -> createDecoder -> only_video_ffmpeg");
                 }
                 Class<?> clazz = Class.forName("lib.kalu.mediax.renderers.OnlyVideoFFmpegRenderersFactory");
                 Object newInstance = clazz.getDeclaredConstructor(Context.class).newInstance(context);
@@ -264,7 +262,7 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
             // only_audio_codec
             else if (decoderType == PlayerType.DecoderType.ONLY_AUDIO_CODEC) {
                 if (LogUtil.DEBUG) {
-                    LogUtil.log("VideoMediaxPlayer => createDecoder => only_audio_codec");
+                    LogUtil.log("VideoMediaxPlayer -> createDecoder -> only_audio_codec");
                 }
                 Class<?> clazz = Class.forName("lib.kalu.mediax.renderers.OnlyAudioCodecRenderersFactory");
                 Object newInstance = clazz.getDeclaredConstructor(Context.class).newInstance(context);
@@ -273,7 +271,7 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
             // only_video_codec
             else if (decoderType == PlayerType.DecoderType.ONLY_VIDEO_CODEC) {
                 if (LogUtil.DEBUG) {
-                    LogUtil.log("VideoMediaxPlayer => createDecoder => only_video_codec");
+                    LogUtil.log("VideoMediaxPlayer -> createDecoder -> only_video_codec");
                 }
                 Class<?> clazz = Class.forName("lib.kalu.mediax.renderers.OnlyVideoCodecRenderersFactory");
                 Object newInstance = clazz.getDeclaredConstructor(Context.class).newInstance(context);
@@ -282,7 +280,7 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
             // all
             else {
                 if (LogUtil.DEBUG) {
-                    LogUtil.log("VideoMediaxPlayer => createDecoder => only_video_codec");
+                    LogUtil.log("VideoMediaxPlayer -> createDecoder -> only_video_codec");
                 }
                 Class<?> clazz = Class.forName("lib.kalu.mediax.renderers.BaseRenderersFactory");
                 Object newInstance = clazz.getDeclaredConstructor(Context.class).newInstance(context);
@@ -291,7 +289,7 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
 
             mExoPlayer = builder.build();
             if (LogUtil.DEBUG) {
-                LogUtil.log("VideoMediaxPlayer => createDecoder => mExoPlayer = " + mExoPlayer);
+                LogUtil.log("VideoMediaxPlayer -> createDecoder -> mExoPlayer = " + mExoPlayer);
             }
             registListener();
 
@@ -306,11 +304,11 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
 //            mExoPlayer.addAnalyticsListener(new EventLogger((MappingTrackSelector) mExoPlayer.getTrackSelector(), "ExoPlayer"));
 //        }
             if (LogUtil.DEBUG) {
-                LogUtil.log("VideoMediaxPlayer => createDecoder => completed");
+                LogUtil.log("VideoMediaxPlayer -> createDecoder -> completed");
             }
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
-                LogUtil.log("VideoMediaxPlayer => createDecoder => " + e.getMessage());
+                LogUtil.log("VideoMediaxPlayer -> createDecoder -> " + e.getMessage());
             }
         }
     }
@@ -328,7 +326,7 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
             onEvent(PlayerType.KernelType.MEDIA_V3, PlayerType.EventType.INIT_READY);
             boolean initSimpleCache = initSimpleCache(context, args);
             if (LogUtil.DEBUG) {
-                LogUtil.log("VideoMediaxPlayer => startDecoder => initSimpleCache = " + initSimpleCache);
+                LogUtil.log("VideoMediaxPlayer -> startDecoder -> initSimpleCache = " + initSimpleCache);
             }
             MediaSource mediaSource = formatMediaSource(context, args);
             mExoPlayer.setMediaSource(mediaSource);
@@ -339,12 +337,12 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
                 mExoPlayer.prepare();
             }
             if (LogUtil.DEBUG) {
-                LogUtil.log("VideoMediaxPlayer => startDecoder => completed");
+                LogUtil.log("VideoMediaxPlayer -> startDecoder -> completed");
             }
         } catch (Exception e) {
             onEvent(PlayerType.KernelType.MEDIA_V3, PlayerType.EventType.ERROR_BUILD_SOURCE);
             if (LogUtil.DEBUG) {
-                LogUtil.log("VideoMediaxPlayer => startDecoder => Exception " + e.getMessage());
+                LogUtil.log("VideoMediaxPlayer -> startDecoder -> Exception " + e.getMessage());
             }
         }
     }
@@ -367,7 +365,7 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
             mExoPlayer.setPlayWhenReady(playWhenReady);
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
-                LogUtil.log("VideoMediaxPlayer => initOptions => Exception step1 " + e.getMessage());
+                LogUtil.log("VideoMediaxPlayer -> initOptions -> Exception step1 " + e.getMessage());
             }
         }
 
@@ -388,7 +386,7 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
             }
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
-                LogUtil.log("VideoMediaxPlayer => initOptions => Exception step2 " + e.getMessage());
+                LogUtil.log("VideoMediaxPlayer -> initOptions -> Exception step2 " + e.getMessage());
             }
         }
 
@@ -402,7 +400,7 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
             lib.kalu.mediax.util.MediaLogUtil.setDebug(log);
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
-                LogUtil.log("VideoMediaxPlayer => initOptions => Exception step3 " + e.getMessage());
+                LogUtil.log("VideoMediaxPlayer -> initOptions -> Exception step3 " + e.getMessage());
             }
         }
     }
@@ -417,11 +415,11 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
                 throw new Exception("error: surface null");
             mExoPlayer.setVideoSurface(surface);
             if (LogUtil.DEBUG) {
-                LogUtil.log("VideoMediaxPlayer => setSurface => completed");
+                LogUtil.log("VideoMediaxPlayer -> setSurface -> completed");
             }
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
-                LogUtil.log("VideoMediaxPlayer => setSurface => " + e.getMessage());
+                LogUtil.log("VideoMediaxPlayer -> setSurface -> " + e.getMessage());
             }
         }
     }
@@ -446,7 +444,7 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
             }
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
-                LogUtil.log("VideoMediaxPlayer => isPlaying => " + e.getMessage());
+                LogUtil.log("VideoMediaxPlayer -> isPlaying -> " + e.getMessage());
             }
             return false;
         }
@@ -474,11 +472,11 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
             onEvent(PlayerType.KernelType.MEDIA_V3, seek < position ? PlayerType.EventType.SEEK_START_REWIND : PlayerType.EventType.SEEK_START_FORWARD);
             mExoPlayer.seekTo(seek);
             if (LogUtil.DEBUG) {
-                LogUtil.log("VideoMediaxPlayer => seekTo =>");
+                LogUtil.log("VideoMediaxPlayer -> seekTo ->");
             }
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
-                LogUtil.log("VideoMediaxPlayer => seekTo => " + e.getMessage());
+                LogUtil.log("VideoMediaxPlayer -> seekTo -> " + e.getMessage());
             }
         }
     }
@@ -499,7 +497,7 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
             return currentPosition;
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
-                LogUtil.log("VideoMediaxPlayer => getPosition => " + e.getMessage());
+                LogUtil.log("VideoMediaxPlayer -> getPosition -> " + e.getMessage());
             }
             return 0L;
         }
@@ -521,7 +519,7 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
             return duration;
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
-                LogUtil.log("VideoMediaxPlayer => getDuration => " + e.getMessage());
+                LogUtil.log("VideoMediaxPlayer -> getDuration -> " + e.getMessage());
             }
             return 0L;
         }
@@ -555,7 +553,7 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
             return true;
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
-                LogUtil.log("VideoMediaxPlayer => setSpeed => " + e.getMessage());
+                LogUtil.log("VideoMediaxPlayer -> setSpeed -> " + e.getMessage());
             }
             return false;
         }
@@ -572,7 +570,7 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
             mExoPlayer.setVolume(volume);
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
-                LogUtil.log("VideoMediaxPlayer => setVolume => " + e.getMessage());
+                LogUtil.log("VideoMediaxPlayer -> setVolume -> " + e.getMessage());
             }
         }
     }
@@ -585,7 +583,7 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
             mExoPlayer.addAnalyticsListener(mAnalyticsListener);
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
-                LogUtil.log("VideoMediaxPlayer => registListener => Exception " + e.getMessage());
+                LogUtil.log("VideoMediaxPlayer -> registListener -> Exception " + e.getMessage());
             }
         }
     }
@@ -599,7 +597,7 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
             mExoPlayer.setPlaybackParameters(null);
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
-                LogUtil.log("VideoMediaxPlayer => unRegistListener => Exception " + e.getMessage());
+                LogUtil.log("VideoMediaxPlayer -> unRegistListener -> Exception " + e.getMessage());
             }
         }
     }
@@ -609,12 +607,12 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
 
         boolean releaseSimpleCache = releaseSimpleCache();
         if (LogUtil.DEBUG) {
-            LogUtil.log("VideoMediaxPlayer => release => SimpleCache release " + releaseSimpleCache);
+            LogUtil.log("VideoMediaxPlayer -> release -> SimpleCache release " + releaseSimpleCache);
         }
 
         boolean releaseHlsManifest = releaseHlsManifest();
         if (LogUtil.DEBUG) {
-            LogUtil.log("VideoMediaxPlayer => release => HlsManifest release " + releaseHlsManifest);
+            LogUtil.log("VideoMediaxPlayer -> release -> HlsManifest release " + releaseHlsManifest);
         }
 
         try {
@@ -624,34 +622,34 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
             mExoPlayer.release();
             mExoPlayer = null;
             if (LogUtil.DEBUG) {
-                LogUtil.log("VideoMediaxPlayer => release => completed");
+                LogUtil.log("VideoMediaxPlayer -> release -> completed");
             }
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
-                LogUtil.log("VideoMediaxPlayer => release => " + e.getMessage());
+                LogUtil.log("VideoMediaxPlayer -> release -> " + e.getMessage());
             }
         }
     }
 
     private boolean releaseHlsManifest() {
         try {
-            if (null != mHlsSegmentInfo) {
-                mHlsSegmentInfo.clear();
-                mHlsSegmentInfo = null;
-            }
+//            if (null != mHlsSegmentInfos) {
+//                mHlsSegmentInfos.clear();
+//                mHlsSegmentInfos = null;
+//            }
 
-            if (null != mHlsSpanInfo) {
-                mHlsSpanInfo.clear();
-                mHlsSpanInfo = null;
+            if (null != mHlsSpanInfos) {
+                mHlsSpanInfos.clear();
+                mHlsSpanInfos = null;
             }
 
             if (LogUtil.DEBUG) {
-                LogUtil.log("VideoMediaxPlayer => releaseHlsManifest => completed");
+                LogUtil.log("VideoMediaxPlayer -> releaseHlsManifest -> completed");
             }
             return true;
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
-                LogUtil.log("VideoMediaxPlayer => releaseHlsManifest => Exception: " + e.getMessage());
+                LogUtil.log("VideoMediaxPlayer -> releaseHlsManifest -> Exception: " + e.getMessage());
             }
             return false;
         }
@@ -665,12 +663,12 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
             mSimpleCache.release();
             mSimpleCache = null;
             if (LogUtil.DEBUG) {
-                LogUtil.log("VideoMediaxPlayer => releaseSimpleCache => completed");
+                LogUtil.log("VideoMediaxPlayer -> releaseSimpleCache -> completed");
             }
             return true;
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
-                LogUtil.log("VideoMediaxPlayer => releaseSimpleCache => Exception: " + e.getMessage());
+                LogUtil.log("VideoMediaxPlayer -> releaseSimpleCache -> Exception: " + e.getMessage());
             }
             return false;
         }
@@ -681,7 +679,7 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
         //
         boolean releaseSimpleCache = releaseSimpleCache();
         if (LogUtil.DEBUG) {
-            LogUtil.log("VideoMediaxPlayer => initSimpleCache => SimpleCache release " + releaseSimpleCache);
+            LogUtil.log("VideoMediaxPlayer -> initSimpleCache -> SimpleCache release " + releaseSimpleCache);
         }
 
         try {
@@ -726,7 +724,7 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
 
             String dirName = cache.getDir(PlayerType.KernelType.MEDIA_V3);
             if (LogUtil.DEBUG) {
-                LogUtil.log("VideoMediaxPlayer => initSimpleCache => dirName = " + dirName + ", url = " + url);
+                LogUtil.log("VideoMediaxPlayer -> initSimpleCache -> dirName = " + dirName + ", url = " + url);
             }
 
             boolean external = cache.isExternal();
@@ -748,12 +746,12 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
             );
             mSimpleCache.addListener("mCacheListener", mCacheListener);
             if (LogUtil.DEBUG) {
-                LogUtil.log("VideoMediaxPlayer => initSimpleCache => useCache completed");
+                LogUtil.log("VideoMediaxPlayer -> initSimpleCache -> useCache completed");
             }
             return true;
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
-                LogUtil.log("VideoMediaxPlayer => initSimpleCache => Exception: " + e.getMessage());
+                LogUtil.log("VideoMediaxPlayer -> initSimpleCache -> Exception: " + e.getMessage());
             }
             return false;
         }
@@ -775,7 +773,7 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
             mExoPlayer.play();
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
-                LogUtil.log("VideoMediaxPlayer => start => " + e.getMessage());
+                LogUtil.log("VideoMediaxPlayer -> start -> " + e.getMessage());
             }
         }
     }
@@ -793,7 +791,7 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
             mExoPlayer.pause();
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
-                LogUtil.log("VideoMediaxPlayer => pause => " + e.getMessage());
+                LogUtil.log("VideoMediaxPlayer -> pause -> " + e.getMessage());
             }
         }
     }
@@ -811,7 +809,7 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
 //            mExoPlayer.reset();
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
-                LogUtil.log("VideoMediaxPlayer => stop => " + e.getMessage());
+                LogUtil.log("VideoMediaxPlayer -> stop -> " + e.getMessage());
             }
         }
     }
@@ -828,28 +826,28 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
 
             boolean containsExtUrl = args.containsExtUrl();
             if (LogUtil.DEBUG) {
-                LogUtil.log("VideoMediaxPlayer => formatMediaSource => containsExtUrl = " + containsExtUrl);
+                LogUtil.log("VideoMediaxPlayer -> formatMediaSource -> containsExtUrl = " + containsExtUrl);
             }
 
             UrlArgs urlArgs = args.getUrlArgs();
             if (LogUtil.DEBUG) {
-                LogUtil.log("VideoMediaxPlayer => formatMediaSource => urlArgs = " + urlArgs);
+                LogUtil.log("VideoMediaxPlayer -> formatMediaSource -> urlArgs = " + urlArgs);
             }
 
             UrlArgs.Item mainVideo = urlArgs.getMainVideo();
             if (LogUtil.DEBUG) {
-                LogUtil.log("VideoMediaxPlayer => formatMediaSource => mainVideo = " + mainVideo);
+                LogUtil.log("VideoMediaxPlayer -> formatMediaSource -> mainVideo = " + mainVideo);
             }
 
             // 有 外挂轨道
             if (containsExtUrl) {
                 if (LogUtil.DEBUG) {
-                    LogUtil.log("VideoMediaxPlayer => formatMediaSource => 外挂轨道 有");
+                    LogUtil.log("VideoMediaxPlayer -> formatMediaSource -> 外挂轨道 有");
                 }
 
                 int urlCount = urlArgs.getUrlCount();
                 if (LogUtil.DEBUG) {
-                    LogUtil.log("VideoMediaxPlayer => formatMediaSource => urlCount = " + urlCount);
+                    LogUtil.log("VideoMediaxPlayer -> formatMediaSource -> urlCount = " + urlCount);
                 }
 
                 int index = -1;
@@ -863,11 +861,11 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
                 if (null != extVideo) {
                     for (UrlArgs.Item videoArgs : extVideo) {
                         if (LogUtil.DEBUG) {
-                            LogUtil.log("VideoMediaxPlayer => formatMediaSource => 外挂视频轨道: videoArgs = " + videoArgs);
+                            LogUtil.log("VideoMediaxPlayer -> formatMediaSource -> 外挂视频轨道: videoArgs = " + videoArgs);
                         }
                         MediaSource mediaSource = buildVideoMediaSource(context, args, videoArgs);
                         if (LogUtil.DEBUG) {
-                            LogUtil.log("VideoMediaxPlayer => formatMediaSource => 外挂视频轨道: mediaSource = " + mediaSource);
+                            LogUtil.log("VideoMediaxPlayer -> formatMediaSource -> 外挂视频轨道: mediaSource = " + mediaSource);
                         }
                         mediaSources[++index] = mediaSource;
                     }
@@ -878,11 +876,11 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
                 if (null != extAudio) {
                     for (UrlArgs.Item audioArgs : extAudio) {
                         if (LogUtil.DEBUG) {
-                            LogUtil.log("VideoMediaxPlayer => formatMediaSource => 外挂音频轨道: audioArgs = " + audioArgs);
+                            LogUtil.log("VideoMediaxPlayer -> formatMediaSource -> 外挂音频轨道: audioArgs = " + audioArgs);
                         }
                         MediaSource mediaSource = buildAudioMediaSource(context, args, audioArgs);
                         if (LogUtil.DEBUG) {
-                            LogUtil.log("VideoMediaxPlayer => formatMediaSource => 外挂音频轨道: mediaSource = " + mediaSource);
+                            LogUtil.log("VideoMediaxPlayer -> formatMediaSource -> 外挂音频轨道: mediaSource = " + mediaSource);
                         }
                         if (null == mediaSource)
                             continue;
@@ -895,11 +893,11 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
                 if (null != extSubtitle) {
                     for (UrlArgs.Item item : extSubtitle) {
                         if (LogUtil.DEBUG) {
-                            LogUtil.log("VideoMediaxPlayer => formatMediaSource => 外挂字幕轨道: subtitle = " + item);
+                            LogUtil.log("VideoMediaxPlayer -> formatMediaSource -> 外挂字幕轨道: subtitle = " + item);
                         }
                         MediaSource mediaSource = buildSubtitleMediaSource(context, args, item);
                         if (LogUtil.DEBUG) {
-                            LogUtil.log("VideoMediaxPlayer => formatMediaSource => 外挂字幕轨道: mediaSource = " + mediaSource);
+                            LogUtil.log("VideoMediaxPlayer -> formatMediaSource -> 外挂字幕轨道: mediaSource = " + mediaSource);
                         }
                         if (null == mediaSource)
                             continue;
@@ -912,13 +910,13 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
             // 无 外挂轨道
             else {
                 if (LogUtil.DEBUG) {
-                    LogUtil.log("VideoMediaxPlayer => formatMediaSource => 外挂轨道 无");
+                    LogUtil.log("VideoMediaxPlayer -> formatMediaSource -> 外挂轨道 无");
                 }
                 return buildVideoMediaSource(context, args, mainVideo);
             }
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
-                LogUtil.log("VideoMediaxPlayer => formatMediaSource => Exception: " + e.getMessage());
+                LogUtil.log("VideoMediaxPlayer -> formatMediaSource -> Exception: " + e.getMessage());
             }
             throw e;
         }
@@ -977,7 +975,7 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
             }
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
-                LogUtil.log("VideoMediaxPlayer => formatMetaType => Exception: " + e.getMessage());
+                LogUtil.log("VideoMediaxPlayer -> formatMetaType -> Exception: " + e.getMessage());
             }
             return PlayerType.MetaType.VIDEO_OTHER;
         }
@@ -995,19 +993,19 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
             String language = item.getLanguage();
             int metaType = formatMetaType(url);
             if (LogUtil.DEBUG) {
-                LogUtil.log("VideoMediaxPlayer => buildVideoMediaSource => metaType = " + metaType + ", language = " + language + ", url = " + url);
+                LogUtil.log("VideoMediaxPlayer -> buildVideoMediaSource -> metaType = " + metaType + ", language = " + language + ", url = " + url);
             }
 
             int hashCode = url.hashCode();
             if (LogUtil.DEBUG) {
-                LogUtil.log("VideoMediaxPlayer => buildVideoMediaSource => hashCode = " + hashCode + ", dataUrl = " + url);
+                LogUtil.log("VideoMediaxPlayer -> buildVideoMediaSource -> hashCode = " + hashCode + ", dataUrl = " + url);
             }
 
             // rtmp
             if (metaType == PlayerType.MetaType.VIDEO_RTMP) {
                 Object factory = buildVideoMediaFactory(context, args, metaType, item);
                 if (LogUtil.DEBUG) {
-                    LogUtil.log("VideoMediaxPlayer => buildVideoMediaSource => rtmp, dataUrl = " + url);
+                    LogUtil.log("VideoMediaxPlayer -> buildVideoMediaSource -> rtmp, dataUrl = " + url);
                 }
                 return new ProgressiveMediaSource.Factory(((DataSource.Factory) factory)).createMediaSource(new MediaItem.Builder()
                         .setUri(Uri.parse(url))
@@ -1018,7 +1016,7 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
             else if (metaType == PlayerType.MetaType.VIDEO_RTSP) {
                 Object factory = buildVideoMediaFactory(context, args, metaType, item);
                 if (LogUtil.DEBUG) {
-                    LogUtil.log("VideoMediaxPlayer => buildVideoMediaSource => rtsp, dataUrl = " + url);
+                    LogUtil.log("VideoMediaxPlayer -> buildVideoMediaSource -> rtsp, dataUrl = " + url);
                 }
                 return ((MediaSource.Factory) factory).createMediaSource(new MediaItem.Builder()
                         .setUri(Uri.parse(url))
@@ -1029,7 +1027,7 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
             else if (metaType == PlayerType.MetaType.VIDEO_MP4) {
                 Object factory = buildVideoMediaFactory(context, args, metaType, item);
                 if (LogUtil.DEBUG) {
-                    LogUtil.log("VideoMediaxPlayer => buildVideoMediaSource => mp4, dataUrl = " + url);
+                    LogUtil.log("VideoMediaxPlayer -> buildVideoMediaSource -> mp4, dataUrl = " + url);
                 }
 
                 return new ProgressiveMediaSource.Factory(((DataSource.Factory) factory)).createMediaSource(new MediaItem.Builder()
@@ -1041,7 +1039,7 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
             else if (metaType == PlayerType.MetaType.VIDEO_DASH) {
                 Object factory = buildVideoMediaFactory(context, args, metaType, item);
                 if (LogUtil.DEBUG) {
-                    LogUtil.log("VideoMediaxPlayer => buildVideoMediaSource => dash, dataUrl = " + url);
+                    LogUtil.log("VideoMediaxPlayer -> buildVideoMediaSource -> dash, dataUrl = " + url);
                 }
                 return ((MediaSource.Factory) factory).createMediaSource(new MediaItem.Builder()
                         .setUri(Uri.parse(url))
@@ -1052,7 +1050,7 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
             else if (metaType == PlayerType.MetaType.VIDEO_HLS) {
                 Object factory = buildVideoMediaFactory(context, args, metaType, item);
                 if (LogUtil.DEBUG) {
-                    LogUtil.log("VideoMediaxPlayer => buildVideoMediaSource => hls, dataUrl = " + url);
+                    LogUtil.log("VideoMediaxPlayer -> buildVideoMediaSource -> hls, dataUrl = " + url);
                 }
                 return ((MediaSource.Factory) factory).createMediaSource(new MediaItem.Builder()
                         .setUri(Uri.parse(url))
@@ -1063,7 +1061,7 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
             else if (metaType == PlayerType.MetaType.VIDEO_SS) {
                 Object factory = buildVideoMediaFactory(context, args, metaType, item);
                 if (LogUtil.DEBUG) {
-                    LogUtil.log("VideoMediaxPlayer => buildVideoMediaSource => SmoothStreaming, dataUrl = " + url);
+                    LogUtil.log("VideoMediaxPlayer -> buildVideoMediaSource -> SmoothStreaming, dataUrl = " + url);
                 }
                 return ((MediaSource.Factory) factory).createMediaSource(new MediaItem.Builder()
                         .setUri(Uri.parse(url))
@@ -1074,7 +1072,7 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
             else {
                 Object factory = buildVideoMediaFactory(context, args, metaType, item);
                 if (LogUtil.DEBUG) {
-                    LogUtil.log("VideoMediaxPlayer => buildVideoMediaSource => other, dataUrl = " + url);
+                    LogUtil.log("VideoMediaxPlayer -> buildVideoMediaSource -> other, dataUrl = " + url);
                 }
                 return ((DefaultMediaSourceFactory) factory).createMediaSource(new MediaItem.Builder()
                         .setUri(Uri.parse(url))
@@ -1084,7 +1082,7 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
 
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
-                LogUtil.log("VideoMediaxPlayer => buildVideoMediaSource => Exception: " + e.getMessage());
+                LogUtil.log("VideoMediaxPlayer -> buildVideoMediaSource -> Exception: " + e.getMessage());
             }
             return null;
         }
@@ -1103,7 +1101,7 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
                 Class<?> cls = Class.forName("ext.rtmp.RtmpDataSource");
                 DataSource.Factory factory = (DataSource.Factory) cls.newInstance();
                 if (LogUtil.DEBUG) {
-                    LogUtil.log("VideoMediaxPlayer => buildVideoMediaFactory => rtmp, dataUrl = " + url);
+                    LogUtil.log("VideoMediaxPlayer -> buildVideoMediaFactory -> rtmp, dataUrl = " + url);
                 }
                 return factory;
             }
@@ -1114,14 +1112,14 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
                 constructor.setAccessible(true);
                 DataSource.Factory factory = buildDateFactory(context, args, PlayerType.UrlType.VIDEO, url);
                 if (LogUtil.DEBUG) {
-                    LogUtil.log("VideoMediaxPlayer => buildVideoMediaFactory => rtsp, dataUrl = " + url);
+                    LogUtil.log("VideoMediaxPlayer -> buildVideoMediaFactory -> rtsp, dataUrl = " + url);
                 }
                 return constructor.newInstance(factory);
             }
             // mp4
             else if (metaType == PlayerType.MetaType.VIDEO_MP4) {
                 if (LogUtil.DEBUG) {
-                    LogUtil.log("VideoMediaxPlayer => buildVideoMediaFactory => mp4, dataUrl = " + url);
+                    LogUtil.log("VideoMediaxPlayer -> buildVideoMediaFactory -> mp4, dataUrl = " + url);
                 }
                 return buildDateFactory(context, args, PlayerType.UrlType.VIDEO, url);
             }
@@ -1132,7 +1130,7 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
                 constructor.setAccessible(true);
                 DataSource.Factory factory = buildDateFactory(context, args, PlayerType.UrlType.VIDEO, url);
                 if (LogUtil.DEBUG) {
-                    LogUtil.log("VideoMediaxPlayer => buildVideoMediaFactory => dash, dataUrl = " + url);
+                    LogUtil.log("VideoMediaxPlayer -> buildVideoMediaFactory -> dash, dataUrl = " + url);
                 }
                 return constructor.newInstance(factory);
             }
@@ -1143,7 +1141,7 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
                 constructor.setAccessible(true);
                 DataSource.Factory factory = buildDateFactory(context, args, PlayerType.UrlType.VIDEO, url);
                 if (LogUtil.DEBUG) {
-                    LogUtil.log("VideoMediaxPlayer => buildVideoMediaFactory => hls, dataUrl = " + url);
+                    LogUtil.log("VideoMediaxPlayer -> buildVideoMediaFactory -> hls, dataUrl = " + url);
                 }
                 Object object = constructor.newInstance(factory);
 
@@ -1170,7 +1168,7 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
                     exposeCea608WhenMissingDeclarations = true;
                 }
                 if (LogUtil.DEBUG) {
-                    LogUtil.log("VideoMediaxPlayer => buildVideoMediaFactory => hls, parser = " + parser + ", payloadReaderFactoryFlags = " + payloadReaderFactoryFlags + ", exposeCea608WhenMissingDeclarations = " + exposeCea608WhenMissingDeclarations);
+                    LogUtil.log("VideoMediaxPlayer -> buildVideoMediaFactory -> hls, parser = " + parser + ", payloadReaderFactoryFlags = " + payloadReaderFactoryFlags + ", exposeCea608WhenMissingDeclarations = " + exposeCea608WhenMissingDeclarations);
                 }
                 Method method_setExtractorFactory = cls.getMethod("setExtractorFactory", HlsExtractorFactory.class);
                 method_setExtractorFactory.invoke(object, new CustomDefaultHlsExtractorFactory(payloadReaderFactoryFlags, exposeCea608WhenMissingDeclarations));
@@ -1184,21 +1182,21 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
                 constructor.setAccessible(true);
                 DataSource.Factory factory = buildDateFactory(context, args, PlayerType.UrlType.VIDEO, url);
                 if (LogUtil.DEBUG) {
-                    LogUtil.log("VideoMediaxPlayer => buildVideoMediaFactory => SmoothStreaming, dataUrl = " + url);
+                    LogUtil.log("VideoMediaxPlayer -> buildVideoMediaFactory -> SmoothStreaming, dataUrl = " + url);
                 }
                 return constructor.newInstance(factory);
             }
             // other
             else {
                 if (LogUtil.DEBUG) {
-                    LogUtil.log("VideoMediaxPlayer => buildVideoMediaFactory => other, dataUrl = " + url);
+                    LogUtil.log("VideoMediaxPlayer -> buildVideoMediaFactory -> other, dataUrl = " + url);
                 }
                 return buildDateFactory(context, args, PlayerType.UrlType.VIDEO, url);
             }
 
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
-                LogUtil.log("VideoMediaxPlayer => buildVideoMediaFactory => Exception: " + e.getMessage());
+                LogUtil.log("VideoMediaxPlayer -> buildVideoMediaFactory -> Exception: " + e.getMessage());
             }
             return null;
         }
@@ -1216,18 +1214,18 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
             int metaType = formatMetaType(url);
             if (LogUtil.DEBUG) {
                 String language = item.getLanguage();
-                LogUtil.log("VideoMediaxPlayer => buildAudioMediaSource => metaType = " + metaType + ", language = " + language + ", url = " + url);
+                LogUtil.log("VideoMediaxPlayer -> buildAudioMediaSource -> metaType = " + metaType + ", language = " + language + ", url = " + url);
             }
 
             int hashCode = url.hashCode();
             if (LogUtil.DEBUG) {
-                LogUtil.log("VideoMediaxPlayer => buildAudioMediaSource => hashCode = " + hashCode + ", dataUrl = " + url);
+                LogUtil.log("VideoMediaxPlayer -> buildAudioMediaSource -> hashCode = " + hashCode + ", dataUrl = " + url);
             }
 
             // hls
             if (metaType == PlayerType.MetaType.VIDEO_HLS) {
                 if (LogUtil.DEBUG) {
-                    LogUtil.log("VideoMediaxPlayer => buildAudioMediaSource => hls, dataUrl = " + url);
+                    LogUtil.log("VideoMediaxPlayer -> buildAudioMediaSource -> hls, dataUrl = " + url);
                 }
                 Object factory = buildAudioMediaFactory(context, args, item);
                 return ((MediaSource.Factory) factory).createMediaSource(new MediaItem.Builder()
@@ -1239,7 +1237,7 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
             else {
                 Object factory = buildAudioMediaFactory(context, args, item);
                 if (LogUtil.DEBUG) {
-                    LogUtil.log("VideoMediaxPlayer => buildAudioMediaSource => factory = " + factory);
+                    LogUtil.log("VideoMediaxPlayer -> buildAudioMediaSource -> factory = " + factory);
                 }
                 if (null == factory)
                     throw new Exception("error: factory null");
@@ -1260,7 +1258,7 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
             }
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
-                LogUtil.log("VideoMediaxPlayer => buildAudioMediaSource => Exception: " + e.getMessage());
+                LogUtil.log("VideoMediaxPlayer -> buildAudioMediaSource -> Exception: " + e.getMessage());
             }
             return null;
         }
@@ -1275,7 +1273,7 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
             int metaType = formatMetaType(url);
             if (LogUtil.DEBUG) {
                 String language = item.getLanguage();
-                LogUtil.log("VideoMediaxPlayer => buildAudioMediaFactory => metaType = " + metaType + ", language = " + language + ", url = " + url);
+                LogUtil.log("VideoMediaxPlayer -> buildAudioMediaFactory -> metaType = " + metaType + ", language = " + language + ", url = " + url);
             }
 
             // hls
@@ -1287,7 +1285,7 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
                 constructor.setAccessible(true);
                 DataSource.Factory factory = buildDateFactory(context, args, PlayerType.UrlType.AUDIO, url);
                 if (LogUtil.DEBUG) {
-                    LogUtil.log("VideoMediaxPlayer => buildAudioMediaFactory => hls, dataUrl = " + url);
+                    LogUtil.log("VideoMediaxPlayer -> buildAudioMediaFactory -> hls, dataUrl = " + url);
                 }
                 Object object = constructor.newInstance(factory);
 
@@ -1303,7 +1301,7 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
             }
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
-                LogUtil.log("VideoMediaxPlayer => buildAudioMediaFactory => Exception: " + e.getMessage());
+                LogUtil.log("VideoMediaxPlayer -> buildAudioMediaFactory -> Exception: " + e.getMessage());
             }
             return null;
         }
@@ -1341,19 +1339,19 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
             }
 
             if (LogUtil.DEBUG) {
-                LogUtil.log("VideoMediaxPlayer => buildSubtitleMediaSource => mimeType = " + mimeType + ", sutitleUrl = " + sutitleUrl);
+                LogUtil.log("VideoMediaxPlayer -> buildSubtitleMediaSource -> mimeType = " + mimeType + ", sutitleUrl = " + sutitleUrl);
             }
             if (null == mimeType)
                 throw new Exception("error: mimeType null");
 
             Object factory = buildDateFactory(context, args, PlayerType.UrlType.SUBTITLE, sutitleUrl);
             if (LogUtil.DEBUG) {
-                LogUtil.log("VideoMediaxPlayer => buildSubtitleMediaSource => factory = " + factory);
+                LogUtil.log("VideoMediaxPlayer -> buildSubtitleMediaSource -> factory = " + factory);
             }
 
             int hashCode = sutitleUrl.hashCode();
             if (LogUtil.DEBUG) {
-                LogUtil.log("VideoMediaxPlayer => buildSubtitleMediaSource => hashCode = " + hashCode + ", sutitleUrl = " + sutitleUrl);
+                LogUtil.log("VideoMediaxPlayer -> buildSubtitleMediaSource -> hashCode = " + hashCode + ", sutitleUrl = " + sutitleUrl);
             }
             MediaItem.SubtitleConfiguration subtitleConfig = new MediaItem.SubtitleConfiguration.Builder(Uri.parse(sutitleUrl))
                     .setSelectionFlags(C.SELECTION_FLAG_AUTOSELECT)
@@ -1379,7 +1377,7 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
             }
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
-                LogUtil.log("VideoMediaxPlayer => buildSubtitleMediaSource => Exception: " + e.getMessage());
+                LogUtil.log("VideoMediaxPlayer -> buildSubtitleMediaSource -> Exception: " + e.getMessage());
             }
             return null;
         }
@@ -1414,7 +1412,7 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
                                 return formatCacheKey(url);
                             } catch (Exception e) {
                                 if (LogUtil.DEBUG) {
-                                    LogUtil.log("VideoMediaxPlayer => buildDateFactory -> buildCacheKey => Exception: " + e.getMessage());
+                                    LogUtil.log("VideoMediaxPlayer -> buildDateFactory -> buildCacheKey -> Exception: " + e.getMessage());
                                 }
                                 return null;
                             }
@@ -1422,7 +1420,7 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
                     });
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
-                LogUtil.log("VideoMediaxPlayer => buildDateFactory => Exception: " + e.getMessage());
+                LogUtil.log("VideoMediaxPlayer -> buildDateFactory -> Exception: " + e.getMessage());
             }
             return new DefaultDataSource.Factory(context, buildHttpFactory(args));
         }
@@ -1438,7 +1436,7 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
                     .setKeepPostFor302Redirects(true);
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
-                LogUtil.log("VideoMediaxPlayer => buildHttpFactory => Exception: " + e.getMessage());
+                LogUtil.log("VideoMediaxPlayer -> buildHttpFactory -> Exception: " + e.getMessage());
             }
             return null;
         }
@@ -1458,12 +1456,12 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
                     .append(path)
                     .toString();
 //            if (LogUtil.DEBUG) {
-//                LogUtil.log("VideoMediaxPlayer => formatBaseUrl -> url =  " + url + ", baseUrl = " + baseUrl);
+//                LogUtil.log("VideoMediaxPlayer -> formatBaseUrl -> url =  " + url + ", baseUrl = " + baseUrl);
 //            }
             return baseUrl;
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
-                LogUtil.log("VideoMediaxPlayer => formatBaseUrl => Exception: " + e.getMessage());
+                LogUtil.log("VideoMediaxPlayer -> formatBaseUrl -> Exception: " + e.getMessage());
             }
             return "";
         }
@@ -1478,87 +1476,31 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
                     .append(uri.getPath())
                     .toString();
 //            if (LogUtil.DEBUG) {
-//                LogUtil.log("VideoMediaxPlayer => formatCacheKey -> url =  " + url + ", newKey = " + newKey);
+//                LogUtil.log("VideoMediaxPlayer -> formatCacheKey -> url =  " + url + ", newKey = " + newKey);
 //            }
             return newKey;
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
-                LogUtil.log("VideoMediaxPlayer => formatCacheKey => Exception: " + e.getMessage());
+                LogUtil.log("VideoMediaxPlayer -> formatCacheKey -> Exception: " + e.getMessage());
             }
             return "";
         }
     }
 
-    private boolean loadHlsManifest(HlsManifest hlsManifest) {
+    private int formatSegmentPosition(String url) {
         try {
-            if (null == mSimpleCache)
-                throw new Exception("warning: mSimpleCache null");
-            if (null == hlsManifest)
-                throw new Exception("warning: mHlsManifest null");
-            HlsMediaPlaylist hlsMediaPlaylist = hlsManifest.mediaPlaylist;
-            if (null == hlsMediaPlaylist)
-                throw new Exception("warning: hlsMediaPlaylist null");
-
-            List<HlsMediaPlaylist.Segment> segments = hlsMediaPlaylist.segments;
-            if (segments.isEmpty())
-                throw new Exception("warning: segments isEmpty");
-
-            String url = hlsMediaPlaylist.baseUri;
-            String baseUrl = formatBaseUrl(url);
-            int size = segments.size();
-
-            if (null == mHlsSegmentInfo) {
-                mHlsSegmentInfo = new ArrayList<>(size);
-            }
-            if (null == mHlsSpanInfo) {
-                mHlsSpanInfo = new ArrayList<>(size);
-            }
-
-            for (int i = 0; i < size; i++) {
-                HlsMediaPlaylist.Segment segment = segments.get(i);
-                if (null == segment)
-                    continue;
-
-                mHlsSegmentInfo.add(segment);
-                if (LogUtil.DEBUG) {
-                    LogUtil.log("VideoMediaxPlayer => loadHlsManifest => add segment completed, size = " + size + ", baseUrl = " + baseUrl);
-                }
-
-                //
-                String segmentUrl = baseUrl + PlayerType.MarkType.SEPARATOR + segment.url;
-                String cacheKey = formatCacheKey(segmentUrl);
-
-                NavigableSet<CacheSpan> cachedSpans = mSimpleCache.getCachedSpans(cacheKey);
-                if (cachedSpans.isEmpty())
-                    continue;
-
-                for (CacheSpan span : cachedSpans) {
-                    if (null == span)
-                        continue;
-                    if (!span.isCached)
-                        continue;
-                    HlsSpanInfo hlsSpanInfo = new HlsSpanInfo();
-                    String segmentPath = span.file.getAbsolutePath();
-                    hlsSpanInfo.setPath(segmentPath);
-                    hlsSpanInfo.setUrl(segmentUrl);
-                    hlsSpanInfo.setRelativeStartTimeUs(segment.relativeStartTimeUs);
-                    hlsSpanInfo.setDurationUs(segment.durationUs);
-                    //
-                    mHlsSpanInfo.add(hlsSpanInfo);
-                    if (LogUtil.DEBUG) {
-                        LogUtil.log("VideoMediaxPlayer => loadHlsManifest => add span completed, i = " + i + ", size = " + size + ", cacheKey = " + cacheKey + ", segmentPath = " + segmentPath + ", segmentUrl = " + segmentUrl);
-                    }
-                }
-            }
+            int startIndex = url.lastIndexOf("/");
+            int endIndex = url.lastIndexOf(".");
+            String substring = url.substring(startIndex + 1, endIndex);
             if (LogUtil.DEBUG) {
-                LogUtil.log("VideoMediaxPlayer => loadHlsManifest => completed, mHlsSegmentInfo.size = " + mHlsSegmentInfo.size());
+                LogUtil.log("VideoMediaxPlayer -> formatSegmentPosition -> substring = " + substring);
             }
-            return true;
+            return Integer.parseInt(substring);
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
-                LogUtil.log("VideoMediaxPlayer => loadHlsManifest => Exception " + e.getMessage());
+                LogUtil.log("VideoMediaxPlayer -> formatSegmentPosition -> Exception: " + e.getMessage());
             }
-            return false;
+            return -1;
         }
     }
 
@@ -1566,52 +1508,68 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
         try {
             if (null == mSimpleCache)
                 throw new Exception("warning: mSimpleCache null");
-            if (null == mHlsSpanInfo)
-                throw new Exception("warning: mHlsSpanInfo null");
+            if (null == mHlsSpanInfos)
+                throw new Exception("warning: mHlsSpanInfos null");
             if (null == loadEventInfo)
                 throw new Exception("warning: loadEventInfo null");
             if (null == mediaLoadData)
                 throw new Exception("warning: mediaLoadData null");
 
-            if (mediaLoadData.dataType == C.DATA_TYPE_MEDIA) {
-                DataSpec dataSpec = loadEventInfo.dataSpec;
+            if (LogUtil.DEBUG) {
+                LogUtil.log("VideoMediaxPlayer -> loadHlsSpanInfo -> mediaLoadData.dataType = " + mediaLoadData.dataType + ", mediaLoadData.trackType = " + mediaLoadData.trackType + ", mediaLoadData.mediaStartTimeMs = " + mediaLoadData.mediaStartTimeMs + ", mediaLoadData.mediaEndTimeMs = " + mediaLoadData.mediaEndTimeMs);
+            }
 
-                HlsSpanInfo tempSpanInfo = mHlsSpanInfo.get((int) dataSpec.position);
-                if (null != tempSpanInfo)
-                    throw new Exception("warning: tempSpanInfo already cons");
+            if (mediaLoadData.dataType == C.DATA_TYPE_MANIFEST) {
+                if (LogUtil.DEBUG) {
+                    DataSpec dataSpec = loadEventInfo.dataSpec;
+                    LogUtil.log("VideoMediaxPlayer -> loadHlsSpanInfo -> .m3u8 索引文件, dataSpec.uri = " + dataSpec.uri);
+                }
+            } else if (mediaLoadData.dataType == C.DATA_TYPE_MEDIA) {
+                DataSpec dataSpec = loadEventInfo.dataSpec;
 
                 Uri uri = dataSpec.uri;
                 if (null == uri)
                     throw new Exception("warning: uri null");
+
                 String segmentUrl = uri.toString();
                 if (segmentUrl.isEmpty())
                     throw new Exception("warning: segmentUrl isEmpty");
+
+                int segmentPosition = formatSegmentPosition(segmentUrl);
+                if (segmentPosition < 0)
+                    throw new Exception("warning: segmentPosition < 0");
+
+                HlsSpanInfo spanInfos = mHlsSpanInfos.get(segmentPosition);
+                if (null != spanInfos)
+                    throw new Exception("warning: spanInfos already contains, segmentPosition = " + segmentPosition);
+
                 String cacheKey = formatCacheKey(segmentUrl);
                 if (cacheKey.isEmpty())
                     throw new Exception("warning: cacheKey isEmpty");
 
-                HlsMediaPlaylist.Segment segment = mHlsSegmentInfo.get((int) dataSpec.position);
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("VideoMediaxPlayer -> loadHlsSpanInfo -> .m3u8 缓存文件, cacheKey = " + cacheKey + ", segmentUrl = " + segmentUrl);
+                }
+
                 NavigableSet<CacheSpan> cachedSpans = mSimpleCache.getCachedSpans(cacheKey);
+                if (cachedSpans.isEmpty())
+                    throw new Exception("warning: cachedSpans isEmpty");
+
                 for (CacheSpan span : cachedSpans) {
                     if (null == span)
                         continue;
-                    if (!span.isCached)
+                    if (span.isCached)
                         continue;
                     HlsSpanInfo hlsSpanInfo = new HlsSpanInfo();
-                    String segmentPath = span.file.getAbsolutePath();
-                    hlsSpanInfo.setPath(segmentPath);
+                    hlsSpanInfo.setPath(span.file.getAbsolutePath());
                     hlsSpanInfo.setUrl(segmentUrl);
-                    hlsSpanInfo.setRelativeStartTimeUs(segment.relativeStartTimeUs);
-                    hlsSpanInfo.setDurationUs(segment.durationUs);
-//                    //
-//                    if (null == mHlsSpanInfo) {
-//                        mHlsSpanInfo = new LinkedHashMap<>();
-//                    }
+                    hlsSpanInfo.setStartTimeMs(mediaLoadData.mediaStartTimeMs);
+                    hlsSpanInfo.setEndTimeMs(mediaLoadData.mediaEndTimeMs);
 
                     if (LogUtil.DEBUG) {
-                        LogUtil.log("VideoMediaxPlayer => loadHlsSpanInfo2 => completed, segmentPath = " + segmentPath + ", segmentUrl = " + segmentUrl + ", mHlsSpanInfo.size = " + mHlsSpanInfo.size());
+                        LogUtil.log("VideoMediaxPlayer -> loadHlsSpanInfo -> add span completed, hlsSpanInfo = " + hlsSpanInfo);
                     }
-                    mHlsSpanInfo.set((int) dataSpec.position, hlsSpanInfo);
+                    mHlsSpanInfos.add(hlsSpanInfo);
                 }
             } else {
                 throw new Exception("warning: not support mediaLoadData.dataType = " + mediaLoadData.dataType);
@@ -1619,7 +1577,7 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
             return true;
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
-                LogUtil.log("VideoMediaxPlayer => loadHlsSpanInfo => Exception " + e.getMessage());
+                LogUtil.log("VideoMediaxPlayer -> loadHlsSpanInfo -> Exception " + e.getMessage());
             }
             return false;
         }
@@ -1629,14 +1587,14 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
         @Override
         public void onSpanAdded(androidx.media3.datasource.cache.Cache cache, CacheSpan cacheSpan) {
             if (LogUtil.DEBUG) {
-                LogUtil.log("VideoMediaxPlayer => Cache.Listener => onSpanAdded -> span = " + cacheSpan);
+                LogUtil.log("VideoMediaxPlayer -> Cache.Listener -> onSpanAdded -> span = " + cacheSpan);
             }
         }
 
         @Override
         public void onSpanRemoved(androidx.media3.datasource.cache.Cache cache, CacheSpan cacheSpan) {
             if (LogUtil.DEBUG) {
-                LogUtil.log("VideoMediaxPlayer => Cache.Listener => onSpanRemoved -> span = " + cacheSpan);
+                LogUtil.log("VideoMediaxPlayer -> Cache.Listener -> onSpanRemoved -> span = " + cacheSpan);
             }
         }
 
@@ -1647,28 +1605,82 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
 
     private final AnalyticsListener mAnalyticsListener = new AnalyticsListener() {
 
+        /**
+         * 初始化当前的 本地所有缓存
+         * @param eventTime
+         * @param i
+         */
         @Override
         public void onTimelineChanged(AnalyticsListener.EventTime eventTime, int i) {
-            Object manifest = mExoPlayer.getCurrentManifest();
-            if (LogUtil.DEBUG) {
-                LogUtil.log("VideoMediaxPlayer => onTimelineChanged => manifest = " + manifest);
-            }
-            if (manifest instanceof HlsManifest) {
-                loadHlsManifest((HlsManifest) manifest);
+            try {
+                if (null == mSimpleCache)
+                    throw new Exception("warning: mSimpleCache null");
+                Object currentManifest = mExoPlayer.getCurrentManifest();
+                if (null == currentManifest)
+                    throw new Exception("warning: currentManifest null");
+                if (!(currentManifest instanceof HlsManifest))
+                    throw new Exception("warning: currentManifest not instanceof HlsManifest");
+                HlsMediaPlaylist hlsMediaPlaylist = ((HlsManifest) currentManifest).mediaPlaylist;
+                if (null == hlsMediaPlaylist)
+                    throw new Exception("warning: hlsMediaPlaylist null");
+                List<HlsMediaPlaylist.Segment> segments = hlsMediaPlaylist.segments;
+                if (null == segments)
+                    throw new Exception("warning: segments null");
+                String url = hlsMediaPlaylist.baseUri;
+                String baseUrl = formatBaseUrl(url);
+                for (HlsMediaPlaylist.Segment segment : segments) {
+                    if (null == segment)
+                        continue;
+
+                    String segmentUrl = baseUrl + PlayerType.MarkType.SEPARATOR + segment.url;
+                    String cacheKey = formatCacheKey(segmentUrl);
+
+                    NavigableSet<CacheSpan> cachedSpans = mSimpleCache.getCachedSpans(cacheKey);
+                    if (cachedSpans.isEmpty())
+                        continue;
+
+                    for (CacheSpan span : cachedSpans) {
+                        if (null == span)
+                            continue;
+                        if (!span.isCached)
+                            continue;
+                        HlsSpanInfo hlsSpanInfo = new HlsSpanInfo();
+                        String segmentPath = span.file.getAbsolutePath();
+                        hlsSpanInfo.setPath(segmentPath);
+                        hlsSpanInfo.setUrl(segmentUrl);
+                        long startTimeMs = segment.relativeStartTimeUs / 1000;
+                        hlsSpanInfo.setStartTimeMs(startTimeMs);
+                        long endTimeMs = startTimeMs + segment.durationUs / 1000;
+                        hlsSpanInfo.setEndTimeMs(endTimeMs);
+
+                        if (null == mHlsSpanInfos) {
+                            mHlsSpanInfos = new LinkedList<>();
+                        }
+                        mHlsSpanInfos.add(hlsSpanInfo);
+                    }
+
+                }
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("VideoMediaxPlayer -> onTimelineChanged -> load segments completed, mHlsSpanInfos.size = " + mHlsSpanInfos.size());
+                }
+            } catch (Exception e) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("VideoMediaxPlayer -> onTimelineChanged -> Exception: " + e.getMessage());
+                }
             }
         }
 
         @Override
         public void onPlayerErrorChanged(EventTime eventTime, @Nullable PlaybackException e) {
             if (LogUtil.DEBUG) {
-                LogUtil.log("VideoMediaxPlayer => onPlayerErrorChanged => message = " + e.getMessage(), e);
+                LogUtil.log("VideoMediaxPlayer -> onPlayerErrorChanged -> message = " + e.getMessage(), e);
             }
         }
 
         @Override
         public void onPlayWhenReadyChanged(AnalyticsListener.EventTime eventTime, boolean playWhenReady, int reason) {
             if (LogUtil.DEBUG) {
-                LogUtil.log("VideoMediaxPlayer => onPlayWhenReadyChanged => playWhenReady = " + playWhenReady + ", reason = " + reason);
+                LogUtil.log("VideoMediaxPlayer -> onPlayWhenReadyChanged -> playWhenReady = " + playWhenReady + ", reason = " + reason);
             }
         }
 
@@ -1684,35 +1696,35 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
                 onEvent(PlayerType.KernelType.MEDIA_V3, PlayerType.EventType.ERROR);
             } catch (Exception e) {
                 if (LogUtil.DEBUG) {
-                    LogUtil.log("VideoMediaxPlayer => onPlayerError => error = " + error.getMessage());
+                    LogUtil.log("VideoMediaxPlayer -> onPlayerError -> error = " + error.getMessage());
                 }
             }
         }
 
         public void onEvents(Player player, AnalyticsListener.Events events) {
             if (LogUtil.DEBUG) {
-                LogUtil.log("VideoMediaxPlayer => onEvents => isPlaying = " + player.isPlaying());
+                LogUtil.log("VideoMediaxPlayer -> onEvents -> isPlaying = " + player.isPlaying());
             }
         }
 
         @Override
         public void onVideoSizeChanged(AnalyticsListener.EventTime eventTime, VideoSize videoSize) {
             if (LogUtil.DEBUG) {
-                LogUtil.log("VideoMediaxPlayer => onVideoSizeChanged => width = " + videoSize.width + ", height = " + videoSize.height);
+                LogUtil.log("VideoMediaxPlayer -> onVideoSizeChanged -> width = " + videoSize.width + ", height = " + videoSize.height);
             }
         }
 
         @Override
         public void onIsPlayingChanged(AnalyticsListener.EventTime eventTime, boolean isPlaying) {
             if (LogUtil.DEBUG) {
-                LogUtil.log("VideoMediaxPlayer => onIsPlayingChanged => isPlaying = " + isPlaying);
+                LogUtil.log("VideoMediaxPlayer -> onIsPlayingChanged -> isPlaying = " + isPlaying);
             }
         }
 
         @Override
         public void onLoadError(EventTime eventTime, LoadEventInfo loadEventInfo, MediaLoadData mediaLoadData, IOException e, boolean b) {
             if (LogUtil.DEBUG) {
-                LogUtil.log("VideoMediaxPlayer => onLoadError =>");
+                LogUtil.log("VideoMediaxPlayer -> onLoadError ->");
             }
             stop();
             onEvent(PlayerType.KernelType.MEDIA_V3, PlayerType.EventType.STOP);
@@ -1723,7 +1735,7 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
         public void onLoadCompleted(EventTime eventTime, LoadEventInfo loadEventInfo, MediaLoadData mediaLoadData) {
             if (LogUtil.DEBUG) {
 //                long position = loadEventInfo.dataSpec.position;
-                LogUtil.log("VideoMediaxPlayer => onLoadCompleted => mediaLoadData.dataType = " + mediaLoadData.dataType + ", loadEventInfo.dataSpec.position = " + loadEventInfo.dataSpec.position + ", loadEventInfo.dataSpec.uri = " + loadEventInfo.dataSpec.uri);
+                LogUtil.log("VideoMediaxPlayer -> onLoadCompleted -> mediaLoadData.dataType = " + mediaLoadData.dataType + ", loadEventInfo.dataSpec.position = " + loadEventInfo.dataSpec.position + ", loadEventInfo.dataSpec.uri = " + loadEventInfo.dataSpec.uri);
             }
             loadHlsSpanInfo(loadEventInfo, mediaLoadData);
         }
@@ -1734,20 +1746,20 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
             // 播放错误
             if (state == Player.STATE_IDLE) {
                 if (LogUtil.DEBUG) {
-                    LogUtil.log("VideoMediaxPlayer => onPlaybackStateChanged -> state[Player.STATE_IDLE] = " + state);
+                    LogUtil.log("VideoMediaxPlayer -> onPlaybackStateChanged -> state[Player.STATE_IDLE] = " + state);
                 }
             }
             // 播放完成
             else if (state == Player.STATE_ENDED) {
                 if (LogUtil.DEBUG) {
-                    LogUtil.log("VideoMediaxPlayer => onPlaybackStateChanged -> state[Player.STATE_ENDED] = " + state);
+                    LogUtil.log("VideoMediaxPlayer -> onPlaybackStateChanged -> state[Player.STATE_ENDED] = " + state);
                 }
                 onEvent(PlayerType.KernelType.MEDIA_V3, PlayerType.EventType.COMPLETE);
             }
             // 播放开始
             else if (state == Player.STATE_READY) {
                 if (LogUtil.DEBUG) {
-                    LogUtil.log("VideoMediaxPlayer => onPlaybackStateChanged -> state[Player.STATE_READY] = " + state);
+                    LogUtil.log("VideoMediaxPlayer -> onPlaybackStateChanged -> state[Player.STATE_READY] = " + state);
                 }
                 try {
                     if (!isPrepared)
@@ -1756,7 +1768,7 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
                     // buffering
                     if (isBuffering) {
                         if (LogUtil.DEBUG) {
-                            LogUtil.log("VideoMediaxPlayer => onPlaybackStateChanged -> state[Player.STATE_READY] -> buffering");
+                            LogUtil.log("VideoMediaxPlayer -> onPlaybackStateChanged -> state[Player.STATE_READY] -> buffering");
                         }
                         isBuffering = false;
                         onEvent(PlayerType.KernelType.MEDIA_V3, PlayerType.EventType.BUFFERING_STOP);
@@ -1764,7 +1776,7 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
                     // seeking
                     else if (mSeeking) {
                         if (LogUtil.DEBUG) {
-                            LogUtil.log("VideoMediaxPlayer => onPlaybackStateChanged -> state[Player.STATE_READY] -> seeking");
+                            LogUtil.log("VideoMediaxPlayer -> onPlaybackStateChanged -> state[Player.STATE_READY] -> seeking");
                         }
                         mSeeking = false;
                         onEvent(PlayerType.KernelType.MEDIA_V3, PlayerType.EventType.SEEK_FINISH);
@@ -1795,7 +1807,7 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
                     // start ready
                     else {
                         if (LogUtil.DEBUG) {
-                            LogUtil.log("VideoMediaxPlayer => onPlaybackStateChanged -> state[Player.STATE_READY] -> start ready");
+                            LogUtil.log("VideoMediaxPlayer -> onPlaybackStateChanged -> state[Player.STATE_READY] -> start ready");
                         }
                         boolean playWhenReady = isPlayWhenReady();
                         onEvent(PlayerType.KernelType.MEDIA_V3, playWhenReady ? PlayerType.EventType.START_PLAY_WHEN_READY_TRUE : PlayerType.EventType.START_PLAY_WHEN_READY_FALSE);
@@ -1812,14 +1824,14 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
 
                 } catch (Exception e) {
                     if (LogUtil.DEBUG) {
-                        LogUtil.log("VideoMediaxPlayer => onPlaybackStateChanged -> state[Player.STATE_READY] -> Exception " + e.getMessage());
+                        LogUtil.log("VideoMediaxPlayer -> onPlaybackStateChanged -> state[Player.STATE_READY] -> Exception " + e.getMessage());
                     }
                 }
             }
             // 播放缓冲
             else if (state == Player.STATE_BUFFERING) {
                 if (LogUtil.DEBUG) {
-                    LogUtil.log("VideoMediaxPlayer => onPlaybackStateChanged -> state[Player.STATE_BUFFERING] = " + state);
+                    LogUtil.log("VideoMediaxPlayer -> onPlaybackStateChanged -> state[Player.STATE_BUFFERING] = " + state);
                 }
                 try {
                     if (!isPrepared)
@@ -1828,14 +1840,14 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
                     onEvent(PlayerType.KernelType.MEDIA_V3, PlayerType.EventType.BUFFERING_START);
                 } catch (Exception e) {
                     if (LogUtil.DEBUG) {
-                        LogUtil.log("VideoMediaxPlayer => onPlaybackStateChanged -> state[Player.STATE_BUFFERING] -> Exception " + state);
+                        LogUtil.log("VideoMediaxPlayer -> onPlaybackStateChanged -> state[Player.STATE_BUFFERING] -> Exception " + state);
                     }
                 }
             }
             // ????
             else {
                 if (LogUtil.DEBUG) {
-                    LogUtil.log("VideoMediaxPlayer => onPlaybackStateChanged -> state[????] = " + state);
+                    LogUtil.log("VideoMediaxPlayer -> onPlaybackStateChanged -> state[????] = " + state);
                 }
             }
         }
@@ -1843,7 +1855,7 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
         @Override
         public void onVideoInputFormatChanged(AnalyticsListener.EventTime eventTime, Format format, @Nullable DecoderReuseEvaluation decoderReuseEvaluation) {
             if (LogUtil.DEBUG) {
-                LogUtil.log("VideoMediaxPlayer => onVideoInputFormatChanged[出画面] => width = " + format.width + ", height = " + format.height);
+                LogUtil.log("VideoMediaxPlayer -> onVideoInputFormatChanged[出画面] -> width = " + format.width + ", height = " + format.height);
             }
             // 视频信息
             try {
@@ -1857,7 +1869,7 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
                 onVideoFormatChanged(PlayerType.KernelType.MEDIA_V3, rotation, scaleType, format.width, format.height, format.bitrate);
             } catch (Exception e) {
                 if (LogUtil.DEBUG) {
-                    LogUtil.log("VideoMediaxPlayer => onVideoInputFormatChanged => " + e.getMessage());
+                    LogUtil.log("VideoMediaxPlayer -> onVideoInputFormatChanged -> " + e.getMessage());
                 }
             }
 
@@ -1881,7 +1893,7 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
                 }
             } catch (Exception e) {
                 if (LogUtil.DEBUG) {
-                    LogUtil.log("VideoMediaxPlayer => onVideoInputFormatChanged => Exception " + e.getMessage());
+                    LogUtil.log("VideoMediaxPlayer -> onVideoInputFormatChanged -> Exception " + e.getMessage());
                 }
             }
         }
@@ -1889,49 +1901,49 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
         @Override
         public void onRenderedFirstFrame(AnalyticsListener.EventTime eventTime, Object output, long renderTimeMs) {
             if (LogUtil.DEBUG) {
-                LogUtil.log("VideoMediaxPlayer => onRenderedFirstFrame =>");
+                LogUtil.log("VideoMediaxPlayer -> onRenderedFirstFrame ->");
             }
         }
 
         @Override
         public void onAudioInputFormatChanged(AnalyticsListener.EventTime eventTime, Format format, @Nullable DecoderReuseEvaluation decoderReuseEvaluation) {
             if (LogUtil.DEBUG) {
-                LogUtil.log("VideoMediaxPlayer => onAudioInputFormatChanged =>");
+                LogUtil.log("VideoMediaxPlayer -> onAudioInputFormatChanged ->");
             }
         }
 
         @Override
         public void onSeekStarted(EventTime eventTime) {
             if (LogUtil.DEBUG) {
-                LogUtil.log("VideoMediaxPlayer => onSeekStarted =>");
+                LogUtil.log("VideoMediaxPlayer -> onSeekStarted ->");
             }
         }
 
         @Override
         public void onSeekBackIncrementChanged(EventTime eventTime, long l) {
             if (LogUtil.DEBUG) {
-                LogUtil.log("VideoMediaxPlayer => onSeekBackIncrementChanged =>");
+                LogUtil.log("VideoMediaxPlayer -> onSeekBackIncrementChanged ->");
             }
         }
 
         @Override
         public void onSeekForwardIncrementChanged(EventTime eventTime, long l) {
             if (LogUtil.DEBUG) {
-                LogUtil.log("VideoMediaxPlayer => onSeekForwardIncrementChanged =>");
+                LogUtil.log("VideoMediaxPlayer -> onSeekForwardIncrementChanged ->");
             }
         }
 
         @Override
         public void onCues(EventTime eventTime, CueGroup cueGroup) {
             if (LogUtil.DEBUG) {
-                LogUtil.log("VideoMediaxPlayer => onCues => cueGroup = " + cueGroup);
+                LogUtil.log("VideoMediaxPlayer -> onCues -> cueGroup = " + cueGroup);
             }
         }
 
         @Override
         public void onCues(EventTime eventTime, List<Cue> cues) {
             if (LogUtil.DEBUG) {
-                LogUtil.log("VideoMediaxPlayer => onCues => cues = " + cues);
+                LogUtil.log("VideoMediaxPlayer -> onCues -> cues = " + cues);
             }
 
             try {
@@ -1960,13 +1972,13 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
         @Override
         public void onTrackSelectionParametersChanged(EventTime eventTime, TrackSelectionParameters trackSelectionParameters) {
             if (LogUtil.DEBUG) {
-                LogUtil.log("VideoMediaxPlayer => onTrackSelectionParametersChanged => trackSelectionParameters = " + trackSelectionParameters);
+                LogUtil.log("VideoMediaxPlayer -> onTrackSelectionParametersChanged -> trackSelectionParameters = " + trackSelectionParameters);
             }
 //
 //            int rendererCount = mExoPlayer.getRendererCount();
 //            for(int i=0;i<rendererCount;i++){
 //                int rendererType = mExoPlayer.getRendererType(i);
-//                LogUtil.log("VideoMediaxPlayer => onTrackSelectionParametersChanged => i = "+i+", rendererType = "+rendererType);
+//                LogUtil.log("VideoMediaxPlayer -> onTrackSelectionParametersChanged -> i = "+i+", rendererType = "+rendererType);
 //                mExoPlayer.getRenderer(i)
 //            .(videoRendererIndex, true) // 禁用视频渲染器
 //            player.setRendererDisabled(videoRendererIndex, false) // 重新启用
@@ -1995,7 +2007,7 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
         @Override
         public void onTracksChanged(EventTime eventTime, Tracks tracks) {
             if (LogUtil.DEBUG) {
-                LogUtil.log("VideoMediaxPlayer => onTracksChanged => tracks = " + tracks);
+                LogUtil.log("VideoMediaxPlayer -> onTracksChanged -> tracks = " + tracks);
             }
 
 //            if (videoIndex != -100) {
@@ -2006,7 +2018,7 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
 //                for (int i = 0; i < trackSelector.getCurrentMappedTrackInfo().getRendererCount(); i++) {
 //                    if (trackSelector.getCurrentMappedTrackInfo().getRendererType(i) == C.TRACK_TYPE_VIDEO) {
 //                        videoIndex = i;
-//                        LogUtil.log("VideoMediaxPlayer => onTracksChanged => i = " + i);
+//                        LogUtil.log("VideoMediaxPlayer -> onTracksChanged -> i = " + i);
 //                        break;
 //                    }
 //                }
@@ -2019,7 +2031,7 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
         @Override
         public void onSurfaceSizeChanged(EventTime eventTime, int i, int i1) {
             if (LogUtil.DEBUG) {
-                LogUtil.log("VideoMediaxPlayer => onSurfaceSizeChanged => i = " + i + ", i1 = " + i1);
+                LogUtil.log("VideoMediaxPlayer -> onSurfaceSizeChanged -> i = " + i + ", i1 = " + i1);
             }
         }
     };
@@ -2052,7 +2064,7 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
             return true;
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
-                LogUtil.log("VideoMediaxPlayer => toggleTrack => " + e.getMessage());
+                LogUtil.log("VideoMediaxPlayer -> toggleTrack -> " + e.getMessage());
             }
             return false;
         }
@@ -2080,7 +2092,7 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
 
                 if (LogUtil.DEBUG) {
                     TrackGroup trackGroup = group.getMediaTrackGroup();
-                    LogUtil.log("VideoMediaxPlayer => getTrackInfo => trackGroup.id = " + trackGroup.id + ", trackGroup.length = " + trackGroup.length);
+                    LogUtil.log("VideoMediaxPlayer -> getTrackInfo -> trackGroup.id = " + trackGroup.id + ", trackGroup.length = " + trackGroup.length);
                 }
 
                 int trackType = group.getType();
@@ -2102,7 +2114,7 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
                     //
                     Format format = group.getTrackFormat(trackIndex);
                     if (LogUtil.DEBUG) {
-                        LogUtil.log("VideoMediaxPlayer => getTrackInfo => format = " + format + ", format.metadata = " + format.metadata);
+                        LogUtil.log("VideoMediaxPlayer -> getTrackInfo -> format = " + format + ", format.metadata = " + format.metadata);
                     }
 
                     TrackInfo trackInfo = new TrackInfo();
@@ -2177,12 +2189,12 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
                     }
                     // 媒体信息
                     else if (type == -1 && trackType == C.TRACK_TYPE_METADATA) {
-                        // LogUtil.log("VideoMediaxPlayer => getTrackInfo[C.TRACK_TYPE_METADATA] => groupCount = " + groupCount + ", groupIndex = " + groupIndex + ", trackCount = " + trackCount + ", trackIndex = " + trackIndex + ", trackType = " + trackType + ", isGroupAdaptiveSupported = " + isGroupAdaptiveSupported + ", isGroupSelected = " + isGroupSelected + ", isGroupSupported = " + isGroupSupported + ", isTrackSelected = " + isTrackSelected + ", isTrackSupported = " + isTrackSupported);
+                        // LogUtil.log("VideoMediaxPlayer -> getTrackInfo[C.TRACK_TYPE_METADATA] -> groupCount = " + groupCount + ", groupIndex = " + groupIndex + ", trackCount = " + trackCount + ", trackIndex = " + trackIndex + ", trackType = " + trackType + ", isGroupAdaptiveSupported = " + isGroupAdaptiveSupported + ", isGroupSelected = " + isGroupSelected + ", isGroupSupported = " + isGroupSupported + ", isTrackSelected = " + isTrackSelected + ", isTrackSupported = " + isTrackSupported);
                         continue;
                     }
                     // 未知
                     else {
-                        //  LogUtil.log("VideoMediaxPlayer => getTrackInfo[Unknow] => groupCount = " + groupCount + ", groupIndex = " + groupIndex + ", trackCount = " + trackCount + ", trackIndex = " + trackIndex + ", trackType = " + trackType + ", isGroupAdaptiveSupported = " + isGroupAdaptiveSupported + ", isGroupSelected = " + isGroupSelected + ", isGroupSupported = " + isGroupSupported + ", isTrackSelected = " + isTrackSelected + ", isTrackSupported = " + isTrackSupported);
+                        //  LogUtil.log("VideoMediaxPlayer -> getTrackInfo[Unknow] -> groupCount = " + groupCount + ", groupIndex = " + groupIndex + ", trackCount = " + trackCount + ", trackIndex = " + trackIndex + ", trackType = " + trackType + ", isGroupAdaptiveSupported = " + isGroupAdaptiveSupported + ", isGroupSelected = " + isGroupSelected + ", isGroupSupported = " + isGroupSupported + ", isTrackSelected = " + isTrackSelected + ", isTrackSupported = " + isTrackSupported);
                         continue;
                     }
 
@@ -2238,7 +2250,7 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
 //                    object.put("subsampleOffsetUs", format.subsampleOffsetUs);
 ////                    object.put("hasPrerollSamples", format.hasPrerollSamples);
 
-                    //   LogUtil.log("VideoMediaxPlayer => getTrackInfo => groupCount = " + groupCount + ", groupIndex = " + groupIndex + ", trackCount = " + trackCount + ", trackIndex = " + trackIndex + ", trackType = " + trackType + ", isGroupAdaptiveSupported = " + isGroupAdaptiveSupported + ", isGroupSelected = " + isGroupSelected + ", isGroupSupported = " + isGroupSupported + ", isTrackSelected = " + isTrackSelected + ", isTrackSupported = " + isTrackSupported + ", isTrackMixed = " + isTrackMixed + ", isTrackMixedSelected = " + isTrackMixedSelected + ", format = " + object);
+                    //   LogUtil.log("VideoMediaxPlayer -> getTrackInfo -> groupCount = " + groupCount + ", groupIndex = " + groupIndex + ", trackCount = " + trackCount + ", trackIndex = " + trackIndex + ", trackType = " + trackType + ", isGroupAdaptiveSupported = " + isGroupAdaptiveSupported + ", isGroupSelected = " + isGroupSelected + ", isGroupSupported = " + isGroupSupported + ", isTrackSelected = " + isTrackSelected + ", isTrackSupported = " + isTrackSupported + ", isTrackMixed = " + isTrackMixed + ", isTrackMixedSelected = " + isTrackMixedSelected + ", format = " + object);
                     //
                     list.add(trackInfo);
                 }
@@ -2251,7 +2263,7 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
             return list;
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
-                LogUtil.log("VideoMediaxPlayer => getTrackInfo => Exception " + e.getMessage());
+                LogUtil.log("VideoMediaxPlayer -> getTrackInfo -> Exception " + e.getMessage());
             }
             return null;
         }
@@ -2260,12 +2272,12 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
     @Override
     public List<HlsSpanInfo> getSegments() {
         try {
-            if (null == mHlsSpanInfo)
+            if (null == mHlsSpanInfos)
                 throw new Exception("warning: mHlsSpanInfo null");
-            return mHlsSpanInfo;
+            return mHlsSpanInfos;
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
-                LogUtil.log("VideoMediaxPlayer => getBufferedHlsSpanInfo => Exception " + e.getMessage());
+                LogUtil.log("VideoMediaxPlayer -> getSegments -> Exception " + e.getMessage());
             }
             return null;
         }
@@ -2293,7 +2305,7 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
             return true;
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
-                LogUtil.log("VideoMediaxPlayer => appendSubtitleOffsetMs => Exception " + e.getMessage());
+                LogUtil.log("VideoMediaxPlayer -> appendSubtitleOffsetMs -> Exception " + e.getMessage());
             }
             return false;
         }

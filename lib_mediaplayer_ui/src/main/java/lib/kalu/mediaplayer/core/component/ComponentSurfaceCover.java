@@ -24,7 +24,7 @@ public class ComponentSurfaceCover extends RelativeLayout implements ComponentAp
         switch (playState) {
             case PlayerType.EventType.START:
                 if (LogUtil.DEBUG) {
-                    LogUtil.log("ComponentSurfaceCover => callEventListener => show => playState = " + playState);
+                    LogUtil.log("ComponentSurfaceCover -> callEventListener -> show -> playState = " + playState);
                 }
                 hide();
                 break;
@@ -32,7 +32,7 @@ public class ComponentSurfaceCover extends RelativeLayout implements ComponentAp
             case PlayerType.EventType.RELEASE:
             case PlayerType.EventType.ERROR:
                 if (LogUtil.DEBUG) {
-                    LogUtil.log("ComponentSurfaceCover => callEventListener => gone => playState = " + playState);
+                    LogUtil.log("ComponentSurfaceCover -> callEventListener -> gone -> playState = " + playState);
                 }
                 show();
                 break;

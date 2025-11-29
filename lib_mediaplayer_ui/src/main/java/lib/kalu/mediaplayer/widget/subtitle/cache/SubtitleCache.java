@@ -71,7 +71,7 @@ public class SubtitleCache {
             md.update(str.getBytes());
             return new BigInteger(1, md.digest()).toString(16);
         } catch (Exception e) {
-            LogUtil.log("SubtitleCache => getMD5 => " + e.getMessage());
+            LogUtil.log("SubtitleCache -> getMD5 -> " + e.getMessage());
             return null;
         }
     }

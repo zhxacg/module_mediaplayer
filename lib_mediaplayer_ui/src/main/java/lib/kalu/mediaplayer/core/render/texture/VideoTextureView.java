@@ -50,7 +50,7 @@ public class VideoTextureView extends TextureView implements VideoRenderApi {
             setSurfaceTextureListener(mListener);
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
-                LogUtil.log("VideoTextureView => registListener => Exception " + e.getMessage());
+                LogUtil.log("VideoTextureView -> registListener -> Exception " + e.getMessage());
             }
         }
     }
@@ -61,7 +61,7 @@ public class VideoTextureView extends TextureView implements VideoRenderApi {
             setSurfaceTextureListener(null);
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
-                LogUtil.log("VideoTextureView => unRegistListener => Exception " + e.getMessage());
+                LogUtil.log("VideoTextureView -> unRegistListener -> Exception " + e.getMessage());
             }
         }
     }
@@ -85,7 +85,7 @@ public class VideoTextureView extends TextureView implements VideoRenderApi {
     @Override
     public void reset() {
         if (LogUtil.DEBUG) {
-            LogUtil.log("VideoTextureView => reset =>");
+            LogUtil.log("VideoTextureView -> reset ->");
         }
         setSurface(false);
     }
@@ -107,7 +107,7 @@ public class VideoTextureView extends TextureView implements VideoRenderApi {
             }
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
-                LogUtil.log("VideoTextureView => release => Exception " + e.getMessage());
+                LogUtil.log("VideoTextureView -> release -> Exception " + e.getMessage());
             }
         }
     }
@@ -189,7 +189,7 @@ public class VideoTextureView extends TextureView implements VideoRenderApi {
 //            getHolder().setFixedSize(measureSpec, measureSpec[1]);
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
-                LogUtil.log("VideoTextureView => onMeasure => Exception " + e.getMessage());
+                LogUtil.log("VideoTextureView -> onMeasure -> Exception " + e.getMessage());
             }
             super.onMeasure(widthMeasureSpec, heightMeasureSpec);
         }
@@ -206,7 +206,7 @@ public class VideoTextureView extends TextureView implements VideoRenderApi {
         @Override
         public void onSurfaceTextureAvailable(SurfaceTexture surfaceTexture, int width, int height) {
             if (LogUtil.DEBUG) {
-                LogUtil.log("VideoTextureView => onSurfaceTextureAvailable => " + this);
+                LogUtil.log("VideoTextureView -> onSurfaceTextureAvailable -> " + this);
             }
 //                VideoRenderTextureView.this.mSurfaceTexture = surfaceTexture;
 //                setSurfaceTexture(VideoRenderTextureView.this.mSurfaceTexture);
@@ -222,7 +222,7 @@ public class VideoTextureView extends TextureView implements VideoRenderApi {
         @Override
         public boolean onSurfaceTextureDestroyed(SurfaceTexture surface) {
             if (LogUtil.DEBUG) {
-                LogUtil.log("VideoTextureView => onSurfaceTextureDestroyed => " + this);
+                LogUtil.log("VideoTextureView -> onSurfaceTextureDestroyed -> " + this);
             }
             return false;
         }
@@ -236,7 +236,7 @@ public class VideoTextureView extends TextureView implements VideoRenderApi {
         @Override
         public void onSurfaceTextureSizeChanged(SurfaceTexture surface, int width, int height) {
             if (LogUtil.DEBUG) {
-                LogUtil.log("VideoTextureView => onSurfaceTextureSizeChanged => " + this);
+                LogUtil.log("VideoTextureView -> onSurfaceTextureSizeChanged -> " + this);
             }
         }
 
@@ -247,7 +247,7 @@ public class VideoTextureView extends TextureView implements VideoRenderApi {
         @Override
         public void onSurfaceTextureUpdated(SurfaceTexture surface) {
             if (LogUtil.DEBUG) {
-                LogUtil.log("VideoTextureView => onSurfaceTextureUpdated => " + this);
+                LogUtil.log("VideoTextureView -> onSurfaceTextureUpdated -> " + this);
             }
         }
     };

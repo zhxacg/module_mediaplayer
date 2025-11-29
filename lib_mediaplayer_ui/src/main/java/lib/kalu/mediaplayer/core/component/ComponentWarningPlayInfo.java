@@ -38,13 +38,13 @@ public class ComponentWarningPlayInfo extends RelativeLayout implements Componen
             case PlayerType.EventType.COMPONENT_SEEK_SHOW:
             case PlayerType.EventType.START_PLAY_WHEN_READY_FALSE:
                 if (LogUtil.DEBUG) {
-                    LogUtil.log("ComponentWarningPlayInfo => callEvent => START_PLAY_WHEN_READY_FALSE");
+                    LogUtil.log("ComponentWarningPlayInfo -> callEvent -> START_PLAY_WHEN_READY_FALSE");
                 }
                 hide();
                 break;
             case PlayerType.EventType.VIDEO_RENDERING_START:
                 if (LogUtil.DEBUG) {
-                    LogUtil.log("ComponentWarningPlayInfo => callEvent => VIDEO_RENDERING_START");
+                    LogUtil.log("ComponentWarningPlayInfo -> callEvent -> VIDEO_RENDERING_START");
                 }
                 show();
                 break;
@@ -86,7 +86,7 @@ public class ComponentWarningPlayInfo extends RelativeLayout implements Componen
 
     @Override
     public void show() {
-//        LogUtil.log("ComponentWarningPlayInfo => show");
+//        LogUtil.log("ComponentWarningPlayInfo -> show");
 
         try {
             boolean componentShowing = isComponentShowing();
@@ -126,7 +126,7 @@ public class ComponentWarningPlayInfo extends RelativeLayout implements Componen
 
     @Override
     public void hide() {
-//        LogUtil.log("ComponentWarningPlayInfo => hide");
+//        LogUtil.log("ComponentWarningPlayInfo -> hide");
 
         try {
             // 1
@@ -139,7 +139,7 @@ public class ComponentWarningPlayInfo extends RelativeLayout implements Componen
             recordView.setText("");
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
-                LogUtil.log("ComponentWarningPlayInfo => hide => Exception " + e.getMessage());
+                LogUtil.log("ComponentWarningPlayInfo -> hide -> Exception " + e.getMessage());
             }
         }
     }

@@ -25,19 +25,19 @@ public class ComponentPrepareGradient extends RelativeLayout implements Componen
         switch (playState) {
             case PlayerType.EventType.INIT:
                 if (LogUtil.DEBUG) {
-                    LogUtil.log("ComponentLoadingGradient => callEvent => INIT");
+                    LogUtil.log("ComponentLoadingGradient -> callEvent -> INIT");
                 }
                 show();
                 break;
             case PlayerType.EventType.VIDEO_RENDERING_START:
                 if (LogUtil.DEBUG) {
-                    LogUtil.log("ComponentLoadingGradient => callEvent => VIDEO_RENDERING_START");
+                    LogUtil.log("ComponentLoadingGradient -> callEvent -> VIDEO_RENDERING_START");
                 }
                 hide();
                 break;
             case PlayerType.EventType.ERROR:
                 if (LogUtil.DEBUG) {
-                    LogUtil.log("ComponentLoadingGradient => callEvent => ERROR");
+                    LogUtil.log("ComponentLoadingGradient -> callEvent -> ERROR");
                 }
                 hide();
                 break;
@@ -69,7 +69,7 @@ public class ComponentPrepareGradient extends RelativeLayout implements Componen
             }
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
-                LogUtil.log("ComponentLoadingGradient => show => Exception " + e.getMessage());
+                LogUtil.log("ComponentLoadingGradient -> show -> Exception " + e.getMessage());
             }
         }
     }
@@ -86,7 +86,7 @@ public class ComponentPrepareGradient extends RelativeLayout implements Componen
             setComponentText("");
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
-                LogUtil.log("ComponentLoadingGradient => hide => Exception " + e.getMessage());
+                LogUtil.log("ComponentLoadingGradient -> hide -> Exception " + e.getMessage());
             }
         }
     }

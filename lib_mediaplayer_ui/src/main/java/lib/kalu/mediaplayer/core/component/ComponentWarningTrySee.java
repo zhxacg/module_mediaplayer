@@ -47,7 +47,7 @@ public class ComponentWarningTrySee extends RelativeLayout implements ComponentA
                 return true;
             } catch (Exception e) {
                 if (LogUtil.DEBUG) {
-                    LogUtil.log("ComponentWarningTrySee => dispatchKeyEvent => Exception " + e.getMessage());
+                    LogUtil.log("ComponentWarningTrySee -> dispatchKeyEvent -> Exception " + e.getMessage());
                 }
             }
         }
@@ -63,7 +63,7 @@ public class ComponentWarningTrySee extends RelativeLayout implements ComponentA
                     imageView.setImageResource(R.drawable.module_mediaplayer_ic_pause);
                 } catch (Exception e) {
                     if (LogUtil.DEBUG) {
-                        LogUtil.log("ComponentWarningTrySee => callEvent => PAUSE => Exception " + e.getMessage());
+                        LogUtil.log("ComponentWarningTrySee -> callEvent -> PAUSE -> Exception " + e.getMessage());
                     }
                 }
                 break;
@@ -73,7 +73,7 @@ public class ComponentWarningTrySee extends RelativeLayout implements ComponentA
                     imageView.setImageResource(R.drawable.module_mediaplayer_ic_resume);
                 } catch (Exception e) {
                     if (LogUtil.DEBUG) {
-                        LogUtil.log("ComponentWarningTrySee => callEvent => RESUME => Exception " + e.getMessage());
+                        LogUtil.log("ComponentWarningTrySee -> callEvent -> RESUME -> Exception " + e.getMessage());
                     }
                 }
                 break;
@@ -111,7 +111,7 @@ public class ComponentWarningTrySee extends RelativeLayout implements ComponentA
     public void onUpdateProgress(boolean isFromUser, long max, long position, long duration) {
 
         if (LogUtil.DEBUG) {
-            LogUtil.log("ComponentWarningTrySee => onUpdateProgress");
+            LogUtil.log("ComponentWarningTrySee -> onUpdateProgress");
         }
 
         try {
@@ -129,7 +129,7 @@ public class ComponentWarningTrySee extends RelativeLayout implements ComponentA
             seekBar.setMax((int) (max > 0 ? max : duration));
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
-                LogUtil.log("ComponentWarningTrySee => onUpdateProgress => Exception " + e.getMessage());
+                LogUtil.log("ComponentWarningTrySee -> onUpdateProgress -> Exception " + e.getMessage());
             }
         }
     }

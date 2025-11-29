@@ -22,7 +22,7 @@ public interface VideoPlayerApiComponent extends VideoPlayerApiBase {
             viewGroup.removeAllViews();
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
-                LogUtil.log("VideoPlayerApiComponent => clearAllComponent => " + e.getMessage());
+                LogUtil.log("VideoPlayerApiComponent -> clearAllComponent -> " + e.getMessage());
             }
         }
     }
@@ -49,7 +49,7 @@ public interface VideoPlayerApiComponent extends VideoPlayerApiBase {
             }
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
-                LogUtil.log("VideoPlayerApiComponent => clearComponent => " + e.getMessage());
+                LogUtil.log("VideoPlayerApiComponent -> clearComponent -> " + e.getMessage());
             }
         }
     }
@@ -65,7 +65,7 @@ public interface VideoPlayerApiComponent extends VideoPlayerApiBase {
             viewGroup.addView((View) component, 0, new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT));
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
-                LogUtil.log("VideoPlayerApiComponent => addComponent => " + e.getMessage());
+                LogUtil.log("VideoPlayerApiComponent -> addComponent -> " + e.getMessage());
             }
         }
     }
@@ -85,7 +85,7 @@ public interface VideoPlayerApiComponent extends VideoPlayerApiBase {
             }
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
-                LogUtil.log("VideoPlayerApiComponent => addAllComponent => " + e.getMessage());
+                LogUtil.log("VideoPlayerApiComponent -> addAllComponent -> " + e.getMessage());
             }
         }
     }
@@ -116,7 +116,7 @@ public interface VideoPlayerApiComponent extends VideoPlayerApiBase {
             throw new Exception("not find");
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
-                LogUtil.log("VideoPlayerApiComponent => findComponent => " + e.getMessage());
+                LogUtil.log("VideoPlayerApiComponent -> findComponent -> " + e.getMessage());
             }
             return null;
         }

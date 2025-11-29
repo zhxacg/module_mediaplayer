@@ -77,26 +77,6 @@ public final class TestActivity extends Activity {
             }
         });
 
-        findViewById(R.id.module_mediaplayer_hls_span).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                PlayerLayout playerLayout = findViewById(R.id.module_mediaplayer_test_video);
-                List<HlsSpanInfo> list = playerLayout.getSegments();
-                if (null != list) {
-                    for (HlsSpanInfo span : list) {
-                        long durationUs = span.getDurationUs();
-                        long relativeStartTimeUs = span.getRelativeStartTimeUs();
-                        String path = span.getPath();
-                        String url = span.getUrl();
-                        if (LogUtil.DEBUG) {
-                            LogUtil.log("TestActivity -> getSegments -> durationUs = " + durationUs + ", relativeStartTimeUs = " + relativeStartTimeUs + ", path = " + path + ", url = " + url);
-                        }
-                    }
-                }
-            }
-        });
-
-
         // module_mediaplayer_subtitle_offset1
         findViewById(R.id.module_mediaplayer_subtitle_offset1).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -282,7 +262,7 @@ public final class TestActivity extends Activity {
                                 @Override
                                 public void onCall(String name, StartArgs startArgs, long position, long duration) {
                                     if (LogUtil.DEBUG) {
-                                        LogUtil.log("TestActivity -> onCall => name = " + name + ", position = " + position + ", duration = " + duration + ", url = " + startArgs.getUrl());
+                                        LogUtil.log("TestActivity -> onCall -> name = " + name + ", position = " + position + ", duration = " + duration + ", url = " + startArgs.getUrl());
                                     }
                                 }
                             })

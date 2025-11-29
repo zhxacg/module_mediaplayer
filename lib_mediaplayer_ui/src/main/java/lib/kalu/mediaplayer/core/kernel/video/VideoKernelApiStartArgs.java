@@ -28,7 +28,7 @@ interface VideoKernelApiStartArgs extends VideoKernelApiBase {
             return args.getTrySeeDuration();
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
-                LogUtil.log("VideoKernelApiBase => getTrySeeDuration => Exception " + e.getMessage());
+                LogUtil.log("VideoKernelApiBase -> getTrySeeDuration -> Exception " + e.getMessage());
             }
             return 0L;
         }
@@ -42,7 +42,7 @@ interface VideoKernelApiStartArgs extends VideoKernelApiBase {
             return args.isLive();
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
-                LogUtil.log("VideoKernelApiBase => isLive => Exception " + e.getMessage());
+                LogUtil.log("VideoKernelApiBase -> isLive -> Exception " + e.getMessage());
             }
             return false;
         }
@@ -56,7 +56,7 @@ interface VideoKernelApiStartArgs extends VideoKernelApiBase {
             return args.isPlayWhenReady();
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
-                LogUtil.log("VideoKernelApiBase => isPlayWhenReady => Exception " + e.getMessage());
+                LogUtil.log("VideoKernelApiBase -> isPlayWhenReady -> Exception " + e.getMessage());
             }
             return false;
         }
@@ -70,7 +70,7 @@ interface VideoKernelApiStartArgs extends VideoKernelApiBase {
             return args.getPlayWhenReadyDelayedTime();
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
-                LogUtil.log("VideoKernelApiBase => getPlayWhenReadyDelayedTime => Exception " + e.getMessage());
+                LogUtil.log("VideoKernelApiBase -> getPlayWhenReadyDelayedTime -> Exception " + e.getMessage());
             }
             return 0L;
         }
@@ -84,7 +84,7 @@ interface VideoKernelApiStartArgs extends VideoKernelApiBase {
             return args.getPlayWhenReadySeekToPosition();
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
-                LogUtil.log("VideoKernelApiBase => getPlayWhenReadySeekToPosition => Exception " + e.getMessage());
+                LogUtil.log("VideoKernelApiBase -> getPlayWhenReadySeekToPosition -> Exception " + e.getMessage());
             }
             return 0L;
         }
@@ -106,7 +106,7 @@ interface VideoKernelApiStartArgs extends VideoKernelApiBase {
             return args;
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
-                LogUtil.log("VideoKernelApiStartArgs => getStartArgs => Exception " + e.getMessage());
+                LogUtil.log("VideoKernelApiStartArgs -> getStartArgs -> Exception " + e.getMessage());
             }
             return null;
         }
@@ -126,7 +126,7 @@ interface VideoKernelApiStartArgs extends VideoKernelApiBase {
             return aBoolean;
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
-                LogUtil.log("VideoKernelApiStartArgs => isDoWindowing => Exception " + e.getMessage());
+                LogUtil.log("VideoKernelApiStartArgs -> isDoWindowing -> Exception " + e.getMessage());
             }
             return false;
         }
