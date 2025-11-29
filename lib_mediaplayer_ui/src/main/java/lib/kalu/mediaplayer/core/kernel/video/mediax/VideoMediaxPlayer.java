@@ -1509,8 +1509,6 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
         try {
             if (null == mSimpleCache)
                 throw new Exception("warning: mSimpleCache null");
-            if (null == mHlsSpanInfos)
-                throw new Exception("warning: mHlsSpanInfos null");
             if (null == loadEventInfo)
                 throw new Exception("warning: loadEventInfo null");
             if (null == mediaLoadData)
@@ -1540,6 +1538,9 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
                 if (segmentPosition < 0)
                     throw new Exception("warning: segmentPosition < 0");
 
+                if (null == mHlsSpanInfos) {
+                    mHlsSpanInfos = new HlsSpanList();
+                }
                 HlsSpanInfo spanInfos = mHlsSpanInfos.get(segmentPosition);
                 if (null != spanInfos)
                     throw new Exception("warning: spanInfos already contains, segmentPosition = " + segmentPosition);
@@ -1559,7 +1560,7 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
                 for (CacheSpan span : cachedSpans) {
                     if (null == span)
                         continue;
-                    if (span.isCached)
+                    if (!span.isCached)
                         continue;
                     HlsSpanInfo hlsSpanInfo = new HlsSpanInfo();
                     hlsSpanInfo.setPath(span.file.getAbsolutePath());
@@ -1570,6 +1571,7 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
                     if (LogUtil.DEBUG) {
                         LogUtil.log("VideoMediaxPlayer -> loadHlsSpanInfo -> add span completed, hlsSpanInfo = " + hlsSpanInfo);
                     }
+
                     mHlsSpanInfos.add(hlsSpanInfo);
                 }
             } else {

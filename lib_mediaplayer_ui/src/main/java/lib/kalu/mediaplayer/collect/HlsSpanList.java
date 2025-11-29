@@ -28,4 +28,13 @@ public final class HlsSpanList extends LinkedList<HlsSpanInfo> {
         super.add(index, e);
         return true;
     }
+
+    @Override
+    public HlsSpanInfo get(int index) {
+        try {
+            return super.get(index);
+        }catch (Exception e){
+            return null;
+        }
+    }
 }
