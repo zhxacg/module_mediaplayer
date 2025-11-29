@@ -80,6 +80,7 @@ import lib.kalu.mediaplayer.bean.cache.Cache;
 import lib.kalu.mediaplayer.bean.info.HlsSpanInfo;
 import lib.kalu.mediaplayer.bean.info.TrackInfo;
 import lib.kalu.mediaplayer.bean.type.PlayerType;
+import lib.kalu.mediaplayer.collect.HlsSpanList;
 import lib.kalu.mediaplayer.core.kernel.video.VideoBasePlayer;
 import lib.kalu.mediaplayer.core.kernel.video.mediax.hls.CustomDefaultHlsExtractorFactory;
 import lib.kalu.mediaplayer.core.kernel.video.mediax.hls.CustomDefaultHttpDataSource;
@@ -100,7 +101,7 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
     private ExoPlayer mExoPlayer;
 
     // 缓存
-    private List<HlsSpanInfo> mHlsSpanInfos;
+    private HlsSpanList mHlsSpanInfos;
 
     @Override
     public ExoPlayer getPlayer() {
@@ -1654,7 +1655,7 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
                         hlsSpanInfo.setEndTimeMs(endTimeMs);
 
                         if (null == mHlsSpanInfos) {
-                            mHlsSpanInfos = new LinkedList<>();
+                            mHlsSpanInfos = new HlsSpanList();
                         }
                         mHlsSpanInfos.add(hlsSpanInfo);
                     }
@@ -2270,7 +2271,7 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
     }
 
     @Override
-    public List<HlsSpanInfo> getSegments() {
+    public HlsSpanList getSegments() {
         try {
             if (null == mHlsSpanInfos)
                 throw new Exception("warning: mHlsSpanInfo null");

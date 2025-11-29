@@ -3,10 +3,7 @@ package lib.kalu.mediaplayer.core.component;
 import android.content.Context;
 import android.widget.RelativeLayout;
 
-import java.util.List;
-
 import lib.kalu.mediaplayer.R;
-import lib.kalu.mediaplayer.bean.info.HlsSpanInfo;
 import lib.kalu.mediaplayer.util.LogUtil;
 import lib.kalu.mediaplayer.widget.progress.MultiSegmentProgressBar;
 
@@ -44,33 +41,7 @@ public class ComponentSeek2 extends RelativeLayout implements ComponentApi {
         if (!useCache)
             return;
 
-        List<HlsSpanInfo> segments = getPlayerView().getSegments();
-        if (LogUtil.DEBUG) {
-            LogUtil.log("ComponentSeek2 -> onUpdateProgress -> segments = " + segments);
-        }
-        if (null != segments) {
-            int size = segments.size();
-            if (LogUtil.DEBUG) {
-                LogUtil.log("ComponentSeek2 -> onUpdateProgress -> segments.size = " + size);
-            }
-            int index = -1;
-            long[] longs = new long[size * 2];
-            for (int i = 0; i < size; i++) {
-                HlsSpanInfo hlsSpanInfo = segments.get(i);
-                if (null == hlsSpanInfo)
-                    continue;
-                long startTimeMs = hlsSpanInfo.getStartTimeMs();
-                long endTimeMs = hlsSpanInfo.getEndTimeMs();
-                if (LogUtil.DEBUG) {
-                    LogUtil.log("ComponentSeek2 -> onUpdateProgress -> i = " + i + ", startTimeMs = " + startTimeMs + ", endTimeMs = " + endTimeMs);
-                }
-                longs[++index] = startTimeMs;
-                longs[++index] = endTimeMs;
-            }
-            if (LogUtil.DEBUG) {
-                LogUtil.log("ComponentSeek2 -> onUpdateProgress -> longs.length = " + longs.length);
-            }
-            progressBar.addBufferSegments(longs);
-        }
+        long[] segmentsMs = getPlayerView().getSegmentsMs();
+        progressBar.addBufferSegments(segmentsMs);
     }
 }

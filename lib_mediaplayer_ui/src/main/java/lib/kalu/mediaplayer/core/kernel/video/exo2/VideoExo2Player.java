@@ -75,6 +75,7 @@ import lib.kalu.mediaplayer.bean.cache.Cache;
 import lib.kalu.mediaplayer.bean.info.HlsSpanInfo;
 import lib.kalu.mediaplayer.bean.info.TrackInfo;
 import lib.kalu.mediaplayer.bean.type.PlayerType;
+import lib.kalu.mediaplayer.collect.HlsSpanList;
 import lib.kalu.mediaplayer.core.kernel.video.VideoBasePlayer;
 import lib.kalu.mediaplayer.core.kernel.video.exo2.proxy.CustomDefaultHttpDataSource;
 import lib.kalu.mediaplayer.core.kernel.video.exo2.proxy.CustomHlsPlaylistParserFactory;
@@ -1501,7 +1502,7 @@ public final class VideoExo2Player extends VideoBasePlayer {
     }
 
     @Override
-    public List<HlsSpanInfo> getSegments() {
+    public HlsSpanList getSegments() {
 //        try {
 //            if (null == mHlsManifest)
 //                throw new Exception("warning: mHlsManifest null");

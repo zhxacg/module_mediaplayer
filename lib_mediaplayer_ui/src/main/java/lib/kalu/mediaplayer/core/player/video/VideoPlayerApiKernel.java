@@ -12,6 +12,7 @@ import lib.kalu.mediaplayer.bean.args.StartArgs;
 import lib.kalu.mediaplayer.bean.info.HlsSpanInfo;
 import lib.kalu.mediaplayer.bean.info.TrackInfo;
 import lib.kalu.mediaplayer.bean.type.PlayerType;
+import lib.kalu.mediaplayer.collect.HlsSpanList;
 import lib.kalu.mediaplayer.core.kernel.video.VideoKernelApi;
 import lib.kalu.mediaplayer.core.kernel.video.VideoKernelApiEvent;
 import lib.kalu.mediaplayer.core.kernel.video.VideoKernelFactoryManager;
@@ -779,12 +780,26 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
         }
     }
 
-    default List<HlsSpanInfo> getSegments() {
+    default HlsSpanList getSegments() {
         try {
             VideoKernelApi kernel = getVideoKernel();
             if (null == kernel)
                 throw new Exception("warning: kernel null");
             return kernel.getSegments();
+        } catch (Exception e) {
+            if (LogUtil.DEBUG) {
+                LogUtil.log("VideoPlayerApiKernel -> getSegments -> " + e.getMessage());
+            }
+            return null;
+        }
+    }
+
+    default long[] getSegmentsMs() {
+        try {
+            VideoKernelApi kernel = getVideoKernel();
+            if (null == kernel)
+                throw new Exception("warning: kernel null");
+            return kernel.getSegmentsMs();
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
                 LogUtil.log("VideoPlayerApiKernel -> getSegments -> " + e.getMessage());
