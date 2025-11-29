@@ -20,6 +20,7 @@ public final class HlsSpanList extends LinkedList<HlsSpanInfo> {
 
     @Override
     public boolean add(HlsSpanInfo e) {
+        // 二分查找插入位置
         int index = Collections.binarySearch(this, e, comparator);
         if (index < 0) {
             index = -index - 1;
