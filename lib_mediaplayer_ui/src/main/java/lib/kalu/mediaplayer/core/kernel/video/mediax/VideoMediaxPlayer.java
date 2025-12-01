@@ -1572,7 +1572,7 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
                         LogUtil.log("VideoMediaxPlayer -> loadHlsSpanInfo -> add span completed, hlsSpanInfo = " + hlsSpanInfo);
                     }
 
-                    mHlsSpanInfos.add(hlsSpanInfo);
+                    mHlsSpanInfos.add(hlsSpanInfo, true);
                 }
             } else {
                 throw new Exception("warning: not support mediaLoadData.dataType = " + mediaLoadData.dataType);
@@ -1659,7 +1659,7 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
                         if (null == mHlsSpanInfos) {
                             mHlsSpanInfos = new HlsSpanList();
                         }
-                        mHlsSpanInfos.add(hlsSpanInfo);
+                        mHlsSpanInfos.add(hlsSpanInfo, false);
                     }
 
                 }
