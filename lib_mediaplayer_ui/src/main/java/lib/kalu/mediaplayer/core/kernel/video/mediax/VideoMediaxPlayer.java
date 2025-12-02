@@ -326,7 +326,7 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
             if (!containsMainUrl)
                 throw new Exception("error: containsMainUrl false");
             HttpDataSource.Factory httpFactory = buildHttpFactory(startArgs);
-            if(null == httpFactory)
+            if (null == httpFactory)
                 throw new Exception("error: args null");
             onEvent(PlayerType.KernelType.MEDIA_V3, PlayerType.EventType.INIT_READY);
             boolean initSimpleCache = initSimpleCache(context, startArgs);
@@ -1530,7 +1530,7 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
                         if (LogUtil.DEBUG) {
                             LogUtil.log("VideoMediaxPlayer -> formatMediaSource -> 外挂音频轨道: audioArgs = " + audioArgs);
                         }
-                        MediaSource mediaSource = buildAudioMediaSource(context,httpFactory, args, audioArgs);
+                        MediaSource mediaSource = buildAudioMediaSource(context, httpFactory, args, audioArgs);
                         if (LogUtil.DEBUG) {
                             LogUtil.log("VideoMediaxPlayer -> formatMediaSource -> 外挂音频轨道: mediaSource = " + mediaSource);
                         }
@@ -1547,7 +1547,7 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
                         if (LogUtil.DEBUG) {
                             LogUtil.log("VideoMediaxPlayer -> formatMediaSource -> 外挂字幕轨道: subtitle = " + item);
                         }
-                        MediaSource mediaSource = buildSubtitleMediaSource(context,httpFactory, args, item);
+                        MediaSource mediaSource = buildSubtitleMediaSource(context, httpFactory, args, item);
                         if (LogUtil.DEBUG) {
                             LogUtil.log("VideoMediaxPlayer -> formatMediaSource -> 外挂字幕轨道: mediaSource = " + mediaSource);
                         }
@@ -1564,7 +1564,7 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
                 if (LogUtil.DEBUG) {
                     LogUtil.log("VideoMediaxPlayer -> formatMediaSource -> 外挂轨道 无");
                 }
-                return buildVideoMediaSource(context,httpFactory, args, mainVideo);
+                return buildVideoMediaSource(context, httpFactory, args, mainVideo);
             }
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
@@ -1724,7 +1724,7 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
             }
             // other
             else {
-                Object factory = buildVideoMediaFactory(context,httpFactory, args, metaType, item);
+                Object factory = buildVideoMediaFactory(context, httpFactory, args, metaType, item);
                 if (LogUtil.DEBUG) {
                     LogUtil.log("VideoMediaxPlayer -> buildVideoMediaSource -> other, dataUrl = " + url);
                 }
@@ -2006,7 +2006,7 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
             if (null == mimeType)
                 throw new Exception("error: mimeType null");
 
-            Object factory = buildDateFactory(context,httpFactory, args, PlayerType.UrlType.SUBTITLE, sutitleUrl);
+            Object factory = buildDateFactory(context, httpFactory, args, PlayerType.UrlType.SUBTITLE, sutitleUrl);
             if (LogUtil.DEBUG) {
                 LogUtil.log("VideoMediaxPlayer -> buildSubtitleMediaSource -> factory = " + factory);
             }
@@ -2071,15 +2071,7 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
                     .setCacheKeyFactory(new CacheKeyFactory() {
                         @Override
                         public String buildCacheKey(DataSpec dataSpec) {
-                            try {
-                                String url = dataSpec.uri.toString();
-                                return formatCacheKey(url);
-                            } catch (Exception e) {
-                                if (LogUtil.DEBUG) {
-                                    LogUtil.log("VideoMediaxPlayer -> buildDateFactory -> buildCacheKey -> Exception: " + e.getMessage());
-                                }
-                                return null;
-                            }
+                            return formatCacheKey(dataSpec.uri);
                         }
                     });
         } catch (Exception e) {
@@ -2216,7 +2208,23 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
 
     private String formatCacheKey(String url) {
         try {
-            Uri uri = Uri.parse(url);
+            if (null == url)
+                throw new Exception("error: url null");
+            if (url.isEmpty())
+                throw new Exception("error: url isEmpty");
+            return formatCacheKey(Uri.parse(url));
+        } catch (Exception e) {
+            if (LogUtil.DEBUG) {
+                LogUtil.log("VideoMediaxPlayer -> formatCacheKey -> Exception: " + e.getMessage());
+            }
+            return "";
+        }
+    }
+
+    private String formatCacheKey(Uri uri) {
+        try {
+            if (null == uri)
+                throw new Exception("error: uri null");
             String newKey = new StringBuilder().append(uri.getScheme())
                     .append("://")
                     .append(uri.getHost())
