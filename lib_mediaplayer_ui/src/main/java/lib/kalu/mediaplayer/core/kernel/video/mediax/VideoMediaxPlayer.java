@@ -2084,12 +2084,16 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
 
     private HttpDataSource.Factory buildHttpFactory(StartArgs args) {
         try {
-            return new CustomDefaultHttpDataSource.Factory(args.getProxyUrl())
+            CustomDefaultHttpDataSource.Factory factory = new CustomDefaultHttpDataSource.Factory(args.getProxyUrl())
                     .setUserAgent(MediaLibraryInfo.VERSION_SLASHY)
                     .setConnectTimeoutMs((int) args.getConnectTimout())
                     .setReadTimeoutMs((int) args.getConnectTimout())
                     .setAllowCrossProtocolRedirects(true)
                     .setKeepPostFor302Redirects(true);
+            if (LogUtil.DEBUG) {
+                LogUtil.log("VideoMediaxPlayer -> buildHttpFactory -> completed");
+            }
+            return factory;
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
                 LogUtil.log("VideoMediaxPlayer -> buildHttpFactory -> Exception: " + e.getMessage());
