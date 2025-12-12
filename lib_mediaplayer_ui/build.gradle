@@ -70,7 +70,7 @@ dependencies {
     // exo2
     compileOnly files('../repo/aar/lib_player_exo_mini_2.19.1_release_20251022.aar')
     // media3
-    compileOnly files('../repo/aar/lib_player_mediax_mini_3.1.8.0_release_20251022.aar')
+    compileOnly files('../repo/aar/lib_player_mediax_mini_3.1.8.0_release_20251212.aar')
     // ffplayer
     compileOnly files('../repo/aar/lib_mediaplayer_ffplayer_ff3.4.13_mini_release_20240508.aar')
     // vlc
