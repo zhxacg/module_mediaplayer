@@ -1,3 +1,22 @@
+-dontwarn org.checkerframework.**
+-dontwarn kotlin.annotations.jvm.**
+-dontwarn javax.annotation.**
+-dontwarn com.google.android.exoplayer2.**
+-dontwarn org.bouncycastle.**
+-dontwarn org.conscrypt.**
+-dontwarn java.lang.invoke.*
+-dontwarn **$$Lambda$*
+-dontwarn androidx.media3.**
+-dontwarn kotlin.annotations.jvm.**
+-dontwarn javax.annotation.**
+-dontwarn java.lang.ClassValue
+-dontwarn java.lang.SafeVarargs
+-dontwarn javax.lang.model.element.Modifier
+-dontwarn sun.misc.Unsafe
+-dontwarn com.google.errorprone.annotations.**
+-dontwarn com.google.j2objc.annotations.**
+-dontwarn org.codehaus.mojo.animal_sniffer.IgnoreJRERequirement
+
 # 保护泛型
 -keepattributes Signature
 
@@ -6,10 +25,6 @@
 
 # 抛出异常时保留代码行号
 -keepattributes SourceFile,LineNumberTable
-
-# Lambda
--dontwarn java.lang.invoke.*
--dontwarn **$$Lambda$*
 
 # 保护注解
 -keepattributes *Annotation*,InnerClasses,EnclosingMethod
@@ -35,17 +50,6 @@
 #-keep class xx.xx.xx{*;} 保持类名，同时保持里面的内容不被混淆
 
 # media3 r1.6.1
--dontwarn androidx.media3.**
--dontwarn org.checkerframework.**
--dontwarn kotlin.annotations.jvm.**
--dontwarn javax.annotation.**
--dontwarn java.lang.ClassValue
--dontwarn java.lang.SafeVarargs
--dontwarn javax.lang.model.element.Modifier
--dontwarn sun.misc.Unsafe
--dontwarn com.google.errorprone.annotations.**
--dontwarn com.google.j2objc.annotations.**
--dontwarn org.codehaus.mojo.animal_sniffer.IgnoreJRERequirement
 -keepclassmembernames class com.google.common.base.Function { *; }
 -keepclassmembers class androidx.media3.datasource.RawResourceDataSource {
   public static android.net.Uri buildRawResourceUri(int);
@@ -144,6 +148,3 @@
 -keepclassmembers class androidx.media3.decoder.midi.MidiExtractor {
   <init>();
 }
--dontwarn org.checkerframework.**
--dontwarn kotlin.annotations.jvm.**
--dontwarn javax.annotation.**
