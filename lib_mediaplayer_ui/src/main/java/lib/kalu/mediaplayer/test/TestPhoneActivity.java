@@ -3,7 +3,6 @@ package lib.kalu.mediaplayer.test;
 import android.app.Activity;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.view.View;
 import android.view.WindowManager;
 import android.widget.Toast;
 
@@ -15,18 +14,9 @@ import lib.kalu.mediaplayer.bean.args.StartArgs;
 import lib.kalu.mediaplayer.bean.args.UrlArgs;
 import lib.kalu.mediaplayer.bean.info.TrackInfo;
 import lib.kalu.mediaplayer.bean.type.PlayerType;
-import lib.kalu.mediaplayer.core.component.ComponentBuffering;
-import lib.kalu.mediaplayer.core.component.ComponentComplete;
-import lib.kalu.mediaplayer.core.component.ComponentError;
-import lib.kalu.mediaplayer.core.component.ComponentInit;
-import lib.kalu.mediaplayer.core.component.ComponentMenu;
-import lib.kalu.mediaplayer.core.component.ComponentPause;
 import lib.kalu.mediaplayer.core.component.ComponentPrepareGradient;
-import lib.kalu.mediaplayer.core.component.ComponentSeek2;
-import lib.kalu.mediaplayer.core.component.ComponentSubtitle;
-import lib.kalu.mediaplayer.core.component.ComponentWarningPlayInfo;
-import lib.kalu.mediaplayer.core.component.ComponentWarningTrySee;
-import lib.kalu.mediaplayer.core.component.phone.ComponentControl;
+import lib.kalu.mediaplayer.core.component.phone.ComponentControlLandscape;
+import lib.kalu.mediaplayer.core.component.phone.ComponentControlPortrait;
 import lib.kalu.mediaplayer.listener.OnPlayerEpisodeListener;
 import lib.kalu.mediaplayer.listener.OnPlayerEventListener;
 import lib.kalu.mediaplayer.listener.OnPlayerProgressListener;
@@ -59,8 +49,10 @@ public final class TestPhoneActivity extends Activity {
     private void initComponent() {
         PlayerLayout playerLayout = findViewById(R.id.module_mediaplayer_test_video);
         // control
-        ComponentControl control = new ComponentControl(getApplicationContext());
-        playerLayout.addComponent(control);
+        ComponentControlPortrait controlPortrait = new ComponentControlPortrait(getApplicationContext());
+        playerLayout.addComponent(controlPortrait);
+        ComponentControlLandscape controlLandscape = new ComponentControlLandscape(getApplicationContext());
+        playerLayout.addComponent(controlLandscape);
         // loading
         ComponentPrepareGradient loading = new ComponentPrepareGradient(getApplicationContext());
         loading.setComponentBackgroundColorInt(Color.BLACK);

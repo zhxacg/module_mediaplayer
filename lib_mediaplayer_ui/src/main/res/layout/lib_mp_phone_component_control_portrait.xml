@@ -30,7 +30,7 @@
 
 
         <CheckBox
-            android:id="@+id/module_mediaplayer_component_phone_control_status"
+            android:id="@+id/module_mediaplayer_component_phone_control_portrait_toggle2"
             android:layout_width="80dp"
             android:layout_height="80dp"
             android:layout_centerInParent="true"
@@ -42,11 +42,10 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="60dp"
-            android:layout_alignParentBottom="true"
-            android:background="@android:color/holo_red_dark">
+            android:layout_alignParentBottom="true">
 
             <CheckBox
-                android:id="@+id/module_mediaplayer_component_phone_control_toggle"
+                android:id="@+id/module_mediaplayer_component_phone_control_portrait_toggle1"
                 android:layout_width="24dp"
                 android:layout_height="24dp"
                 android:layout_centerVertical="true"
@@ -61,7 +60,7 @@
                 android:layout_height="24dp"
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="20dp"
-                android:layout_toRightOf="@id/module_mediaplayer_component_phone_control_toggle"
+                android:layout_toRightOf="@id/module_mediaplayer_component_phone_control_portrait_toggle1"
                 android:background="@drawable/lib_mp_phone_selector_ic_voice"
                 android:button="@android:color/transparent"
                 android:checked="true" />
@@ -88,7 +87,7 @@
         </RelativeLayout>
 
         <SeekBar
-            android:id="@+id/module_mediaplayer_component_phone_control_seekbar"
+            android:id="@+id/module_mediaplayer_component_phone_control_portrait_seekbar"
             android:layout_width="match_parent"
             android:layout_height="4dp"
             android:layout_alignParentBottom="true"

@@ -138,6 +138,12 @@ public interface VideoPlayerApiOrientation extends VideoPlayerApiBase, VideoPlay
                 LogUtil.log(TAG, "setRequestedOrientation -> Layout_Params[0] = " + Layout_Params[0] + ", Layout_Params[1] = " + Layout_Params[1]);
             }
 
+            if (isVt) {
+                callOrientation(false, true, true);
+            } else {
+                callOrientation(false, true, false);
+            }
+
             return true;
         } catch (Exception e) {
             if (LogUtil.DEBUG) {

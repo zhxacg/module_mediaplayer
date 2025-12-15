@@ -80,7 +80,7 @@ public final class TimeUtil {
      * @param isMillis 是否为毫秒数（true：毫秒，false：秒）
      * @return 格式化后的字符串（如02:00 或 01:02:00）
      */
-    public static String formatDuration(long duration, boolean isMillis) {
+    public static String formatTime(long duration, boolean isMillis) {
         // 1. 统一转换为总秒数，处理负数和异常值（避免出现-01:-20这种错误格式）
         long totalSeconds = isMillis ? duration / 1000 : duration;
         totalSeconds = Math.max(totalSeconds, 0); // 确保秒数非负
@@ -91,18 +91,19 @@ public final class TimeUtil {
         long seconds = totalSeconds % 60; // 最终的秒数
 
         // 3. 根据小时是否大于0，选择不同的格式化模板（%02d表示补零为两位数字）
-        if (hours > 0) {
-            return String.format("%02d:%02d:%02d", hours, minutes, seconds);
-        } else {
-            return String.format("%02d:%02d", minutes, seconds);
-        }
+        return String.format("%02d:%02d:%02d", hours, minutes, seconds);
+//        if (hours > 0) {
+//            return String.format("%02d:%02d:%02d", hours, minutes, seconds);
+//        } else {
+//            return String.format("%02d:%02d", minutes, seconds);
+//        }
     }
 
     public static String formatTime(long position, long duration, boolean isMillis) {
         return new StringBuilder()
-                .append(formatDuration(position, isMillis))
+                .append(formatTime(position, isMillis))
                 .append("/")
-                .append(formatDuration(duration, isMillis))
+                .append(formatTime(duration, isMillis))
                 .toString();
     }
 }

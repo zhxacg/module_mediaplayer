@@ -335,8 +335,8 @@
                 android:id="@+id/main_input"
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
-                android:text="https://www.w3schools.com/html/mov_bbb.mp4"
                 android:hint="输入视频地址: 优先播放此链接" />
+<!--            android:text="https://www.w3schools.com/html/mov_bbb.mp4"-->
 
             <Button
                 android:id="@+id/main_button1"

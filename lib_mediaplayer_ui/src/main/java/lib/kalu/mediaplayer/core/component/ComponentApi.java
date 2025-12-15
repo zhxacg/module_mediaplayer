@@ -94,6 +94,9 @@ public interface ComponentApi {
     default void callWindow(int state) {
     }
 
+    default void callOrientation(boolean isVt) {
+    }
+
     /******************/
 
     default void setComponentBackgroundColorInt(@ColorInt int v) {
