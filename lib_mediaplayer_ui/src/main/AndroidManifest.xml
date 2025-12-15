@@ -1,19 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
-<!--    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />-->
+    <!--    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />-->
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application
         android:allowBackup="false"
         android:supportsRtl="true">
 
+        <provider
+            android:name="lib.kalu.mediaplayer.init.PlayerInitProvider"
+            android:authorities="${applicationId}.playerinitprovider"
+            android:exported="false" />
+
         <activity
-            android:name="lib.kalu.mediaplayer.test.TestActivity"
+            android:name="lib.kalu.mediaplayer.test.TestTvActivity"
             android:configChanges="orientation|screenSize|keyboardHidden|keyboard|uiMode"
             android:exported="false"
             android:screenOrientation="landscape"
+            android:theme="@style/MediaplayerThemeFull" />
+
+        <activity
+            android:name="lib.kalu.mediaplayer.test.TestPhoneActivity"
+            android:configChanges="orientation|screenSize|keyboardHidden|keyboard|uiMode"
+            android:exported="false"
+            android:screenOrientation="portrait"
             android:theme="@style/MediaplayerThemeFull" />
 
     </application>

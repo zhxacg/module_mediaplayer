@@ -12,7 +12,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:background="@drawable/module_mediaplayer_shape_shandow_down_to_up"
+        android:background="@drawable/lib_mp_tv_shape_shandow_down_to_up"
         android:clipChildren="false"
         android:clipToPadding="false"
         android:focusable="false"

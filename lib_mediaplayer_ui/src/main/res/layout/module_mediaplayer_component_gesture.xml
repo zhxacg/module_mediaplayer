@@ -35,7 +35,7 @@
             android:focusable="true"
             android:focusableInTouchMode="true"
             android:max="100"
-            android:progressDrawable="@drawable/module_mediaplayer_shape_seek_progress"
+            android:progressDrawable="@drawable/lib_mp_tv_shape_seek_progress"
             android:visibility="gone" />
     </RelativeLayout>
 

@@ -11,7 +11,7 @@
         android:id="@+id/module_mediaplayer_component_menu_item_content_txt"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/module_mediaplayer_selector_bg_menu_item"
+        android:background="@drawable/lib_mp_tv_selector_bg_menu_item"
         android:button="@null"
         android:focusable="true"
         android:gravity="center"

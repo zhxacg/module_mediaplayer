@@ -21,6 +21,35 @@
                 android:layout_height="20dp"
                 android:layout_marginLeft="6dp"
                 android:gravity="center_vertical|left"
+                android:text="设备"
+                android:textSize="14sp" />
+
+            <RadioGroup
+                android:id="@+id/main_platform"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:orientation="horizontal">
+
+                <RadioButton
+                    android:id="@+id/main_platform_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="tv" />
+
+                <RadioButton
+                    android:id="@+id/main_platform_phone"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:checked="true"
+                    android:text="phone" />
+
+            </RadioGroup>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="20dp"
+                android:layout_marginLeft="6dp"
+                android:gravity="center_vertical|left"
                 android:text="旋转角度"
                 android:textSize="14sp" />
 
@@ -306,6 +335,7 @@
                 android:id="@+id/main_input"
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
+                android:text="https://www.w3schools.com/html/mov_bbb.mp4"
                 android:hint="输入视频地址: 优先播放此链接" />
 
             <Button

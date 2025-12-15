@@ -3,7 +3,6 @@ package com.kalu.mediaplayer;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,9 +24,8 @@ import lib.kalu.mediaplayer.bean.args.UrlArgs;
 import lib.kalu.mediaplayer.bean.cache.Cache;
 import lib.kalu.mediaplayer.bean.menu.Menu;
 import lib.kalu.mediaplayer.bean.type.PlayerType;
-import lib.kalu.mediaplayer.proxy.Proxy;
-import lib.kalu.mediaplayer.proxy.ProxyUrl;
-import lib.kalu.mediaplayer.test.TestActivity;
+import lib.kalu.mediaplayer.test.TestPhoneActivity;
+import lib.kalu.mediaplayer.test.TestTvActivity;
 
 /**
  * description:
@@ -48,25 +46,38 @@ public class MainActivity extends Activity {
                 // 1
                 initPlayer();
                 // 2
-                StartArgs args = new StartArgs.Builder()
-                        .setUrl(getUrl())
-                        .setTitle("测试视频")
-                        .setLive(isLive())
-                        .setLooping(isLooping())
-                        .setPlayWhenReadySeekToPosition(getSeek())
-                        .setPlayWhenReadyDelayedTime(getPlayWhenReadyDelayedTime())
-                        .setPlayWhenReady(isPlayWhenReady())
-                        .setTrySeeDuration(getTrySeeDuration())
-                        .setShowSpeed(isShowNet())
-                        .setMenu(createMenu())
-                        .build();
-                Intent intent = new Intent(getApplicationContext(), TestActivity.class);
-                intent.putExtra(TestActivity.INTENT_ARGS, args);
-                startActivity(intent);
+                next();
             }
         });
     }
 
+    private void next() {
+
+        StartArgs args = new StartArgs.Builder()
+                .setUrl(getUrl())
+                .setTitle("测试视频")
+                .setLive(isLive())
+                .setLooping(isLooping())
+                .setPlayWhenReadySeekToPosition(getSeek())
+                .setPlayWhenReadyDelayedTime(getPlayWhenReadyDelayedTime())
+                .setPlayWhenReady(isPlayWhenReady())
+                .setTrySeeDuration(getTrySeeDuration())
+                .setShowSpeed(isShowNet())
+                .setMenu(createMenu())
+                .build();
+
+        RadioGroup radioGroup = findViewById(R.id.main_platform);
+        int buttonId = radioGroup.getCheckedRadioButtonId();
+        Intent intent;
+        if (buttonId == R.id.main_platform_tv) {
+            intent = new Intent(getApplicationContext(), TestTvActivity.class);
+            intent.putExtra(TestTvActivity.INTENT_ARGS, args);
+        } else {
+            intent = new Intent(getApplicationContext(), TestPhoneActivity.class);
+            intent.putExtra(TestPhoneActivity.INTENT_ARGS, args);
+        }
+        startActivity(intent);
+    }
 
     private void init() {
 
@@ -269,7 +280,7 @@ public class MainActivity extends Activity {
                 checkUrl = radioButton.getTag().toString();
             }
 
-            if (null != inputUrl && !inputUrl.isEmpty()) {
+            if (!inputUrl.isEmpty()) {
                 return new UrlArgs.Builder().setUrl(inputUrl).build();
             } else if (null != checkUrl && !checkUrl.isEmpty()) {
                 return new UrlArgs.Builder().setUrl(checkUrl).build();

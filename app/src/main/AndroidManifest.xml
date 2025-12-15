@@ -23,8 +23,7 @@
             android:name="com.kalu.mediaplayer.MainActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:exported="true"
-            android:theme="@style/AppFull"
-            android:screenOrientation="landscape">
+            android:theme="@style/AppFull">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />

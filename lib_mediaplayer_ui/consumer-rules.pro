@@ -112,7 +112,7 @@
 }
 
 # test
--keep class lib.kalu.mediaplayer.test.TestActivity {
+-keep class lib.kalu.mediaplayer.test.TestTvActivity {
     public <fields>;
     public <methods>;
 }

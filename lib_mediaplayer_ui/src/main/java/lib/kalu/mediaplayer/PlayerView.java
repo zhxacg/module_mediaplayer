@@ -3,6 +3,7 @@ package lib.kalu.mediaplayer;
 import android.content.Context;
 import android.graphics.Color;
 import android.view.KeyEvent;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
@@ -62,6 +63,49 @@ public final class PlayerView extends RelativeLayout implements VideoPlayerApi {
     @Override
     protected void onFinishInflate() {
         super.onFinishInflate();
+    }
+
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent ev) {
+        try {
+
+            // Component step1
+            ViewGroup componentGroup = getBaseComponentViewGroup();
+            int childCount = componentGroup.getChildCount();
+            for (int i = 0; i < childCount; i++) {
+                View childAt = componentGroup.getChildAt(i);
+                if (null == childAt)
+                    continue;
+                boolean assignableFrom = ComponentApi.class.isAssignableFrom(childAt.getClass());
+                if (!assignableFrom)
+                    continue;
+                boolean componentShowing = ((ComponentApi) childAt).isComponentShowing();
+                if (!componentShowing)
+                    continue;
+                boolean dispatchTouchEvent = childAt.dispatchTouchEvent(ev);
+                if (!dispatchTouchEvent)
+                    continue;
+                throw new Exception("warning: dispatchTouchEvent true, childAt = " + childAt);
+            }
+            // Component step2
+            for (int i = 0; i < childCount; i++) {
+                View childAt = componentGroup.getChildAt(i);
+                if (null == childAt)
+                    continue;
+                boolean assignableFrom = ComponentApi.class.isAssignableFrom(childAt.getClass());
+                if (!assignableFrom)
+                    continue;
+                boolean dispatchTouchEvent = childAt.dispatchTouchEvent(ev);
+                if (!dispatchTouchEvent)
+                    continue;
+                throw new Exception("warning: dispatchTouchEvent true, childAt = " + childAt);
+            }
+
+            // error
+            return false;
+        } catch (Exception e) {
+            return true;
+        }
     }
 
     @Override

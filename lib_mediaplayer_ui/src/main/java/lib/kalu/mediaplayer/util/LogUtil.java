@@ -23,6 +23,12 @@ public final class LogUtil {
         }
     }
 
+    public static void log(String tag, String msg) {
+        if (DEBUG) {
+            Log.e(mTag, tag + " -> " + msg);
+        }
+    }
+
     public static void log(String message, @Nullable Throwable throwable) {
         if (DEBUG) {
             Log.e(mTag, message, throwable);

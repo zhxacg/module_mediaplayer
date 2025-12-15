@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.Build;
 import android.util.AttributeSet;
 import android.view.KeyEvent;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
@@ -28,40 +29,50 @@ import lib.kalu.mediaplayer.util.LogUtil;
 
 public class PlayerLayout extends RelativeLayout {
 
-    public PlayerLayout(Context context) {
-        super(context);
-        initPlayerView();
-    }
-
     public PlayerLayout(Context context, AttributeSet attrs) {
         super(context, attrs);
-        initPlayerView();
+        initPlayerView(context, attrs);
     }
 
     public PlayerLayout(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        initPlayerView();
+        initPlayerView(context, attrs);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     public PlayerLayout(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
-        initPlayerView();
+        initPlayerView(context, attrs);
     }
 
-    private void initPlayerView() {
+    private void initPlayerView(Context context, AttributeSet attrs) {
         clearOnPlayerListener();
         try {
             int childCount = getChildCount();
             if (childCount > 0)
                 throw new Exception("childCount warning: " + childCount);
-            PlayerView playerView = new PlayerView(getContext());
+            PlayerView playerView = new PlayerView(context);
             playerView.setLayoutParams(new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT));
             addView(playerView);
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
                 LogUtil.log("PlayerLayout -> initPlayerView -> " + e.getMessage());
             }
+        }
+    }
+
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent ev) {
+        try {
+            PlayerView playerView = getPlayerView();
+            if (null == playerView)
+                throw new Exception("warning: null == playerView");
+            return playerView.dispatchTouchEvent(ev);
+        } catch (Exception e) {
+            if (LogUtil.DEBUG) {
+                LogUtil.log("PlayerLayout -> dispatchTouchEvent -> " + e.getMessage());
+            }
+            return false;
         }
     }
 

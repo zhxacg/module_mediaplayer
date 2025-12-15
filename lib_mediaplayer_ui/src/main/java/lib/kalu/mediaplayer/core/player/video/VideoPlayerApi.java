@@ -9,5 +9,6 @@ public interface VideoPlayerApi extends VideoPlayerApiBuried,
         VideoPlayerApiRender,
         VideoPlayerLifecycle,
         VideoPlayerApiWindow,
+        VideoPlayerApiOrientation,
         VideoPlayerApiSubtitle {
 }

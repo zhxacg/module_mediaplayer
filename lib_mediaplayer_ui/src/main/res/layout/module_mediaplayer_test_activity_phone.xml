@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/holo_green_dark"
+    android:focusable="false">
+
+    <lib.kalu.mediaplayer.PlayerLayout
+        android:id="@+id/module_mediaplayer_test_video"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:layout_alignParentTop="true"
+        android:background="@android:color/black"
+        android:focusable="true" />
+
+</RelativeLayout>

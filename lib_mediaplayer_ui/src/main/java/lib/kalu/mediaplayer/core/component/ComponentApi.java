@@ -731,4 +731,58 @@ public interface ComponentApi {
             return 0L;
         }
     }
+
+    default void closeVolume() {
+        try {
+            PlayerView playerView = getPlayerView();
+            if (null == playerView)
+                throw new Exception("playerView error: null");
+            playerView.setVolume(0f, 0f);
+        } catch (Exception e) {
+            if (LogUtil.DEBUG) {
+                LogUtil.log("ComponentApi -> closeVolume -> " + e.getMessage());
+            }
+        }
+    }
+
+    default void openVolume() {
+        try {
+            PlayerView playerView = getPlayerView();
+            if (null == playerView)
+                throw new Exception("playerView error: null");
+            playerView.setVolume(1f, 1f);
+        } catch (Exception e) {
+            if (LogUtil.DEBUG) {
+                LogUtil.log("ComponentApi -> openVolume -> " + e.getMessage());
+            }
+        }
+    }
+
+    default boolean canBackPress(Context context) {
+        try {
+            PlayerView playerView = getPlayerView();
+            if (null == playerView)
+                throw new Exception("playerView error: null");
+            return playerView.canBackPress(context);
+        } catch (Exception e) {
+            if (LogUtil.DEBUG) {
+                LogUtil.log("ComponentApi -> canBackPress -> " + e.getMessage());
+            }
+            return false;
+        }
+    }
+
+    default boolean setRequestedOrientation(Context context, boolean isVt) {
+        try {
+            PlayerView playerView = getPlayerView();
+            if (null == playerView)
+                throw new Exception("playerView error: null");
+            return playerView.setRequestedOrientation(context, isVt);
+        } catch (Exception e) {
+            if (LogUtil.DEBUG) {
+                LogUtil.log("ComponentApi -> setRequestedOrientation -> " + e.getMessage());
+            }
+            return false;
+        }
+    }
 }

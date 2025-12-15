@@ -26,7 +26,7 @@
             app:ms_corner="8dp"
             app:ms_progress_color="#ff482a"
             app:ms_thumb_color_gradient="@array/thumb_colors"
-            app:ms_thumb_icon="@drawable/module_mediaplayer_shape_thumb"
+            app:ms_thumb_icon="@drawable/lib_mp_tv_shape_thumb"
             app:ms_thumb_icon_height="10dp"
             app:ms_thumb_icon_width="10dp"
             app:ms_thumb_radius="10dp" />

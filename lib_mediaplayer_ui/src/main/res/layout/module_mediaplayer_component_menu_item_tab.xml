@@ -4,7 +4,7 @@
     android:layout_width="wrap_content"
     android:layout_height="match_parent"
     android:layout_weight="1"
-    android:background="@drawable/module_mediaplayer_selector_bg_menu_tab"
+    android:background="@drawable/lib_mp_tv_selector_bg_menu_tab"
     android:button="@null"
     android:focusable="true"
     android:gravity="center"

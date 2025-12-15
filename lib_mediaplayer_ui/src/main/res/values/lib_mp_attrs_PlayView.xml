@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="PlayerView">
+        <attr name="pv_height" format="dimension|reference" />
+        <attr name="pv_type">
+            <enum name="tv" value="1" />
+            <enum name="phone" value="2" />
+        </attr>
+    </declare-styleable>
+</resources>
