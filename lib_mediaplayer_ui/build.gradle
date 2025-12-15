@@ -64,7 +64,6 @@ dependencies {
     api files('libs/guava-33.2.1-android.jar')
     api files('libs/guava-failureaccess-1.0.2.jar')
     compileOnly 'androidx.annotation:annotation:1.7.0'
-    compileOnly("com.airbnb.android:lottie:6.7.1")
 
     // ijk
     compileOnly files('../repo/aar/lib_mediaplayer_ijk_k0.8.8_ff3.4.13_mini_release_20240430.aar')
