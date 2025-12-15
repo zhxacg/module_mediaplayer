@@ -117,12 +117,6 @@
     public <methods>;
 }
 
-# component
--keep class lib.kalu.mediaplayer.core.component.** {
-     public <fields>;
-     public <methods>;
-}
-
 # view
 -keep class lib.kalu.mediaplayer.PlayerLayout {
     public <methods>;

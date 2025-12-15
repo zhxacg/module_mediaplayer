@@ -29,6 +29,11 @@ import lib.kalu.mediaplayer.util.LogUtil;
 
 public class PlayerLayout extends RelativeLayout {
 
+    public PlayerLayout(Context context) {
+        super(context);
+        initPlayerView(context, null);
+    }
+
     public PlayerLayout(Context context, AttributeSet attrs) {
         super(context, attrs);
         initPlayerView(context, attrs);
