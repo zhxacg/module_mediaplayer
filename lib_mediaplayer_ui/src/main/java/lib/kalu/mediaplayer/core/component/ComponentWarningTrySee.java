@@ -32,7 +32,7 @@ public class ComponentWarningTrySee extends RelativeLayout implements ComponentA
 
     @Override
     public int initLayoutId() {
-        return R.layout.module_mediaplayer_component_warning_try_see;
+        return R.layout.lib_mp_component_warning_try_see;
     }
 
     @Override
@@ -60,7 +60,7 @@ public class ComponentWarningTrySee extends RelativeLayout implements ComponentA
             case PlayerType.EventType.PAUSE:
                 try {
                     ImageView imageView = findViewById(R.id.module_mediaplayer_component_warning_try_see_state);
-                    imageView.setImageResource(R.drawable.module_mediaplayer_ic_pause);
+                    imageView.setImageResource(R.drawable.lib_mp_ic_pause);
                 } catch (Exception e) {
                     if (LogUtil.DEBUG) {
                         LogUtil.log("ComponentWarningTrySee -> callEvent -> PAUSE -> Exception " + e.getMessage());
@@ -70,7 +70,7 @@ public class ComponentWarningTrySee extends RelativeLayout implements ComponentA
             case PlayerType.EventType.RESUME:
                 try {
                     ImageView imageView = findViewById(R.id.module_mediaplayer_component_warning_try_see_state);
-                    imageView.setImageResource(R.drawable.module_mediaplayer_ic_resume);
+                    imageView.setImageResource(R.drawable.lib_mp_ic_resume);
                 } catch (Exception e) {
                     if (LogUtil.DEBUG) {
                         LogUtil.log("ComponentWarningTrySee -> callEvent -> RESUME -> Exception " + e.getMessage());

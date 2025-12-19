@@ -18,7 +18,7 @@ public class ComponentPause extends RelativeLayout implements ComponentApi {
 
     @Override
     public int initLayoutId() {
-        return R.layout.module_mediaplayer_component_pause;
+        return R.layout.lib_mp_component_pause;
     }
 
     @Override

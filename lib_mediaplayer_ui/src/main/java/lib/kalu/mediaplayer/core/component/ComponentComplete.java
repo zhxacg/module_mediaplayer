@@ -16,7 +16,7 @@ public class ComponentComplete extends RelativeLayout implements ComponentApi {
 
     @Override
     public int initLayoutId() {
-        return R.layout.module_mediaplayer_component_complete;
+        return R.layout.lib_mp_component_complete;
     }
 
     @Override

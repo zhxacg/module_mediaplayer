@@ -9,7 +9,6 @@ import java.util.List;
 
 import lib.kalu.mediaplayer.R;
 import lib.kalu.mediaplayer.bean.args.StartArgs;
-import lib.kalu.mediaplayer.bean.info.HlsSpanInfo;
 import lib.kalu.mediaplayer.bean.info.TrackInfo;
 import lib.kalu.mediaplayer.bean.type.PlayerType;
 import lib.kalu.mediaplayer.collect.HlsSpanList;
@@ -141,11 +140,8 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
                 LogUtil.log("VideoPlayerApiKernel -> setMute -> enable = " + enable);
             }
             VideoKernelApi kernel = getVideoKernel();
-            if (enable) {
-                kernel.setVolume(0f, 0f);
-            } else {
-                kernel.setVolume(1f, 1f);
-            }
+            float value = enable ? 0f : 1f;
+            kernel.setVolume(value, value);
         } catch (Exception e) {
         }
     }
@@ -278,6 +274,49 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
                 LogUtil.log("VideoPlayerApiKernel -> seekToVideoKernel -> " + e.getMessage());
+            }
+        }
+    }
+
+    default void fastRewind(long step) {
+        try {
+            if (step < 0)
+                return;
+            VideoKernelApi kernel = getVideoKernel();
+            if (null == kernel)
+                throw new Exception("warning: kernel null");
+            long position = kernel.getPosition();
+            long nextPosition = position - step;
+            if (nextPosition < 0L) {
+                nextPosition = 0L;
+            }
+            kernel.seekTo(nextPosition);
+            setScreenKeep(true);
+        } catch (Exception e) {
+            if (LogUtil.DEBUG) {
+                LogUtil.log("VideoPlayerApiKernel -> fastRewind -> " + e.getMessage());
+            }
+        }
+    }
+
+    default void fastForward(long step) {
+        try {
+            if (step < 0)
+                return;
+            VideoKernelApi kernel = getVideoKernel();
+            if (null == kernel)
+                throw new Exception("warning: kernel null");
+            long position = kernel.getPosition();
+            long duration = kernel.getDuration();
+            long nextPosition = position + step;
+            if (nextPosition > duration) {
+                nextPosition = duration;
+            }
+            kernel.seekTo(nextPosition);
+            setScreenKeep(true);
+        } catch (Exception e) {
+            if (LogUtil.DEBUG) {
+                LogUtil.log("VideoPlayerApiKernel -> fastForward -> " + e.getMessage());
             }
         }
     }

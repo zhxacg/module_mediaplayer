@@ -7,25 +7,18 @@
     android:focusable="false">
 
     <RelativeLayout
-        android:id="@+id/module_mediaplayer_component_pause_root"
+        android:id="@+id/module_mediaplayer_component_warning_try_see_root"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:focusable="false"
         android:visibility="gone">
 
-        <!-- 背景 -->
-        <ImageView
-            android:id="@+id/module_mediaplayer_component_pause_bg"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:focusable="false"
-            android:visibility="gone" />
-
         <!-- 标题 -->
         <TextView
-            android:id="@+id/module_mediaplayer_component_pause_title"
+            android:id="@+id/module_mediaplayer_component_warning_try_see_title"
             android:layout_width="match_parent"
             android:layout_height="80dp"
+            android:layout_alignParentTop="true"
             android:background="@drawable/lib_mp_tv_shape_shandow_up_to_down"
             android:ellipsize="end"
             android:focusable="false"
@@ -36,9 +29,9 @@
             android:textColor="@color/module_mediaplayer_color_ffffff"
             android:textSize="24sp" />
 
-        <!-- 快进快退 -->
+        <!-- 进度条 -->
         <lib.kalu.mediaplayer.widget.seek.SeekBar
-            android:id="@+id/module_mediaplayer_component_pause_sb"
+            android:id="@+id/module_mediaplayer_component_warning_try_see_seekbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
@@ -61,15 +54,14 @@
 
         <!-- 图标 -->
         <ImageView
-            android:id="@+id/module_mediaplayer_component_pause_icon"
+            android:id="@+id/module_mediaplayer_component_warning_try_see_state"
             android:layout_width="20dp"
             android:layout_height="20dp"
             android:layout_alignParentBottom="true"
             android:layout_margin="24dp"
             android:focusable="false"
-            android:src="@drawable/module_mediaplayer_ic_resume" />
+            android:src="@drawable/lib_mp_ic_resume" />
 
     </RelativeLayout>
-
 
 </RelativeLayout>

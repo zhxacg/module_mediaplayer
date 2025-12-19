@@ -1,7 +1,6 @@
 package lib.kalu.mediaplayer.core.component;
 
 import android.content.Context;
-import android.view.KeyEvent;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -20,7 +19,7 @@ public class ComponentWarningPlayInfo extends RelativeLayout implements Componen
 
     @Override
     public int initLayoutId() {
-        return R.layout.module_mediaplayer_component_warning_play_info;
+        return R.layout.lib_mp_component_warning_play_info;
     }
 
 //    @Override

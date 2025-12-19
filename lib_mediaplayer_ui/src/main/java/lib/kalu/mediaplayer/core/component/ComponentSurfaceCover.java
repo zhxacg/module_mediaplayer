@@ -16,7 +16,7 @@ public class ComponentSurfaceCover extends RelativeLayout implements ComponentAp
 
     @Override
     public int initLayoutId() {
-        return R.layout.module_mediaplayer_component_surface_cover;
+        return R.layout.lib_mp_component_surface_cover;
     }
 
     @Override

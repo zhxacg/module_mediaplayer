@@ -17,7 +17,7 @@ public class ComponentPrepareGradient extends RelativeLayout implements Componen
 
     @Override
     public int initLayoutId() {
-        return R.layout.module_mediaplayer_component_prepare_gradient;
+        return R.layout.lib_mp_component_prepare_gradient;
     }
 
     @Override

@@ -33,7 +33,7 @@ public class ComponentSubtitle extends RelativeLayout implements ComponentApi {
 
     @Override
     public int initLayoutId() {
-        return R.layout.module_mediaplayer_component_subtitle;
+        return R.layout.lib_mp_component_subtitle;
     }
 
     @Override

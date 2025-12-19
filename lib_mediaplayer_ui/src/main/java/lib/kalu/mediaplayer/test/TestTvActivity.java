@@ -48,7 +48,7 @@ public final class TestTvActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED, WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED);
-        setContentView(R.layout.module_mediaplayer_test_activity_tv);
+        setContentView(R.layout.lib_mp_test_activity_tv);
 
         initComponent();
         initListener();

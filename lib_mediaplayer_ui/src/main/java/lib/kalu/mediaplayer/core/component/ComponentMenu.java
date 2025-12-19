@@ -9,7 +9,6 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -33,7 +32,7 @@ public class ComponentMenu extends RelativeLayout implements ComponentApi {
 
     @Override
     public int initLayoutId() {
-        return R.layout.module_mediaplayer_component_menu;
+        return R.layout.lib_mp_component_menu;
     }
 
     @Override
@@ -459,7 +458,7 @@ public class ComponentMenu extends RelativeLayout implements ComponentApi {
 
                 // 填充数据
                 for (int i = 0; i < size; i++) {
-                    LayoutInflater.from(getContext()).inflate(R.layout.module_mediaplayer_component_menu_item_tab, viewGroup, true);
+                    LayoutInflater.from(getContext()).inflate(R.layout.lib_mp_component_menu_item_tab, viewGroup, true);
                     View childAt = viewGroup.getChildAt(i);
                     if (null == childAt)
                         continue;
@@ -561,7 +560,7 @@ public class ComponentMenu extends RelativeLayout implements ComponentApi {
 
                 for (int i = 0; i < 10; i++) {
                     //
-                    LayoutInflater.from(getContext()).inflate(R.layout.module_mediaplayer_component_menu_item_content, viewGroup, true);
+                    LayoutInflater.from(getContext()).inflate(R.layout.lib_mp_component_menu_item_content, viewGroup, true);
                     View childAt = viewGroup.getChildAt(i);
                     //
                     childAt.setVisibility(i >= playCount ? View.INVISIBLE : View.VISIBLE);
@@ -617,7 +616,7 @@ public class ComponentMenu extends RelativeLayout implements ComponentApi {
                 int length = Math.min(contentData.length, 10);
                 for (int i = 0; i < length; i++) {
                     //
-                    LayoutInflater.from(getContext()).inflate(R.layout.module_mediaplayer_component_menu_item_content, viewGroup, true);
+                    LayoutInflater.from(getContext()).inflate(R.layout.lib_mp_component_menu_item_content, viewGroup, true);
                     View childAt = viewGroup.getChildAt(i);
 
                     //

@@ -456,6 +456,32 @@ public interface ComponentApi {
         }
     }
 
+    default void fastRewind(long step) {
+        try {
+            PlayerView playerView = getPlayerView();
+            if (null == playerView)
+                throw new Exception("playerView error: null");
+            playerView.fastRewind(step);
+        } catch (Exception e) {
+            if (LogUtil.DEBUG) {
+                LogUtil.log("ComponentApi -> fastRewind -> " + e.getMessage());
+            }
+        }
+    }
+
+    default void fastForward(long step) {
+        try {
+            PlayerView playerView = getPlayerView();
+            if (null == playerView)
+                throw new Exception("playerView error: null");
+            playerView.fastForward(step);
+        } catch (Exception e) {
+            if (LogUtil.DEBUG) {
+                LogUtil.log("ComponentApi -> fastForward -> " + e.getMessage());
+            }
+        }
+    }
+
     default void resume() {
         resume(true);
     }
@@ -735,28 +761,15 @@ public interface ComponentApi {
         }
     }
 
-    default void closeVolume() {
+    default void setMute(boolean enable) {
         try {
             PlayerView playerView = getPlayerView();
             if (null == playerView)
                 throw new Exception("playerView error: null");
-            playerView.setVolume(0f, 0f);
+            playerView.setMute(enable);
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
-                LogUtil.log("ComponentApi -> closeVolume -> " + e.getMessage());
-            }
-        }
-    }
-
-    default void openVolume() {
-        try {
-            PlayerView playerView = getPlayerView();
-            if (null == playerView)
-                throw new Exception("playerView error: null");
-            playerView.setVolume(1f, 1f);
-        } catch (Exception e) {
-            if (LogUtil.DEBUG) {
-                LogUtil.log("ComponentApi -> openVolume -> " + e.getMessage());
+                LogUtil.log("ComponentApi -> setMute -> " + e.getMessage());
             }
         }
     }
