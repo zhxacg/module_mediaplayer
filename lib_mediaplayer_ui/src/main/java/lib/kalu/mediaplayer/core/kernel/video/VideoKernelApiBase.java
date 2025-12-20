@@ -30,12 +30,9 @@ interface VideoKernelApiBase {
 
     void seekTo(long position);
 
-    boolean setSpeed(float speed);
+    void setSpeed(float speed);
 
-    void setSpeed(@PlayerType.SpeedType.Value int speed);
-
-    @PlayerType.SpeedType.Value
-    int getSpeed();
+    float getSpeed();
 
     void start();
 

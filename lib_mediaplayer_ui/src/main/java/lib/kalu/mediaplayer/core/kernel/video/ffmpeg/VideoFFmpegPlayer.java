@@ -348,19 +348,22 @@ public final class VideoFFmpegPlayer extends VideoBasePlayer {
     }
 
     @Override
-    public boolean setSpeed(float speed) {
+    public void setSpeed(float speed) {
         try {
             if (null == mFFmpegPlayer)
                 throw new Exception("mFFmpegPlayer error: null");
 //            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M)
 //                throw new Exception("only support above Android M");
-            return false;
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
                 LogUtil.log("VideoFFmpegPlayer -> setSpeed -> " + e.getMessage());
             }
-            return false;
         }
+    }
+
+    @Override
+    public float getSpeed() {
+        return 1.0f;
     }
 
     private OnInfoListener onInfoListener = new OnInfoListener() {

@@ -33,7 +33,6 @@ import com.google.android.exoplayer2.source.MergingMediaSource;
 import com.google.android.exoplayer2.source.ProgressiveMediaSource;
 import com.google.android.exoplayer2.source.TrackGroup;
 import com.google.android.exoplayer2.source.hls.HlsManifest;
-import com.google.android.exoplayer2.source.hls.playlist.HlsMediaPlaylist;
 import com.google.android.exoplayer2.source.hls.playlist.HlsPlaylistParserFactory;
 import com.google.android.exoplayer2.text.Cue;
 import com.google.android.exoplayer2.text.CueGroup;
@@ -65,14 +64,12 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.NavigableSet;
 
 import lib.kalu.exoplayer2.subtitle.OffsetMsTextRenderer;
 import lib.kalu.mediaplayer.PlayerSDK;
 import lib.kalu.mediaplayer.bean.args.StartArgs;
 import lib.kalu.mediaplayer.bean.args.UrlArgs;
 import lib.kalu.mediaplayer.bean.cache.Cache;
-import lib.kalu.mediaplayer.bean.info.HlsSpanInfo;
 import lib.kalu.mediaplayer.bean.info.TrackInfo;
 import lib.kalu.mediaplayer.bean.type.PlayerType;
 import lib.kalu.mediaplayer.collect.HlsSpanList;
@@ -517,7 +514,7 @@ public final class VideoExo2Player extends VideoBasePlayer {
     }
 
     @Override
-    public boolean setSpeed(float speed) {
+    public void setSpeed(float speed) {
         try {
             if (null == mExoPlayer)
                 throw new Exception("mMediaPlayer error: null");
@@ -528,12 +525,20 @@ public final class VideoExo2Player extends VideoBasePlayer {
                 playbackParameters = new PlaybackParameters(speed);
             }
             mExoPlayer.setPlaybackParameters(playbackParameters);
-            return true;
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
                 LogUtil.log("VideoExo2Player -> setSpeed -> " + e.getMessage());
             }
-            return false;
+        }
+    }
+
+    @Override
+    public float getSpeed() {
+        try {
+            PlaybackParameters playbackParameters = mExoPlayer.getPlaybackParameters();
+            return playbackParameters.speed;
+        } catch (Exception e) {
+            return 1.0f;
         }
     }
 

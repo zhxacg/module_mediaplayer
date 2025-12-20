@@ -540,11 +540,8 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
         return null != mSimpleCache;
     }
 
-    /**
-     * 设置播放速度
-     */
     @Override
-    public boolean setSpeed(float speed) {
+    public void setSpeed(float speed) {
         try {
             if (null == mExoPlayer)
                 throw new Exception("mMediaPlayer error: null");
@@ -555,12 +552,21 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
                 playbackParameters = new PlaybackParameters(speed);
             }
             mExoPlayer.setPlaybackParameters(playbackParameters);
-            return true;
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
                 LogUtil.log("VideoMediaxPlayer -> setSpeed -> " + e.getMessage());
             }
-            return false;
+        }
+    }
+
+    @Override
+    public float getSpeed() {
+        try {
+            if (null == mExoPlayer)
+                throw new Exception("mMediaPlayer error: null");
+           return mExoPlayer.getPlaybackParameters().speed;
+        } catch (Exception e) {
+            return 1.0f;
         }
     }
 

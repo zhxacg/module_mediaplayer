@@ -296,18 +296,21 @@ public final class VideoVlcPlayer extends VideoBasePlayer {
     }
 
     @Override
-    public boolean setSpeed(float speed) {
+    public void setSpeed(float speed) {
         try {
             if (null == mVlcPlayer)
                 throw new Exception("mIjkPlayer error: null");
             mVlcPlayer.setSpeed(speed);
-            return true;
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
                 LogUtil.log("VideoVlcPlayer -> setSpeed -> " + e.getMessage());
             }
-            return false;
         }
+    }
+
+    @Override
+    public float getSpeed() {
+        return 1.0f;
     }
 
     /****************/

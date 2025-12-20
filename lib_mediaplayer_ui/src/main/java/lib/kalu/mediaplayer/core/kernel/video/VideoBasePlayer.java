@@ -8,51 +8,6 @@ public abstract class VideoBasePlayer implements VideoKernelApi {
 
     private VideoKernelApiEvent eventApi;
     private VideoPlayerApi playerApi;
-    private int mVideoSpeed = PlayerType.SpeedType.DEFAULT;
-
-    @Override
-    public void setSpeed(@PlayerType.SpeedType.Value int speed) {
-        this.mVideoSpeed = speed;
-        switch (mVideoSpeed) {
-            case PlayerType.SpeedType._0_5:
-                setSpeed(0.5F);
-                break;
-            case PlayerType.SpeedType._1_5:
-                setSpeed(1.5F);
-                break;
-            case PlayerType.SpeedType._2_0:
-                setSpeed(2.0F);
-                break;
-            case PlayerType.SpeedType._2_5:
-                setSpeed(2.5F);
-                break;
-            case PlayerType.SpeedType._3_0:
-                setSpeed(3.0F);
-                break;
-            case PlayerType.SpeedType._3_5:
-                setSpeed(3.5F);
-                break;
-            case PlayerType.SpeedType._4_0:
-                setSpeed(4.0F);
-                break;
-            case PlayerType.SpeedType._4_5:
-                setSpeed(4.5F);
-                break;
-            case PlayerType.SpeedType._5_0:
-                setSpeed(5.0F);
-                break;
-            default:
-                setSpeed(1.0F);
-                break;
-        }
-    }
-
-    @PlayerType.SpeedType.Value
-    @Override
-    public int getSpeed() {
-        return this.mVideoSpeed;
-    }
-
     @Override
     public void setPlayerApi(VideoPlayerApi playerApi) {
         this.playerApi = playerApi;

@@ -699,7 +699,7 @@ public class PlayerLayout extends RelativeLayout {
         }
     }
 
-    public final void setSpeed(@PlayerType.SpeedType.Value int speed) {
+    public final void setSpeed(float speed) {
         try {
             PlayerView playerView = getPlayerView();
             if (null == playerView)
@@ -707,13 +707,12 @@ public class PlayerLayout extends RelativeLayout {
             playerView.setSpeed(speed);
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
-                LogUtil.log("PlayerLayout -> setPlayerBackgroundColor -> " + e.getMessage());
+                LogUtil.log("PlayerLayout -> setSpeed -> " + e.getMessage());
             }
         }
     }
 
-    @PlayerType.SpeedType.Value
-    public final int getSpeed() {
+    public final float getSpeed() {
         try {
             PlayerView playerView = getPlayerView();
             if (null == playerView)
@@ -723,7 +722,7 @@ public class PlayerLayout extends RelativeLayout {
             if (LogUtil.DEBUG) {
                 LogUtil.log("PlayerLayout -> setPlayerBackgroundColor -> " + e.getMessage());
             }
-            return PlayerType.SpeedType.DEFAULT;
+            return 1.0f;
         }
     }
 

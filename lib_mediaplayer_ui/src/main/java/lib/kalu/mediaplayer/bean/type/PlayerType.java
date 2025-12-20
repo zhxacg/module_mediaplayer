@@ -311,40 +311,6 @@ public @interface PlayerType {
     @Documented
     @Retention(CLASS)
     @Target({METHOD, PARAMETER, FIELD, LOCAL_VARIABLE, ANNOTATION_TYPE, PACKAGE})
-    @interface SpeedType {
-        int _0_5 = 8_001;
-        int _1_0 = 8_002;
-        int _1_5 = 8_003;
-        int _2_0 = 8_004;
-        int _2_5 = 8_005;
-        int _3_0 = 8_006;
-        int _3_5 = 8_007;
-        int _4_0 = 8_008;
-        int _4_5 = 8_009;
-        int _5_0 = 8_010;
-        int DEFAULT = _1_0;
-
-        @Documented
-        @Retention(CLASS)
-        @Target({METHOD, PARAMETER, FIELD, LOCAL_VARIABLE, ANNOTATION_TYPE, PACKAGE})
-        @IntDef({_0_5,
-                _1_0,
-                _1_5,
-                _2_0,
-                _2_5,
-                _3_0,
-                _3_5,
-                _4_0,
-                _4_5,
-                _5_0,
-                DEFAULT})
-        @interface Value {
-        }
-    }
-
-    @Documented
-    @Retention(CLASS)
-    @Target({METHOD, PARAMETER, FIELD, LOCAL_VARIABLE, ANNOTATION_TYPE, PACKAGE})
     @interface TrackType {
 
         String TEXT_VTT = "text/vtt";

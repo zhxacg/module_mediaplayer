@@ -584,7 +584,7 @@ public interface ComponentApi {
         }
     }
 
-    default void setVideoSpeed(@PlayerType.SpeedType.Value int speed) {
+    default void setSpeed(float speed) {
         try {
             PlayerView playerView = getPlayerView();
             if (null == playerView)
@@ -592,13 +592,12 @@ public interface ComponentApi {
             playerView.setSpeed(speed);
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
-                LogUtil.log("ComponentApi -> setVideoSpeed -> " + e.getMessage());
+                LogUtil.log("ComponentApi -> setSpeed -> " + e.getMessage());
             }
         }
     }
 
-    @PlayerType.SpeedType.Value
-    default int getVideoSpeed() {
+    default float getSpeed() {
         try {
             PlayerView playerView = getPlayerView();
             if (null == playerView)
@@ -606,9 +605,9 @@ public interface ComponentApi {
             return playerView.getSpeed();
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
-                LogUtil.log("ComponentApi -> getVideoSpeed -> " + e.getMessage());
+                LogUtil.log("ComponentApi -> getSpeed -> " + e.getMessage());
             }
-            return PlayerType.SpeedType.DEFAULT;
+            return 1.0f;
         }
     }
 

@@ -15,8 +15,6 @@ import lib.kalu.mediaplayer.bean.args.UrlArgs;
 import lib.kalu.mediaplayer.bean.info.TrackInfo;
 import lib.kalu.mediaplayer.bean.type.PlayerType;
 import lib.kalu.mediaplayer.core.component.ComponentPrepareGradient;
-import lib.kalu.mediaplayer.core.component.phone.ComponentControlLandscape;
-import lib.kalu.mediaplayer.core.component.phone.ComponentControlPortrait;
 import lib.kalu.mediaplayer.listener.OnPlayerEpisodeListener;
 import lib.kalu.mediaplayer.listener.OnPlayerEventListener;
 import lib.kalu.mediaplayer.listener.OnPlayerProgressListener;
@@ -47,16 +45,16 @@ public final class TestPhoneActivity extends Activity {
     }
 
     private void initComponent() {
-        PlayerLayout playerLayout = findViewById(R.id.module_mediaplayer_test_video);
-        // control
-        ComponentControlPortrait controlPortrait = new ComponentControlPortrait(getApplicationContext());
-        playerLayout.addComponent(controlPortrait);
-        ComponentControlLandscape controlLandscape = new ComponentControlLandscape(getApplicationContext());
-        playerLayout.addComponent(controlLandscape);
-        // loading
-        ComponentPrepareGradient loading = new ComponentPrepareGradient(getApplicationContext());
-        loading.setComponentBackgroundColorInt(Color.BLACK);
-        playerLayout.addComponent(loading);
+//        PlayerLayout playerLayout = findViewById(R.id.module_mediaplayer_test_video);
+//        // control
+//        ComponentControlPortrait controlPortrait = new ComponentControlPortrait(getApplicationContext());
+//        playerLayout.addComponent(controlPortrait);
+//        ComponentControlLandscape controlLandscape = new ComponentControlLandscape(getApplicationContext());
+//        playerLayout.addComponent(controlLandscape);
+//        // loading
+//        ComponentPrepareGradient loading = new ComponentPrepareGradient(getApplicationContext());
+//        loading.setComponentBackgroundColorInt(Color.BLACK);
+//        playerLayout.addComponent(loading);
     }
 
     private void initListener() {

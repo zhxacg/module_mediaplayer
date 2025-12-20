@@ -96,7 +96,7 @@ public class ComponentMenu extends RelativeLayout implements ComponentApi {
                         // childAt.setActivated(i == indexedOfChild);
                     }
                     //
-                    setVideoSpeed(((int[]) _tag)[1]);
+                    setSpeed(((int[]) _tag)[1]);
 //                    hide();
                 }
                 // 画面比例
@@ -591,7 +591,7 @@ public class ComponentMenu extends RelativeLayout implements ComponentApi {
                     throw new Exception("error: contentData.length == 0");
 
                 int scaleType = getVideoScale();
-                int speedType = getVideoSpeed();
+                float speedType = getSpeed();
 
                 List<Integer> listScale = Arrays.asList(PlayerType.ScaleType._1_1,
                         PlayerType.ScaleType._4_3,
@@ -602,16 +602,18 @@ public class ComponentMenu extends RelativeLayout implements ComponentApi {
                         PlayerType.ScaleType.FULL,
                         PlayerType.ScaleType.AUTO);
 
-                List<Integer> listSpeed = Arrays.asList(PlayerType.SpeedType._0_5,
-                        PlayerType.SpeedType._1_0,
-                        PlayerType.SpeedType._1_5,
-                        PlayerType.SpeedType._2_0,
-                        PlayerType.SpeedType._2_5,
-                        PlayerType.SpeedType._3_0,
-                        PlayerType.SpeedType._3_5,
-                        PlayerType.SpeedType._4_0,
-                        PlayerType.SpeedType._4_5,
-                        PlayerType.SpeedType._5_0);
+                List<Integer> listSpeed = Arrays.asList(
+//                        PlayerType.SpeedType._0_5,
+//                        PlayerType.SpeedType._1_0,
+//                        PlayerType.SpeedType._1_5,
+//                        PlayerType.SpeedType._2_0,
+//                        PlayerType.SpeedType._2_5,
+//                        PlayerType.SpeedType._3_0,
+//                        PlayerType.SpeedType._3_5,
+//                        PlayerType.SpeedType._4_0,
+//                        PlayerType.SpeedType._4_5,
+//                        PlayerType.SpeedType._5_0
+                );
 
                 int length = Math.min(contentData.length, 10);
                 for (int i = 0; i < length; i++) {
@@ -624,30 +626,30 @@ public class ComponentMenu extends RelativeLayout implements ComponentApi {
 
                     // 倍速
                     if (listSpeed.contains(value)) {
-                        TextView textView = childAt.findViewById(R.id.module_mediaplayer_component_menu_item_content_txt);
-                        textView.setTag(new int[]{TYPE_SPEED, value});
-                        textView.setSelected(speedType == value);
-                        if (value == PlayerType.SpeedType._0_5) {
-                            textView.setText("0.5");
-                        } else if (value == PlayerType.SpeedType._1_5) {
-                            textView.setText("1.5");
-                        } else if (value == PlayerType.SpeedType._2_0) {
-                            textView.setText("2.0");
-                        } else if (value == PlayerType.SpeedType._2_5) {
-                            textView.setText("2.5");
-                        } else if (value == PlayerType.SpeedType._3_0) {
-                            textView.setText("3.0");
-                        } else if (value == PlayerType.SpeedType._3_5) {
-                            textView.setText("3.5");
-                        } else if (value == PlayerType.SpeedType._4_0) {
-                            textView.setText("4.0");
-                        } else if (value == PlayerType.SpeedType._4_5) {
-                            textView.setText("4.5");
-                        } else if (value == PlayerType.SpeedType._5_0) {
-                            textView.setText("5.0");
-                        } else {
-                            textView.setText("1.0");
-                        }
+//                        TextView textView = childAt.findViewById(R.id.module_mediaplayer_component_menu_item_content_txt);
+//                        textView.setTag(new int[]{TYPE_SPEED, value});
+//                        textView.setSelected(speedType == value);
+//                        if (value == PlayerType.SpeedType._0_5) {
+//                            textView.setText("0.5");
+//                        } else if (value == PlayerType.SpeedType._1_5) {
+//                            textView.setText("1.5");
+//                        } else if (value == PlayerType.SpeedType._2_0) {
+//                            textView.setText("2.0");
+//                        } else if (value == PlayerType.SpeedType._2_5) {
+//                            textView.setText("2.5");
+//                        } else if (value == PlayerType.SpeedType._3_0) {
+//                            textView.setText("3.0");
+//                        } else if (value == PlayerType.SpeedType._3_5) {
+//                            textView.setText("3.5");
+//                        } else if (value == PlayerType.SpeedType._4_0) {
+//                            textView.setText("4.0");
+//                        } else if (value == PlayerType.SpeedType._4_5) {
+//                            textView.setText("4.5");
+//                        } else if (value == PlayerType.SpeedType._5_0) {
+//                            textView.setText("5.0");
+//                        } else {
+//                            textView.setText("1.0");
+//                        }
                     }
                     // 画面比例
                     else if (listScale.contains(value)) {
