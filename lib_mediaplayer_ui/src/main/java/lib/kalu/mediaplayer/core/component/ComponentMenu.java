@@ -96,7 +96,7 @@ public class ComponentMenu extends RelativeLayout implements ComponentApi {
                         // childAt.setActivated(i == indexedOfChild);
                     }
                     //
-                    setSpeed(((int[]) _tag)[1]);
+                    setPlaybackSpeed(((int[]) _tag)[1]);
 //                    hide();
                 }
                 // 画面比例
@@ -591,7 +591,7 @@ public class ComponentMenu extends RelativeLayout implements ComponentApi {
                     throw new Exception("error: contentData.length == 0");
 
                 int scaleType = getVideoScale();
-                float speedType = getSpeed();
+                float speedType = getPlaybackSpeed();
 
                 List<Integer> listScale = Arrays.asList(PlayerType.ScaleType._1_1,
                         PlayerType.ScaleType._4_3,

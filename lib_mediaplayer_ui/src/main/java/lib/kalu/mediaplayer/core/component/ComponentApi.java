@@ -584,7 +584,7 @@ public interface ComponentApi {
         }
     }
 
-    default void setSpeed(float speed) {
+    default void setPlaybackSpeed(float speed) {
         try {
             PlayerView playerView = getPlayerView();
             if (null == playerView)
@@ -597,7 +597,7 @@ public interface ComponentApi {
         }
     }
 
-    default float getSpeed() {
+    default float getPlaybackSpeed() {
         try {
             PlayerView playerView = getPlayerView();
             if (null == playerView)
