@@ -9,7 +9,7 @@
         android:supportsRtl="true">
 
         <provider
-            android:name="lib.kalu.mediaplayer.init.PlayerInitProvider"
+            android:name="lib.kalu.mediaplayer.PlayerInitProvider"
             android:authorities="${applicationId}.playerinitprovider"
             android:exported="false" />
 

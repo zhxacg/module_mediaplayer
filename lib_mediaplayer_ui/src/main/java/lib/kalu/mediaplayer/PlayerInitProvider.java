@@ -1,15 +1,19 @@
-package lib.kalu.mediaplayer.init;
+package lib.kalu.mediaplayer;
 
 import android.app.Activity;
 import android.app.Application;
+import android.content.ComponentCallbacks;
 import android.content.ContentProvider;
 import android.content.ContentValues;
+import android.content.res.Configuration;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+
+import lib.kalu.mediaplayer.util.LogUtil;
 
 public class PlayerInitProvider extends ContentProvider implements Application.ActivityLifecycleCallbacks {
 
@@ -36,6 +40,20 @@ public class PlayerInitProvider extends ContentProvider implements Application.A
             ((Application) getContext()).registerActivityLifecycleCallbacks(this);
         } catch (Exception e) {
         }
+
+        ((Application) getContext()).registerComponentCallbacks(new ComponentCallbacks() {
+            @Override
+            public void onConfigurationChanged(@NonNull Configuration newConfig) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("PlayerInitProvider -> onConfigurationChanged -> newConfig.orientation = " + newConfig.orientation);
+                }
+            }
+
+            @Override
+            public void onLowMemory() {
+            }
+        });
+
         return false;
     }
 

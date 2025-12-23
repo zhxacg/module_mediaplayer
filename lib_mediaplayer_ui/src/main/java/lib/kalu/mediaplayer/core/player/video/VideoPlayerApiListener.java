@@ -115,7 +115,7 @@ public interface VideoPlayerApiListener extends VideoPlayerApiBase, VideoPlayerA
         }
     }
 
-    default void callOrientation(boolean callPlayer, boolean callComponent, Boolean isVt) {
+    default void callOrientation(boolean callPlayer, boolean callComponent, boolean landspace) {
 
         // component
         try {
@@ -131,7 +131,7 @@ public interface VideoPlayerApiListener extends VideoPlayerApiBase, VideoPlayerA
                     continue;
                 if (!(childAt instanceof ComponentApi))
                     continue;
-                ((ComponentApi) childAt).callOrientation(isVt);
+                ((ComponentApi) childAt).callOrientation(landspace);
             }
         } catch (Exception e) {
             if (LogUtil.DEBUG) {

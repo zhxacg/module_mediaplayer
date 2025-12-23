@@ -234,6 +234,7 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
             if (cleatTag) {
                 setTags(null);
             }
+            callEvent(PlayerType.EventType.ERROR);
             StartArgs newArgs = args.newBuilder().setPlayWhenReadySeekToPosition(position).build();
             start(newArgs);
         } catch (Exception e) {

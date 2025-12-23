@@ -787,17 +787,86 @@ public interface ComponentApi {
         }
     }
 
-    default boolean setRequestedOrientation(Context context, boolean isVt) {
+    default boolean isScreenOrientationPortrait() {
         try {
             PlayerView playerView = getPlayerView();
             if (null == playerView)
                 throw new Exception("playerView error: null");
-            return playerView.setRequestedOrientation(context, isVt);
+            return playerView.isScreenOrientationPortrait();
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
-                LogUtil.log("ComponentApi -> setRequestedOrientation -> " + e.getMessage());
+                LogUtil.log("ComponentApi -> isScreenOrientationPortrait -> " + e.getMessage());
             }
             return false;
+        }
+    }
+
+    default boolean isScreenOrientationLandspace() {
+        try {
+            PlayerView playerView = getPlayerView();
+            if (null == playerView)
+                throw new Exception("playerView error: null");
+            return playerView.isScreenOrientationLandspace();
+        } catch (Exception e) {
+            if (LogUtil.DEBUG) {
+                LogUtil.log("ComponentApi -> isScreenOrientationLandspace -> " + e.getMessage());
+            }
+            return false;
+        }
+    }
+
+    default boolean setScreenOrientationPortrait() {
+        try {
+            PlayerView playerView = getPlayerView();
+            if (null == playerView)
+                throw new Exception("playerView error: null");
+            return playerView.setScreenOrientationPortrait();
+        } catch (Exception e) {
+            if (LogUtil.DEBUG) {
+                LogUtil.log("ComponentApi -> setScreenOrientationPortrait -> " + e.getMessage());
+            }
+            return false;
+        }
+    }
+
+    default boolean setScreenOrientationLandspace() {
+        try {
+            PlayerView playerView = getPlayerView();
+            if (null == playerView)
+                throw new Exception("playerView error: null");
+            return playerView.setScreenOrientationLandspace();
+        } catch (Exception e) {
+            if (LogUtil.DEBUG) {
+                LogUtil.log("ComponentApi -> setScreenOrientationLandspace -> " + e.getMessage());
+            }
+            return false;
+        }
+    }
+
+    default boolean setPlaybackSubtitleOffsetMs(int offsetMs) {
+        try {
+            PlayerView playerView = getPlayerView();
+            if (null == playerView)
+                throw new Exception("playerView error: null");
+            return playerView.subtitleOffsetMs(offsetMs);
+        } catch (Exception e) {
+            if (LogUtil.DEBUG) {
+                LogUtil.log("ComponentApi -> setPlaybackSubtitleOffsetMs -> " + e.getMessage());
+            }
+            return false;
+        }
+    }
+
+    default void restart(){
+        try {
+            PlayerView playerView = getPlayerView();
+            if (null == playerView)
+                throw new Exception("playerView error: null");
+            playerView.restart();
+        } catch (Exception e) {
+            if (LogUtil.DEBUG) {
+                LogUtil.log("ComponentApi -> restart -> " + e.getMessage());
+            }
         }
     }
 }

@@ -1560,7 +1560,7 @@ public final class VideoExo2Player extends VideoBasePlayer {
     }
 
     @Override
-    public boolean appendSubtitleOffsetMs(int offsetMs) {
+    public boolean subtitleOffsetMs(int offsetMs) {
         try {
             if (null == mExoPlayer)
                 throw new Exception("error: mExoPlayer null");
@@ -1581,7 +1581,7 @@ public final class VideoExo2Player extends VideoBasePlayer {
             return true;
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
-                LogUtil.log("VideoExo2Player -> appendSubtitleOffsetMs -> Exception " + e.getMessage());
+                LogUtil.log("VideoExo2Player -> subtitleOffsetMs -> Exception " + e.getMessage());
             }
             return false;
         }
