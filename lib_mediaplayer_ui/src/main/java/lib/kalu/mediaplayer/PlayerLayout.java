@@ -491,7 +491,7 @@ public class PlayerLayout extends RelativeLayout {
             if (null == playerView)
                 throw new Exception("playerView error: null");
             boolean releaseTag = enableReleaseTag();
-            playerView.release(releaseTag, false, true);
+            playerView.release(releaseTag, false, true, true);
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
                 LogUtil.log("PlayerLayout -> release -> " + e.getMessage());
@@ -508,7 +508,7 @@ public class PlayerLayout extends RelativeLayout {
             PlayerView playerView = getPlayerView();
             if (null == playerView)
                 throw new Exception("playerView error: null");
-            playerView.release(callEvent, clearTag, false);
+            playerView.release(callEvent, clearTag, false, true);
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
                 LogUtil.log("PlayerLayout -> release -> " + e.getMessage());

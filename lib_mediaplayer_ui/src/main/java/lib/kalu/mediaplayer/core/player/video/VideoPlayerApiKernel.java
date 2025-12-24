@@ -71,7 +71,7 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
             // 2
             boolean initRelease = args.isInitRelease();
             if (initRelease) {
-                release(false, true, false);
+                release(false, true, false, false);
             } else {
                 stop(false, true);
             }
@@ -193,12 +193,14 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
     }
 
     default void release() {
-        release(true, true, true);
+        release(true, true, true, true);
     }
 
-    default void release(boolean callEvent, boolean clearTag, boolean isFromUser) {
+    default void release(boolean callEvent, boolean clearTag, boolean isFromUser, boolean clearListener) {
         try {
-            clearOnPlayerListener();
+            if (clearListener) {
+                clearOnPlayerListener();
+            }
             releaseRender();
             releaseKernel(clearTag, isFromUser);
             if (!callEvent)

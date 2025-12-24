@@ -131,8 +131,8 @@ public final class PlayerArgs {
 
     public final static class Builder {
 
-        private boolean log = false;// 日志log
-        private boolean initRelease = false;
+        private boolean log = false;
+        private boolean initRelease = true;
         private boolean supportAutoRelease = true;
         private int connectTimeout = 20 * 1000;  // 连接超时
         private boolean bufferingTimeoutRetry = false; // 缓冲失败重试

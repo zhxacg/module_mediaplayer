@@ -29,7 +29,7 @@ public interface VideoPlayerLifecycle extends VideoPlayerApiBase, VideoPlayerApi
             if (!containsMainUrl)
                 throw new Exception("error: containsMainUrl false");
             stop(true, false);
-            release(true, true, false);
+            release(true, true, false, false);
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
                 LogUtil.log("VideoPlayerLifecycle -> detachedFromWindow -> " + e.getMessage());
