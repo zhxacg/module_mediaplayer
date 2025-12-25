@@ -125,7 +125,7 @@ public interface VideoPlayerApiOrientation extends VideoPlayerApiBase, VideoPlay
                 throw new Exception("error: activity null");
 
             activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-            callOrientation(false, true, false);
+            callScreenPortrait(false, true);
 
 //            PlayerLayout playerLayout = getPlayerLayout();
 //            if (null == playerLayout)
@@ -185,7 +185,7 @@ public interface VideoPlayerApiOrientation extends VideoPlayerApiBase, VideoPlay
                 throw new Exception("error: activity null");
 
             activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-            callOrientation(false, true, true);
+            callScreenLandspace(false, true);
 
 //            PlayerLayout playerLayout = getPlayerLayout();
 //            if (null == playerLayout)

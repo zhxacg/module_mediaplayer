@@ -115,7 +115,7 @@ public interface VideoPlayerApiListener extends VideoPlayerApiBase, VideoPlayerA
         }
     }
 
-    default void callOrientation(boolean callPlayer, boolean callComponent, boolean landspace) {
+    default void callScreenLandspace(boolean callPlayer, boolean callComponent) {
 
         // component
         try {
@@ -131,11 +131,11 @@ public interface VideoPlayerApiListener extends VideoPlayerApiBase, VideoPlayerA
                     continue;
                 if (!(childAt instanceof ComponentApi))
                     continue;
-                ((ComponentApi) childAt).callOrientation(landspace);
+                ((ComponentApi) childAt).callScreenLandspace();
             }
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
-                LogUtil.log("VideoPlayerApiBase -> callOrientation -> " + e.getMessage());
+                LogUtil.log("VideoPlayerApiBase -> callScreenLandspace -> " + e.getMessage());
             }
         }
 
@@ -143,30 +143,44 @@ public interface VideoPlayerApiListener extends VideoPlayerApiBase, VideoPlayerA
         try {
             if (!callPlayer)
                 throw new Exception("warning: callPlayer false");
-//            OnPlayerEventListener eventListener = getOnPlayerEventListener();
-//            if (null == eventListener)
-//                throw new Exception("warning: eventListener null");
-//            eventListener.callOrientation(isVt);
-//            if (state == PlayerType.EventType.START) {
-//                eventListener.onStart();
-//            } else if (state == PlayerType.EventType.COMPLETE) {
-//                eventListener.onComplete();
-//            } else if (state == PlayerType.EventType.PAUSE) {
-//                eventListener.onPause();
-//            } else if (state == PlayerType.EventType.RESUME) {
-//                eventListener.onResume();
-//            } else if (state == PlayerType.EventType.ERROR) {
-//                eventListener.onError(null);
-//            } else if (state == PlayerType.EventType.BUFFERING_START) {
-//                eventListener.onBufferingStart();
-//            } else if (state == PlayerType.EventType.BUFFERING_STOP) {
-//                eventListener.onBufferingStop();
-//            } else if (state == PlayerType.EventType.PREPARE) {
-//                eventListener.onPrepare();
-//            }
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
-                LogUtil.log("VideoPlayerApiBase -> callOrientation -> " + e.getMessage());
+                LogUtil.log("VideoPlayerApiBase -> callScreenLandspace -> " + e.getMessage());
+            }
+        }
+    }
+
+    default void callScreenPortrait(boolean callPlayer, boolean callComponent) {
+
+        // component
+        try {
+            if (!callComponent)
+                throw new Exception("warning: callComponent false");
+            ViewGroup viewGroup = getBaseComponentViewGroup();
+            int childCount = viewGroup.getChildCount();
+            if (childCount <= 0)
+                throw new Exception("not find component");
+            for (int i = 0; i < childCount; i++) {
+                View childAt = viewGroup.getChildAt(i);
+                if (null == childAt)
+                    continue;
+                if (!(childAt instanceof ComponentApi))
+                    continue;
+                ((ComponentApi) childAt).callScreenPortrait();
+            }
+        } catch (Exception e) {
+            if (LogUtil.DEBUG) {
+                LogUtil.log("VideoPlayerApiBase -> callScreenPortrait -> " + e.getMessage());
+            }
+        }
+
+        // listener
+        try {
+            if (!callPlayer)
+                throw new Exception("warning: callPlayer false");
+        } catch (Exception e) {
+            if (LogUtil.DEBUG) {
+                LogUtil.log("VideoPlayerApiBase -> callScreenPortrait -> " + e.getMessage());
             }
         }
     }

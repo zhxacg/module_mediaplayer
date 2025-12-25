@@ -94,7 +94,12 @@ public interface ComponentApi {
     default void callWindow(int state) {
     }
 
-    default void callOrientation(boolean isVt) {
+    default void callScreenLandspace() {
+
+    }
+
+    default void callScreenPortrait() {
+
     }
 
     /******************/
@@ -857,7 +862,7 @@ public interface ComponentApi {
         }
     }
 
-    default void restart(){
+    default void restart() {
         try {
             PlayerView playerView = getPlayerView();
             if (null == playerView)
