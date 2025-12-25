@@ -72,6 +72,8 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.NavigableSet;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import lib.kalu.mediaplayer.PlayerSDK;
 import lib.kalu.mediaplayer.bean.args.PlayerArgs;
@@ -564,7 +566,7 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
         try {
             if (null == mExoPlayer)
                 throw new Exception("mMediaPlayer error: null");
-           return mExoPlayer.getPlaybackParameters().speed;
+            return mExoPlayer.getPlaybackParameters().speed;
         } catch (Exception e) {
             return 1.0f;
         }
@@ -2252,15 +2254,19 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
         }
     }
 
-    private int formatSegmentPosition(String url) {
+    private int formatSegmentPosition(String segmentUrl) {
         try {
-            int startIndex = url.lastIndexOf("/");
-            int endIndex = url.lastIndexOf(".");
-            String substring = url.substring(startIndex + 1, endIndex);
+            Pattern pattern = Pattern.compile(".*?(\\d+)\\.ts");
+            Matcher matcher = pattern.matcher(segmentUrl);
+            if (!matcher.find())
+                throw new Exception("error: not find1");
+            String segmentPosition = matcher.group(1);
+            if (null == segmentPosition || segmentPosition.isEmpty())
+                throw new Exception("error: not find2");
             if (LogUtil.DEBUG) {
-                LogUtil.log("VideoMediaxPlayer -> formatSegmentPosition -> substring = " + substring);
+                LogUtil.log("VideoMediaxPlayer -> formatSegmentPosition -> segmentPosition = " + segmentPosition + ", segmentUrl = " + segmentUrl);
             }
-            return Integer.parseInt(substring);
+            return Integer.parseInt(segmentPosition);
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
                 LogUtil.log("VideoMediaxPlayer -> formatSegmentPosition -> Exception: " + e.getMessage());
