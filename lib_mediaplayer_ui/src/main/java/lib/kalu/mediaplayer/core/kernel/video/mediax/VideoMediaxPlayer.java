@@ -35,7 +35,6 @@ import androidx.media3.datasource.cache.CacheSpan;
 import androidx.media3.datasource.cache.LeastRecentlyUsedCacheEvictor;
 import androidx.media3.datasource.cache.SimpleCache;
 import androidx.media3.exoplayer.DecoderReuseEvaluation;
-import androidx.media3.exoplayer.DefaultLoadControl;
 import androidx.media3.exoplayer.DefaultRenderersFactory;
 import androidx.media3.exoplayer.ExoPlaybackException;
 import androidx.media3.exoplayer.ExoPlayer;
@@ -56,10 +55,7 @@ import androidx.media3.exoplayer.source.ProgressiveMediaSource;
 import androidx.media3.exoplayer.source.SingleSampleMediaSource;
 import androidx.media3.exoplayer.text.TextOutput;
 import androidx.media3.exoplayer.text.TextRenderer;
-import androidx.media3.exoplayer.trackselection.AdaptiveTrackSelection;
-import androidx.media3.exoplayer.trackselection.DefaultTrackSelector;
 import androidx.media3.exoplayer.trackselection.TrackSelector;
-import androidx.media3.exoplayer.upstream.DefaultBandwidthMeter;
 import androidx.media3.extractor.ts.DefaultTsPayloadReaderFactory;
 
 import com.google.common.collect.ImmutableList;
@@ -159,23 +155,23 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
                     .setMediaSourceFactory(new DefaultMediaSourceFactory(context)
                             .experimentalParseSubtitlesDuringExtraction(true))
                     // 监听
-                    .setAnalyticsCollector(new DefaultAnalyticsCollector(Clock.DEFAULT))
-                    // 配置带宽测量器
-                    .setBandwidthMeter(new DefaultBandwidthMeter.Builder(context)
-                            // 初始带宽估算为5Mbps（5,000,000 bps）
-                            .setInitialBitrateEstimate(5_000_000)
-                            .build())
-                    // 缓冲缓存
-                    .setLoadControl(new DefaultLoadControl.Builder()
-                            // minBufferMs 最小缓冲时长的参数，单位为毫秒
-                            // maxBufferMs 限制最大缓冲时长的参数，单位是毫秒
-                            // bufferForPlaybackMs 如果设置 bufferForPlaybackMs 为 5000，那么播放器会在开始播放前先缓冲 5 秒钟的媒体数据
-                            // bufferForPlaybackAfterRebufferMs 用于指定在播放过程中出现重新缓冲（Rebuffer）后，为了保证后续播放流畅，需要再次缓冲的时长，单位同样是毫秒
-                            .setBufferDurationsMs(10_0000, 10_0000, 1000, 5000)
-                            .build())
-                    // 自适应码率
-                    .setTrackSelector(new DefaultTrackSelector(context, DefaultTrackSelector.Parameters.getDefaults(context)
-                            .buildUpon()
+                    .setAnalyticsCollector(new DefaultAnalyticsCollector(Clock.DEFAULT));
+            // 配置带宽测量器
+//                    .setBandwidthMeter(new DefaultBandwidthMeter.Builder(context)
+//                            // 初始带宽估算为5Mbps（5,000,000 bps）
+//                            .setInitialBitrateEstimate(5_000_000)
+//                            .build())
+            // 缓冲缓存
+//                    .setLoadControl(new DefaultLoadControl.Builder()
+//                            // minBufferMs 最小缓冲时长的参数，单位为毫秒
+//                            // maxBufferMs 限制最大缓冲时长的参数，单位是毫秒
+//                            // bufferForPlaybackMs 如果设置 bufferForPlaybackMs 为 5000，那么播放器会在开始播放前先缓冲 5 秒钟的媒体数据
+//                            // bufferForPlaybackAfterRebufferMs 用于指定在播放过程中出现重新缓冲（Rebuffer）后，为了保证后续播放流畅，需要再次缓冲的时长，单位同样是毫秒
+//                            .setBufferDurationsMs(10_0000, 10_0000, 1000, 5000)
+//                            .build())
+            // 自适应码率
+//                    .setTrackSelector(new DefaultTrackSelector(context, DefaultTrackSelector.Parameters.getDefaults(context)
+//                            .buildUpon()
 //                            // 主字幕轨道
 //                            .setPreferredTextRoleFlags(C.ROLE_FLAG_MAIN)
 //                            // 主音频轨道
@@ -198,12 +194,12 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
 //                            .setAllowAudioMixedDecoderSupportAdaptiveness(true)
 //                            // 音频混合时解码器支持自适应
 //                            .setAllowVideoMixedDecoderSupportAdaptiveness(true)
-                            .build(),
-                            new AdaptiveTrackSelection.Factory(
-                                    10000,// 至少 10 秒后才允许升码率
-                                    25000, // 最多 2.5 秒后允许降码率
-                                    25000, //
-                                    0.7F))); //
+//                            .build(),
+//                            new AdaptiveTrackSelection.Factory(
+//                                    10000,// 至少 10 秒后才允许升码率
+//                                    25000, // 最多 2.5 秒后允许降码率
+//                                    25000, //
+//                                    0.7F)));
 
             int decoderType = args.getDecoderType();
             if (LogUtil.DEBUG) {
