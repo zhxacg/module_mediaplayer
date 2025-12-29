@@ -101,10 +101,9 @@ public interface VideoKernelApiHandler extends VideoKernelApiBase, VideoKernelAp
                     //
                     boolean live = isLive();
                     if (live) {
-                        getPlayerApi().restart();
+                        getPlayerApi().restart(false);
                     } else {
-                        long position = getPosition();
-                        getPlayerApi().restart(position);
+                        getPlayerApi().restart(true);
                     }
                 } else {
                     boolean buffering = isBuffering();
@@ -123,7 +122,7 @@ public interface VideoKernelApiHandler extends VideoKernelApiBase, VideoKernelAp
                 }
             }
         } catch (Exception e) {
-            if(LogUtil.DEBUG) {
+            if (LogUtil.DEBUG) {
                 LogUtil.log("VideoKernelApiHandler -> parseTimer -> Exception " + e.getMessage());
             }
         }
@@ -134,13 +133,13 @@ public interface VideoKernelApiHandler extends VideoKernelApiBase, VideoKernelAp
             Handler handler = mHandler.get(this);
             if (null == handler)
                 throw new Exception("warning: handler null");
-            if(LogUtil.DEBUG) {
+            if (LogUtil.DEBUG) {
                 LogUtil.log("VideoKernelApiHandler -> releaseTimer ->");
             }
             handler.removeCallbacksAndMessages(null);
             mHandler.remove(this);
         } catch (Exception e) {
-            if(LogUtil.DEBUG) {
+            if (LogUtil.DEBUG) {
                 LogUtil.log("VideoKernelApiHandler -> releaseTimer -> " + e.getMessage());
             }
         }
@@ -151,7 +150,7 @@ public interface VideoKernelApiHandler extends VideoKernelApiBase, VideoKernelAp
             Handler handler = mHandler.get(this);
             if (null != handler)
                 throw new Exception("warning: handler not null");
-            if(LogUtil.DEBUG) {
+            if (LogUtil.DEBUG) {
                 LogUtil.log("VideoKernelApiHandler -> createTimer ->");
             }
             mHandler.put(this, new android.os.Handler(Looper.getMainLooper()) {
@@ -161,7 +160,7 @@ public interface VideoKernelApiHandler extends VideoKernelApiBase, VideoKernelAp
                 }
             });
         } catch (Exception e) {
-            if(LogUtil.DEBUG) {
+            if (LogUtil.DEBUG) {
                 LogUtil.log("VideoKernelApiHandler -> createTimer -> " + e.getMessage());
             }
         }
@@ -174,7 +173,7 @@ public interface VideoKernelApiHandler extends VideoKernelApiBase, VideoKernelAp
             Handler handler = mHandler.get(this);
             if (null == handler)
                 throw new Exception("warning: handler null");
-            if(LogUtil.DEBUG) {
+            if (LogUtil.DEBUG) {
                 LogUtil.log("VideoKernelApiHandler -> startPlayWhenReadyDelayedTime ->");
             }
             //
@@ -186,7 +185,7 @@ public interface VideoKernelApiHandler extends VideoKernelApiBase, VideoKernelAp
             message.obj = context;
             handler.sendMessageDelayed(message, delayedTime);
         } catch (Exception e) {
-            if(LogUtil.DEBUG) {
+            if (LogUtil.DEBUG) {
                 LogUtil.log("VideoKernelApiHandler -> startPlayWhenReadyDelayedTime -> Exception " + e.getMessage());
             }
         }
@@ -197,16 +196,16 @@ public interface VideoKernelApiHandler extends VideoKernelApiBase, VideoKernelAp
             Handler handler = mHandler.get(this);
             if (null == handler)
                 throw new Exception("warning: handler null");
-            if(LogUtil.DEBUG) {
+            if (LogUtil.DEBUG) {
                 LogUtil.log("VideoKernelApiHandler -> sendMessageConnectTimeout ->");
             }
             Message message = Message.obtain();
             message.what = WHAT_ConnectTimeout;
             message.arg1 = kernelType;
             message.obj = new long[]{timeMillis, timeout};
-            handler.sendMessageDelayed(message, delay?1000:0);
+            handler.sendMessageDelayed(message, delay ? 1000 : 0);
         } catch (Exception e) {
-            if(LogUtil.DEBUG) {
+            if (LogUtil.DEBUG) {
                 LogUtil.log("VideoKernelApiHandler -> sendMessageConnectTimeout -> Exception " + e.getMessage());
             }
         }
@@ -217,12 +216,12 @@ public interface VideoKernelApiHandler extends VideoKernelApiBase, VideoKernelAp
             Handler handler = mHandler.get(this);
             if (null == handler)
                 throw new Exception("warning: handler null");
-            if(LogUtil.DEBUG) {
+            if (LogUtil.DEBUG) {
                 LogUtil.log("VideoKernelApiHandler -> removeMessagesConnectTimeout ->");
             }
             handler.removeMessages(WHAT_ConnectTimeout);
         } catch (Exception e) {
-            if(LogUtil.DEBUG) {
+            if (LogUtil.DEBUG) {
                 LogUtil.log("VideoKernelApiHandler -> removeMessagesConnectTimeout -> Exception " + e.getMessage());
             }
         }
@@ -235,7 +234,7 @@ public interface VideoKernelApiHandler extends VideoKernelApiBase, VideoKernelAp
             Handler handler = mHandler.get(this);
             if (null == handler)
                 throw new Exception("warning: handler null");
-            if(LogUtil.DEBUG) {
+            if (LogUtil.DEBUG) {
                 LogUtil.log("VideoKernelApiHandler -> sendMessageCheckPreparedPlaying ->");
             }
             Message message = Message.obtain();
@@ -243,7 +242,7 @@ public interface VideoKernelApiHandler extends VideoKernelApiBase, VideoKernelAp
             message.arg1 = kernelType;
             handler.sendMessageDelayed(message, 1000);
         } catch (Exception e) {
-            if(LogUtil.DEBUG) {
+            if (LogUtil.DEBUG) {
                 LogUtil.log("VideoKernelApiHandler -> sendMessageCheckPreparedPlaying -> Exception " + e.getMessage());
             }
         }
@@ -254,7 +253,7 @@ public interface VideoKernelApiHandler extends VideoKernelApiBase, VideoKernelAp
             Handler handler = mHandler.get(this);
             if (null == handler)
                 throw new Exception("warning: handler null");
-            if(LogUtil.DEBUG) {
+            if (LogUtil.DEBUG) {
                 LogUtil.log("VideoKernelApiHandler -> sendMessageProgressUpdate ->");
             }
             Message message = Message.obtain();
@@ -262,7 +261,7 @@ public interface VideoKernelApiHandler extends VideoKernelApiBase, VideoKernelAp
             message.arg1 = kernelType;
             handler.sendMessageDelayed(message, delay ? 1000 : 0);
         } catch (Exception e) {
-            if(LogUtil.DEBUG) {
+            if (LogUtil.DEBUG) {
                 LogUtil.log("VideoKernelApiHandler -> sendMessageProgressUpdate -> Exception " + e.getMessage());
             }
         }
@@ -273,12 +272,12 @@ public interface VideoKernelApiHandler extends VideoKernelApiBase, VideoKernelAp
             Handler handler = mHandler.get(this);
             if (null == handler)
                 throw new Exception("warning: handler null");
-            if(LogUtil.DEBUG) {
+            if (LogUtil.DEBUG) {
                 LogUtil.log("VideoKernelApiHandler -> removeMessagesProgressUpdate ->");
             }
             handler.removeMessages(WHAT_ProgressUpdate);
         } catch (Exception e) {
-            if(LogUtil.DEBUG) {
+            if (LogUtil.DEBUG) {
                 LogUtil.log("VideoKernelApiHandler -> removeMessagesProgressUpdate -> Exception " + e.getMessage());
             }
         }
@@ -289,15 +288,15 @@ public interface VideoKernelApiHandler extends VideoKernelApiBase, VideoKernelAp
             Handler handler = mHandler.get(this);
             if (null == handler)
                 throw new Exception("warning: handler null");
-            if(LogUtil.DEBUG) {
+            if (LogUtil.DEBUG) {
                 LogUtil.log("VideoKernelApiHandler -> sendMessageSpeedUpdate ->");
             }
             Message message = Message.obtain();
             message.what = WHAT_UPDATE_SPEED;
             message.arg1 = kernelType;
-            handler.sendMessageDelayed(message, delay?1000:0);
+            handler.sendMessageDelayed(message, delay ? 1000 : 0);
         } catch (Exception e) {
-            if(LogUtil.DEBUG) {
+            if (LogUtil.DEBUG) {
                 LogUtil.log("VideoKernelApiHandler -> sendMessageSpeedUpdate -> Exception " + e.getMessage());
             }
         }
@@ -308,12 +307,12 @@ public interface VideoKernelApiHandler extends VideoKernelApiBase, VideoKernelAp
             Handler handler = mHandler.get(this);
             if (null == handler)
                 throw new Exception("warning: handler null");
-            if(LogUtil.DEBUG) {
+            if (LogUtil.DEBUG) {
                 LogUtil.log("VideoKernelApiHandler -> removeMessagesSpeedUpdate ->");
             }
             handler.removeMessages(WHAT_UPDATE_SPEED);
         } catch (Exception e) {
-            if(LogUtil.DEBUG) {
+            if (LogUtil.DEBUG) {
                 LogUtil.log("VideoKernelApiHandler -> removeMessagesSpeedUpdate -> Exception " + e.getMessage());
             }
         }
@@ -324,7 +323,7 @@ public interface VideoKernelApiHandler extends VideoKernelApiBase, VideoKernelAp
             Handler handler = mHandler.get(this);
             if (null == handler)
                 throw new Exception("warning: handler null");
-            if(LogUtil.DEBUG) {
+            if (LogUtil.DEBUG) {
                 LogUtil.log("VideoKernelApiHandler -> sendMessageBufferingTimeout ->");
             }
             Message message = Message.obtain();
@@ -334,7 +333,7 @@ public interface VideoKernelApiHandler extends VideoKernelApiBase, VideoKernelAp
             message.obj = new long[]{timeMillis, timeMillis};
             handler.sendMessageDelayed(message, 1000);
         } catch (Exception e) {
-            if(LogUtil.DEBUG) {
+            if (LogUtil.DEBUG) {
                 LogUtil.log("VideoKernelApiHandler -> sendMessageBufferingTimeout -> Exception " + e.getMessage());
             }
         }
@@ -345,12 +344,12 @@ public interface VideoKernelApiHandler extends VideoKernelApiBase, VideoKernelAp
             Handler handler = mHandler.get(this);
             if (null == handler)
                 throw new Exception("warning: handler null");
-            if(LogUtil.DEBUG) {
+            if (LogUtil.DEBUG) {
                 LogUtil.log("VideoKernelApiHandler -> removeMessagesBufferingTimeout ->");
             }
             handler.removeMessages(WHAT_BufferingTimeout);
         } catch (Exception e) {
-            if(LogUtil.DEBUG) {
+            if (LogUtil.DEBUG) {
                 LogUtil.log("VideoKernelApiHandler -> removeMessagesBufferingTimeout -> Exception " + e.getMessage());
             }
         }
@@ -361,12 +360,12 @@ public interface VideoKernelApiHandler extends VideoKernelApiBase, VideoKernelAp
             Handler handler = mHandler.get(this);
             if (null == handler)
                 throw new Exception("warning: handler null");
-            if(LogUtil.DEBUG) {
+            if (LogUtil.DEBUG) {
                 LogUtil.log("VideoKernelApiHandler -> removeMessagesAll ->");
             }
             handler.removeCallbacksAndMessages(null);
         } catch (Exception e) {
-            if(LogUtil.DEBUG) {
+            if (LogUtil.DEBUG) {
                 LogUtil.log("VideoKernelApiHandler -> removeMessagesAll -> Exception " + e.getMessage());
             }
         }

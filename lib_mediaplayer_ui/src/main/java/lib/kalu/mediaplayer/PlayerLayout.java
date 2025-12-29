@@ -593,12 +593,12 @@ public class PlayerLayout extends RelativeLayout {
         }
     }
 
-    public void restart() {
+    public void restart(boolean isPlaySeek) {
         try {
             PlayerView playerView = getPlayerView();
             if (null == playerView)
                 throw new Exception("playerView error: null");
-            playerView.restart();
+            playerView.restart(isPlaySeek);
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
                 LogUtil.log("PlayerLayout -> restart -> " + e.getMessage());

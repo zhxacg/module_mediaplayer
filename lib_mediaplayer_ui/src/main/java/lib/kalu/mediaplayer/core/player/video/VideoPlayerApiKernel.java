@@ -60,6 +60,8 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
     @Override
     default void start(StartArgs args) {
         try {
+            // 0
+            setTags(args);
             if (null == args)
                 throw new Exception("error: args null");
             boolean containsMainUrl = args.containsMainUrl();
@@ -76,7 +78,6 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
                 stop(false, true);
             }
             // 3
-            setTags(args);
             setScreenKeep(true);
             // 4
             checkKernelNull(args, false);
@@ -213,31 +214,23 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
         }
     }
 
-    default void restart() {
-        restart(0L, true);
-    }
-
-    default void restart(boolean clearTag) {
-        restart(0L, clearTag);
-    }
-
-    default void restart(long position) {
-        restart(position, true);
-    }
-
-    default void restart(long position, boolean cleatTag) {
+    default void restart(boolean isPlaySeek) {
         try {
-            StartArgs args = getStartArgs();
-            if (null == args)
+            StartArgs startArgs = getStartArgs();
+            if (null == startArgs)
                 throw new Exception("error: args null");
-            boolean containsMainUrl = args.containsMainUrl();
+            boolean containsMainUrl = startArgs.containsMainUrl();
             if (!containsMainUrl)
                 throw new Exception("error: containsMainUrl false");
-            if (cleatTag) {
-                setTags(null);
+            callEvent(PlayerType.EventType.RESTART);
+            long position = 0L;
+            if (isPlaySeek) {
+                position = getPosition();
             }
-            callEvent(PlayerType.EventType.ERROR);
-            StartArgs newArgs = args.newBuilder().setPlayWhenReadySeekToPosition(position).build();
+            StartArgs newArgs = startArgs.
+                    newBuilder()
+                    .setPlayWhenReadySeekToPosition(position)
+                    .build();
             start(newArgs);
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
@@ -656,7 +649,7 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
                             //
                             boolean looping = args.isLooping();
                             if (looping) {
-                                restart();
+                                restart(false);
                             }
 //                            // 多剧集
 //                            int episodeItemCount = args.getEpisodeItemCount();
