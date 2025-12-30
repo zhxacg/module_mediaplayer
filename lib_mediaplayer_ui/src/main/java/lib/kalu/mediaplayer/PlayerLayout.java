@@ -24,6 +24,7 @@ import lib.kalu.mediaplayer.listener.OnPlayerEpisodeListener;
 import lib.kalu.mediaplayer.listener.OnPlayerEventListener;
 import lib.kalu.mediaplayer.listener.OnPlayerProgressListener;
 import lib.kalu.mediaplayer.listener.OnPlayerVisibilityChangedListener;
+import lib.kalu.mediaplayer.listener.OnPlayerWindowAttachChangedListener;
 import lib.kalu.mediaplayer.listener.OnPlayerWindowStateChangeListener;
 import lib.kalu.mediaplayer.listener.OnPlayerWindowVisibilityChangedListener;
 import lib.kalu.mediaplayer.util.LogUtil;
@@ -835,20 +836,6 @@ public class PlayerLayout extends RelativeLayout {
         }
     }
 
-    public final OnPlayerEpisodeListener getPlayerEpisodeListener() {
-        try {
-            PlayerView playerView = getPlayerView();
-            if (null == playerView)
-                throw new Exception("playerView error: null");
-            return playerView.getPlayerEpisodeListener();
-        } catch (Exception e) {
-            if (LogUtil.DEBUG) {
-                LogUtil.log("PlayerLayout -> getPlayerEpisodeListener -> " + e.getMessage());
-            }
-            return null;
-        }
-    }
-
     public final void setOnPlayerEpisodeListener(OnPlayerEpisodeListener listener) {
         try {
             if (null == listener)
@@ -894,20 +881,6 @@ public class PlayerLayout extends RelativeLayout {
         }
     }
 
-    public final OnPlayerProgressListener getPlayerProgressListener() {
-        try {
-            PlayerView playerView = getPlayerView();
-            if (null == playerView)
-                throw new Exception("playerView error: null");
-            return playerView.getPlayerProgressListener();
-        } catch (Exception e) {
-            if (LogUtil.DEBUG) {
-                LogUtil.log("PlayerLayout -> getPlayerProgressListener -> " + e.getMessage());
-            }
-            return null;
-        }
-    }
-
     public final void setOnPlayerProgressListener(OnPlayerProgressListener listener) {
         try {
             if (null == listener)
@@ -923,20 +896,6 @@ public class PlayerLayout extends RelativeLayout {
         }
     }
 
-    public final OnPlayerWindowVisibilityChangedListener getPlayerWindowVisibilityChangedListener() {
-        try {
-            PlayerView playerView = getPlayerView();
-            if (null == playerView)
-                throw new Exception("playerView error: null");
-            return playerView.getPlayerWindowVisibilityChangedListener();
-        } catch (Exception e) {
-            if (LogUtil.DEBUG) {
-                LogUtil.log("PlayerLayout -> getPlayerWindowVisibilityChangedListener -> " + e.getMessage());
-            }
-            return null;
-        }
-    }
-
     public final void setOnPlayerWindowVisibilityChangedListener(OnPlayerWindowVisibilityChangedListener listener) {
         try {
             if (null == listener)
@@ -948,6 +907,21 @@ public class PlayerLayout extends RelativeLayout {
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
                 LogUtil.log("PlayerLayout -> setOnPlayerWindowVisibilityChangedListener -> " + e.getMessage());
+            }
+        }
+    }
+
+    public final void setOnPlayerWindowAttachChangedListener(OnPlayerWindowAttachChangedListener listener) {
+        try {
+            if (null == listener)
+                throw new Exception("listener error: null");
+            PlayerView playerView = getPlayerView();
+            if (null == playerView)
+                throw new Exception("playerView error: null");
+            playerView.setOnPlayerWindowAttachChangedListener(listener);
+        } catch (Exception e) {
+            if (LogUtil.DEBUG) {
+                LogUtil.log("PlayerLayout -> setOnPlayerWindowAttachChangedListener -> " + e.getMessage());
             }
         }
     }

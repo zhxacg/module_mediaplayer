@@ -7,6 +7,7 @@ import lib.kalu.mediaplayer.listener.OnPlayerProgressListener;
 import lib.kalu.mediaplayer.listener.OnPlayerScreenOrientationChangeListener;
 import lib.kalu.mediaplayer.listener.OnPlayerPlaybackChangedListener;
 import lib.kalu.mediaplayer.listener.OnPlayerVisibilityChangedListener;
+import lib.kalu.mediaplayer.listener.OnPlayerWindowAttachChangedListener;
 import lib.kalu.mediaplayer.listener.OnPlayerWindowStateChangeListener;
 import lib.kalu.mediaplayer.listener.OnPlayerWindowVisibilityChangedListener;
 
@@ -77,5 +78,12 @@ public interface VideoPlayerApiListener extends VideoPlayerApiBase {
     }
 
     default void setOnPlayerScreenOrientationChangeListener(OnPlayerScreenOrientationChangeListener l){
+    }
+
+    default OnPlayerWindowAttachChangedListener getPlayerWindowAttachChangedListener(){
+        return null;
+    }
+
+    default void setOnPlayerWindowAttachChangedListener(OnPlayerWindowAttachChangedListener l){
     }
 }

@@ -9,10 +9,11 @@ import lib.kalu.mediaplayer.bean.type.PlayerType;
 import lib.kalu.mediaplayer.core.component.ComponentApi;
 import lib.kalu.mediaplayer.listener.OnPlayerEpisodeListener;
 import lib.kalu.mediaplayer.listener.OnPlayerEventListener;
+import lib.kalu.mediaplayer.listener.OnPlayerPlaybackChangedListener;
 import lib.kalu.mediaplayer.listener.OnPlayerProgressListener;
 import lib.kalu.mediaplayer.listener.OnPlayerScreenOrientationChangeListener;
-import lib.kalu.mediaplayer.listener.OnPlayerPlaybackChangedListener;
 import lib.kalu.mediaplayer.listener.OnPlayerVisibilityChangedListener;
+import lib.kalu.mediaplayer.listener.OnPlayerWindowAttachChangedListener;
 import lib.kalu.mediaplayer.listener.OnPlayerWindowStateChangeListener;
 import lib.kalu.mediaplayer.listener.OnPlayerWindowVisibilityChangedListener;
 import lib.kalu.mediaplayer.proxy.Proxy;
@@ -365,6 +366,23 @@ public interface VideoPlayerApiCall extends VideoPlayerApiBase, VideoPlayerApiLi
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
                 LogUtil.log(TAG, "callPlayerWindowVisibilityChanged -> " + e.getMessage());
+            }
+        }
+    }
+
+    default void callPlayerWindowAttachChanged(boolean isAttach) {
+        try {
+            OnPlayerWindowAttachChangedListener onPlayerWindowAttachChangedListener = getPlayerWindowAttachChangedListener();
+            if (null == onPlayerWindowAttachChangedListener)
+                throw new Exception("warning: onPlayerWindowAttachChangedListener null");
+            if (isAttach) {
+                onPlayerWindowAttachChangedListener.onAttachedToWindow();
+            } else {
+                onPlayerWindowAttachChangedListener.onDetachedFromWindow();
+            }
+        } catch (Exception e) {
+            if (LogUtil.DEBUG) {
+                LogUtil.log(TAG, "callPlayerWindowAttachChanged -> " + e.getMessage());
             }
         }
     }
