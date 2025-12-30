@@ -2,5 +2,5 @@ package lib.kalu.mediaplayer.listener;
 
 public interface OnPlayerEpisodeListener {
 
-    void onEpisode(int curIndex);
+    void onEpisode(int position, int count);
 }

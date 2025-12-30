@@ -117,7 +117,7 @@ public interface VideoKernelApiHandler extends VideoKernelApiBase, VideoKernelAp
             // 更新网速
             else if (msg.what == WHAT_UPDATE_SPEED) {
                 if (!isPrepared()) {
-                    onUpdateSpeed(msg.arg1);
+                    onUpdateNetSpeed(msg.arg1);
                     sendMessageSpeedUpdate(msg.arg1, true);
                 }
             }

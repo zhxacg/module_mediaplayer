@@ -12,7 +12,7 @@ import lib.kalu.mediaplayer.PlayerInitProvider;
 import lib.kalu.mediaplayer.PlayerLayout;
 import lib.kalu.mediaplayer.util.LogUtil;
 
-public interface VideoPlayerApiOrientation extends VideoPlayerApiBase, VideoPlayerApiRender, VideoPlayerApiListener {
+public interface VideoPlayerApiOrientation extends VideoPlayerApiBase, VideoPlayerApiRender, VideoPlayerApiListener, VideoPlayerApiCall {
 
     String TAG = "VideoPlayerApiOrientation";
 

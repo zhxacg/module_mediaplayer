@@ -331,7 +331,7 @@ public interface ComponentApi {
     default void onUpdateSubtitle(int kernel, CharSequence result) {
     }
 
-    default void onUpdateSpeed(int kernel, CharSequence result) {
+    default void onUpdateNetSpeed(int kernel, CharSequence value) {
     }
 
     /*******************/
@@ -871,6 +871,19 @@ public interface ComponentApi {
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
                 LogUtil.log("ComponentApi -> restart -> " + e.getMessage());
+            }
+        }
+    }
+
+    default void callPlayerEpisode(int position, int count) {
+        try {
+            PlayerView playerView = getPlayerView();
+            if (null == playerView)
+                throw new Exception("playerView error: null");
+            playerView.callPlayerEpisode(position, count);
+        } catch (Exception e) {
+            if (LogUtil.DEBUG) {
+                LogUtil.log("ComponentApi -> callPlayerEpisode -> " + e.getMessage());
             }
         }
     }

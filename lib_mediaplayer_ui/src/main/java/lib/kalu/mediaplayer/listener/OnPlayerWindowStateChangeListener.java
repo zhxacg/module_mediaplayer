@@ -3,7 +3,7 @@ package lib.kalu.mediaplayer.listener;
 import lib.kalu.mediaplayer.bean.type.PlayerType;
 
 
-public interface OnPlayerWindowListener {
+public interface OnPlayerWindowStateChangeListener {
 
     /**
      * 播放模式
@@ -11,5 +11,5 @@ public interface OnPlayerWindowListener {
      *
      * @param state 播放模式
      */
-     void onWindow(@PlayerType.WindowType.Value int state);
+    void onState(@PlayerType.WindowType.Value int state);
 }

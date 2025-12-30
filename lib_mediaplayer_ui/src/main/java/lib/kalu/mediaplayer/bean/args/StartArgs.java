@@ -79,13 +79,6 @@ public class StartArgs implements Serializable {
         return initRelease;
     }
 
-    // View生命周期, 自动暂停&续播&销毁...
-    private boolean supportAutoRelease;
-
-    public boolean isSupportAutoRelease() {
-        return supportAutoRelease;
-    }
-
     // 视频url
     private UrlArgs urlArgs;
 
@@ -231,7 +224,6 @@ public class StartArgs implements Serializable {
                 ", log=" + log +
                 ", bufferingTimeoutRetry=" + bufferingTimeoutRetry +
                 ", initRelease=" + initRelease +
-                ", supportAutoRelease=" + supportAutoRelease +
                 ", urlArgs='" + urlArgs + '\'' +
                 ", title='" + title + '\'' +
                 ", trySeeDuration=" + trySeeDuration +
@@ -260,7 +252,6 @@ public class StartArgs implements Serializable {
         this.log = builder.log;
         this.bufferingTimeoutRetry = builder.bufferingTimeoutRetry;
         this.initRelease = builder.initRelease;
-        this.supportAutoRelease = builder.supportAutoRelease;
         this.urlArgs = builder.urlArgs;
         this.title = builder.title;
         this.trySeeDuration = builder.trySeeDuration;
@@ -289,7 +280,6 @@ public class StartArgs implements Serializable {
         builder.log = log;
         builder.bufferingTimeoutRetry = bufferingTimeoutRetry;
         builder.initRelease = initRelease;
-        builder.supportAutoRelease = supportAutoRelease;
         builder.urlArgs = urlArgs;
         builder.title = title;
         builder.trySeeDuration = trySeeDuration;
@@ -331,13 +321,6 @@ public class StartArgs implements Serializable {
         private boolean bufferingTimeoutRetry = playerArgs.getBufferingTimeoutRetry();
         // 开始播放前，是否销毁已存在的播放器相关实例
         private boolean initRelease = playerArgs.isInitRelease();
-        // 自动暂停&续播&销毁...
-        private boolean supportAutoRelease = playerArgs.isSupportAutoRelease();
-
-        public Builder setSupportAutoRelease(boolean v) {
-            this.supportAutoRelease = v;
-            return this;
-        }
 
         @PlayerType.SeekType.Value
         private int seekType = playerArgs.getSeekType();

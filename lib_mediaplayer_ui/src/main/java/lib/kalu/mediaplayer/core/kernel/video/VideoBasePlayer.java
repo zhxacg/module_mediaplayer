@@ -55,14 +55,14 @@ public abstract class VideoBasePlayer implements VideoKernelApi {
     }
 
     @Override
-    public void onUpdateSpeed(int kernel) {
+    public void onUpdateNetSpeed(int kernel) {
         try {
             if (null == eventApi || null == eventApi)
                 throw new Exception("eventApi error: null");
-            eventApi.onUpdateSpeed(kernel);
+            eventApi.onUpdateNetSpeed(kernel);
         } catch (Exception e) {
             if(LogUtil.DEBUG) {
-                LogUtil.log("VideoBasePlayer -> onUpdateSpeed -> " + e.getMessage());
+                LogUtil.log("VideoBasePlayer -> onUpdateNetSpeed -> " + e.getMessage());
             }
         }
     }

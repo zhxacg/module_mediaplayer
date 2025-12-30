@@ -29,7 +29,8 @@ import lib.kalu.mediaplayer.core.component.ComponentWarningTrySee;
 import lib.kalu.mediaplayer.listener.OnPlayerEpisodeListener;
 import lib.kalu.mediaplayer.listener.OnPlayerEventListener;
 import lib.kalu.mediaplayer.listener.OnPlayerProgressListener;
-import lib.kalu.mediaplayer.listener.OnPlayerWindowListener;
+import lib.kalu.mediaplayer.listener.OnPlayerWindowStateChangeListener;
+import lib.kalu.mediaplayer.listener.OnPlayerWindowVisibilityChangedListener;
 import lib.kalu.mediaplayer.proxy.Proxy;
 import lib.kalu.mediaplayer.proxy.ProxyBuried;
 import lib.kalu.mediaplayer.proxy.ProxyTrack;
@@ -188,9 +189,9 @@ public final class TestTvActivity extends Activity {
     private void initListener() {
         // playerLayout
         PlayerLayout playerLayout = findViewById(R.id.module_mediaplayer_test_video);
-        playerLayout.setOnPlayerWindowListener(new OnPlayerWindowListener() {
+        playerLayout.setOnPlayerWindowStateChangeListener(new OnPlayerWindowStateChangeListener() {
             @Override
-            public void onWindow(int state) {
+            public void onState(int state) {
                 switch (state) {
                     case PlayerType.WindowType.DEFAULT:
                         //普通模式
@@ -251,7 +252,8 @@ public final class TestTvActivity extends Activity {
             });
             playerLayout.setOnPlayerEpisodeListener(new OnPlayerEpisodeListener() {
                 @Override
-                public void onEpisode(int curIndex) {
+                public void onEpisode(int position, int count) {
+
                 }
             });
 

@@ -11,7 +11,7 @@ public interface VideoKernelApiEvent {
     default void onUpdateSubtitle(int kernel, CharSequence result) {
     }
 
-    default void onUpdateSpeed(int kernel) {
+    default void onUpdateNetSpeed(int kernel) {
     }
 
     default void onEvent(@PlayerType.KernelType.Value int kernel, @PlayerType.EventType.Value int event) {

@@ -1,7 +1,6 @@
 package lib.kalu.mediaplayer.test;
 
 import android.app.Activity;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.view.WindowManager;
 import android.widget.Toast;
@@ -14,11 +13,11 @@ import lib.kalu.mediaplayer.bean.args.StartArgs;
 import lib.kalu.mediaplayer.bean.args.UrlArgs;
 import lib.kalu.mediaplayer.bean.info.TrackInfo;
 import lib.kalu.mediaplayer.bean.type.PlayerType;
-import lib.kalu.mediaplayer.core.component.ComponentPrepareGradient;
 import lib.kalu.mediaplayer.listener.OnPlayerEpisodeListener;
 import lib.kalu.mediaplayer.listener.OnPlayerEventListener;
 import lib.kalu.mediaplayer.listener.OnPlayerProgressListener;
-import lib.kalu.mediaplayer.listener.OnPlayerWindowListener;
+import lib.kalu.mediaplayer.listener.OnPlayerWindowStateChangeListener;
+import lib.kalu.mediaplayer.listener.OnPlayerWindowVisibilityChangedListener;
 import lib.kalu.mediaplayer.proxy.Proxy;
 import lib.kalu.mediaplayer.proxy.ProxyBuried;
 import lib.kalu.mediaplayer.proxy.ProxyTrack;
@@ -60,9 +59,9 @@ public final class TestPhoneActivity extends Activity {
     private void initListener() {
         // playerLayout
         PlayerLayout playerLayout = findViewById(R.id.module_mediaplayer_test_video);
-        playerLayout.setOnPlayerWindowListener(new OnPlayerWindowListener() {
+        playerLayout.setOnPlayerWindowStateChangeListener(new OnPlayerWindowStateChangeListener() {
             @Override
-            public void onWindow(int state) {
+            public void onState(int state) {
                 switch (state) {
                     case PlayerType.WindowType.DEFAULT:
                         //普通模式
@@ -119,11 +118,6 @@ public final class TestPhoneActivity extends Activity {
                 @Override
                 public void onError(String info) {
 
-                }
-            });
-            playerLayout.setOnPlayerEpisodeListener(new OnPlayerEpisodeListener() {
-                @Override
-                public void onEpisode(int curIndex) {
                 }
             });
 

@@ -23,7 +23,9 @@ import lib.kalu.mediaplayer.core.component.ComponentApi;
 import lib.kalu.mediaplayer.listener.OnPlayerEpisodeListener;
 import lib.kalu.mediaplayer.listener.OnPlayerEventListener;
 import lib.kalu.mediaplayer.listener.OnPlayerProgressListener;
-import lib.kalu.mediaplayer.listener.OnPlayerWindowListener;
+import lib.kalu.mediaplayer.listener.OnPlayerVisibilityChangedListener;
+import lib.kalu.mediaplayer.listener.OnPlayerWindowStateChangeListener;
+import lib.kalu.mediaplayer.listener.OnPlayerWindowVisibilityChangedListener;
 import lib.kalu.mediaplayer.util.LogUtil;
 
 
@@ -51,7 +53,6 @@ public class PlayerLayout extends RelativeLayout {
     }
 
     private void initPlayerView(Context context, AttributeSet attrs) {
-        clearOnPlayerListener();
         try {
             int childCount = getChildCount();
             if (childCount > 0)
@@ -96,8 +97,6 @@ public class PlayerLayout extends RelativeLayout {
         }
     }
 
-    /**********/
-
     private ViewGroup findDecorView(View view) {
         try {
             View parent = (View) view.getParent();
@@ -140,24 +139,6 @@ public class PlayerLayout extends RelativeLayout {
             }
             return null;
         }
-    }
-
-    /**********/
-
-    protected boolean enableReleaseTag() {
-        return false;
-    }
-
-    protected boolean enableDetachedFromWindowTodo() {
-        return false;
-    }
-
-    protected boolean enableWindowVisibilityChangedTodo(int visibility) {
-        return false;
-    }
-
-    protected boolean enableAttachedToWindowTodo() {
-        return false;
     }
 
     /**********/
@@ -490,8 +471,7 @@ public class PlayerLayout extends RelativeLayout {
             PlayerView playerView = getPlayerView();
             if (null == playerView)
                 throw new Exception("playerView error: null");
-            boolean releaseTag = enableReleaseTag();
-            playerView.release(releaseTag, false, true, true);
+            playerView.release(false, false, true, true);
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
                 LogUtil.log("PlayerLayout -> release -> " + e.getMessage());
@@ -855,15 +835,15 @@ public class PlayerLayout extends RelativeLayout {
         }
     }
 
-    public final OnPlayerEpisodeListener getOnPlayerEpisodeListener() {
+    public final OnPlayerEpisodeListener getPlayerEpisodeListener() {
         try {
             PlayerView playerView = getPlayerView();
             if (null == playerView)
                 throw new Exception("playerView error: null");
-            return playerView.getOnPlayerEpisodeListener();
+            return playerView.getPlayerEpisodeListener();
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
-                LogUtil.log("PlayerLayout -> getOnPlayerEpisodeListener -> " + e.getMessage());
+                LogUtil.log("PlayerLayout -> getPlayerEpisodeListener -> " + e.getMessage());
             }
             return null;
         }
@@ -884,17 +864,18 @@ public class PlayerLayout extends RelativeLayout {
         }
     }
 
-    public final OnPlayerEventListener getOnPlayerEventListener() {
+    public final void setOnPlayerWindowStateChangeListener(OnPlayerWindowStateChangeListener listener) {
         try {
+            if (null == listener)
+                throw new Exception("listener error: null");
             PlayerView playerView = getPlayerView();
             if (null == playerView)
                 throw new Exception("playerView error: null");
-            return playerView.getOnPlayerEventListener();
+            playerView.setOnPlayerWindowStateChangeListener(listener);
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
-                LogUtil.log("PlayerLayout -> getOnPlayerEventListener -> " + e.getMessage());
+                LogUtil.log("PlayerLayout -> setOnPlayerWindowStateChangeListener -> " + e.getMessage());
             }
-            return null;
         }
     }
 
@@ -913,15 +894,15 @@ public class PlayerLayout extends RelativeLayout {
         }
     }
 
-    public final OnPlayerProgressListener getOnPlayerProgressListener() {
+    public final OnPlayerProgressListener getPlayerProgressListener() {
         try {
             PlayerView playerView = getPlayerView();
             if (null == playerView)
                 throw new Exception("playerView error: null");
-            return playerView.getOnPlayerProgressListener();
+            return playerView.getPlayerProgressListener();
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
-                LogUtil.log("PlayerLayout -> getOnPlayerProgressListener -> " + e.getMessage());
+                LogUtil.log("PlayerLayout -> getPlayerProgressListener -> " + e.getMessage());
             }
             return null;
         }
@@ -942,44 +923,57 @@ public class PlayerLayout extends RelativeLayout {
         }
     }
 
-    public final OnPlayerWindowListener getOnPlayerWindowListener() {
+    public final OnPlayerWindowVisibilityChangedListener getPlayerWindowVisibilityChangedListener() {
         try {
             PlayerView playerView = getPlayerView();
             if (null == playerView)
                 throw new Exception("playerView error: null");
-            return playerView.getOnPlayerWindowListener();
+            return playerView.getPlayerWindowVisibilityChangedListener();
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
-                LogUtil.log("PlayerLayout -> getOnPlayerWindowListener -> " + e.getMessage());
+                LogUtil.log("PlayerLayout -> getPlayerWindowVisibilityChangedListener -> " + e.getMessage());
             }
             return null;
         }
     }
 
-    public final void setOnPlayerWindowListener(OnPlayerWindowListener listener) {
+    public final void setOnPlayerWindowVisibilityChangedListener(OnPlayerWindowVisibilityChangedListener listener) {
         try {
             if (null == listener)
                 throw new Exception("listener error: null");
             PlayerView playerView = getPlayerView();
             if (null == playerView)
                 throw new Exception("playerView error: null");
-            playerView.setOnPlayerWindowListener(listener);
+            playerView.setOnPlayerWindowVisibilityChangedListener(listener);
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
-                LogUtil.log("PlayerLayout -> setOnPlayerWindowListener -> " + e.getMessage());
+                LogUtil.log("PlayerLayout -> setOnPlayerWindowVisibilityChangedListener -> " + e.getMessage());
             }
         }
     }
 
-    public final void clearOnPlayerListener() {
+    public final void setOnPlayerVisibilityChangedListener(OnPlayerVisibilityChangedListener l) {
         try {
             PlayerView playerView = getPlayerView();
             if (null == playerView)
                 throw new Exception("playerView error: null");
-            playerView.clearOnPlayerListener();
+            playerView.setOnPlayerVisibilityChangedListener(l);
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
-                LogUtil.log("PlayerLayout -> clearOnPlayerListener -> " + e.getMessage());
+                LogUtil.log("PlayerLayout -> setOnPlayerVisibilityChangedListener -> " + e.getMessage());
+            }
+        }
+    }
+
+    public final void removeAllPlayerListener() {
+        try {
+            PlayerView playerView = getPlayerView();
+            if (null == playerView)
+                throw new Exception("playerView error: null");
+            playerView.clearPlayerListener();
+        } catch (Exception e) {
+            if (LogUtil.DEBUG) {
+                LogUtil.log("PlayerLayout -> removeAllPlayerListener -> " + e.getMessage());
             }
         }
     }

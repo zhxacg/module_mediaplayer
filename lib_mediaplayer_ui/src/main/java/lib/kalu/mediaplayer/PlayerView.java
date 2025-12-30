@@ -8,10 +8,20 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 
+import androidx.annotation.NonNull;
+
 import lib.kalu.mediaplayer.core.component.ComponentApi;
 import lib.kalu.mediaplayer.core.kernel.video.VideoKernelApi;
 import lib.kalu.mediaplayer.core.player.video.VideoPlayerApi;
 import lib.kalu.mediaplayer.core.render.VideoRenderApi;
+import lib.kalu.mediaplayer.listener.OnPlayerEpisodeListener;
+import lib.kalu.mediaplayer.listener.OnPlayerEventListener;
+import lib.kalu.mediaplayer.listener.OnPlayerProgressListener;
+import lib.kalu.mediaplayer.listener.OnPlayerScreenOrientationChangeListener;
+import lib.kalu.mediaplayer.listener.OnPlayerPlaybackChangedListener;
+import lib.kalu.mediaplayer.listener.OnPlayerVisibilityChangedListener;
+import lib.kalu.mediaplayer.listener.OnPlayerWindowStateChangeListener;
+import lib.kalu.mediaplayer.listener.OnPlayerWindowVisibilityChangedListener;
 import lib.kalu.mediaplayer.util.LogUtil;
 
 
@@ -44,20 +54,26 @@ public final class PlayerView extends RelativeLayout implements VideoPlayerApi {
 
     @Override
     protected void onDetachedFromWindow() {
-        detachedFromWindow();
         super.onDetachedFromWindow();
+        stop(true, false);
     }
 
     @Override
     protected void onAttachedToWindow() {
-        attachedToWindow();
         super.onAttachedToWindow();
+        restart(true);
     }
 
     @Override
     protected void onWindowVisibilityChanged(int visibility) {
-        windowVisibilityChanged(visibility);
         super.onWindowVisibilityChanged(visibility);
+        callPlayerWindowVisibilityChanged(visibility);
+    }
+
+    @Override
+    protected void onVisibilityChanged(@NonNull View changedView, int visibility) {
+        super.onVisibilityChanged(changedView, visibility);
+        callPlayerVisibilityChanged(visibility);
     }
 
     @Override
@@ -197,5 +213,117 @@ public final class PlayerView extends RelativeLayout implements VideoPlayerApi {
     @Override
     public void setScreenKeep(boolean enable) {
         setKeepScreenOn(enable);
+    }
+
+    /**************/
+
+    private OnPlayerWindowStateChangeListener mOnPlayerWindowStateChangeListener = null;
+
+    @Override
+    public OnPlayerWindowStateChangeListener getPlayerWindowStateChangeListener() {
+        return mOnPlayerWindowStateChangeListener;
+    }
+
+    @Override
+    public void setOnPlayerWindowStateChangeListener(OnPlayerWindowStateChangeListener l) {
+        this.mOnPlayerWindowStateChangeListener = l;
+    }
+
+    /**************/
+
+    private OnPlayerEventListener mOnPlayerEventListener = null;
+
+    @Override
+    public void setOnPlayerEventListener(OnPlayerEventListener l) {
+        this.mOnPlayerEventListener = l;
+    }
+
+    @Override
+    public OnPlayerEventListener getPlayerEventListener() {
+        return mOnPlayerEventListener;
+    }
+
+    /**************/
+
+    private OnPlayerProgressListener mOnPlayerProgressListener = null;
+
+    @Override
+    public OnPlayerProgressListener getPlayerProgressListener() {
+        return mOnPlayerProgressListener;
+    }
+
+    @Override
+    public void setOnPlayerProgressListener(OnPlayerProgressListener l) {
+        this.mOnPlayerProgressListener = null;
+    }
+
+    /**************/
+
+    private OnPlayerEpisodeListener mOnPlayerEpisodeListener = null;
+
+    @Override
+    public OnPlayerEpisodeListener getPlayerEpisodeListener() {
+        return mOnPlayerEpisodeListener;
+    }
+
+    @Override
+    public void setOnPlayerEpisodeListener(OnPlayerEpisodeListener l) {
+        this.mOnPlayerEpisodeListener = l;
+    }
+
+    /**************/
+
+    private OnPlayerVisibilityChangedListener mOnPlayerVisibilityChangedListener = null;
+
+    @Override
+    public OnPlayerVisibilityChangedListener getPlayerVisibilityChangedListener() {
+        return mOnPlayerVisibilityChangedListener;
+    }
+
+    @Override
+    public void setOnPlayerVisibilityChangedListener(OnPlayerVisibilityChangedListener l) {
+        this.mOnPlayerVisibilityChangedListener = l;
+    }
+
+    /**************/
+
+    private OnPlayerWindowVisibilityChangedListener mOnPlayerWindowVisibilityChangedListener = null;
+
+
+    @Override
+    public OnPlayerWindowVisibilityChangedListener getPlayerWindowVisibilityChangedListener() {
+        return mOnPlayerWindowVisibilityChangedListener;
+    }
+
+    public void setmOnPlayerWindowVisibilityChangedListener(OnPlayerWindowVisibilityChangedListener l) {
+        this.mOnPlayerWindowVisibilityChangedListener = l;
+    }
+
+    /**************/
+
+    private OnPlayerPlaybackChangedListener mOnPlayerSpeedChangedListener = null;
+
+    @Override
+    public OnPlayerPlaybackChangedListener getOnPlayerPlaybackChangedListener() {
+        return mOnPlayerSpeedChangedListener;
+    }
+
+    @Override
+    public void setOnPlayerPlaybackChangedListener(OnPlayerPlaybackChangedListener l) {
+        this.mOnPlayerSpeedChangedListener = l;
+    }
+
+    /**************/
+
+    private OnPlayerScreenOrientationChangeListener mOnPlayerScreenOrientationChangeListener = null;
+
+    @Override
+    public OnPlayerScreenOrientationChangeListener getPlayerScreenOrientationChangeListener() {
+        return mOnPlayerScreenOrientationChangeListener;
+    }
+
+    @Override
+    public void setOnPlayerScreenOrientationChangeListener(OnPlayerScreenOrientationChangeListener l) {
+        this.mOnPlayerScreenOrientationChangeListener = l;
     }
 }

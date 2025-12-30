@@ -16,7 +16,6 @@ import lib.kalu.mediaplayer.R;
 import lib.kalu.mediaplayer.bean.args.StartArgs;
 import lib.kalu.mediaplayer.bean.menu.Menu;
 import lib.kalu.mediaplayer.bean.type.PlayerType;
-import lib.kalu.mediaplayer.listener.OnPlayerEpisodeListener;
 import lib.kalu.mediaplayer.util.LogUtil;
 
 public class ComponentMenu extends RelativeLayout implements ComponentApi {
@@ -138,10 +137,7 @@ public class ComponentMenu extends RelativeLayout implements ComponentApi {
                                 // childAt.setActivated(i == indexedOfChild);
                             }
                             //
-                            OnPlayerEpisodeListener listener = getPlayerView().getOnPlayerEpisodeListener();
-                            if (null != listener) {
-                                listener.onEpisode(select);
-                            }
+                            callPlayerEpisode(select, childCount);
                             //
                             String url = playUrls.get(select);
 

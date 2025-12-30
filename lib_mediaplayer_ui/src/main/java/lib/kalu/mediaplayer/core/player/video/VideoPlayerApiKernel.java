@@ -21,10 +21,10 @@ import lib.kalu.mediaplayer.util.LogUtil;
 import lib.kalu.mediaplayer.util.SpeedUtil;
 
 public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
-        VideoPlayerApiBuried,
         VideoPlayerApiComponent,
         VideoPlayerApiRender,
-        VideoPlayerApiDevice {
+        VideoPlayerApiDevice,
+        VideoPlayerApiCall, VideoPlayerApiBase {
 
     default boolean isDoWindowing() {
         try {
@@ -200,7 +200,7 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
     default void release(boolean callEvent, boolean clearTag, boolean isFromUser, boolean clearListener) {
         try {
             if (clearListener) {
-                clearOnPlayerListener();
+                clearPlayerListener();
             }
             releaseRender();
             releaseKernel(clearTag, isFromUser);
@@ -531,7 +531,7 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
                 }
 
                 @Override
-                public void onUpdateSpeed(int kernel) {
+                public void onUpdateNetSpeed(int kernel) {
                     try {
                         boolean showSpeed = args.isShowSpeed();
                         if (!showSpeed)
@@ -539,7 +539,7 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
                         String speed = SpeedUtil.getNetSpeed(getBaseContext());
                         if (speed.isEmpty())
                             throw new Exception("warning: speed isEmpty");
-                        callSpeed(kernel, speed);
+                        callNetSpeed(kernel, speed);
                     } catch (Exception e) {
                     }
                 }
