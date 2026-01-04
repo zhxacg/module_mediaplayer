@@ -42,7 +42,6 @@ public final class VideoAndroidPlayer extends VideoBasePlayer {
             if (isFromUser) {
                 setEvent(null);
             }
-            clear();
             unRegistListener();
             release();
         } catch (Exception e) {
@@ -274,7 +273,6 @@ public final class VideoAndroidPlayer extends VideoBasePlayer {
                 LogUtil.log("VideoAndroidPlayer -> stop -> " + e.getMessage());
             }
         } finally {
-            clear();
         }
     }
 

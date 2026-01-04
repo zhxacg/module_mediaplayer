@@ -13,12 +13,19 @@ import lib.kalu.mediaplayer.util.LogUtil;
 
 interface VideoKernelApiStartArgs extends VideoKernelApiBase {
 
+    String TAG = "VideoKernelApiStartArgs22";
+
+
     /***************/
 
-    default void clearArgs() {
-        setDoWindowing(false);
-        setStartArgs(null);
+    default void setStartArgs(StartArgs args) {
     }
+
+    default StartArgs getStartArgs() {
+        return null;
+    }
+
+    /***************/
 
     default long getTrySeeDuration() {
         try {
@@ -79,6 +86,9 @@ interface VideoKernelApiStartArgs extends VideoKernelApiBase {
     default long getPlayWhenReadySeekToPosition() {
         try {
             StartArgs args = getStartArgs();
+            if (LogUtil.DEBUG) {
+                LogUtil.log("VideoKernelApiBase -> getPlayWhenReadySeekToPosition -> args = " + args);
+            }
             if (null == args)
                 throw new Exception("error: args null");
             return args.getPlayWhenReadySeekToPosition();
@@ -91,26 +101,6 @@ interface VideoKernelApiStartArgs extends VideoKernelApiBase {
     }
 
     /***************/
-
-    HashMap<VideoKernelApiBase, StartArgs> mStartArgs = new HashMap<>();
-
-    default void setStartArgs(StartArgs args) {
-        mStartArgs.put(this, args);
-    }
-
-    default StartArgs getStartArgs() {
-        try {
-            StartArgs args = mStartArgs.get(this);
-            if (null == args)
-                throw new Exception("warning: args null");
-            return args;
-        } catch (Exception e) {
-            if (LogUtil.DEBUG) {
-                LogUtil.log("VideoKernelApiStartArgs -> getStartArgs -> Exception " + e.getMessage());
-            }
-            return null;
-        }
-    }
 
     HashMap<VideoKernelApiBase, Boolean> mDoWindowing = new HashMap<>();
 

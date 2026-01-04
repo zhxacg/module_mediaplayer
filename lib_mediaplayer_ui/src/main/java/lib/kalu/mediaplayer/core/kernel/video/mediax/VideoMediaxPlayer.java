@@ -90,6 +90,8 @@ import lib.kalu.mediax.subtitle.OffsetMsTextRenderer;
 @UnstableApi
 public final class VideoMediaxPlayer extends VideoBasePlayer {
 
+    private String TAG = "VideoMediaxPlayer";
+
     private boolean isVideoSizeChanged = false;
     private boolean isPrepared = false;
     private boolean isBuffering = false;
@@ -99,8 +101,21 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
     private SimpleCache mSimpleCache;
     private ExoPlayer mExoPlayer;
 
+    // 播放资源信息
+    private StartArgs mStartArgs;
+
     // 缓存
     private HlsSpanList mHlsSpanInfos;
+
+    @Override
+    public void setStartArgs(StartArgs args) {
+        this.mStartArgs = args;
+    }
+
+    @Override
+    public StartArgs getStartArgs() {
+        return mStartArgs;
+    }
 
     @Override
     public ExoPlayer getPlayer() {
@@ -115,7 +130,6 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
             if (isFromUser) {
                 setEvent(null);
             }
-            clear();
             unRegistListener();
             release();
             if (LogUtil.DEBUG) {
@@ -129,15 +143,17 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
     }
 
     @Override
-    public void createDecoder(Context context, StartArgs args) {
+    public void createDecoder(Context context, StartArgs startArgs) {
         try {
             if (null != mExoPlayer)
                 throw new Exception("warning: null != mExoPlayer");
-            if (null == args)
-                throw new Exception("error: args null");
             if (LogUtil.DEBUG) {
                 LogUtil.log("VideoMediaxPlayer -> createDecoder ->");
             }
+
+            if (null == startArgs)
+                throw new Exception("error: startArgs null");
+
             ExoPlayer.Builder builder = new ExoPlayer.Builder(context)
                     // 播放器调试和诊断相关的配置项
                     .setUsePlatformDiagnostics(false)
@@ -201,7 +217,7 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
 //                                    25000, //
 //                                    0.7F)));
 
-            int decoderType = args.getDecoderType();
+            int decoderType = startArgs.getDecoderType();
             if (LogUtil.DEBUG) {
                 LogUtil.log("VideoMediaxPlayer -> createDecoder -> decoderType = " + decoderType);
             }
@@ -288,16 +304,11 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
             }
 
             mExoPlayer = builder.build();
+
             if (LogUtil.DEBUG) {
                 LogUtil.log("VideoMediaxPlayer -> createDecoder -> mExoPlayer = " + mExoPlayer);
             }
             registListener();
-
-            onEvent(PlayerType.KernelType.MEDIA_V3, PlayerType.EventType.INIT);
-            long trySeeDuration = args.getTrySeeDuration();
-            if (trySeeDuration > 0L) {
-                onEvent(PlayerType.KernelType.MEDIA_V3, PlayerType.EventType.TRY_SEE_START);
-            }
 
             //播放器日志
 //        if (mExoPlayer.getTrackSelector() instanceof MappingTrackSelector) {
@@ -727,7 +738,6 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
      */
     @Override
     public void stop() {
-        clear();
         try {
             if (null == mExoPlayer)
                 throw new Exception("mExoPlayer error: null");
@@ -1012,7 +1022,7 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
         @Override
         public void onVideoInputFormatChanged(AnalyticsListener.EventTime eventTime, Format format, @Nullable DecoderReuseEvaluation decoderReuseEvaluation) {
             if (LogUtil.DEBUG) {
-                LogUtil.log("VideoMediaxPlayer -> onVideoInputFormatChanged[出画面] -> width = " + format.width + ", height = " + format.height);
+                LogUtil.log("VideoMediaxPlayer -> onVideoInputFormatChanged[出画面] -> width = " + format.width + ", height = " + format.height + ", isPrepared = " + isPrepared);
             }
             // 视频信息
             try {
@@ -1037,16 +1047,19 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
                 isPrepared = true;
                 onEvent(PlayerType.KernelType.MEDIA_V3, PlayerType.EventType.PREPARE);
                 onEvent(PlayerType.KernelType.MEDIA_V3, PlayerType.EventType.VIDEO_RENDERING_START);
-                long seek = getPlayWhenReadySeekToPosition();
+                long playWhenReadySeekToPosition = getPlayWhenReadySeekToPosition();
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("VideoMediaxPlayer -> onVideoInputFormatChanged -> playWhenReadySeekToPosition = " + playWhenReadySeekToPosition);
+                }
                 // 立即播放
-                if (seek <= 0L) {
+                if (playWhenReadySeekToPosition <= 0L) {
                     onEvent(PlayerType.KernelType.MEDIA_V3, PlayerType.EventType.START);
                 }
                 // 起播快进
                 else {
                     onEvent(PlayerType.KernelType.MEDIA_V3, PlayerType.EventType.SEEK_START_FORWARD);
                     mPlayWhenReadySeeking = true;
-                    seekTo(seek);
+                    seekTo(playWhenReadySeekToPosition);
                 }
             } catch (Exception e) {
                 if (LogUtil.DEBUG) {
@@ -2055,7 +2068,15 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
                                                 @PlayerType.UrlType.Value int urlType,
                                                 String dataUrl) {
 
+        if (LogUtil.DEBUG) {
+            LogUtil.log("VideoMediaxPlayer -> buildDateFactory -> mSimpleCache = " + mSimpleCache);
+        }
+
         try {
+
+            if (null == mSimpleCache)
+                throw new Exception("error: mSimpleCache null");
+
             return new CacheDataSource.Factory()
                     .setFlags(CacheDataSource.FLAG_IGNORE_CACHE_ON_ERROR)
 //                        .setFlags(

@@ -32,35 +32,31 @@ public interface VideoKernelApi extends VideoKernelApiHandler,
 
     void unRegistListener();
 
-    default void clear() {
-        //
-        clearArgs();
-        //
-        // releaseTimer();
+    default void createDecoder(Context context, StartArgs startArgs) {
     }
 
-    default void createDecoder(Context context, StartArgs args) {
-    }
+    default void initDecoder(Context context, StartArgs startArgs) {
 
-    default void initDecoder(Context context, StartArgs args) {
-        clear();
         try {
-            setStartArgs(args);
-        } catch (Exception e) {
-        }
+            int kernelType = startArgs.getKernelType();
+            onEvent(kernelType, PlayerType.EventType.INIT);
 
-        long playWhenReadyDelayedTime = args.getPlayWhenReadyDelayedTime();
-        // 延迟播放
-        if (playWhenReadyDelayedTime > 0L) {
-            @PlayerType.KernelType.Value
-            int kernelType = args.getKernelType();
-            startPlayWhenReadyDelayedTime(context, kernelType, playWhenReadyDelayedTime);
-        }
-        // 立即播放
-        else {
-            // 2
-            initOptions(context, args);
-            startDecoder(context, args);
+            long trySeeDuration = startArgs.getTrySeeDuration();
+            if (trySeeDuration > 0L) {
+                onEvent(kernelType, PlayerType.EventType.TRY_SEE_START);
+            }
+
+            long playWhenReadyDelayedTime = startArgs.getPlayWhenReadyDelayedTime();
+            // 延迟播放
+            if (playWhenReadyDelayedTime > 0L) {
+                startPlayWhenReadyDelayedTime(context, kernelType, playWhenReadyDelayedTime);
+            }
+            // 立即播放
+            else {
+                initOptions(context, startArgs);
+                startDecoder(context, startArgs);
+            }
+        } catch (Exception e) {
         }
     }
 
@@ -74,7 +70,7 @@ public interface VideoKernelApi extends VideoKernelApiHandler,
             initOptions(context, args);
             startDecoder(context, args);
         } catch (Exception e) {
-            if(LogUtil.DEBUG) {
+            if (LogUtil.DEBUG) {
                 LogUtil.log("VideoKernelApi -> callPlayWhenReadyDelayedTimeComplete -> Exception " + e.getMessage());
             }
         }

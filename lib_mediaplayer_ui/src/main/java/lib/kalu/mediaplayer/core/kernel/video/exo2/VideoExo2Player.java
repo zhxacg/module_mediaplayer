@@ -106,7 +106,6 @@ public final class VideoExo2Player extends VideoBasePlayer {
             if (isFromUser) {
                 setEvent(null);
             }
-            clear();
             unRegistListener();
             release();
         } catch (Exception e) {
@@ -659,7 +658,6 @@ public final class VideoExo2Player extends VideoBasePlayer {
      */
     @Override
     public void stop() {
-        clear();
         try {
             if (null == mExoPlayer)
                 throw new Exception("mExoPlayer error: null");

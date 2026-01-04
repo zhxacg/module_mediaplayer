@@ -1,13 +1,11 @@
 package lib.kalu.mediaplayer.core.player.video;
 
 import android.content.Context;
-import android.view.View;
 
 import androidx.annotation.FloatRange;
 
 import java.util.List;
 
-import lib.kalu.mediaplayer.R;
 import lib.kalu.mediaplayer.bean.args.StartArgs;
 import lib.kalu.mediaplayer.bean.info.TrackInfo;
 import lib.kalu.mediaplayer.bean.type.PlayerType;
@@ -25,6 +23,8 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
         VideoPlayerApiRender,
         VideoPlayerApiDevice,
         VideoPlayerApiCall, VideoPlayerApiBase {
+
+    String TAG = "VideoPlayerApiKernel22";
 
     default boolean isDoWindowing() {
         try {
@@ -47,21 +47,9 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
         }
     }
 
-    default void setTags(StartArgs args) {
-        try {
-            ((View) this).setTag(R.id.module_mediaplayer_id_startargs, args);
-        } catch (Exception e) {
-            if (LogUtil.DEBUG) {
-                LogUtil.log("VideoPlayerApiKernel -> setTags -> " + e.getMessage());
-            }
-        }
-    }
-
     @Override
     default void start(StartArgs args) {
         try {
-            // 0
-            setTags(args);
             if (null == args)
                 throw new Exception("error: args null");
             boolean containsMainUrl = args.containsMainUrl();
@@ -73,9 +61,9 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
             // 2
             boolean initRelease = args.isInitRelease();
             if (initRelease) {
-                release(false, true, false, false);
+                release(false, false, false);
             } else {
-                stop(false, true);
+                stop(false);
             }
             // 3
             setScreenKeep(true);
@@ -86,7 +74,9 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
             // 6
             attachRenderKernel();
             // 7
-            initDecoder(args);
+            initStartArgs(args);
+            // 8
+            initDecoder();
         } catch (Exception e) {
             callEvent(PlayerType.EventType.ERROR);
             if (LogUtil.DEBUG) {
@@ -185,25 +175,25 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
     }
 
     default void stop() {
-        stop(true, true);
+        stop(true);
     }
 
-    default void stop(boolean callEvent, boolean clearTag) {
+    default void stop(boolean callEvent) {
         setScreenKeep(false);
-        stopKernel(callEvent, clearTag);
+        stopKernel(callEvent);
     }
 
     default void release() {
-        release(true, true, true, true);
+        release(true, true, true);
     }
 
-    default void release(boolean callEvent, boolean clearTag, boolean isFromUser, boolean clearListener) {
+    default void release(boolean callEvent, boolean isFromUser, boolean clearListener) {
         try {
             if (clearListener) {
                 clearPlayerListener();
             }
             releaseRender();
-            releaseKernel(clearTag, isFromUser);
+            releaseKernel(isFromUser);
             if (!callEvent)
                 throw new Exception("warning: callEvent false");
             callEvent(PlayerType.EventType.RELEASE);
@@ -215,6 +205,9 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
     }
 
     default void restart(boolean isPlaySeek) {
+        if (LogUtil.DEBUG) {
+            LogUtil.log(TAG, "restart -> isPlaySeek = " + isPlaySeek);
+        }
         try {
             StartArgs startArgs = getStartArgs();
             if (null == startArgs)
@@ -234,7 +227,7 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
             start(newArgs);
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
-                LogUtil.log("VideoPlayerApiKernel -> restart -> " + e.getMessage());
+                LogUtil.log(TAG, "restart -> " + e.getMessage());
             }
         }
     }
@@ -372,21 +365,39 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
 
     /*********************/
 
-    default void initDecoder(StartArgs args) {
+    default void initStartArgs(StartArgs args) {
         try {
             VideoKernelApi kernel = getVideoKernel();
             if (null == kernel)
                 throw new Exception("warning: kernel null");
-            Context context = getBaseContext();
-            kernel.initDecoder(context, args);
+            kernel.setStartArgs(args);
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
-                LogUtil.log("VideoPlayerApiKernel -> initDecoder -> " + e.getMessage());
+                LogUtil.log(TAG, "initStartArgs -> " + e.getMessage());
             }
         }
     }
 
-    default void stopKernel(boolean callEvent, boolean clearTag) {
+    default void initDecoder() {
+        try {
+            StartArgs startArgs = getStartArgs();
+            if (null == startArgs)
+                throw new Exception("error: startArgs null");
+            VideoKernelApi kernel = getVideoKernel();
+            if (null == kernel)
+                throw new Exception("warning: kernel null");
+            Context context = getBaseContext();
+            kernel.createTimer();
+            kernel.createDecoder(context, startArgs);
+            kernel.initDecoder(context, startArgs);
+        } catch (Exception e) {
+            if (LogUtil.DEBUG) {
+                LogUtil.log(TAG, "initDecoder -> " + e.getMessage());
+            }
+        }
+    }
+
+    default void stopKernel(boolean callEvent) {
         try {
             VideoKernelApi kernel = getVideoKernel();
             if (null == kernel)
@@ -400,10 +411,6 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
             kernel.stop();
             // 定时器
             kernel.releaseTimer();
-            // 数据
-            if (clearTag) {
-                setTags(null);
-            }
             if (!callEvent)
                 throw new Exception("warning: callEvent false");
             callEvent(PlayerType.EventType.STOP);
@@ -467,7 +474,7 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
 
     /***************************/
 
-    default void releaseKernel(boolean clearTag, boolean isFromUser) {
+    default void releaseKernel(boolean isFromUser) {
         try {
             VideoKernelApi kernel = getVideoKernel();
             if (null == kernel)
@@ -475,9 +482,6 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
             kernel.releaseDecoder(isFromUser);
             setVideoKernel(null);
             setScreenKeep(false);
-            if (clearTag) {
-                setTags(null);
-            }
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
                 LogUtil.log("VideoPlayerApiKernel -> releaseKernel -> " + e.getMessage());
@@ -488,7 +492,7 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
     default void checkKernelNull(StartArgs args, boolean release) {
         try {
             if (release) {
-                releaseKernel(false, true);
+                releaseKernel(false);
             }
             if (null != getVideoKernel())
                 throw new Exception("warning: getVideoKernel not null");
@@ -518,7 +522,7 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
                             throw new Exception("waning: position<trySeeDuration");
                         // 试看结束
 //                        LogUtil.log("VideoPlayerApiKernel -> setKernelEvent -> onUpdateProgress -> TRY_SEE_FINISH");
-                        stop(false, false);
+                        stop(false);
                         callEvent(PlayerType.EventType.TRY_SEE_FINISH);
                     } catch (Exception e) {
                     }
@@ -685,10 +689,6 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
                     setVideoFormat(kernel, rotation, scaleType, width, height, bitrate);
                 }
             });
-            // 定时器
-            kernelApi.createTimer();
-            // 解码
-            kernelApi.createDecoder(context, args);
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
                 LogUtil.log("VideoPlayerApiKernel -> checkKernelNull -> " + e.getMessage());

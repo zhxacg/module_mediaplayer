@@ -472,7 +472,7 @@ public class PlayerLayout extends RelativeLayout {
             PlayerView playerView = getPlayerView();
             if (null == playerView)
                 throw new Exception("playerView error: null");
-            playerView.release(false, false, true, true);
+            playerView.release(false, true, true);
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
                 LogUtil.log("PlayerLayout -> release -> " + e.getMessage());
@@ -482,14 +482,13 @@ public class PlayerLayout extends RelativeLayout {
 
     /**
      * @param callEvent 透传event
-     * @param clearTag  清除tag
      */
-    public final void release(boolean callEvent, boolean clearTag) {
+    public final void release(boolean callEvent) {
         try {
             PlayerView playerView = getPlayerView();
             if (null == playerView)
                 throw new Exception("playerView error: null");
-            playerView.release(callEvent, clearTag, false, true);
+            playerView.release(callEvent, false, true);
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
                 LogUtil.log("PlayerLayout -> release -> " + e.getMessage());
@@ -498,19 +497,18 @@ public class PlayerLayout extends RelativeLayout {
     }
 
     public final void stop() {
-        stop(true, true);
+        stop(true);
     }
 
     /**
      * @param callEvent 透传event
-     * @param clearTag  清除tag
      */
-    public final void stop(boolean callEvent, boolean clearTag) {
+    public final void stop(boolean callEvent) {
         try {
             PlayerView playerView = getPlayerView();
             if (null == playerView)
                 throw new Exception("playerView error: null");
-            playerView.stop(callEvent, clearTag);
+            playerView.stop(callEvent);
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
                 LogUtil.log("PlayerLayout -> stop -> " + e.getMessage());

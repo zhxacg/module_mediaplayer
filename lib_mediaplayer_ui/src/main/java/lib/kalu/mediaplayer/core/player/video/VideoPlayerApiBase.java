@@ -13,15 +13,17 @@ import lib.kalu.mediaplayer.PlayerLayout;
 
 public interface VideoPlayerApiBase {
 
+    String TAG = "VideoPlayerApiBase22";
+
     default StartArgs getStartArgs() {
         try {
-            Object args = ((View) this).getTag(R.id.module_mediaplayer_id_startargs);
-            if (null == args)
-                throw new Exception("warning: args null");
-            return (StartArgs) args;
+            PlayerLayout playerLayout = getPlayerLayout();
+            if (null == playerLayout)
+                throw new Exception("error: playerLayout null");
+            return playerLayout.getStartArgs();
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
-                LogUtil.log("VideoPlayerApiBase -> getStartArgs -> " + e.getMessage());
+                LogUtil.log(TAG, "getStartArgs -> " + e.getMessage());
             }
             return null;
         }

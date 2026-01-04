@@ -41,7 +41,6 @@ public final class VideoFFmpegPlayer extends VideoBasePlayer {
             if (isFromUser) {
                 setEvent(null);
             }
-            clear();
             unRegistListener();
             release();
         } catch (Exception e) {
@@ -220,7 +219,6 @@ public final class VideoFFmpegPlayer extends VideoBasePlayer {
      */
     @Override
     public void stop() {
-        clear();
         try {
             if (null == mFFmpegPlayer)
                 throw new Exception("mFFmpegPlayer error: null");

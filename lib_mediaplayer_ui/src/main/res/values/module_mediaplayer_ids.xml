@@ -1,8 +1,5 @@
 <resources>
 
-    <!--    <item name="module_mediaplayer_id_seek_position" type="id" />-->
-    <item name="module_mediaplayer_id_startargs" type="id" />
-
     <!-- id -->
     <item name="module_mediaplayer_id_player" type="id" />
     <item name="module_mediaplayer_id_player_parent" type="id" />

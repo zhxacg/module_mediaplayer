@@ -54,7 +54,6 @@ public final class VideoIjkPlayer extends VideoBasePlayer {
             if (isFromUser) {
                 setEvent(null);
             }
-            clear();
             unRegistListener();
             release();
         } catch (Exception e) {
@@ -520,7 +519,6 @@ public final class VideoIjkPlayer extends VideoBasePlayer {
                 LogUtil.log("VideoIjkPlayer -> stop -> " + e.getMessage());
             }
         } finally {
-            clear();
         }
     }
 

@@ -10,15 +10,16 @@ import android.widget.RelativeLayout;
 
 import androidx.annotation.NonNull;
 
+import lib.kalu.mediaplayer.bean.args.StartArgs;
 import lib.kalu.mediaplayer.core.component.ComponentApi;
 import lib.kalu.mediaplayer.core.kernel.video.VideoKernelApi;
 import lib.kalu.mediaplayer.core.player.video.VideoPlayerApi;
 import lib.kalu.mediaplayer.core.render.VideoRenderApi;
 import lib.kalu.mediaplayer.listener.OnPlayerEpisodeListener;
 import lib.kalu.mediaplayer.listener.OnPlayerEventListener;
+import lib.kalu.mediaplayer.listener.OnPlayerPlaybackChangedListener;
 import lib.kalu.mediaplayer.listener.OnPlayerProgressListener;
 import lib.kalu.mediaplayer.listener.OnPlayerScreenOrientationChangeListener;
-import lib.kalu.mediaplayer.listener.OnPlayerPlaybackChangedListener;
 import lib.kalu.mediaplayer.listener.OnPlayerVisibilityChangedListener;
 import lib.kalu.mediaplayer.listener.OnPlayerWindowStateChangeListener;
 import lib.kalu.mediaplayer.listener.OnPlayerWindowVisibilityChangedListener;
@@ -26,6 +27,8 @@ import lib.kalu.mediaplayer.util.LogUtil;
 
 
 public final class PlayerView extends RelativeLayout implements VideoPlayerApi {
+
+    private final String TAG = "PlayerView";
 
     // 视频解码
     private VideoKernelApi mVideoKernelApi;
@@ -56,14 +59,12 @@ public final class PlayerView extends RelativeLayout implements VideoPlayerApi {
     protected void onDetachedFromWindow() {
         super.onDetachedFromWindow();
         callPlayerWindowAttachChanged(false);
-        stop(true, false);
     }
 
     @Override
     protected void onAttachedToWindow() {
         super.onAttachedToWindow();
         callPlayerWindowAttachChanged(true);
-        restart(true);
     }
 
     @Override
@@ -215,6 +216,30 @@ public final class PlayerView extends RelativeLayout implements VideoPlayerApi {
     @Override
     public void setScreenKeep(boolean enable) {
         setKeepScreenOn(enable);
+    }
+
+    @Override
+    public void start(StartArgs args) {
+        VideoPlayerApi.super.start(args);
+    }
+
+    /**************/
+
+    public StartArgs getStartArgs() {
+        try {
+            VideoKernelApi videoKernel = getVideoKernel();
+            if (null == videoKernel)
+                throw new Exception("error: videoKernel null");
+            StartArgs startArgs = videoKernel.getStartArgs();
+            if (null == startArgs)
+                throw new Exception("error: startArgs null");
+            return startArgs;
+        } catch (Exception e) {
+            if (LogUtil.DEBUG) {
+                LogUtil.log(TAG, "getStartArgs -> Exception: " + e.getMessage());
+            }
+            return null;
+        }
     }
 
     /**************/

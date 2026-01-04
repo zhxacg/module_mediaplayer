@@ -175,20 +175,20 @@ public class MainActivity extends Activity {
             }
             // 倍速
             else if (i == 1) {
-                Menu.Default item = new Menu.Default();
-                item.setName("倍速");
-                item.setData(new int[]{
-                        PlayerType.SpeedType._0_5,
-                        PlayerType.SpeedType._1_0,
-                        PlayerType.SpeedType._1_5,
-                        PlayerType.SpeedType._2_0,
-                        PlayerType.SpeedType._2_5,
-                        PlayerType.SpeedType._3_0,
-                        PlayerType.SpeedType._3_5,
-                        PlayerType.SpeedType._4_0,
-                        PlayerType.SpeedType._4_5,
-                        PlayerType.SpeedType._5_0});
-                list.add(item);
+//                Menu.Default item = new Menu.Default();
+//                item.setName("倍速");
+//                item.setData(new int[]{
+//                        PlayerType.SpeedType._0_5,
+//                        PlayerType.SpeedType._1_0,
+//                        PlayerType.SpeedType._1_5,
+//                        PlayerType.SpeedType._2_0,
+//                        PlayerType.SpeedType._2_5,
+//                        PlayerType.SpeedType._3_0,
+//                        PlayerType.SpeedType._3_5,
+//                        PlayerType.SpeedType._4_0,
+//                        PlayerType.SpeedType._4_5,
+//                        PlayerType.SpeedType._5_0});
+//                list.add(item);
             }
             // 画面比例
             else {

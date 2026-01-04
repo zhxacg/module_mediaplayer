@@ -10,8 +10,11 @@ import lib.kalu.mediaplayer.bean.menu.Menu;
 import lib.kalu.mediaplayer.bean.type.PlayerType;
 import lib.kalu.mediaplayer.proxy.Proxy;
 import lib.kalu.mediaplayer.proxy.ProxyUrl;
+import lib.kalu.mediaplayer.util.LogUtil;
 
 public class StartArgs implements Serializable {
+
+    private String TAG = "StartArgs22";
 
     @PlayerType.DecoderType.Value
     private int decoderType;
@@ -122,6 +125,9 @@ public class StartArgs implements Serializable {
     private long playWhenReadySeekToPosition;
 
     public long getPlayWhenReadySeekToPosition() {
+        if (LogUtil.DEBUG) {
+            LogUtil.log(TAG, "getPlayWhenReadySeekToPosition -> playWhenReadySeekToPosition = " + playWhenReadySeekToPosition);
+        }
         return playWhenReadySeekToPosition;
     }
 
@@ -215,7 +221,7 @@ public class StartArgs implements Serializable {
     @Override
     public String toString() {
         return "StartArgs{" +
-                ", seekType=" + seekType +
+                "seekType=" + seekType +
                 ", renderType=" + renderType +
                 ", scaleType=" + scaleType +
                 ", decoderType=" + decoderType +
@@ -300,6 +306,8 @@ public class StartArgs implements Serializable {
 
     public static class Builder implements Serializable {
 
+        private String TAG = "StartArgs22.Builder";
+
         private final PlayerArgs playerArgs = PlayerSDK.init().getPlayerBuilder();
 
         // 解码器类型
@@ -381,6 +389,9 @@ public class StartArgs implements Serializable {
 
         public Builder setPlayWhenReadySeekToPosition(long v) {
             this.playWhenReadySeekToPosition = v;
+            if (LogUtil.DEBUG) {
+                LogUtil.log(TAG, "setPlayWhenReadySeekToPosition -> playWhenReadySeekToPosition = " + playWhenReadySeekToPosition);
+            }
             return this;
         }
 
