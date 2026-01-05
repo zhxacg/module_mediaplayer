@@ -52,9 +52,6 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
         try {
             if (null == args)
                 throw new Exception("error: args null");
-            boolean containsMainUrl = args.containsMainUrl();
-            if (!containsMainUrl)
-                throw new Exception("error: containsMainUrl false");
             // 1
             boolean log = args.isLog();
             LogUtil.setLogger(log);
@@ -507,13 +504,9 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
             kernelApi.setKernelApi(new VideoKernelApiEvent() {
 
                 @Override
-                public void onUpdateProgress() {
+                public void onUpdateProgress(long trySeeDuration, long position, long duration) {
                     try {
-                        long position = getPosition();
-                        long duration = getDuration();
-                        long trySeeDuration = getTrySeeDuration();
                         callProgress(trySeeDuration, position, duration);
-
                         if (trySeeDuration <= 0L)
                             throw new Exception("waning: trySeeDuration<=0L");
                         if (position < 0L)
@@ -521,9 +514,8 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
                         if (position < trySeeDuration)
                             throw new Exception("waning: position<trySeeDuration");
                         // 试看结束
-//                        LogUtil.log("VideoPlayerApiKernel -> setKernelEvent -> onUpdateProgress -> TRY_SEE_FINISH");
                         stop(false);
-                        callEvent(PlayerType.EventType.TRY_SEE_FINISH);
+                        callEvent(PlayerType.EventType.TRY_SEE_END);
                     } catch (Exception e) {
                     }
                 }

@@ -86,7 +86,7 @@ public interface VideoPlayerApiCall extends VideoPlayerApiBase, VideoPlayerApiLi
         callComponentProgress(trySeeDuration, position, duration);
 
         // listener
-        callPlayerProgress(position, duration);
+        callPlayerProgress(trySeeDuration, position, duration);
     }
 
     default void callSubtitle(int kernel, CharSequence value) {
@@ -318,12 +318,12 @@ public interface VideoPlayerApiCall extends VideoPlayerApiBase, VideoPlayerApiLi
         }
     }
 
-    default void callPlayerProgress(long position, long duration) {
+    default void callPlayerProgress(long trySeeDuration, long position, long duration) {
         try {
             OnPlayerProgressListener onPlayerProgressListener = getPlayerProgressListener();
             if (null == onPlayerProgressListener)
                 throw new Exception("warning: onPlayerProgressListener null");
-            onPlayerProgressListener.onProgress(position, duration);
+            onPlayerProgressListener.onProgress(trySeeDuration, position, duration);
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
                 LogUtil.log(TAG, "callPlayerProgress -> " + e.getMessage());

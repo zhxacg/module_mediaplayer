@@ -84,6 +84,7 @@ import lib.kalu.mediaplayer.core.kernel.video.VideoBasePlayer;
 import lib.kalu.mediaplayer.core.kernel.video.mediax.hls.CustomDefaultHlsExtractorFactory;
 import lib.kalu.mediaplayer.core.kernel.video.mediax.hls.CustomDefaultHttpDataSource;
 import lib.kalu.mediaplayer.core.kernel.video.mediax.hls.CustomHlsPlaylistParserFactory;
+import lib.kalu.mediaplayer.error.UrlError;
 import lib.kalu.mediaplayer.util.LogUtil;
 import lib.kalu.mediax.subtitle.OffsetMsTextRenderer;
 
@@ -333,7 +334,7 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
                 throw new Exception("error: startArgs null");
             boolean containsMainUrl = startArgs.containsMainUrl();
             if (!containsMainUrl)
-                throw new Exception("error: containsMainUrl false");
+                throw new UrlError("error: containsMainUrl false");
             HttpDataSource.Factory httpFactory = buildHttpFactory(startArgs);
             if (null == httpFactory)
                 throw new Exception("error: args null");
@@ -354,7 +355,12 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
                 LogUtil.log("VideoMediaxPlayer -> startDecoder -> completed");
             }
         } catch (Exception e) {
-            onEvent(PlayerType.KernelType.MEDIA_V3, PlayerType.EventType.ERROR_BUILD_SOURCE);
+            removeMessagesAll();
+            if (e instanceof UrlError) {
+                onEvent(PlayerType.KernelType.MEDIA_V3, PlayerType.EventType.ERROR_URL);
+            } else {
+                onEvent(PlayerType.KernelType.MEDIA_V3, PlayerType.EventType.ERROR);
+            }
             if (LogUtil.DEBUG) {
                 LogUtil.log("VideoMediaxPlayer -> startDecoder -> Exception " + e.getMessage());
             }

@@ -29,11 +29,11 @@ public abstract class VideoBasePlayer implements VideoKernelApi {
     }
 
     @Override
-    public void onUpdateProgress() {
+    public void onUpdateProgress(long trySeeDuration, long position, long duration) {
         try {
             if (null == eventApi)
                 throw new Exception("eventApi warning: null");
-            eventApi.onUpdateProgress();
+            eventApi.onUpdateProgress(trySeeDuration, position, duration);
         } catch (Exception e) {
             if(LogUtil.DEBUG) {
                 LogUtil.log("VideoBasePlayer -> onUpdateProgress -> " + e.getMessage());

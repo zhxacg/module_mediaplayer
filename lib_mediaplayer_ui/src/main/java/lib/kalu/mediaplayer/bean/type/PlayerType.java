@@ -78,11 +78,11 @@ public @interface PlayerType {
         int WINDOW_FLOAT_SUCC = 3_024;
         int WINDOW_FLOAT_FAIL = 3_025;
         int TRY_SEE_START = 3_026;
-        int TRY_SEE_FINISH = 3_027;
+        int TRY_SEE_END = 3_027;
 
         int ERROR = 3_028; // 播放错误
-        int ERROR_BUILD_SOURCE = 3_029; // 播放错误
-        int ERROR_BUFFERING_TIMEOUT = 3_030;
+        int ERROR_URL = 3_029; // 播放错误
+        int ERROR_TIMEOUT_BUFFERING = 3_030;
 
         int COMPONENT_MENU_SHOW = 3_031;
         int COMPONENT_MENU_HIDE = 3_032;
@@ -124,14 +124,14 @@ public @interface PlayerType {
                 WINDOW_FLOAT_SUCC,
                 WINDOW_FLOAT_FAIL,
                 TRY_SEE_START,
-                TRY_SEE_FINISH,
+                TRY_SEE_END,
                 COMPONENT_MENU_SHOW,
                 COMPONENT_MENU_HIDE,
                 COMPONENT_SEEK_SHOW,
                 COMPONENT_SEEK_HIDE,
                 ERROR,
-                ERROR_BUILD_SOURCE,
-                ERROR_BUFFERING_TIMEOUT})
+                ERROR_URL,
+                ERROR_TIMEOUT_BUFFERING})
         @interface Value {
         }
     }

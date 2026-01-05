@@ -114,9 +114,12 @@ public class StartArgs implements Serializable {
 
 
     // 试看时长
-    private long trySeeDuration = 0L;
+    private long trySeeDuration;
 
     public long getTrySeeDuration() {
+        if (LogUtil.DEBUG) {
+            LogUtil.log(TAG, "getTrySeeDuration -> trySeeDuration = " + trySeeDuration);
+        }
         return trySeeDuration;
     }
 
@@ -381,6 +384,9 @@ public class StartArgs implements Serializable {
 
         public Builder setTrySeeDuration(long v) {
             this.trySeeDuration = v;
+            if (LogUtil.DEBUG) {
+                LogUtil.log(TAG, "setTrySeeDuration -> trySeeDuration = " + trySeeDuration);
+            }
             return this;
         }
 

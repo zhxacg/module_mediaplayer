@@ -78,7 +78,10 @@ public interface VideoKernelApiHandler extends VideoKernelApiBase, VideoKernelAp
             // 更新进度条
             else if (msg.what == WHAT_ProgressUpdate) {
                 if (isPrepared()) {
-                    onUpdateProgress();
+                    long position = getPosition();
+                    long duration = getDuration();
+                    long trySeeDuration = getTrySeeDuration();
+                    onUpdateProgress(trySeeDuration, position, duration);
                 }
                 sendMessageProgressUpdate(msg.arg1, true);
             }
@@ -90,7 +93,7 @@ public interface VideoKernelApiHandler extends VideoKernelApiBase, VideoKernelAp
                 long start = ((long[]) msg.obj)[0];
                 long cast = System.currentTimeMillis() - start;
                 if (cast >= timeout) {
-                    onEvent(msg.arg1, PlayerType.EventType.ERROR_BUFFERING_TIMEOUT);
+                    onEvent(msg.arg1, PlayerType.EventType.ERROR_TIMEOUT_BUFFERING);
                     //
                     removeMessagesBufferingTimeout();
                     //

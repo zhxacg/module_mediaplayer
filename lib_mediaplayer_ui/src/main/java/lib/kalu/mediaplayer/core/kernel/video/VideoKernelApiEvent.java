@@ -5,7 +5,7 @@ import lib.kalu.mediaplayer.bean.type.PlayerType;
 
 public interface VideoKernelApiEvent {
 
-    default void onUpdateProgress() {
+    default void onUpdateProgress(long trySeeDuration, long position, long duration){
     }
 
     default void onUpdateSubtitle(int kernel, CharSequence result) {

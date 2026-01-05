@@ -91,7 +91,7 @@ public class ComponentWarningTrySee extends RelativeLayout implements ComponentA
                 } catch (Exception e) {
                 }
                 break;
-            case PlayerType.EventType.TRY_SEE_FINISH:
+            case PlayerType.EventType.TRY_SEE_END:
                 try {
                     long trySeeDuration = getTrySeeDuration();
                     if (trySeeDuration <= 0L)
@@ -108,7 +108,7 @@ public class ComponentWarningTrySee extends RelativeLayout implements ComponentA
     }
 
     @Override
-    public void onUpdateProgress(boolean isFromUser, long max, long position, long duration) {
+    public void onUpdateProgress(boolean isFromUser, long trySeeDuration, long position, long duration) {
 
         if (LogUtil.DEBUG) {
             LogUtil.log("ComponentWarningTrySee -> onUpdateProgress");
@@ -126,7 +126,7 @@ public class ComponentWarningTrySee extends RelativeLayout implements ComponentA
             }
             SeekBar seekBar = findViewById(R.id.module_mediaplayer_component_warning_try_see_seekbar);
             seekBar.setProgress((int) position);
-            seekBar.setMax((int) (max > 0 ? max : duration));
+            seekBar.setMax((int) (trySeeDuration > 0 ? trySeeDuration : duration));
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
                 LogUtil.log("ComponentWarningTrySee -> onUpdateProgress -> Exception " + e.getMessage());

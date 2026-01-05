@@ -207,7 +207,7 @@ public final class TestTvActivity extends Activity {
         });
         playerLayout.setOnPlayerProgressListener(new OnPlayerProgressListener() {
             @Override
-            public void onProgress(long position, long duration) {
+            public void onProgress(long trySeeDuration, long position, long duration) {
             }
         });
         playerLayout.setOnPlayerEventListener(new OnPlayerEventListener() {
