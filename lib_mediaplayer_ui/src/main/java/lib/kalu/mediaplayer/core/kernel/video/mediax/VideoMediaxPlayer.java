@@ -355,7 +355,7 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
                 LogUtil.log("VideoMediaxPlayer -> startDecoder -> completed");
             }
         } catch (Exception e) {
-            removeMessagesAll();
+            stop();
             if (e instanceof UrlError) {
                 onEvent(PlayerType.KernelType.MEDIA_V3, PlayerType.EventType.ERROR_URL);
             } else {
@@ -628,35 +628,6 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
         }
     }
 
-    @Override
-    public void release() {
-
-        boolean releaseSimpleCache = releaseSimpleCache();
-        if (LogUtil.DEBUG) {
-            LogUtil.log("VideoMediaxPlayer -> release -> SimpleCache release " + releaseSimpleCache);
-        }
-
-        boolean releaseHlsManifest = releaseHlsManifest();
-        if (LogUtil.DEBUG) {
-            LogUtil.log("VideoMediaxPlayer -> release -> HlsManifest release " + releaseHlsManifest);
-        }
-
-        try {
-            if (null == mExoPlayer)
-                throw new Exception("error: mExoPlayer null");
-            mExoPlayer.setVideoSurface(null);
-            mExoPlayer.release();
-            mExoPlayer = null;
-            if (LogUtil.DEBUG) {
-                LogUtil.log("VideoMediaxPlayer -> release -> completed");
-            }
-        } catch (Exception e) {
-            if (LogUtil.DEBUG) {
-                LogUtil.log("VideoMediaxPlayer -> release -> " + e.getMessage());
-            }
-        }
-    }
-
     private boolean releaseHlsManifest() {
         try {
 //            if (null != mHlsSegmentInfos) {
@@ -744,14 +715,50 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
      */
     @Override
     public void stop() {
+
+        boolean removeAllMessages = removeAllMessages();
+        if (LogUtil.DEBUG) {
+            LogUtil.log(TAG, "stop -> removeAllMessages " + removeAllMessages);
+        }
+
         try {
             if (null == mExoPlayer)
                 throw new Exception("mExoPlayer error: null");
+            mExoPlayer.pause();
             mExoPlayer.stop();
-//            mExoPlayer.reset();
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
-                LogUtil.log("VideoMediaxPlayer -> stop -> " + e.getMessage());
+                LogUtil.log(TAG, "stop -> " + e.getMessage());
+            }
+        }
+    }
+
+    @Override
+    public void release() {
+        stop();
+
+        boolean releaseSimpleCache = releaseSimpleCache();
+        if (LogUtil.DEBUG) {
+            LogUtil.log(TAG, "release -> SimpleCache release " + releaseSimpleCache);
+        }
+
+        boolean releaseHlsManifest = releaseHlsManifest();
+        if (LogUtil.DEBUG) {
+            LogUtil.log(TAG, "release -> HlsManifest release " + releaseHlsManifest);
+        }
+
+        try {
+            if (null == mExoPlayer)
+                throw new Exception("error: mExoPlayer null");
+            mExoPlayer.setVideoSurface(null);
+            mExoPlayer.release();
+            mExoPlayer = null;
+            if (LogUtil.DEBUG) {
+                LogUtil.log(TAG, "release -> completed");
+            }
+        } catch (Exception e) {
+            if (LogUtil.DEBUG) {
+                LogUtil.log(TAG, "release -> " + e.getMessage());
             }
         }
     }

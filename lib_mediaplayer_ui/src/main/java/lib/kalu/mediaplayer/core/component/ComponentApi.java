@@ -765,15 +765,28 @@ public interface ComponentApi {
         }
     }
 
-    default void setMute(boolean enable) {
+    default void closeVolume() {
         try {
             PlayerView playerView = getPlayerView();
             if (null == playerView)
                 throw new Exception("playerView error: null");
-            playerView.setMute(enable);
+            playerView.closeVolume();
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
-                LogUtil.log("ComponentApi -> setMute -> " + e.getMessage());
+                LogUtil.log("ComponentApi -> closeVolume -> " + e.getMessage());
+            }
+        }
+    }
+
+    default void openVolume() {
+        try {
+            PlayerView playerView = getPlayerView();
+            if (null == playerView)
+                throw new Exception("playerView error: null");
+            playerView.openVolume();
+        } catch (Exception e) {
+            if (LogUtil.DEBUG) {
+                LogUtil.log("ComponentApi -> openVolume -> " + e.getMessage());
             }
         }
     }

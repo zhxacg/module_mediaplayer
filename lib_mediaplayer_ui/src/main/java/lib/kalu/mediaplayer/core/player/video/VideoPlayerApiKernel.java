@@ -122,14 +122,18 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
         }
     }
 
-    default void setMute(boolean enable) {
+    default void closeVolume() {
         try {
-            if (LogUtil.DEBUG) {
-                LogUtil.log("VideoPlayerApiKernel -> setMute -> enable = " + enable);
-            }
             VideoKernelApi kernel = getVideoKernel();
-            float value = enable ? 0f : 1f;
-            kernel.setVolume(value, value);
+            kernel.setVolume(0f, 0f);
+        } catch (Exception e) {
+        }
+    }
+
+    default void openVolume() {
+        try {
+            VideoKernelApi kernel = getVideoKernel();
+            kernel.setVolume(1f, 1f);
         } catch (Exception e) {
         }
     }
@@ -624,7 +628,7 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
                             // 执行
                             setScreenKeep(false);
                             // 停止轮训
-                            kernelApi.removeMessagesAll();
+                            kernelApi.removeAllMessages();
                             break;
                         //
                         case PlayerType.EventType.PAUSE:

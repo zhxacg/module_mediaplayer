@@ -611,15 +611,28 @@ public class PlayerLayout extends RelativeLayout {
         }
     }
 
-    public final void setMute(boolean enable) {
+    public final void closeVolume() {
         try {
             PlayerView playerView = getPlayerView();
             if (null == playerView)
                 throw new Exception("playerView error: null");
-            playerView.setMute(enable);
+            playerView.closeVolume();
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
-                LogUtil.log("PlayerLayout -> setMute -> " + e.getMessage());
+                LogUtil.log("PlayerLayout -> closeVolume -> " + e.getMessage());
+            }
+        }
+    }
+
+    public final void openVolume() {
+        try {
+            PlayerView playerView = getPlayerView();
+            if (null == playerView)
+                throw new Exception("playerView error: null");
+            playerView.closeVolume();
+        } catch (Exception e) {
+            if (LogUtil.DEBUG) {
+                LogUtil.log("PlayerLayout -> openVolume -> " + e.getMessage());
             }
         }
     }
