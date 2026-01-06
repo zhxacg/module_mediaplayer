@@ -991,9 +991,6 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
                             boolean playWhenReady = isPlayWhenReady();
                             onEvent(PlayerType.KernelType.MEDIA_V3, playWhenReady ? PlayerType.EventType.START_PLAY_WHEN_READY_TRUE : PlayerType.EventType.START_PLAY_WHEN_READY_FALSE);
                             if (playWhenReady) {
-                                boolean playing = isPlaying();
-                                if (playing)
-                                    throw new Exception("warning: isPlaying true");
                                 onEvent(PlayerType.KernelType.MEDIA_V3, PlayerType.EventType.START);
                                 onEvent(PlayerType.KernelType.MEDIA_V3, PlayerType.EventType.VIDEO_RENDERING_START);
                                 start();
