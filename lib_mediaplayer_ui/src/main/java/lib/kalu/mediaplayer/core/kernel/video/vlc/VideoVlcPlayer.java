@@ -359,7 +359,9 @@ public final class VideoVlcPlayer extends VideoBasePlayer {
 
         @Override
         public void onEnd() {
-            onEvent(PlayerType.KernelType.VLC, PlayerType.EventType.COMPLETE);
+            stop();
+            onEvent(PlayerType.KernelType.VLC, PlayerType.EventType.STOP);
+            onEvent(PlayerType.KernelType.VLC, PlayerType.EventType.END);
         }
 
         @Override

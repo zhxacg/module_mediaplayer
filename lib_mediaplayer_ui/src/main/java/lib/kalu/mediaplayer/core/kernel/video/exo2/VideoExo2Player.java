@@ -1029,7 +1029,9 @@ public final class VideoExo2Player extends VideoBasePlayer {
                 if (LogUtil.DEBUG) {
                     LogUtil.log("VideoExo2Player -> onPlaybackStateChanged -> state[Player.STATE_ENDED] = " + state);
                 }
-                onEvent(PlayerType.KernelType.EXO_V2, PlayerType.EventType.COMPLETE);
+                stop();
+                onEvent(PlayerType.KernelType.EXO_V2, PlayerType.EventType.STOP);
+                onEvent(PlayerType.KernelType.EXO_V2, PlayerType.EventType.END);
             }
             // 播放开始
             else if (state == Player.STATE_READY) {

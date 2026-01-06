@@ -508,7 +508,9 @@ public final class VideoFFmpegPlayer extends VideoBasePlayer {
             if (LogUtil.DEBUG) {
                 LogUtil.log("VideoFFmpegPlayer -> onCompletion ->");
             }
-            onEvent(PlayerType.KernelType.FFPLAYER, PlayerType.EventType.COMPLETE);
+            stop();
+            onEvent(PlayerType.KernelType.FFPLAYER, PlayerType.EventType.STOP);
+            onEvent(PlayerType.KernelType.FFPLAYER, PlayerType.EventType.END);
         }
     };
 

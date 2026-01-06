@@ -681,6 +681,11 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
      */
     @Override
     public void start() {
+
+        if (LogUtil.DEBUG) {
+            LogUtil.log("VideoMediaxPlayer -> start");
+        }
+
         try {
             if (null == mExoPlayer)
                 throw new Exception("mExoPlayer error: null");
@@ -697,6 +702,11 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
      */
     @Override
     public void pause() {
+
+        if (LogUtil.DEBUG) {
+            LogUtil.log("VideoMediaxPlayer -> pause");
+        }
+
         try {
             if (!isPrepared)
                 throw new Exception("mPrepared warning: false");
@@ -715,6 +725,10 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
      */
     @Override
     public void stop() {
+
+        if (LogUtil.DEBUG) {
+            LogUtil.log("VideoMediaxPlayer -> stop");
+        }
 
         boolean removeAllMessages = removeAllMessages();
         if (LogUtil.DEBUG) {
@@ -735,7 +749,10 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
 
     @Override
     public void release() {
-        stop();
+
+        if (LogUtil.DEBUG) {
+            LogUtil.log("VideoMediaxPlayer -> release");
+        }
 
         boolean releaseSimpleCache = releaseSimpleCache();
         if (LogUtil.DEBUG) {
@@ -866,6 +883,10 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
 
         @Override
         public void onPlayerError(AnalyticsListener.EventTime eventTime, PlaybackException error) {
+            if (LogUtil.DEBUG) {
+                LogUtil.log("VideoMediaxPlayer -> onPlayerError -> " + error.getMessage());
+            }
+
             try {
                 if (null == error)
                     throw new Exception("PlaybackException error: null");
@@ -904,7 +925,7 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
         @Override
         public void onLoadError(EventTime eventTime, LoadEventInfo loadEventInfo, MediaLoadData mediaLoadData, IOException e, boolean b) {
             if (LogUtil.DEBUG) {
-                LogUtil.log("VideoMediaxPlayer -> onLoadError ->");
+                LogUtil.log("VideoMediaxPlayer -> onLoadError -> " + e.getMessage());
             }
             stop();
             onEvent(PlayerType.KernelType.MEDIA_V3, PlayerType.EventType.STOP);
@@ -934,7 +955,9 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
                 if (LogUtil.DEBUG) {
                     LogUtil.log("VideoMediaxPlayer -> onPlaybackStateChanged -> state[Player.STATE_ENDED] = " + state);
                 }
-                onEvent(PlayerType.KernelType.MEDIA_V3, PlayerType.EventType.COMPLETE);
+                stop();
+                onEvent(PlayerType.KernelType.MEDIA_V3, PlayerType.EventType.STOP);
+                onEvent(PlayerType.KernelType.MEDIA_V3, PlayerType.EventType.END);
             }
             // 播放开始
             else if (state == Player.STATE_READY) {

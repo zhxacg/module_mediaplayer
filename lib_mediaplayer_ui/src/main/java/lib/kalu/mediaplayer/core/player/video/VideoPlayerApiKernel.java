@@ -641,7 +641,7 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
                             kernelApi.sendMessageProgressUpdate(kernel, false);
                             break;
                         // 播放结束
-                        case PlayerType.EventType.COMPLETE:
+                        case PlayerType.EventType.END:
                             // 埋点
                             onBuriedComplete();
                             // 关闭屏幕常亮

@@ -42,11 +42,13 @@ import java.util.Map;
 import java.util.Set;
 import java.util.zip.GZIPInputStream;
 
-import lib.kalu.mediaplayer.bean.args.StartArgs;
+import lib.kalu.mediaplayer.bean.type.PlayerType;
 import lib.kalu.mediaplayer.proxy.ProxyUrl;
 import lib.kalu.mediaplayer.util.LogUtil;
 
 public final class CustomDefaultHttpDataSource extends BaseDataSource implements HttpDataSource {
+
+    private String TAG = "CustomDefaultHttpDataSource22";
 
     /**
      * {@link DataSource.Factory} for {@link CustomDefaultHttpDataSource} instances.
@@ -215,7 +217,6 @@ public final class CustomDefaultHttpDataSource extends BaseDataSource implements
      */
     public static final int DEFAULT_READ_TIMEOUT_MILLIS = 8 * 1000;
 
-    private static final String TAG = "DefaultHttpDataSource";
     private static final int MAX_REDIRECTS = 20; // Same limit as okhttp.
     private static final int HTTP_STATUS_TEMPORARY_REDIRECT = 307;
     private static final int HTTP_STATUS_PERMANENT_REDIRECT = 308;
@@ -944,23 +945,33 @@ public final class CustomDefaultHttpDataSource extends BaseDataSource implements
 
     /****************/
 
+
     private DataSpec formatOpenUrl(DataSpec dataSpec) {
         try {
             if (null == proxyUrl)
                 throw new Exception("waring: proxyUrl null");
             String openUrl = dataSpec.uri.toString();
             if (LogUtil.DEBUG) {
-                LogUtil.log("CustomDefaultHttpDataSource -> formatOpenUrl -> openUrl =  " + openUrl);
+                LogUtil.log(TAG, "formatOpenUrl -> openUrl =  " + openUrl);
             }
-            String formatOpenUrl = proxyUrl.formatOpenUrl(openUrl);
+
+            String formatOpenUrl;
+            if (openUrl.contains(PlayerType.SchemeType._TS)) {
+                formatOpenUrl = formatOpenSegmentUrl(openUrl);
+            } else if (openUrl.contains(PlayerType.SchemeType._TS_)) {
+                formatOpenUrl = formatOpenSegmentUrl(openUrl);
+            } else {
+                formatOpenUrl = formatOpenM3u8Url(openUrl);
+            }
+
             if (LogUtil.DEBUG) {
-                LogUtil.log("CustomDefaultHttpDataSource -> formatOpenUrl -> formatOpenUrl =  " + formatOpenUrl);
+                LogUtil.log(TAG, "formatOpenUrl -> formatUrl =  " + formatOpenUrl);
             }
             if (null == formatOpenUrl || formatOpenUrl.isEmpty())
                 throw new Exception("waring: formatOpenUrl null");
 
             if (LogUtil.DEBUG) {
-                LogUtil.log("CustomDefaultHttpDataSource -> formatOpenUrl -> reset completed");
+                LogUtil.log(TAG, "formatOpenUrl -> reset completed");
             }
 
             return dataSpec.buildUpon()
@@ -968,9 +979,45 @@ public final class CustomDefaultHttpDataSource extends BaseDataSource implements
                     .build();
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
-                LogUtil.log("CustomDefaultHttpDataSource -> formatOpenUrl -> Exception: " + e.getMessage());
+                LogUtil.log(TAG, "formatOpenUrl -> Exception: " + e.getMessage());
             }
             return dataSpec;
+        }
+    }
+
+    private String formatOpenM3u8Url(String url) {
+
+        if (LogUtil.DEBUG) {
+            LogUtil.log(TAG, "formatOpenM3u8Url -> url = " + url);
+        }
+
+        try {
+            if (null == proxyUrl)
+                throw new Exception("waring: proxyUrl null");
+            return proxyUrl.formatM3u8Url(url);
+        } catch (Exception e) {
+            if (LogUtil.DEBUG) {
+                LogUtil.log(TAG, "formatOpenM3u8Url -> Exception: " + e.getMessage());
+            }
+            return "";
+        }
+    }
+
+    private String formatOpenSegmentUrl(String url) {
+
+        if (LogUtil.DEBUG) {
+            LogUtil.log(TAG, "formatOpenSegmentUrl -> url = " + url);
+        }
+
+        try {
+            if (null == proxyUrl)
+                throw new Exception("waring: proxyUrl null");
+            return proxyUrl.formatSegmentUrl(url);
+        } catch (Exception e) {
+            if (LogUtil.DEBUG) {
+                LogUtil.log(TAG, "formatOpenSegmentUrl -> Exception: " + e.getMessage());
+            }
+            return "";
         }
     }
 }

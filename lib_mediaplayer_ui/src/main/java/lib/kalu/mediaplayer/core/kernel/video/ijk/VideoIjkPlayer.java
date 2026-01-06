@@ -848,7 +848,9 @@ public final class VideoIjkPlayer extends VideoBasePlayer {
             if (LogUtil.DEBUG) {
                 LogUtil.log("VideoIjkPlayer -> onCompletion ->");
             }
-            onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.COMPLETE);
+            stop();
+            onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.STOP);
+            onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.END);
         }
     };
 

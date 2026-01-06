@@ -268,7 +268,7 @@ public interface VideoPlayerApiCall extends VideoPlayerApiBase, VideoPlayerApiLi
             onPlayerEventListener.onEvent(state);
             if (state == PlayerType.EventType.START) {
                 onPlayerEventListener.onStart();
-            } else if (state == PlayerType.EventType.COMPLETE) {
+            } else if (state == PlayerType.EventType.END) {
                 onPlayerEventListener.onComplete();
             } else if (state == PlayerType.EventType.PAUSE) {
                 onPlayerEventListener.onPause();

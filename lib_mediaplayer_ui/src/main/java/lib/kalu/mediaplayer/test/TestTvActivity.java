@@ -268,8 +268,17 @@ public final class TestTvActivity extends Activity {
                                 }
                             })
                             .setProxyUrl(new ProxyUrl() {
+
                                 @Override
-                                public String formatOpenUrl(String url) {
+                                public String formatM3u8Url(String url) {
+                                    if (LogUtil.DEBUG) {
+                                        LogUtil.log("TestActivity -> formatM3u8Url -> url = " + url + ", thread = " + Thread.currentThread().getName());
+                                    }
+                                    return url + "?token=1";
+                                }
+
+                                @Override
+                                public String formatSegmentUrl(String url) {
                                     if (LogUtil.DEBUG) {
                                         LogUtil.log("TestActivity -> formatOpenUrl -> url = " + url + ", thread = " + Thread.currentThread().getName());
                                     }
