@@ -41,7 +41,7 @@ public final class VideoVlcPlayer extends VideoBasePlayer {
     }
 
     @Override
-    public void createDecoder(Context context, StartArgs args) {
+    public void checkDecoder(Context context, StartArgs args) {
         try {
             if (null != mVlcPlayer)
                 throw new Exception("warning: null != mVlcPlayer");

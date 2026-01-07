@@ -64,18 +64,18 @@ public final class VideoIjkPlayer extends VideoBasePlayer {
     }
 
     @Override
-    public void createDecoder(Context context, StartArgs args) {
+    public void checkDecoder(Context context, StartArgs args) {
         try {
             if (null != mIjkPlayer)
                 throw new Exception("warning: mIjkPlayer not null");
             if (LogUtil.DEBUG) {
-                LogUtil.log("VideoIjkPlayer -> createDecoder ->");
+                LogUtil.log("VideoIjkPlayer -> checkDecoder ->");
             }
             mIjkPlayer = new IjkMediaPlayer();
             registListener();
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
-                LogUtil.log("VideoIjkPlayer -> createDecoder -> " + e.getMessage());
+                LogUtil.log("VideoIjkPlayer -> checkDecoder -> " + e.getMessage());
             }
         }
     }

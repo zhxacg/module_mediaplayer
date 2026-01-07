@@ -117,7 +117,7 @@ public final class VideoExo2Player extends VideoBasePlayer {
 
 
     @Override
-    public void createDecoder(Context context, StartArgs args) {
+    public void checkDecoder(Context context, StartArgs args) {
         try {
             if (null != mExoPlayer)
                 throw new Exception("warning: null != mExoPlayer");
@@ -190,12 +190,12 @@ public final class VideoExo2Player extends VideoBasePlayer {
 
             int decoderType = args.getDecoderType();
             if (LogUtil.DEBUG) {
-                LogUtil.log("VideoExo2Player -> createDecoder -> decoderType = " + decoderType);
+                LogUtil.log("VideoExo2Player -> checkDecoder -> decoderType = " + decoderType);
             }
             // only_ffmpeg
             if (decoderType == PlayerType.DecoderType.ONLY_FFMPEG) {
                 if (LogUtil.DEBUG) {
-                    LogUtil.log("VideoExo2Player -> createDecoder -> only_ffmpeg");
+                    LogUtil.log("VideoExo2Player -> checkDecoder -> only_ffmpeg");
                 }
                 Class<?> clazz = Class.forName("lib.kalu.exoplayer2.renderers.VideoFFmpegAudioFFmpegRenderersFactory");
                 Object newInstance = clazz.getDeclaredConstructor(Context.class).newInstance(context);
@@ -204,7 +204,7 @@ public final class VideoExo2Player extends VideoBasePlayer {
             // only_codec
             else if (decoderType == PlayerType.DecoderType.ONLY_CODEC) {
                 if (LogUtil.DEBUG) {
-                    LogUtil.log("VideoExo2Player -> createDecoder -> only_codec");
+                    LogUtil.log("VideoExo2Player -> checkDecoder -> only_codec");
                 }
                 Class<?> clazz = Class.forName("lib.kalu.exoplayer2.renderers.VideoCodecAudioCodecRenderersFactory");
                 Object newInstance = clazz.getDeclaredConstructor(Context.class).newInstance(context);
@@ -213,7 +213,7 @@ public final class VideoExo2Player extends VideoBasePlayer {
             // ONLY_VIDEO_CODEC_AUDIO_FFMPEG
             else if (decoderType == PlayerType.DecoderType.ONLY_VIDEO_CODEC_AUDIO_FFMPEG) {
                 if (LogUtil.DEBUG) {
-                    LogUtil.log("VideoExo2Player -> createDecoder -> only_video_codec_audio_ffmpeg");
+                    LogUtil.log("VideoExo2Player -> checkDecoder -> only_video_codec_audio_ffmpeg");
                 }
                 Class<?> clazz = Class.forName("lib.kalu.exoplayer2.renderers.VideoCodecAudioFFmpegRenderersFactory");
                 Object newInstance = clazz.getDeclaredConstructor(Context.class).newInstance(context);
@@ -222,7 +222,7 @@ public final class VideoExo2Player extends VideoBasePlayer {
             // only_video_ffmpeg_audio_codec
             else if (decoderType == PlayerType.DecoderType.ONLY_VIDEO_FFMPEG_AUDIO_CODEC) {
                 if (LogUtil.DEBUG) {
-                    LogUtil.log("VideoExo2Player -> createDecoder -> only_video_ffmpeg_audio_codec");
+                    LogUtil.log("VideoExo2Player -> checkDecoder -> only_video_ffmpeg_audio_codec");
                 }
                 Class<?> clazz = Class.forName("lib.kalu.exoplayer2.renderers.VideoFFmpegAudioCodecRenderersFactory");
                 Object newInstance = clazz.getDeclaredConstructor(Context.class).newInstance(context);
@@ -231,7 +231,7 @@ public final class VideoExo2Player extends VideoBasePlayer {
             // only_audio_ffmpeg
             else if (decoderType == PlayerType.DecoderType.ONLY_AUDIO_FFMPEG) {
                 if (LogUtil.DEBUG) {
-                    LogUtil.log("VideoExo2Player -> createDecoder -> only_audio_ffmpeg");
+                    LogUtil.log("VideoExo2Player -> checkDecoder -> only_audio_ffmpeg");
                 }
                 Class<?> clazz = Class.forName("lib.kalu.exoplayer2.renderers.OnlyAudioFFmpegRenderersFactory");
                 Object newInstance = clazz.getDeclaredConstructor(Context.class).newInstance(context);
@@ -240,7 +240,7 @@ public final class VideoExo2Player extends VideoBasePlayer {
             // only_video_ffmpeg
             else if (decoderType == PlayerType.DecoderType.ONLY_VIDEO_FFMPEG) {
                 if (LogUtil.DEBUG) {
-                    LogUtil.log("VideoExo2Player -> createDecoder -> only_video_ffmpeg");
+                    LogUtil.log("VideoExo2Player -> checkDecoder -> only_video_ffmpeg");
                 }
                 Class<?> clazz = Class.forName("lib.kalu.exoplayer2.renderers.OnlyVideoFFmpegRenderersFactory");
                 Object newInstance = clazz.getDeclaredConstructor(Context.class).newInstance(context);
@@ -249,7 +249,7 @@ public final class VideoExo2Player extends VideoBasePlayer {
             // only_audio_codec
             else if (decoderType == PlayerType.DecoderType.ONLY_AUDIO_CODEC) {
                 if (LogUtil.DEBUG) {
-                    LogUtil.log("VideoExo2Player -> createDecoder -> only_audio_codec");
+                    LogUtil.log("VideoExo2Player -> checkDecoder -> only_audio_codec");
                 }
                 Class<?> clazz = Class.forName("lib.kalu.exoplayer2.renderers.OnlyAudioCodecRenderersFactory");
                 Object newInstance = clazz.getDeclaredConstructor(Context.class).newInstance(context);
@@ -258,7 +258,7 @@ public final class VideoExo2Player extends VideoBasePlayer {
             // only_video_codec
             else if (decoderType == PlayerType.DecoderType.ONLY_VIDEO_CODEC) {
                 if (LogUtil.DEBUG) {
-                    LogUtil.log("VideoExo2Player -> createDecoder -> only_video_codec");
+                    LogUtil.log("VideoExo2Player -> checkDecoder -> only_video_codec");
                 }
                 Class<?> clazz = Class.forName("lib.kalu.exoplayer2.renderers.OnlyVideoCodecRenderersFactory");
                 Object newInstance = clazz.getDeclaredConstructor(Context.class).newInstance(context);
@@ -267,7 +267,7 @@ public final class VideoExo2Player extends VideoBasePlayer {
             // all
             else {
                 if (LogUtil.DEBUG) {
-                    LogUtil.log("VideoExo2Player -> createDecoder -> all");
+                    LogUtil.log("VideoExo2Player -> checkDecoder -> all");
                 }
                 Class<?> clazz = Class.forName("lib.kalu.exoplayer2.renderers.BaseRenderersFactory");
                 Object newInstance = clazz.getDeclaredConstructor(Context.class).newInstance(context);
@@ -295,7 +295,7 @@ public final class VideoExo2Player extends VideoBasePlayer {
 //        }
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
-                LogUtil.log("VideoExo2Player -> createDecoder -> " + e.getMessage());
+                LogUtil.log("VideoExo2Player -> checkDecoder -> " + e.getMessage());
             }
         }
     }

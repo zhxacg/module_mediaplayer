@@ -3,12 +3,7 @@ package lib.kalu.mediaplayer.core.kernel.video;
 
 import android.content.Context;
 import android.os.Handler;
-import android.os.Looper;
 import android.os.Message;
-
-import androidx.annotation.NonNull;
-
-import java.util.HashMap;
 
 import lib.kalu.mediaplayer.bean.type.PlayerType;
 import lib.kalu.mediaplayer.util.LogUtil;
@@ -37,7 +32,7 @@ public interface VideoKernelApiHandler extends VideoKernelApiBase, VideoKernelAp
         }
 
         try {
-            Handler handler = obtainHandler();
+            Handler handler = getHandler();
             if (null == handler)
                 throw new Exception("warning: handler null");
             //
@@ -62,7 +57,7 @@ public interface VideoKernelApiHandler extends VideoKernelApiBase, VideoKernelAp
         }
 
         try {
-            Handler handler = obtainHandler();
+            Handler handler = getHandler();
             if (null == handler)
                 throw new Exception("warning: handler null");
             Message message = Message.obtain();
@@ -84,7 +79,7 @@ public interface VideoKernelApiHandler extends VideoKernelApiBase, VideoKernelAp
         }
 
         try {
-            Handler handler = obtainHandler();
+            Handler handler = getHandler();
             if (null == handler)
                 throw new Exception("warning: handler null");
             handler.removeMessages(WHAT_ConnectTimeout);
@@ -104,7 +99,7 @@ public interface VideoKernelApiHandler extends VideoKernelApiBase, VideoKernelAp
         }
 
         try {
-            Handler handler = obtainHandler();
+            Handler handler = getHandler();
             if (null == handler)
                 throw new Exception("warning: handler null");
             Message message = Message.obtain();
@@ -125,7 +120,7 @@ public interface VideoKernelApiHandler extends VideoKernelApiBase, VideoKernelAp
         }
 
         try {
-            Handler handler = obtainHandler();
+            Handler handler = getHandler();
             if (null == handler)
                 throw new Exception("warning: handler null");
             Message message = Message.obtain();
@@ -146,7 +141,7 @@ public interface VideoKernelApiHandler extends VideoKernelApiBase, VideoKernelAp
         }
 
         try {
-            Handler handler = obtainHandler();
+            Handler handler = getHandler();
             if (null == handler)
                 throw new Exception("warning: handler null");
             handler.removeMessages(WHAT_ProgressUpdate);
@@ -164,7 +159,7 @@ public interface VideoKernelApiHandler extends VideoKernelApiBase, VideoKernelAp
         }
 
         try {
-            Handler handler = obtainHandler();
+            Handler handler = getHandler();
             if (null == handler)
                 throw new Exception("warning: handler null");
             Message message = Message.obtain();
@@ -185,7 +180,7 @@ public interface VideoKernelApiHandler extends VideoKernelApiBase, VideoKernelAp
         }
 
         try {
-            Handler handler = obtainHandler();
+            Handler handler = getHandler();
             if (null == handler)
                 throw new Exception("warning: handler null");
             handler.removeMessages(WHAT_UPDATE_SPEED);
@@ -203,7 +198,7 @@ public interface VideoKernelApiHandler extends VideoKernelApiBase, VideoKernelAp
         }
 
         try {
-            Handler handler = obtainHandler();
+            Handler handler = getHandler();
             if (null == handler)
                 throw new Exception("warning: handler null");
             Message message = Message.obtain();
@@ -226,7 +221,7 @@ public interface VideoKernelApiHandler extends VideoKernelApiBase, VideoKernelAp
         }
 
         try {
-            Handler handler = obtainHandler();
+            Handler handler = getHandler();
             if (null == handler)
                 throw new Exception("warning: handler null");
             if (LogUtil.DEBUG) {
@@ -240,11 +235,14 @@ public interface VideoKernelApiHandler extends VideoKernelApiBase, VideoKernelAp
         }
     }
 
-    default Handler obtainHandler(){
+    default Handler getHandler() {
         return null;
     }
 
-    default void stopHandler(){
+    default void initHandler() {
+    }
+
+    default void stopHandler() {
     }
 
 //    default void stopHandler() {

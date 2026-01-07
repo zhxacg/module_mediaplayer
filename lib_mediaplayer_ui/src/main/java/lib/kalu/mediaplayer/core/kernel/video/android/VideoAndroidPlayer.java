@@ -52,18 +52,18 @@ public final class VideoAndroidPlayer extends VideoBasePlayer {
     }
 
     @Override
-    public void createDecoder(Context context, StartArgs args) {
+    public void checkDecoder(Context context, StartArgs args) {
         try {
             if (null != mAndroidPlayer)
                 throw new Exception("error: mAndroidPlayer not null");
             if (LogUtil.DEBUG) {
-                LogUtil.log("VideoAndroidPlayer -> createDecoder ->");
+                LogUtil.log("VideoAndroidPlayer -> checkDecoder ->");
             }
             mAndroidPlayer = new MediaPlayer();
             registListener();
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
-                LogUtil.log("VideoAndroidPlayer -> createDecoder -> Exception " + e.getMessage());
+                LogUtil.log("VideoAndroidPlayer -> checkDecoder -> Exception " + e.getMessage());
             }
         }
     }

@@ -32,7 +32,7 @@ public interface VideoKernelApi extends VideoKernelApiHandler,
 
     void unRegistListener();
 
-    default void createDecoder(Context context, StartArgs startArgs) {
+    default void checkDecoder(Context context, StartArgs startArgs) {
     }
 
     default void initDecoder(Context context, StartArgs startArgs) {

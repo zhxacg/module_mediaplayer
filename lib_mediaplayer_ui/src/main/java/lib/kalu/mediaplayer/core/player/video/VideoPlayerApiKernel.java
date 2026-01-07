@@ -388,7 +388,8 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
             if (null == kernel)
                 throw new Exception("warning: kernel null");
             Context context = getBaseContext();
-            kernel.createDecoder(context, startArgs);
+            kernel.initHandler();
+            kernel.checkDecoder(context, startArgs);
             kernel.initDecoder(context, startArgs);
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
