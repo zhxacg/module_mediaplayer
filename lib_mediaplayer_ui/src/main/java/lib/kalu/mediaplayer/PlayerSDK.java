@@ -27,8 +27,8 @@ public final class PlayerSDK {
         mPlayerBuilder = new PlayerArgs.Builder();
     }
 
-    public PlayerSDK setConnectTimeout(int v) {
-        this.mPlayerBuilder.setConnectTimeout(v);
+    public PlayerSDK setConnectTimeoutMs(int v) {
+        this.mPlayerBuilder.setConnectTimeoutMs(v);
         return this;
     }
 

@@ -723,10 +723,11 @@ public final class VideoExo2Player extends VideoBasePlayer {
             builder.setUri(Uri.parse(mainUrl));
 
 
+            int connectTimoutMs = args.getConnectTimoutMs();
             CustomDefaultHttpDataSource.Factory dataSourceFactory = new CustomDefaultHttpDataSource.Factory()
                     .setUserAgent(ExoPlayerLibraryInfo.VERSION_SLASHY)
-                    .setConnectTimeoutMs((int) args.getConnectTimout())
-                    .setReadTimeoutMs((int) args.getConnectTimout())
+                    .setConnectTimeoutMs(connectTimoutMs)
+                    .setReadTimeoutMs(connectTimoutMs)
                     .setAllowCrossProtocolRedirects(true)
                     .setKeepPostFor302Redirects(true);
 

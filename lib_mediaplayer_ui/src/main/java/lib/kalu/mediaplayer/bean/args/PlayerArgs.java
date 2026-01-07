@@ -14,7 +14,7 @@ public final class PlayerArgs {
     private boolean log;// 日志log
     private boolean initRelease;
     private boolean supportAutoRelease; // 自动销毁
-    private int connectTimeout;
+    private int connectTimeoutMs;
     private boolean bufferingTimeoutRetry;
     @PlayerType.KernelType.Value
     private int externalAudioKernel; // 音频播放器内核
@@ -41,8 +41,8 @@ public final class PlayerArgs {
         return cache;
     }
 
-    public int getConnectTimeout() {
-        return connectTimeout;
+    public int getConnectTimeoutMs() {
+        return connectTimeoutMs;
     }
 
     public boolean getBufferingTimeoutRetry() {
@@ -98,7 +98,7 @@ public final class PlayerArgs {
         log = builder.log;
         initRelease = builder.initRelease;
         supportAutoRelease = builder.supportAutoRelease;
-        connectTimeout = builder.connectTimeout;
+        connectTimeoutMs = builder.connectTimeoutMs;
         bufferingTimeoutRetry = builder.bufferingTimeoutRetry;
         externalAudioKernel = builder.externalAudioKernel;
         kernelType = builder.kernelType;
@@ -115,7 +115,7 @@ public final class PlayerArgs {
         builder.setLog(this.log);
         builder.setInitRelease(this.initRelease);
         builder.setSupportAutoRelease(this.supportAutoRelease);
-        builder.setConnectTimeout(this.connectTimeout);
+        builder.setConnectTimeoutMs(this.connectTimeoutMs);
         builder.setBufferingTimeoutRetry(this.bufferingTimeoutRetry);
         builder.setExternalAudioKernel(this.externalAudioKernel);
         builder.setKernelType(this.kernelType);
@@ -134,7 +134,7 @@ public final class PlayerArgs {
         private boolean log = false;
         private boolean initRelease = true;
         private boolean supportAutoRelease = true;
-        private int connectTimeout = 20 * 1000;  // 连接超时
+        private int connectTimeoutMs = 10;  // 连接超时 10s
         private boolean bufferingTimeoutRetry = false; // 缓冲失败重试
         @PlayerType.KernelType.Value
         private int externalAudioKernel = PlayerType.KernelType.DEFAULT; // 音频播放器内核
@@ -166,8 +166,8 @@ public final class PlayerArgs {
             return this;
         }
 
-        public Builder setConnectTimeout(int v) {
-            connectTimeout = v;
+        public Builder setConnectTimeoutMs(int v) {
+            connectTimeoutMs = v;
             return this;
         }
 
