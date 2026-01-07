@@ -21,7 +21,7 @@ public class ComponentPrepareGradient extends RelativeLayout implements Componen
     }
 
     @Override
-    public void callEvent(int playState) {
+    public void onUpdateEvent(int playState) {
         switch (playState) {
             case PlayerType.EventType.INIT:
                 if (LogUtil.DEBUG) {

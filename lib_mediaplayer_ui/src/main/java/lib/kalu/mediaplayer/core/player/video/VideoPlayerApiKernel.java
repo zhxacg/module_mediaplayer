@@ -121,6 +121,9 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
     }
 
     default void setVolume(@FloatRange(from = 0f, to = 1f) float left, @FloatRange(from = 0f, to = 1f) float right) {
+
+        callVolume(true, true, Math.min(left, right));
+
         try {
             VideoKernelApi kernel = getVideoKernel();
             kernel.setVolume(left, right);
@@ -129,6 +132,9 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
     }
 
     default void closeVolume() {
+
+        callVolume(true, true, 0f);
+
         try {
             VideoKernelApi kernel = getVideoKernel();
             kernel.setVolume(0f, 0f);
@@ -137,6 +143,9 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
     }
 
     default void openVolume() {
+
+        callVolume(true, true, 1f);
+
         try {
             VideoKernelApi kernel = getVideoKernel();
             kernel.setVolume(1f, 1f);

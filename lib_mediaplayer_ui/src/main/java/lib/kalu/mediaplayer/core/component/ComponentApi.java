@@ -29,6 +29,31 @@ import lib.kalu.mediaplayer.util.LogUtil;
 
 public interface ComponentApi {
 
+    /******************/
+
+    default void onUpdateEvent(@PlayerType.EventType.Value int state) {
+    }
+
+    default void onUpdateWindow(@PlayerType.WindowType.Value int state) {
+    }
+
+    default void onUpdateProgress(boolean isFromUser, long trySeeDuration, long position, long duration) {
+    }
+
+    default void onUpdateVolume(float volume) {
+    }
+
+    default void onUpdateScreenOrientation(@PlayerType.ScreenOrientation int value) {
+    }
+
+    default void onUpdateSubtitle(int kernel, CharSequence result) {
+    }
+
+    default void onUpdateNetSpeed(int kernel, CharSequence value) {
+    }
+
+    /******************/
+
     @LayoutRes
     int initLayoutId();
 
@@ -85,22 +110,6 @@ public interface ComponentApi {
             }
             return false;
         }
-    }
-
-    /******************/
-
-    default void callEvent(int state) {
-    }
-
-    default void callWindow(int state) {
-    }
-
-    default void callScreenLandspace() {
-
-    }
-
-    default void callScreenPortrait() {
-
     }
 
     /******************/
@@ -322,17 +331,6 @@ public interface ComponentApi {
                 LogUtil.log("ComponentApi -> hide -> Exception " + e.getMessage());
             }
         }
-    }
-
-    /******************/
-
-    default void onUpdateProgress(boolean isFromUser, long trySeeDuration, long position, long duration) {
-    }
-
-    default void onUpdateSubtitle(int kernel, CharSequence result) {
-    }
-
-    default void onUpdateNetSpeed(int kernel, CharSequence value) {
     }
 
     /*******************/

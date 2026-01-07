@@ -55,7 +55,7 @@ public class ComponentWarningTrySee extends RelativeLayout implements ComponentA
     }
 
     @Override
-    public void callEvent(int playState) {
+    public void onUpdateEvent(int playState) {
         switch (playState) {
             case PlayerType.EventType.PAUSE:
                 try {

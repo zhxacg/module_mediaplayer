@@ -25,7 +25,7 @@ public class ComponentBuffering extends RelativeLayout implements ComponentApi {
     }
 
     @Override
-    public void callEvent(int playState) {
+    public void onUpdateEvent(int playState) {
         switch (playState) {
             case PlayerType.EventType.BUFFERING_START:
             case PlayerType.EventType.SEEK_START_FORWARD:

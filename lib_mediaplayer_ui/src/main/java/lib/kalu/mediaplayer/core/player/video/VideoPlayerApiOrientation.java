@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 
 import lib.kalu.mediaplayer.PlayerInitProvider;
 import lib.kalu.mediaplayer.PlayerLayout;
+import lib.kalu.mediaplayer.bean.type.PlayerType;
 import lib.kalu.mediaplayer.util.LogUtil;
 
 public interface VideoPlayerApiOrientation extends VideoPlayerApiBase, VideoPlayerApiRender, VideoPlayerApiListener, VideoPlayerApiCall {
@@ -125,7 +126,7 @@ public interface VideoPlayerApiOrientation extends VideoPlayerApiBase, VideoPlay
                 throw new Exception("error: activity null");
 
             activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-            callScreenPortrait(false, true);
+            callScreenOrientation(true, true, PlayerType.ScreenOrientation.PORTRAIT);
 
 //            PlayerLayout playerLayout = getPlayerLayout();
 //            if (null == playerLayout)
@@ -185,7 +186,7 @@ public interface VideoPlayerApiOrientation extends VideoPlayerApiBase, VideoPlay
                 throw new Exception("error: activity null");
 
             activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-            callScreenLandspace(false, true);
+            callScreenOrientation(true, true, PlayerType.ScreenOrientation.LANDSPACE);
 
 //            PlayerLayout playerLayout = getPlayerLayout();
 //            if (null == playerLayout)

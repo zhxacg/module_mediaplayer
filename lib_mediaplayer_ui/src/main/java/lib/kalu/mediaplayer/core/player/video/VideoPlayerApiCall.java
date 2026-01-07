@@ -24,6 +24,93 @@ public interface VideoPlayerApiCall extends VideoPlayerApiBase, VideoPlayerApiLi
 
     String TAG = "VideoPlayerApiCall22";
 
+    default void callScreenOrientation(boolean callPlayer, boolean callComponent, @PlayerType.ScreenOrientation.Value int value) {
+
+        // component
+        if (callComponent) {
+            callComponentScreenOrientation(value);
+        }
+
+        // listener
+        if (callPlayer) {
+            callPlayerScreenOrientation(value);
+        }
+    }
+
+    default void callComponentScreenOrientation(@PlayerType.ScreenOrientation.Value int value) {
+        try {
+            ViewGroup viewGroup = getBaseComponentViewGroup();
+            int childCount = viewGroup.getChildCount();
+            if (childCount <= 0)
+                throw new Exception("not find component");
+            for (int i = 0; i < childCount; i++) {
+                View childAt = viewGroup.getChildAt(i);
+                if (null == childAt)
+                    continue;
+                if (!(childAt instanceof ComponentApi))
+                    continue;
+                ((ComponentApi) childAt).onUpdateScreenOrientation(value);
+            }
+        } catch (Exception e) {
+            if (LogUtil.DEBUG) {
+                LogUtil.log(TAG, "callComponentScreenOrientation -> " + e.getMessage());
+            }
+        }
+    }
+
+    default void callPlayerScreenOrientation(@PlayerType.ScreenOrientation.Value int value) {
+        try {
+            OnPlayerScreenOrientationChangeListener onPlayerScreenOrientationChangeListener = getPlayerScreenOrientationChangeListener();
+            if (null == onPlayerScreenOrientationChangeListener)
+                throw new Exception("warning: onPlayerScreenOrientationChangeListener null");
+            if (value == PlayerType.ScreenOrientation.PORTRAIT) {
+                onPlayerScreenOrientationChangeListener.onPortrait();
+            } else if (value == PlayerType.ScreenOrientation.LANDSPACE) {
+                onPlayerScreenOrientationChangeListener.onLandspace();
+            }
+        } catch (Exception e) {
+            if (LogUtil.DEBUG) {
+                LogUtil.log(TAG, "callPlayerScreenOrientation -> " + e.getMessage());
+            }
+        }
+    }
+
+    default void callVolume(boolean callPlayer, boolean callComponent, float volume) {
+
+        if (callComponent) {
+            callComponentVolume(volume);
+        }
+
+        if (callPlayer) {
+            callPlayerVolume(volume);
+        }
+    }
+
+    default void callComponentVolume(float volume) {
+        try {
+            ViewGroup viewGroup = getBaseComponentViewGroup();
+            int childCount = viewGroup.getChildCount();
+            if (childCount <= 0)
+                throw new Exception("not find component");
+            for (int i = 0; i < childCount; i++) {
+                View childAt = viewGroup.getChildAt(i);
+                if (null == childAt)
+                    continue;
+                if (!(childAt instanceof ComponentApi))
+                    continue;
+                ((ComponentApi) childAt).onUpdateVolume(volume);
+            }
+        } catch (Exception e) {
+            if (LogUtil.DEBUG) {
+                LogUtil.log(TAG, "callComponentVolume -> " + e.getMessage());
+            }
+        }
+    }
+
+    default void callPlayerVolume(float volume) {
+
+    }
+
     default void callWindow(@PlayerType.WindowType.Value int state) {
 
         // component
@@ -54,32 +141,6 @@ public interface VideoPlayerApiCall extends VideoPlayerApiBase, VideoPlayerApiLi
         }
     }
 
-    default void callScreenLandspace(boolean callPlayer, boolean callComponent) {
-
-        // component
-        if (callComponent) {
-            callComponentScreenOrientation(false);
-        }
-
-        // listener
-        if (callPlayer) {
-            callPlayerScreenOrientationChanged(false);
-        }
-    }
-
-    default void callScreenPortrait(boolean callPlayer, boolean callComponent) {
-
-        // component
-        if (callComponent) {
-            callComponentScreenOrientation(true);
-        }
-
-        // listener
-        if (callPlayer) {
-            callPlayerScreenOrientationChanged(true);
-        }
-    }
-
     default void callProgress(long trySeeDuration, long position, long duration) {
 
         // component
@@ -107,52 +168,6 @@ public interface VideoPlayerApiCall extends VideoPlayerApiBase, VideoPlayerApiLi
 
         // listener
         callPlayerPlaybackSpeed(value);
-    }
-
-    default void callComponentScreenLandspace() {
-        try {
-            ViewGroup viewGroup = getBaseComponentViewGroup();
-            int childCount = viewGroup.getChildCount();
-            if (childCount <= 0)
-                throw new Exception("not find component");
-            for (int i = 0; i < childCount; i++) {
-                View childAt = viewGroup.getChildAt(i);
-                if (null == childAt)
-                    continue;
-                if (!(childAt instanceof ComponentApi))
-                    continue;
-                ((ComponentApi) childAt).callScreenLandspace();
-            }
-        } catch (Exception e) {
-            if (LogUtil.DEBUG) {
-                LogUtil.log(TAG, "callComponentScreenLandspace -> " + e.getMessage());
-            }
-        }
-    }
-
-    default void callComponentScreenOrientation(boolean isPortrait) {
-        try {
-            ViewGroup viewGroup = getBaseComponentViewGroup();
-            int childCount = viewGroup.getChildCount();
-            if (childCount <= 0)
-                throw new Exception("not find component");
-            for (int i = 0; i < childCount; i++) {
-                View childAt = viewGroup.getChildAt(i);
-                if (null == childAt)
-                    continue;
-                if (!(childAt instanceof ComponentApi))
-                    continue;
-                if (isPortrait) {
-                    ((ComponentApi) childAt).callScreenPortrait();
-                } else {
-                    ((ComponentApi) childAt).callScreenLandspace();
-                }
-            }
-        } catch (Exception e) {
-            if (LogUtil.DEBUG) {
-                LogUtil.log(TAG, "callComponentScreenOrientation -> " + e.getMessage());
-            }
-        }
     }
 
     default void callComponentSubtitle(int kernel, CharSequence value) {
@@ -230,7 +245,7 @@ public interface VideoPlayerApiCall extends VideoPlayerApiBase, VideoPlayerApiLi
                     continue;
                 if (!(childAt instanceof ComponentApi))
                     continue;
-                ((ComponentApi) childAt).callEvent(state);
+                ((ComponentApi) childAt).onUpdateEvent(state);
             }
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
@@ -251,7 +266,7 @@ public interface VideoPlayerApiCall extends VideoPlayerApiBase, VideoPlayerApiLi
                     continue;
                 if (!(childAt instanceof ComponentApi))
                     continue;
-                ((ComponentApi) childAt).callWindow(state);
+                ((ComponentApi) childAt).onUpdateWindow(state);
             }
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
@@ -387,22 +402,6 @@ public interface VideoPlayerApiCall extends VideoPlayerApiBase, VideoPlayerApiLi
         }
     }
 
-    default void callPlayerScreenOrientationChanged(boolean isPortrait) {
-        try {
-            OnPlayerScreenOrientationChangeListener onPlayerScreenOrientationChangeListener = getPlayerScreenOrientationChangeListener();
-            if (null == onPlayerScreenOrientationChangeListener)
-                throw new Exception("warning: onPlayerScreenOrientationChangeListener null");
-            if (isPortrait) {
-                onPlayerScreenOrientationChangeListener.onPortrait();
-            } else {
-                onPlayerScreenOrientationChangeListener.onLandspace();
-            }
-        } catch (Exception e) {
-            if (LogUtil.DEBUG) {
-                LogUtil.log(TAG, "callPlayerScreenOrientationChanged -> " + e.getMessage());
-            }
-        }
-    }
 
     /***************/
 

@@ -63,7 +63,7 @@ public class ComponentSubtitle extends RelativeLayout implements ComponentApi {
     }
 
     @Override
-    public void callEvent(int state) {
+    public void onUpdateEvent(int state) {
 
         if (state == PlayerType.EventType.INIT) {
 //

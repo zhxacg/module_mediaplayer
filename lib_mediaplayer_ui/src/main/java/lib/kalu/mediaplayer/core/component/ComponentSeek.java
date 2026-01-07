@@ -240,7 +240,7 @@ public class ComponentSeek extends RelativeLayout implements ComponentApi {
     }
 
     @Override
-    public void callEvent(int playState) {
+    public void onUpdateEvent(int playState) {
         switch (playState) {
 //            case PlayerType.EventType.SEEK_START_FORWARD:
 //                LogUtil.log("ComponentSeek -> callEvent -> SEEK_START_FORWARD");

@@ -450,6 +450,26 @@ public @interface PlayerType {
         }
     }
 
+
+    @Documented
+    @Retention(CLASS)
+    @Target({METHOD, PARAMETER, FIELD, LOCAL_VARIABLE, ANNOTATION_TYPE, PACKAGE})
+    @interface ScreenOrientation {
+        int PORTRAIT = 1;
+        int LANDSPACE = 2;
+        int UNKNOW = 3;
+
+        @Documented
+        @Retention(CLASS)
+        @Target({METHOD, PARAMETER, FIELD, LOCAL_VARIABLE, ANNOTATION_TYPE, PACKAGE})
+        @IntDef(value = {
+                ScreenOrientation.PORTRAIT,
+                ScreenOrientation.LANDSPACE,
+                ScreenOrientation.UNKNOW})
+        @interface Value {
+        }
+    }
+
     @Documented
     @Retention(CLASS)
     @Target({METHOD, PARAMETER, FIELD, LOCAL_VARIABLE, ANNOTATION_TYPE, PACKAGE})

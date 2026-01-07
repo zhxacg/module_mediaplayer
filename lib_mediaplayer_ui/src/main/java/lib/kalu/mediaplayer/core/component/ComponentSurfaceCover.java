@@ -20,7 +20,7 @@ public class ComponentSurfaceCover extends RelativeLayout implements ComponentAp
     }
 
     @Override
-    public void callEvent(int playState) {
+    public void onUpdateEvent(int playState) {
         switch (playState) {
             case PlayerType.EventType.START:
                 if (LogUtil.DEBUG) {
