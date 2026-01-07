@@ -561,4 +561,18 @@ public final class VideoFFmpegPlayer extends VideoBasePlayer {
             }
         }
     }
+
+    @Override
+    public float getVolume() {
+        try {
+            if (null == mFFmpegPlayer)
+                throw new Exception("mFFmpegPlayer error: null");
+            return 0f;
+        } catch (Exception e) {
+            if (LogUtil.DEBUG) {
+                LogUtil.log("VideoFFmpegPlayer -> getVolume -> " + e.getMessage());
+            }
+            return 0f;
+        }
+    }
 }

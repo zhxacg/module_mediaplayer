@@ -541,11 +541,6 @@ public final class VideoExo2Player extends VideoBasePlayer {
         }
     }
 
-    /**
-     * 设置播放速度
-     */
-
-
     @Override
     public void setVolume(float v1, float v2) {
         try {
@@ -559,6 +554,20 @@ public final class VideoExo2Player extends VideoBasePlayer {
             if (LogUtil.DEBUG) {
                 LogUtil.log("VideoExo2Player -> setVolume -> " + e.getMessage());
             }
+        }
+    }
+
+    @Override
+    public float getVolume() {
+        try {
+            if (null == mExoPlayer)
+                throw new Exception("mExoPlayer error: null");
+           return mExoPlayer.getVolume();
+        } catch (Exception e) {
+            if (LogUtil.DEBUG) {
+                LogUtil.log("VideoExo2Player -> getVolume -> " + e.getMessage());
+            }
+            return 0f;
         }
     }
 

@@ -111,11 +111,17 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
         }
     }
 
+    default float getVolume() {
+        try {
+            VideoKernelApi kernel = getVideoKernel();
+            return kernel.getVolume();
+        } catch (Exception e) {
+            return 0f;
+        }
+    }
+
     default void setVolume(@FloatRange(from = 0f, to = 1f) float left, @FloatRange(from = 0f, to = 1f) float right) {
         try {
-            if (LogUtil.DEBUG) {
-                LogUtil.log(TAG, "setVolume -> left = " + left + ", right = " + right);
-            }
             VideoKernelApi kernel = getVideoKernel();
             kernel.setVolume(left, right);
         } catch (Exception e) {

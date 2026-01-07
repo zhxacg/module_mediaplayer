@@ -315,7 +315,6 @@ public final class VideoVlcPlayer extends VideoBasePlayer {
 
     @Override
     public void setVolume(float v1, float v2) {
-
         try {
             if (null == mVlcPlayer)
                 throw new Exception("mVlcPlayer error: null");
@@ -327,6 +326,20 @@ public final class VideoVlcPlayer extends VideoBasePlayer {
             if (LogUtil.DEBUG) {
                 LogUtil.log("VideoVlcPlayer -> setVolume -> Exception " + e.getMessage());
             }
+        }
+    }
+
+    @Override
+    public float getVolume() {
+        try {
+            if (null == mVlcPlayer)
+                throw new Exception("mVlcPlayer error: null");
+           return mVlcPlayer.getVolume();
+        } catch (Exception e) {
+            if (LogUtil.DEBUG) {
+                LogUtil.log("VideoVlcPlayer -> getVolume -> Exception " + e.getMessage());
+            }
+            return 0f;
         }
     }
 

@@ -28,6 +28,8 @@ interface VideoKernelApiBase {
 
     void setVolume(float left, float right);
 
+    float getVolume();
+
     void seekTo(long position);
 
     void setSpeed(float speed);

@@ -650,6 +650,20 @@ public final class VideoIjkPlayer extends VideoBasePlayer {
         }
     }
 
+    @Override
+    public float getVolume() {
+        try {
+            if (null == mIjkPlayer)
+                throw new Exception("mIjkPlayer error: null");
+           return 0f;
+        } catch (Exception e) {
+            if (LogUtil.DEBUG) {
+                LogUtil.log("VideoIjkPlayer -> getVolume -> " + e.getMessage());
+            }
+            return 0f;
+        }
+    }
+
     /**
      * 设置视频信息监听器
      */

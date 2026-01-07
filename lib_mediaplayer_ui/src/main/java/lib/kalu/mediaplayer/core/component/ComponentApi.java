@@ -15,6 +15,7 @@ import androidx.annotation.ColorInt;
 import androidx.annotation.ColorRes;
 import androidx.annotation.DimenRes;
 import androidx.annotation.DrawableRes;
+import androidx.annotation.FloatRange;
 import androidx.annotation.IdRes;
 import androidx.annotation.LayoutRes;
 import androidx.annotation.NonNull;
@@ -788,6 +789,33 @@ public interface ComponentApi {
             if (LogUtil.DEBUG) {
                 LogUtil.log("ComponentApi -> openVolume -> " + e.getMessage());
             }
+        }
+    }
+
+    default void setVolume(@FloatRange(from = 0f, to = 1f) float left, @FloatRange(from = 0f, to = 1f) float right) {
+        try {
+            PlayerView playerView = getPlayerView();
+            if (null == playerView)
+                throw new Exception("playerView error: null");
+            playerView.setVolume(left, right);
+        } catch (Exception e) {
+            if (LogUtil.DEBUG) {
+                LogUtil.log("ComponentApi -> setVolume -> " + e.getMessage());
+            }
+        }
+    }
+
+    default float getVolume() {
+        try {
+            PlayerView playerView = getPlayerView();
+            if (null == playerView)
+                throw new Exception("playerView error: null");
+            return playerView.getVolume();
+        } catch (Exception e) {
+            if (LogUtil.DEBUG) {
+                LogUtil.log("ComponentApi -> getVolume -> " + e.getMessage());
+            }
+            return 0f;
         }
     }
 

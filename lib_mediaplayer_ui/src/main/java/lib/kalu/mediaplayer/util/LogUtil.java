@@ -29,9 +29,15 @@ public final class LogUtil {
         }
     }
 
-    public static void log(String message, @Nullable Throwable throwable) {
+    public static void log(String msg, @Nullable Throwable throwable) {
         if (DEBUG) {
-            Log.e(mTag, message, throwable);
+            Log.e(mTag, msg, throwable);
+        }
+    }
+
+    public static void log(String tag, String msg, @Nullable Throwable throwable) {
+        if (DEBUG) {
+            Log.e(mTag, tag + " -> " + msg, throwable);
         }
     }
 }

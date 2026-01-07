@@ -235,6 +235,20 @@ public final class VideoAndroidPlayer extends VideoBasePlayer {
         }
     }
 
+    @Override
+    public float getVolume() {
+        try {
+            if (null == mAndroidPlayer)
+                throw new Exception("mAndroidPlayer error: null");
+            return 1f;
+        } catch (Exception e) {
+            if (LogUtil.DEBUG) {
+                LogUtil.log("VideoAndroidPlayer -> getVolume -> " + e.getMessage());
+            }
+            return 0f;
+        }
+    }
+
     /**
      * 暂停
      */
