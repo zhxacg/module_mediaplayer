@@ -38,6 +38,7 @@ import androidx.media3.datasource.cache.CacheSpan;
 import androidx.media3.datasource.cache.LeastRecentlyUsedCacheEvictor;
 import androidx.media3.datasource.cache.SimpleCache;
 import androidx.media3.exoplayer.DecoderReuseEvaluation;
+import androidx.media3.exoplayer.DefaultLoadControl;
 import androidx.media3.exoplayer.DefaultRenderersFactory;
 import androidx.media3.exoplayer.ExoPlaybackException;
 import androidx.media3.exoplayer.ExoPlayer;
@@ -160,6 +161,11 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
             if (null == startArgs)
                 throw new Exception("error: startArgs null");
 
+            int connectTimeoutMs = startArgs.getConnectTimeoutMs();
+            if (LogUtil.DEBUG) {
+                LogUtil.log(TAG, "checkDecoder -> connectTimeoutMs = "+connectTimeoutMs);
+            }
+
             ExoPlayer.Builder builder = new ExoPlayer.Builder(context)
                     // 播放器调试和诊断相关的配置项
                     .setUsePlatformDiagnostics(false)
@@ -177,19 +183,20 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
                     .setMediaSourceFactory(new DefaultMediaSourceFactory(context)
                             .experimentalParseSubtitlesDuringExtraction(true))
                     // 监听
-                    .setAnalyticsCollector(new DefaultAnalyticsCollector(Clock.DEFAULT));
+                    .setAnalyticsCollector(new DefaultAnalyticsCollector(Clock.DEFAULT))
+                    // 缓冲缓存
+                    .setLoadControl(new DefaultLoadControl.Builder()
+                            .setBufferDurationsMs(
+                                    1000, // 播放器至少要缓冲1 秒的视频数据，才会停止主动加载更多分片, 设得太小：频繁触发加载，易重复请求；设得太大：初始加载慢，缓冲占用多
+                                    5000,   // 播放器最多缓冲5 秒的视频数据，达到后会停止加载，避免过度缓存, 针对 TS 分片：限制单次缓存的分片数量，防止一次性请求过多分片，也避免缓冲溢出后重新加载
+                                    1000,    // 播放器只要缓冲了0.5 秒的数据，就可以开始播放, 设得小：播放启动快，但网络波动时易触发重新缓冲（导致 TS 重复请求）；设得大：启动稍慢，但播放更稳定
+                                    5000    // 播放器因缓冲不足暂停后，需要重新缓冲1 秒的数据才会恢复播放, 避免缓冲刚够就恢复播放，减少频繁暂停 / 播放导致的 TS 重复请求
+                            )
+                            .build());
             // 配置带宽测量器
 //                    .setBandwidthMeter(new DefaultBandwidthMeter.Builder(context)
 //                            // 初始带宽估算为5Mbps（5,000,000 bps）
 //                            .setInitialBitrateEstimate(5_000_000)
-//                            .build())
-            // 缓冲缓存
-//                    .setLoadControl(new DefaultLoadControl.Builder()
-//                            // minBufferMs 最小缓冲时长的参数，单位为毫秒
-//                            // maxBufferMs 限制最大缓冲时长的参数，单位是毫秒
-//                            // bufferForPlaybackMs 如果设置 bufferForPlaybackMs 为 5000，那么播放器会在开始播放前先缓冲 5 秒钟的媒体数据
-//                            // bufferForPlaybackAfterRebufferMs 用于指定在播放过程中出现重新缓冲（Rebuffer）后，为了保证后续播放流畅，需要再次缓冲的时长，单位同样是毫秒
-//                            .setBufferDurationsMs(10_0000, 10_0000, 1000, 5000)
 //                            .build())
             // 自适应码率
 //                    .setTrackSelector(new DefaultTrackSelector(context, DefaultTrackSelector.Parameters.getDefaults(context)
@@ -2194,7 +2201,7 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
 
     private HttpDataSource.Factory buildHttpFactory(StartArgs args) {
         try {
-            int connectTimoutMs = args.getConnectTimoutMs();
+            int connectTimoutMs = args.getConnectTimeoutMs();
             CustomDefaultHttpDataSource.Factory factory = new CustomDefaultHttpDataSource.Factory(args.getProxyUrl())
                     .setUserAgent(MediaLibraryInfo.VERSION_SLASHY)
                     .setConnectTimeoutMs(connectTimoutMs)

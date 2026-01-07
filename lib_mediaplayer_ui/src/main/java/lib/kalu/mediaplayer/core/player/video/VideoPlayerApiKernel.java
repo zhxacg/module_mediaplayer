@@ -575,7 +575,7 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
                                 kernelApi.sendMessageSpeedUpdate(kernel, false);
                             }
                             //
-                            long connectTimeout = args.getConnectTimoutMs();
+                            long connectTimeout = args.getConnectTimeoutMs();
                             @PlayerType.KernelType.Value
                             int kernelType = args.getKernelType();
                             long timeMillis = System.currentTimeMillis();
@@ -587,7 +587,7 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
                             onBuriedBufferingStart();
                             //
                             boolean bufferingTimeoutRetry = args.isBufferingTimeoutRetry();
-                            long connectTimout = args.getConnectTimoutMs();
+                            long connectTimout = args.getConnectTimeoutMs();
                             long timeMillis1 = System.currentTimeMillis();
                             kernelApi.sendMessageBufferingTimeout(kernel, bufferingTimeoutRetry, timeMillis1, connectTimout);
                             break;

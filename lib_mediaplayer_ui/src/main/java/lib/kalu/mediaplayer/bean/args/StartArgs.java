@@ -55,10 +55,10 @@ public class StartArgs implements Serializable {
     }
 
     // 超时时间
-    private int connectTimoutMs;
+    private int connectTimeoutMs;
 
-    public int getConnectTimoutMs() {
-        return connectTimoutMs;
+    public int getConnectTimeoutMs() {
+        return connectTimeoutMs;
     }
 
     // 日志
@@ -229,7 +229,7 @@ public class StartArgs implements Serializable {
                 ", scaleType=" + scaleType +
                 ", decoderType=" + decoderType +
                 ", kernelType=" + kernelType +
-                ", connectTimoutMs=" + connectTimoutMs +
+                ", connectTimeoutMs=" + connectTimeoutMs +
                 ", log=" + log +
                 ", bufferingTimeoutRetry=" + bufferingTimeoutRetry +
                 ", initRelease=" + initRelease +
@@ -257,7 +257,7 @@ public class StartArgs implements Serializable {
         this.renderType = builder.renderType;
         this.scaleType = builder.scaleType;
         this.kernelType = builder.kernelType;
-        this.connectTimoutMs = builder.connectTimoutMs;
+        this.connectTimeoutMs = builder.connectTimeoutMs;
         this.log = builder.log;
         this.bufferingTimeoutRetry = builder.bufferingTimeoutRetry;
         this.initRelease = builder.initRelease;
@@ -285,7 +285,7 @@ public class StartArgs implements Serializable {
         builder.renderType = renderType;
         builder.scaleType = scaleType;
         builder.kernelType = kernelType;
-        builder.connectTimoutMs = connectTimoutMs;
+        builder.connectTimeoutMs = connectTimeoutMs;
         builder.log = log;
         builder.bufferingTimeoutRetry = bufferingTimeoutRetry;
         builder.initRelease = initRelease;
@@ -325,7 +325,7 @@ public class StartArgs implements Serializable {
         @PlayerType.RotationType.Value
         private int rotation = playerArgs.getRotation();
         // 超时时间
-        private int connectTimoutMs = playerArgs.getConnectTimeoutMs();
+        private int connectTimeoutMs = playerArgs.getConnectTimeoutMs();
         // 日志
         private boolean log = playerArgs.isLog();
         // 缓冲超时, 是否重新播放
