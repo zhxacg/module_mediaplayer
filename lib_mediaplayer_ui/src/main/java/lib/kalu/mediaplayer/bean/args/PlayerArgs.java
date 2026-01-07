@@ -134,7 +134,7 @@ public final class PlayerArgs {
         private boolean log = false;
         private boolean initRelease = true;
         private boolean supportAutoRelease = true;
-        private int connectTimeoutMs = 10;  // 连接超时 10s
+        private int connectTimeoutMs = 10_000;  // 连接超时 10s
         private boolean bufferingTimeoutRetry = false; // 缓冲失败重试
         @PlayerType.KernelType.Value
         private int externalAudioKernel = PlayerType.KernelType.DEFAULT; // 音频播放器内核

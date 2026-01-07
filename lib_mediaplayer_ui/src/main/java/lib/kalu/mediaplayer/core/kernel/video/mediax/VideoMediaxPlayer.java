@@ -68,6 +68,7 @@ import java.io.IOException;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.NavigableSet;
@@ -2198,6 +2199,7 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
                     .setUserAgent(MediaLibraryInfo.VERSION_SLASHY)
                     .setConnectTimeoutMs(connectTimoutMs)
                     .setReadTimeoutMs(connectTimoutMs)
+                    .setDefaultRequestProperties(new HashMap<>())
                     .setAllowCrossProtocolRedirects(true)
                     .setKeepPostFor302Redirects(true);
             if (LogUtil.DEBUG) {
