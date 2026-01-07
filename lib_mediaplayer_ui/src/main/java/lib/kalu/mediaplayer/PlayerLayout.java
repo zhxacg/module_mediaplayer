@@ -819,6 +819,19 @@ public class PlayerLayout extends RelativeLayout {
         }
     }
 
+    public final void sendSelfEvent(int playState) {
+        try {
+            PlayerView playerView = getPlayerView();
+            if (null == playerView)
+                throw new Exception("playerView error: null");
+            playerView.callEvent(playState);
+        } catch (Exception e) {
+            if (LogUtil.DEBUG) {
+                LogUtil.log("PlayerLayout -> sendSelfEvent -> " + e.getMessage());
+            }
+        }
+    }
+
     public final boolean setPlaybackSubtitleOffsetMs(int offset) {
         try {
             PlayerView playerView = getPlayerView();

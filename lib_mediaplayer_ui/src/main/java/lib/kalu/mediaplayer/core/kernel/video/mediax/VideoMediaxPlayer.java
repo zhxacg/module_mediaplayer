@@ -2,9 +2,12 @@ package lib.kalu.mediaplayer.core.kernel.video.mediax;
 
 import android.content.Context;
 import android.net.Uri;
+import android.os.Handler;
 import android.os.Looper;
+import android.os.Message;
 import android.view.Surface;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.media3.common.C;
 import androidx.media3.common.Format;
@@ -101,6 +104,7 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
 
     private SimpleCache mSimpleCache;
     private ExoPlayer mExoPlayer;
+    private Handler mHandler;
 
     // 播放资源信息
     private StartArgs mStartArgs;
@@ -683,7 +687,7 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
     public void start() {
 
         if (LogUtil.DEBUG) {
-            LogUtil.log("VideoMediaxPlayer -> start");
+            LogUtil.log(TAG, "start");
         }
 
         try {
@@ -704,7 +708,7 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
     public void pause() {
 
         if (LogUtil.DEBUG) {
-            LogUtil.log("VideoMediaxPlayer -> pause");
+            LogUtil.log(TAG, "pause");
         }
 
         try {
@@ -727,13 +731,10 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
     public void stop() {
 
         if (LogUtil.DEBUG) {
-            LogUtil.log("VideoMediaxPlayer -> stop");
+            LogUtil.log(TAG, "stop");
         }
 
-        boolean removeAllMessages = removeAllMessages();
-        if (LogUtil.DEBUG) {
-            LogUtil.log(TAG, "stop -> removeAllMessages " + removeAllMessages);
-        }
+        stopHandler();
 
         try {
             if (null == mExoPlayer)
@@ -751,7 +752,7 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
     public void release() {
 
         if (LogUtil.DEBUG) {
-            LogUtil.log("VideoMediaxPlayer -> release");
+            LogUtil.log(TAG, "release");
         }
 
         boolean releaseSimpleCache = releaseSimpleCache();
@@ -763,6 +764,8 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
         if (LogUtil.DEBUG) {
             LogUtil.log(TAG, "release -> HlsManifest release " + releaseHlsManifest);
         }
+
+        stopHandler();
 
         try {
             if (null == mExoPlayer)
@@ -777,6 +780,37 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
             if (LogUtil.DEBUG) {
                 LogUtil.log(TAG, "release -> " + e.getMessage());
             }
+        }
+    }
+
+    @Override
+    public Handler obtainHandler() {
+
+        if (LogUtil.DEBUG) {
+            LogUtil.log(TAG, "obtainHandler");
+        }
+
+        if (null == mHandler) {
+            mHandler = new Handler(Looper.getMainLooper()) {
+                @Override
+                public void handleMessage(@NonNull Message msg) {
+                    formatMessage(msg);
+                }
+            };
+        }
+        return mHandler;
+    }
+
+    @Override
+    public void stopHandler() {
+
+        if (LogUtil.DEBUG) {
+            LogUtil.log(TAG, "stopHandler");
+        }
+
+        if (null != mHandler) {
+            mHandler.removeCallbacksAndMessages(null);
+            mHandler = null;
         }
     }
 

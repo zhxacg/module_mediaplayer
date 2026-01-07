@@ -19,6 +19,7 @@ import lib.kalu.mediaplayer.util.LogUtil;
  */
 public interface VideoKernelApiHandler extends VideoKernelApiBase, VideoKernelApiEvent, VideoKernelApiStartArgs {
 
+    String TAG = "VideoKernelApiHandler22";
     int WHAT_PlayWhenReadyDelayedTime = 1000;
     int WHAT_ConnectTimeout = 2000;
     int WHAT_CheckPreparedPlaying = 3000;
@@ -26,9 +27,274 @@ public interface VideoKernelApiHandler extends VideoKernelApiBase, VideoKernelAp
     int WHAT_BufferingTimeout = 5000;
     int WHAT_UPDATE_SPEED = 6000;
 
-    HashMap<VideoKernelApiBase, android.os.Handler> mHandler = new HashMap<>();
+    /***********/
 
-    default void parseTimer(Message msg) {
+
+    default void startPlayWhenReadyDelayedTime(Context context, @PlayerType.KernelType.Value int kernelType, long delayedTime) {
+
+        if (LogUtil.DEBUG) {
+            LogUtil.log(TAG, "startPlayWhenReadyDelayedTime ->");
+        }
+
+        try {
+            Handler handler = obtainHandler();
+            if (null == handler)
+                throw new Exception("warning: handler null");
+            //
+            onEvent(kernelType, PlayerType.EventType.INIT_PLAY_WHEN_READY_DELAYED_TIME_START);
+            //
+            Message message = Message.obtain();
+            message.what = WHAT_PlayWhenReadyDelayedTime;
+            message.arg1 = kernelType;
+            message.obj = context;
+            handler.sendMessageDelayed(message, delayedTime);
+        } catch (Exception e) {
+            if (LogUtil.DEBUG) {
+                LogUtil.log(TAG, "startPlayWhenReadyDelayedTime -> Exception " + e.getMessage());
+            }
+        }
+    }
+
+    default void sendMessageConnectTimeout(@PlayerType.KernelType.Value int kernelType, long timeMillis, long timeout, boolean delay) {
+
+        if (LogUtil.DEBUG) {
+            LogUtil.log(TAG, "sendMessageConnectTimeout ->");
+        }
+
+        try {
+            Handler handler = obtainHandler();
+            if (null == handler)
+                throw new Exception("warning: handler null");
+            Message message = Message.obtain();
+            message.what = WHAT_ConnectTimeout;
+            message.arg1 = kernelType;
+            message.obj = new long[]{timeMillis, timeout};
+            handler.sendMessageDelayed(message, delay ? 1000 : 0);
+        } catch (Exception e) {
+            if (LogUtil.DEBUG) {
+                LogUtil.log(TAG, "sendMessageConnectTimeout -> Exception " + e.getMessage());
+            }
+        }
+    }
+
+    default void removeMessagesConnectTimeout() {
+
+        if (LogUtil.DEBUG) {
+            LogUtil.log(TAG, "removeMessagesConnectTimeout ->");
+        }
+
+        try {
+            Handler handler = obtainHandler();
+            if (null == handler)
+                throw new Exception("warning: handler null");
+            handler.removeMessages(WHAT_ConnectTimeout);
+        } catch (Exception e) {
+            if (LogUtil.DEBUG) {
+                LogUtil.log(TAG, "removeMessagesConnectTimeout -> Exception " + e.getMessage());
+            }
+        }
+    }
+
+    /***********/
+
+    default void sendMessageCheckPreparedPlaying(@PlayerType.KernelType.Value int kernelType) {
+
+        if (LogUtil.DEBUG) {
+            LogUtil.log(TAG, "sendMessageCheckPreparedPlaying ->");
+        }
+
+        try {
+            Handler handler = obtainHandler();
+            if (null == handler)
+                throw new Exception("warning: handler null");
+            Message message = Message.obtain();
+            message.what = WHAT_CheckPreparedPlaying;
+            message.arg1 = kernelType;
+            handler.sendMessageDelayed(message, 1000);
+        } catch (Exception e) {
+            if (LogUtil.DEBUG) {
+                LogUtil.log(TAG, "sendMessageCheckPreparedPlaying -> Exception " + e.getMessage());
+            }
+        }
+    }
+
+    default void sendMessageProgressUpdate(@PlayerType.KernelType.Value int kernelType, boolean delay) {
+
+        if (LogUtil.DEBUG) {
+            LogUtil.log(TAG, "sendMessageProgressUpdate ->");
+        }
+
+        try {
+            Handler handler = obtainHandler();
+            if (null == handler)
+                throw new Exception("warning: handler null");
+            Message message = Message.obtain();
+            message.what = WHAT_ProgressUpdate;
+            message.arg1 = kernelType;
+            handler.sendMessageDelayed(message, delay ? 1000 : 0);
+        } catch (Exception e) {
+            if (LogUtil.DEBUG) {
+                LogUtil.log(TAG, "sendMessageProgressUpdate -> Exception " + e.getMessage());
+            }
+        }
+    }
+
+    default void removeMessagesProgressUpdate() {
+
+        if (LogUtil.DEBUG) {
+            LogUtil.log(TAG, "removeMessagesProgressUpdate ->");
+        }
+
+        try {
+            Handler handler = obtainHandler();
+            if (null == handler)
+                throw new Exception("warning: handler null");
+            handler.removeMessages(WHAT_ProgressUpdate);
+        } catch (Exception e) {
+            if (LogUtil.DEBUG) {
+                LogUtil.log(TAG, "removeMessagesProgressUpdate -> Exception " + e.getMessage());
+            }
+        }
+    }
+
+    default void sendMessageSpeedUpdate(@PlayerType.KernelType.Value int kernelType, boolean delay) {
+
+        if (LogUtil.DEBUG) {
+            LogUtil.log(TAG, "sendMessageSpeedUpdate ->");
+        }
+
+        try {
+            Handler handler = obtainHandler();
+            if (null == handler)
+                throw new Exception("warning: handler null");
+            Message message = Message.obtain();
+            message.what = WHAT_UPDATE_SPEED;
+            message.arg1 = kernelType;
+            handler.sendMessageDelayed(message, delay ? 1000 : 0);
+        } catch (Exception e) {
+            if (LogUtil.DEBUG) {
+                LogUtil.log(TAG, "sendMessageSpeedUpdate -> Exception " + e.getMessage());
+            }
+        }
+    }
+
+    default void removeMessagesSpeedUpdate() {
+
+        if (LogUtil.DEBUG) {
+            LogUtil.log(TAG, "removeMessagesSpeedUpdate ->");
+        }
+
+        try {
+            Handler handler = obtainHandler();
+            if (null == handler)
+                throw new Exception("warning: handler null");
+            handler.removeMessages(WHAT_UPDATE_SPEED);
+        } catch (Exception e) {
+            if (LogUtil.DEBUG) {
+                LogUtil.log(TAG, "removeMessagesSpeedUpdate -> Exception " + e.getMessage());
+            }
+        }
+    }
+
+    default void sendMessageBufferingTimeout(@PlayerType.KernelType.Value int kernelType, boolean bufferingTimeoutRetry, long timeMillis, long timeout) {
+
+        if (LogUtil.DEBUG) {
+            LogUtil.log(TAG, "sendMessageBufferingTimeout ->");
+        }
+
+        try {
+            Handler handler = obtainHandler();
+            if (null == handler)
+                throw new Exception("warning: handler null");
+            Message message = Message.obtain();
+            message.what = WHAT_BufferingTimeout;
+            message.arg1 = kernelType;
+            message.arg2 = bufferingTimeoutRetry ? 1 : 0;
+            message.obj = new long[]{timeMillis, timeMillis};
+            handler.sendMessageDelayed(message, 1000);
+        } catch (Exception e) {
+            if (LogUtil.DEBUG) {
+                LogUtil.log(TAG, "sendMessageBufferingTimeout -> Exception " + e.getMessage());
+            }
+        }
+    }
+
+    default void removeMessagesBufferingTimeout() {
+
+        if (LogUtil.DEBUG) {
+            LogUtil.log(TAG, "removeMessagesBufferingTimeout ->");
+        }
+
+        try {
+            Handler handler = obtainHandler();
+            if (null == handler)
+                throw new Exception("warning: handler null");
+            if (LogUtil.DEBUG) {
+                LogUtil.log(TAG, "removeMessagesBufferingTimeout ->");
+            }
+            handler.removeMessages(WHAT_BufferingTimeout);
+        } catch (Exception e) {
+            if (LogUtil.DEBUG) {
+                LogUtil.log(TAG, "removeMessagesBufferingTimeout -> Exception " + e.getMessage());
+            }
+        }
+    }
+
+    default Handler obtainHandler(){
+        return null;
+    }
+
+    default void stopHandler(){
+    }
+
+//    default void stopHandler() {
+//
+//        if (LogUtil.DEBUG) {
+//            LogUtil.log(TAG, "stopHandler ->");
+//        }
+//
+//        try {
+//            Handler handler = mHandler.get(this);
+//            if (null == handler)
+//                throw new Exception("warning: handler null");
+//            handler.removeCallbacksAndMessages(null);
+//            handler = null;
+//            mHandler.remove(this);
+//        } catch (Exception e) {
+//            if (LogUtil.DEBUG) {
+//                LogUtil.log(TAG, "stopHandler -> " + e.getMessage());
+//            }
+//        }
+//    }
+//
+//    default void initHandler() {
+//
+//        if (LogUtil.DEBUG) {
+//            LogUtil.log(TAG, "initHandler ->");
+//        }
+//
+//        try {
+//            Handler handler = mHandler.get(this);
+//            if (null != handler)
+//                throw new Exception("warning: handler not null");
+//            mHandler.put(this, new android.os.Handler(Looper.getMainLooper()) {
+//                @Override
+//                public void handleMessage(@NonNull Message msg) {
+//                    formatMessage(msg);
+//                }
+//            });
+//        } catch (Exception e) {
+//            if (LogUtil.DEBUG) {
+//                LogUtil.log(TAG, "initHandler -> " + e.getMessage());
+//            }
+//        }
+//    }
+
+    default void formatMessage(Message msg) {
+
+        if (LogUtil.DEBUG) {
+            LogUtil.log(TAG, "formatMessage ->");
+        }
 
         try {
             if (null == msg)
@@ -82,8 +348,8 @@ public interface VideoKernelApiHandler extends VideoKernelApiBase, VideoKernelAp
                     long duration = getDuration();
                     long trySeeDuration = getTrySeeDuration();
                     onUpdateProgress(trySeeDuration, position, duration);
+                    sendMessageProgressUpdate(msg.arg1, true);
                 }
-                sendMessageProgressUpdate(msg.arg1, true);
             }
             // 缓冲超时
             else if (msg.what == WHAT_BufferingTimeout) {
@@ -126,253 +392,8 @@ public interface VideoKernelApiHandler extends VideoKernelApiBase, VideoKernelAp
             }
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
-                LogUtil.log("VideoKernelApiHandler -> parseTimer -> Exception " + e.getMessage());
+                LogUtil.log(TAG, "formatMessage -> Exception " + e.getMessage());
             }
-        }
-    }
-
-    default void releaseTimer() {
-        try {
-            Handler handler = mHandler.get(this);
-            if (null == handler)
-                throw new Exception("warning: handler null");
-            if (LogUtil.DEBUG) {
-                LogUtil.log("VideoKernelApiHandler -> releaseTimer ->");
-            }
-            handler.removeCallbacksAndMessages(null);
-            mHandler.remove(this);
-        } catch (Exception e) {
-            if (LogUtil.DEBUG) {
-                LogUtil.log("VideoKernelApiHandler -> releaseTimer -> " + e.getMessage());
-            }
-        }
-    }
-
-    default void createTimer() {
-        try {
-            Handler handler = mHandler.get(this);
-            if (null != handler)
-                throw new Exception("warning: handler not null");
-            if (LogUtil.DEBUG) {
-                LogUtil.log("VideoKernelApiHandler -> createTimer ->");
-            }
-            mHandler.put(this, new android.os.Handler(Looper.getMainLooper()) {
-                @Override
-                public void handleMessage(@NonNull Message msg) {
-                    parseTimer(msg);
-                }
-            });
-        } catch (Exception e) {
-            if (LogUtil.DEBUG) {
-                LogUtil.log("VideoKernelApiHandler -> createTimer -> " + e.getMessage());
-            }
-        }
-    }
-
-    /***********/
-
-    default void startPlayWhenReadyDelayedTime(Context context, @PlayerType.KernelType.Value int kernelType, long delayedTime) {
-        try {
-            Handler handler = mHandler.get(this);
-            if (null == handler)
-                throw new Exception("warning: handler null");
-            if (LogUtil.DEBUG) {
-                LogUtil.log("VideoKernelApiHandler -> startPlayWhenReadyDelayedTime ->");
-            }
-            //
-            onEvent(kernelType, PlayerType.EventType.INIT_PLAY_WHEN_READY_DELAYED_TIME_START);
-            //
-            Message message = Message.obtain();
-            message.what = WHAT_PlayWhenReadyDelayedTime;
-            message.arg1 = kernelType;
-            message.obj = context;
-            handler.sendMessageDelayed(message, delayedTime);
-        } catch (Exception e) {
-            if (LogUtil.DEBUG) {
-                LogUtil.log("VideoKernelApiHandler -> startPlayWhenReadyDelayedTime -> Exception " + e.getMessage());
-            }
-        }
-    }
-
-    default void sendMessageConnectTimeout(@PlayerType.KernelType.Value int kernelType, long timeMillis, long timeout, boolean delay) {
-        try {
-            Handler handler = mHandler.get(this);
-            if (null == handler)
-                throw new Exception("warning: handler null");
-            if (LogUtil.DEBUG) {
-                LogUtil.log("VideoKernelApiHandler -> sendMessageConnectTimeout ->");
-            }
-            Message message = Message.obtain();
-            message.what = WHAT_ConnectTimeout;
-            message.arg1 = kernelType;
-            message.obj = new long[]{timeMillis, timeout};
-            handler.sendMessageDelayed(message, delay ? 1000 : 0);
-        } catch (Exception e) {
-            if (LogUtil.DEBUG) {
-                LogUtil.log("VideoKernelApiHandler -> sendMessageConnectTimeout -> Exception " + e.getMessage());
-            }
-        }
-    }
-
-    default void removeMessagesConnectTimeout() {
-        try {
-            Handler handler = mHandler.get(this);
-            if (null == handler)
-                throw new Exception("warning: handler null");
-            if (LogUtil.DEBUG) {
-                LogUtil.log("VideoKernelApiHandler -> removeMessagesConnectTimeout ->");
-            }
-            handler.removeMessages(WHAT_ConnectTimeout);
-        } catch (Exception e) {
-            if (LogUtil.DEBUG) {
-                LogUtil.log("VideoKernelApiHandler -> removeMessagesConnectTimeout -> Exception " + e.getMessage());
-            }
-        }
-    }
-
-    /***********/
-
-    default void sendMessageCheckPreparedPlaying(@PlayerType.KernelType.Value int kernelType) {
-        try {
-            Handler handler = mHandler.get(this);
-            if (null == handler)
-                throw new Exception("warning: handler null");
-            if (LogUtil.DEBUG) {
-                LogUtil.log("VideoKernelApiHandler -> sendMessageCheckPreparedPlaying ->");
-            }
-            Message message = Message.obtain();
-            message.what = WHAT_CheckPreparedPlaying;
-            message.arg1 = kernelType;
-            handler.sendMessageDelayed(message, 1000);
-        } catch (Exception e) {
-            if (LogUtil.DEBUG) {
-                LogUtil.log("VideoKernelApiHandler -> sendMessageCheckPreparedPlaying -> Exception " + e.getMessage());
-            }
-        }
-    }
-
-    default void sendMessageProgressUpdate(@PlayerType.KernelType.Value int kernelType, boolean delay) {
-        try {
-            Handler handler = mHandler.get(this);
-            if (null == handler)
-                throw new Exception("warning: handler null");
-            if (LogUtil.DEBUG) {
-                LogUtil.log("VideoKernelApiHandler -> sendMessageProgressUpdate ->");
-            }
-            Message message = Message.obtain();
-            message.what = WHAT_ProgressUpdate;
-            message.arg1 = kernelType;
-            handler.sendMessageDelayed(message, delay ? 1000 : 0);
-        } catch (Exception e) {
-            if (LogUtil.DEBUG) {
-                LogUtil.log("VideoKernelApiHandler -> sendMessageProgressUpdate -> Exception " + e.getMessage());
-            }
-        }
-    }
-
-    default void removeMessagesProgressUpdate() {
-        try {
-            Handler handler = mHandler.get(this);
-            if (null == handler)
-                throw new Exception("warning: handler null");
-            if (LogUtil.DEBUG) {
-                LogUtil.log("VideoKernelApiHandler -> removeMessagesProgressUpdate ->");
-            }
-            handler.removeMessages(WHAT_ProgressUpdate);
-        } catch (Exception e) {
-            if (LogUtil.DEBUG) {
-                LogUtil.log("VideoKernelApiHandler -> removeMessagesProgressUpdate -> Exception " + e.getMessage());
-            }
-        }
-    }
-
-    default void sendMessageSpeedUpdate(@PlayerType.KernelType.Value int kernelType, boolean delay) {
-        try {
-            Handler handler = mHandler.get(this);
-            if (null == handler)
-                throw new Exception("warning: handler null");
-            if (LogUtil.DEBUG) {
-                LogUtil.log("VideoKernelApiHandler -> sendMessageSpeedUpdate ->");
-            }
-            Message message = Message.obtain();
-            message.what = WHAT_UPDATE_SPEED;
-            message.arg1 = kernelType;
-            handler.sendMessageDelayed(message, delay ? 1000 : 0);
-        } catch (Exception e) {
-            if (LogUtil.DEBUG) {
-                LogUtil.log("VideoKernelApiHandler -> sendMessageSpeedUpdate -> Exception " + e.getMessage());
-            }
-        }
-    }
-
-    default void removeMessagesSpeedUpdate() {
-        try {
-            Handler handler = mHandler.get(this);
-            if (null == handler)
-                throw new Exception("warning: handler null");
-            if (LogUtil.DEBUG) {
-                LogUtil.log("VideoKernelApiHandler -> removeMessagesSpeedUpdate ->");
-            }
-            handler.removeMessages(WHAT_UPDATE_SPEED);
-        } catch (Exception e) {
-            if (LogUtil.DEBUG) {
-                LogUtil.log("VideoKernelApiHandler -> removeMessagesSpeedUpdate -> Exception " + e.getMessage());
-            }
-        }
-    }
-
-    default void sendMessageBufferingTimeout(@PlayerType.KernelType.Value int kernelType, boolean bufferingTimeoutRetry, long timeMillis, long timeout) {
-        try {
-            Handler handler = mHandler.get(this);
-            if (null == handler)
-                throw new Exception("warning: handler null");
-            if (LogUtil.DEBUG) {
-                LogUtil.log("VideoKernelApiHandler -> sendMessageBufferingTimeout ->");
-            }
-            Message message = Message.obtain();
-            message.what = WHAT_BufferingTimeout;
-            message.arg1 = kernelType;
-            message.arg2 = bufferingTimeoutRetry ? 1 : 0;
-            message.obj = new long[]{timeMillis, timeMillis};
-            handler.sendMessageDelayed(message, 1000);
-        } catch (Exception e) {
-            if (LogUtil.DEBUG) {
-                LogUtil.log("VideoKernelApiHandler -> sendMessageBufferingTimeout -> Exception " + e.getMessage());
-            }
-        }
-    }
-
-    default void removeMessagesBufferingTimeout() {
-        try {
-            Handler handler = mHandler.get(this);
-            if (null == handler)
-                throw new Exception("warning: handler null");
-            if (LogUtil.DEBUG) {
-                LogUtil.log("VideoKernelApiHandler -> removeMessagesBufferingTimeout ->");
-            }
-            handler.removeMessages(WHAT_BufferingTimeout);
-        } catch (Exception e) {
-            if (LogUtil.DEBUG) {
-                LogUtil.log("VideoKernelApiHandler -> removeMessagesBufferingTimeout -> Exception " + e.getMessage());
-            }
-        }
-    }
-
-    default boolean removeAllMessages() {
-        try {
-            Handler handler = mHandler.get(this);
-            if (null == handler)
-                throw new Exception("warning: handler null");
-            if (LogUtil.DEBUG) {
-                LogUtil.log(TAG, "removeAllMessages ->");
-            }
-            handler.removeCallbacksAndMessages(null);
-            return true;
-        } catch (Exception e) {
-            if (LogUtil.DEBUG) {
-                LogUtil.log(TAG, "removeAllMessages -> Exception " + e.getMessage());
-            }
-            return false;
         }
     }
 }
