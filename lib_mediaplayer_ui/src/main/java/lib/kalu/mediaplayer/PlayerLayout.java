@@ -1021,15 +1021,15 @@ public class PlayerLayout extends RelativeLayout {
         }
     }
 
-    public final boolean setScreenOrientation(@PlayerType.ScreenOrientation.Value int value) {
+    public final boolean requestScreenOrientation(@PlayerType.ScreenOrientation.Value int value) {
         try {
             PlayerView playerView = getPlayerView();
             if (null == playerView)
                 throw new Exception("playerView error: null");
-            return playerView.setScreenOrientation(value);
+            return playerView.requestScreenOrientation(value);
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
-                LogUtil.log("ComponentApi -> setScreenOrientation -> " + e.getMessage());
+                LogUtil.log("ComponentApi -> requestScreenOrientation -> " + e.getMessage());
             }
             return false;
         }

@@ -117,7 +117,7 @@ public interface VideoPlayerApiOrientation extends VideoPlayerApiBase, VideoPlay
         }
     }
 
-    default boolean setScreenOrientation(@PlayerType.ScreenOrientation.Value int value) {
+    default boolean requestScreenOrientation(@PlayerType.ScreenOrientation.Value int value) {
 
         try {
 
@@ -140,86 +140,12 @@ public interface VideoPlayerApiOrientation extends VideoPlayerApiBase, VideoPlay
                 activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
                 callScreenOrientation(true, true, PlayerType.ScreenOrientation.LANDSPACE);
             }
-
-
-//            PlayerLayout playerLayout = getPlayerLayout();
-//            if (null == playerLayout)
-//                throw new Exception("error: screenRestore null");
-//
-//            View decorView = activity.getWindow().getDecorView();
-//            Rect visibleRect = new Rect();
-//            decorView.getWindowVisibleDisplayFrame(visibleRect);
-//            int screenWidth = decorView.getRootView().getWidth();
-//            int screenHeight = decorView.getRootView().getHeight();
-//
-//            ViewGroup.LayoutParams layoutParams = playerLayout.getLayoutParams();
-//            int viewWidth = layoutParams.width;
-//            int viewHeight = layoutParams.height;
-//
-//            if (LogUtil.DEBUG) {
-//                int navBarHeight = screenHeight - visibleRect.bottom;
-//                LogUtil.log(TAG, "setRequestedOrientation -> isVt = " + isVt + ", viewWidth = " + viewWidth + ", screenWidth = " + screenWidth + ", viewHeight = " + viewHeight + ", screenHeight = " + screenHeight + ", navBarHeight = " + navBarHeight);
-//            }
-//
-//            if (isVt) {
-//                layoutParams.width = Layout_Params[0];
-//                layoutParams.height = Layout_Params[1];
-//            } else {
-//                layoutParams.width = Math.max(screenWidth, screenHeight);
-//                layoutParams.height = Math.min(screenWidth, screenHeight);
-//            }
-//            playerLayout.setLayoutParams(layoutParams);
-//
-//            if (isVt) {
-//                Layout_Params[0] = -100;
-//                Layout_Params[1] = -100;
-//            } else {
-//                Layout_Params[0] = viewWidth;
-//                Layout_Params[1] = viewHeight;
-//            }
-
-//            if (LogUtil.DEBUG) {
-//                LogUtil.log(TAG, "setRequestedOrientation -> Layout_Params[0] = " + Layout_Params[0] + ", Layout_Params[1] = " + Layout_Params[1]+", layoutParams.width = "+playerLayout.getLayoutParams().width+", layoutParams.height = "+playerLayout.getLayoutParams().height);
-//            }
-
             return true;
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
-                LogUtil.log(TAG, "setScreenOrientationLandspace -> Exception: " + e.getMessage());
+                LogUtil.log(TAG, "requestScreenOrientation -> Exception: " + e.getMessage());
             }
             return false;
         }
     }
-
-//    default boolean screenFull(Context context) {
-//        try {
-//
-//            PlayerLayout playerLayout = getPlayerLayout();
-//            if (LogUtil.DEBUG) {
-//                LogUtil.log(TAG, "screenFull -> playerLayout = " + playerLayout);
-//            }
-//            if (null == playerLayout)
-//                throw new Exception("error: playerLayout null");
-//
-//            DisplayMetrics metrics = context.getResources().getDisplayMetrics();
-//            int widthPixels = metrics.widthPixels;
-//            int heightPixels = metrics.heightPixels;
-//
-//            ViewGroup.LayoutParams layoutParams = playerLayout.getLayoutParams();
-//            int width = layoutParams.width;
-//            int height = layoutParams.height;
-//
-//            if (LogUtil.DEBUG) {
-//                LogUtil.log(TAG, "screenFull -> width = " + width + ", widthPixels = " + widthPixels + ", height = " + height + ", heightPixels = " + heightPixels);
-//            }
-//
-//
-//            layoutParams.width = Math.max(widthPixels, heightPixels);
-//            layoutParams.height = Math.min(widthPixels, heightPixels);
-//            playerLayout.setLayoutParams(layoutParams);
-//            return true;
-//        } catch (Exception e) {
-//            return false;
-//        }
-//    }
 }
