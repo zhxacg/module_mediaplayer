@@ -1,6 +1,5 @@
 package lib.kalu.mediaplayer.core.player.video;
 
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.pm.ActivityInfo;
@@ -12,6 +11,7 @@ import lib.kalu.mediaplayer.PlayerInitProvider;
 import lib.kalu.mediaplayer.PlayerLayout;
 import lib.kalu.mediaplayer.bean.type.PlayerType;
 import lib.kalu.mediaplayer.util.LogUtil;
+import lib.kalu.mediaplayer.util.StatusBarUtil;
 
 public interface VideoPlayerApiOrientation extends VideoPlayerApiBase, VideoPlayerApiRender, VideoPlayerApiListener, VideoPlayerApiCall {
 
@@ -117,76 +117,30 @@ public interface VideoPlayerApiOrientation extends VideoPlayerApiBase, VideoPlay
         }
     }
 
-    @SuppressLint("SourceLockedOrientationActivity")
-    default boolean setScreenOrientationPortrait() {
+    default boolean setScreenOrientation(@PlayerType.ScreenOrientation.Value int value) {
+
         try {
 
             Activity activity = PlayerInitProvider.getCurrentActivity();
             if (null == activity)
                 throw new Exception("error: activity null");
 
-            activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-            callScreenOrientation(true, true, PlayerType.ScreenOrientation.PORTRAIT);
-
-//            PlayerLayout playerLayout = getPlayerLayout();
-//            if (null == playerLayout)
-//                throw new Exception("error: screenRestore null");
-//
-//            View decorView = activity.getWindow().getDecorView();
-//            Rect visibleRect = new Rect();
-//            decorView.getWindowVisibleDisplayFrame(visibleRect);
-//            int screenWidth = decorView.getRootView().getWidth();
-//            int screenHeight = decorView.getRootView().getHeight();
-//
-//            ViewGroup.LayoutParams layoutParams = playerLayout.getLayoutParams();
-//            int viewWidth = layoutParams.width;
-//            int viewHeight = layoutParams.height;
-//
-//            if (LogUtil.DEBUG) {
-//                int navBarHeight = screenHeight - visibleRect.bottom;
-//                LogUtil.log(TAG, "setRequestedOrientation -> isVt = " + isVt + ", viewWidth = " + viewWidth + ", screenWidth = " + screenWidth + ", viewHeight = " + viewHeight + ", screenHeight = " + screenHeight + ", navBarHeight = " + navBarHeight);
-//            }
-//
-//            if (isVt) {
-//                layoutParams.width = Layout_Params[0];
-//                layoutParams.height = Layout_Params[1];
-//            } else {
-//                layoutParams.width = Math.max(screenWidth, screenHeight);
-//                layoutParams.height = Math.min(screenWidth, screenHeight);
-//            }
-//            playerLayout.setLayoutParams(layoutParams);
-//
-//            if (isVt) {
-//                Layout_Params[0] = -100;
-//                Layout_Params[1] = -100;
-//            } else {
-//                Layout_Params[0] = viewWidth;
-//                Layout_Params[1] = viewHeight;
-//            }
-
-//            if (LogUtil.DEBUG) {
-//                LogUtil.log(TAG, "setRequestedOrientation -> Layout_Params[0] = " + Layout_Params[0] + ", Layout_Params[1] = " + Layout_Params[1]+", layoutParams.width = "+playerLayout.getLayoutParams().width+", layoutParams.height = "+playerLayout.getLayoutParams().height);
-//            }
-
-            return true;
-        } catch (Exception e) {
-            if (LogUtil.DEBUG) {
-                LogUtil.log(TAG, "setScreenOrientationPortrait -> Exception: " + e.getMessage());
+            // 状态栏隐藏
+            if (value == PlayerType.ScreenOrientation.PORTRAIT) {
+                StatusBarUtil.toggleStatusBarText(activity, true);
+            } else if (value == PlayerType.ScreenOrientation.LANDSPACE) {
+                StatusBarUtil.toggleStatusBarText(activity, false);
             }
-            return false;
-        }
-    }
 
-    default boolean setScreenOrientationLandspace() {
+            // 屏幕切换
+            if (value == PlayerType.ScreenOrientation.PORTRAIT) {
+                activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+                callScreenOrientation(true, true, PlayerType.ScreenOrientation.PORTRAIT);
+            } else if (value == PlayerType.ScreenOrientation.LANDSPACE) {
+                activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+                callScreenOrientation(true, true, PlayerType.ScreenOrientation.LANDSPACE);
+            }
 
-        try {
-
-            Activity activity = PlayerInitProvider.getCurrentActivity();
-            if (null == activity)
-                throw new Exception("error: activity null");
-
-            activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-            callScreenOrientation(true, true, PlayerType.ScreenOrientation.LANDSPACE);
 
 //            PlayerLayout playerLayout = getPlayerLayout();
 //            if (null == playerLayout)
