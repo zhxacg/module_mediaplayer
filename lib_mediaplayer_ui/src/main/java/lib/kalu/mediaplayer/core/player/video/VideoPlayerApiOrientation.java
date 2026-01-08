@@ -132,12 +132,12 @@ public interface VideoPlayerApiOrientation extends VideoPlayerApiBase, VideoPlay
             // 状态栏隐藏
             if (value == PlayerType.ScreenOrientation.PORTRAIT) {
                 if (LogUtil.DEBUG) {
-                    LogUtil.log(TAG, "requestScreenOrientation -> toggleStatusBarText");
+                    LogUtil.log(TAG, "requestScreenOrientation -> toggleStatusBarText true");
                 }
                 StatusBarUtil.toggleStatusBarText(activity, true);
             } else if (value == PlayerType.ScreenOrientation.LANDSPACE) {
                 if (LogUtil.DEBUG) {
-                    LogUtil.log(TAG, "requestScreenOrientation -> toggleStatusBarText");
+                    LogUtil.log(TAG, "requestScreenOrientation -> toggleStatusBarText false");
                 }
                 StatusBarUtil.toggleStatusBarText(activity, false);
             }
