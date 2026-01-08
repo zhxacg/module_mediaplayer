@@ -119,6 +119,10 @@ public interface VideoPlayerApiOrientation extends VideoPlayerApiBase, VideoPlay
 
     default boolean requestScreenOrientation(@PlayerType.ScreenOrientation.Value int value) {
 
+        if (LogUtil.DEBUG) {
+            LogUtil.log(TAG, "requestScreenOrientation -> value = " + value);
+        }
+
         try {
 
             Activity activity = PlayerInitProvider.getCurrentActivity();
@@ -127,8 +131,14 @@ public interface VideoPlayerApiOrientation extends VideoPlayerApiBase, VideoPlay
 
             // 状态栏隐藏
             if (value == PlayerType.ScreenOrientation.PORTRAIT) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log(TAG, "requestScreenOrientation -> toggleStatusBarText");
+                }
                 StatusBarUtil.toggleStatusBarText(activity, true);
             } else if (value == PlayerType.ScreenOrientation.LANDSPACE) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log(TAG, "requestScreenOrientation -> toggleStatusBarText");
+                }
                 StatusBarUtil.toggleStatusBarText(activity, false);
             }
 
