@@ -11,7 +11,6 @@ import lib.kalu.mediaplayer.PlayerInitProvider;
 import lib.kalu.mediaplayer.PlayerLayout;
 import lib.kalu.mediaplayer.bean.type.PlayerType;
 import lib.kalu.mediaplayer.util.LogUtil;
-import lib.kalu.mediaplayer.util.StatusBarUtil;
 
 public interface VideoPlayerApiOrientation extends VideoPlayerApiBase, VideoPlayerApiRender, VideoPlayerApiListener, VideoPlayerApiCall {
 
@@ -128,19 +127,6 @@ public interface VideoPlayerApiOrientation extends VideoPlayerApiBase, VideoPlay
             Activity activity = PlayerInitProvider.getCurrentActivity();
             if (null == activity)
                 throw new Exception("error: activity null");
-
-            // 状态栏隐藏
-            if (value == PlayerType.ScreenOrientation.PORTRAIT) {
-                if (LogUtil.DEBUG) {
-                    LogUtil.log(TAG, "requestScreenOrientation -> toggleStatusBarText true");
-                }
-                StatusBarUtil.toggleStatusBarText(activity, true);
-            } else if (value == PlayerType.ScreenOrientation.LANDSPACE) {
-                if (LogUtil.DEBUG) {
-                    LogUtil.log(TAG, "requestScreenOrientation -> toggleStatusBarText false");
-                }
-                StatusBarUtil.toggleStatusBarText(activity, false);
-            }
 
             // 屏幕切换
             if (value == PlayerType.ScreenOrientation.PORTRAIT) {
