@@ -138,8 +138,23 @@ public interface VideoPlayerApiOrientation extends VideoPlayerApiBase, VideoPlay
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
                     windowInsetsController = window.getInsetsController();
                 }
+                // 退出全屏：显示状态栏和导航栏
                 if (value == PlayerType.ScreenOrientation.PORTRAIT) {
-                    // 全屏模式：隐藏状态栏和导航栏，设置沉浸式
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                        if (windowInsetsController != null) {
+                            windowInsetsController.show(android.view.WindowInsets.Type.systemBars());
+                        }
+                        window.setDecorFitsSystemWindows(true);
+                    } else {
+                        // 低版本恢复系统 UI 显示
+                        window.getDecorView().setSystemUiVisibility(
+                                View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                                        | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                        );
+                    }
+                }
+                // 全屏模式：隐藏状态栏和导航栏，设置沉浸式
+                else if (value == PlayerType.ScreenOrientation.LANDSPACE) {
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
                         if (windowInsetsController != null) {
                             windowInsetsController.hide(android.view.WindowInsets.Type.systemBars());
@@ -153,20 +168,6 @@ public interface VideoPlayerApiOrientation extends VideoPlayerApiBase, VideoPlay
                                         | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
                                         | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
                                         | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-                        );
-                    }
-                } else if (value == PlayerType.ScreenOrientation.LANDSPACE) {
-                    // 退出全屏：显示状态栏和导航栏
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-                        if (windowInsetsController != null) {
-                            windowInsetsController.show(android.view.WindowInsets.Type.systemBars());
-                        }
-                        window.setDecorFitsSystemWindows(true);
-                    } else {
-                        // 低版本恢复系统 UI 显示
-                        window.getDecorView().setSystemUiVisibility(
-                                View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-                                        | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
                         );
                     }
                 }
