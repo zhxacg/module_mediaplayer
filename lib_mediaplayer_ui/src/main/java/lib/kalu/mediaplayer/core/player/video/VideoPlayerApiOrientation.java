@@ -84,37 +84,37 @@ public interface VideoPlayerApiOrientation extends VideoPlayerApiBase, VideoPlay
         }
     }
 
-    default boolean isScreenOrientationPortrait() {
-        try {
-
-            Activity activity = PlayerInitProvider.getCurrentActivity();
-            if (null == activity)
-                throw new Exception("error: activity null");
-
-            return activity.getResources().getConfiguration().orientation == ActivityInfo.SCREEN_ORIENTATION_PORTRAIT;
-        } catch (Exception e) {
-            if (LogUtil.DEBUG) {
-                LogUtil.log(TAG, "isScreenOrientationPortrait -> Exception: " + e.getMessage());
-            }
-            return false;
-        }
-    }
-
-    default boolean isScreenOrientationLandspace() {
-        try {
-
-            Activity activity = PlayerInitProvider.getCurrentActivity();
-            if (null == activity)
-                throw new Exception("error: activity null");
-
-            return activity.getResources().getConfiguration().orientation == ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE;
-        } catch (Exception e) {
-            if (LogUtil.DEBUG) {
-                LogUtil.log(TAG, "isScreenOrientationLandspace -> Exception: " + e.getMessage());
-            }
-            return false;
-        }
-    }
+//    default boolean isScreenOrientationPortrait() {
+//        try {
+//
+//            Activity activity = PlayerInitProvider.getCurrentActivity();
+//            if (null == activity)
+//                throw new Exception("error: activity null");
+//
+//            return activity.getResources().getConfiguration().orientation == ActivityInfo.SCREEN_ORIENTATION_PORTRAIT;
+//        } catch (Exception e) {
+//            if (LogUtil.DEBUG) {
+//                LogUtil.log(TAG, "isScreenOrientationPortrait -> Exception: " + e.getMessage());
+//            }
+//            return false;
+//        }
+//    }
+//
+//    default boolean isScreenOrientationLandspace() {
+//        try {
+//
+//            Activity activity = PlayerInitProvider.getCurrentActivity();
+//            if (null == activity)
+//                throw new Exception("error: activity null");
+//
+//            return activity.getResources().getConfiguration().orientation == ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE;
+//        } catch (Exception e) {
+//            if (LogUtil.DEBUG) {
+//                LogUtil.log(TAG, "isScreenOrientationLandspace -> Exception: " + e.getMessage());
+//            }
+//            return false;
+//        }
+//    }
 
     default boolean requestScreenOrientation(@PlayerType.ScreenOrientation.Value int value) {
 

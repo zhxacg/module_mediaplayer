@@ -993,33 +993,33 @@ public class PlayerLayout extends RelativeLayout {
         }
     }
 
-    public final boolean isScreenOrientationPortrait() {
-        try {
-            PlayerView playerView = getPlayerView();
-            if (null == playerView)
-                throw new Exception("playerView error: null");
-            return playerView.isScreenOrientationPortrait();
-        } catch (Exception e) {
-            if (LogUtil.DEBUG) {
-                LogUtil.log("ComponentApi -> isScreenOrientationPortrait -> " + e.getMessage());
-            }
-            return false;
-        }
-    }
-
-    public final boolean isScreenOrientationLandspace() {
-        try {
-            PlayerView playerView = getPlayerView();
-            if (null == playerView)
-                throw new Exception("playerView error: null");
-            return playerView.isScreenOrientationLandspace();
-        } catch (Exception e) {
-            if (LogUtil.DEBUG) {
-                LogUtil.log("ComponentApi -> isScreenOrientationLandspace -> " + e.getMessage());
-            }
-            return false;
-        }
-    }
+//    public final boolean isScreenOrientationPortrait() {
+//        try {
+//            PlayerView playerView = getPlayerView();
+//            if (null == playerView)
+//                throw new Exception("playerView error: null");
+//            return playerView.isScreenOrientationPortrait();
+//        } catch (Exception e) {
+//            if (LogUtil.DEBUG) {
+//                LogUtil.log("ComponentApi -> isScreenOrientationPortrait -> " + e.getMessage());
+//            }
+//            return false;
+//        }
+//    }
+//
+//    public final boolean isScreenOrientationLandspace() {
+//        try {
+//            PlayerView playerView = getPlayerView();
+//            if (null == playerView)
+//                throw new Exception("playerView error: null");
+//            return playerView.isScreenOrientationLandspace();
+//        } catch (Exception e) {
+//            if (LogUtil.DEBUG) {
+//                LogUtil.log("ComponentApi -> isScreenOrientationLandspace -> " + e.getMessage());
+//            }
+//            return false;
+//        }
+//    }
 
     public final boolean requestScreenOrientation(@PlayerType.ScreenOrientation.Value int value) {
         try {
