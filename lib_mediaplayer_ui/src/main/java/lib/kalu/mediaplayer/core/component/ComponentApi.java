@@ -860,11 +860,15 @@ public interface ComponentApi {
 //    }
 
     default boolean requestScreenOrientation(@PlayerType.ScreenOrientation.Value int value) {
+        return requestScreenOrientation(value, false);
+    }
+
+    default boolean requestScreenOrientation(@PlayerType.ScreenOrientation.Value int value, boolean formatScreen) {
         try {
             PlayerView playerView = getPlayerView();
             if (null == playerView)
                 throw new Exception("playerView error: null");
-            return playerView.requestScreenOrientation(value);
+            return playerView.requestScreenOrientation(value, formatScreen);
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
                 LogUtil.log("ComponentApi -> requestScreenOrientation -> " + e.getMessage());
