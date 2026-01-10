@@ -58,6 +58,8 @@ import androidx.media3.exoplayer.source.ProgressiveMediaSource;
 import androidx.media3.exoplayer.source.SingleSampleMediaSource;
 import androidx.media3.exoplayer.text.TextOutput;
 import androidx.media3.exoplayer.text.TextRenderer;
+import androidx.media3.exoplayer.trackselection.AdaptiveTrackSelection;
+import androidx.media3.exoplayer.trackselection.DefaultTrackSelector;
 import androidx.media3.exoplayer.trackselection.TrackSelector;
 import androidx.media3.extractor.ts.DefaultTsPayloadReaderFactory;
 
@@ -182,7 +184,38 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
                     .setMediaSourceFactory(new DefaultMediaSourceFactory(context)
                             .experimentalParseSubtitlesDuringExtraction(true))
                     // 监听
-                    .setAnalyticsCollector(new DefaultAnalyticsCollector(Clock.DEFAULT));
+                    .setAnalyticsCollector(new DefaultAnalyticsCollector(Clock.DEFAULT))
+                    // 自适应码率
+                    .setTrackSelector(new DefaultTrackSelector(context, DefaultTrackSelector.Parameters.getDefaults(context)
+                            .buildUpon()
+                            // 主字幕轨道
+                            .setPreferredTextRoleFlags(C.ROLE_FLAG_MAIN)
+                            // 主音频轨道
+                            .setPreferredAudioRoleFlags(C.ROLE_FLAG_MAIN)
+                            // 主视频轨道
+                            .setPreferredVideoRoleFlags(C.ROLE_FLAG_MAIN)
+                            // 音频禁止混合 MIME 类型切换（如视频+音频单独切换）
+                            .setAllowAudioMixedMimeTypeAdaptiveness(false)
+                            // 视频禁止混合 MIME 类型切换（如视频+音频单独切换）
+                            .setAllowVideoMixedMimeTypeAdaptiveness(true)
+                            // 音频禁止非无缝切换
+                            .setAllowAudioNonSeamlessAdaptiveness(false)
+                            // 视频禁止非无缝切换
+                            .setAllowVideoNonSeamlessAdaptiveness(false)
+                            // 音频混合声道数量的自适应性
+                            .setAllowAudioMixedChannelCountAdaptiveness(true)
+                            // 音频混合采样率自适应
+                            .setAllowAudioMixedSampleRateAdaptiveness(true)
+                            // 音频混合时解码器支持自适应
+                            .setAllowAudioMixedDecoderSupportAdaptiveness(true)
+                            // 音频混合时解码器支持自适应
+                            .setAllowVideoMixedDecoderSupportAdaptiveness(true)
+                            .build(),
+                            new AdaptiveTrackSelection.Factory(
+                                    10000,// 至少 10 秒后才允许升码率
+                                    25000, // 最多 2.5 秒后允许降码率
+                                    25000, //
+                                    0.7F)));
 //                    // 缓冲缓存
 //                    .setLoadControl(new DefaultLoadControl.Builder()
 //                            .setBufferDurationsMs(
@@ -197,37 +230,6 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
 //                            // 初始带宽估算为5Mbps（5,000,000 bps）
 //                            .setInitialBitrateEstimate(5_000_000)
 //                            .build())
-            // 自适应码率
-//                    .setTrackSelector(new DefaultTrackSelector(context, DefaultTrackSelector.Parameters.getDefaults(context)
-//                            .buildUpon()
-//                            // 主字幕轨道
-//                            .setPreferredTextRoleFlags(C.ROLE_FLAG_MAIN)
-//                            // 主音频轨道
-//                            .setPreferredAudioRoleFlags(C.ROLE_FLAG_MAIN)
-//                            // 主视频轨道
-//                            .setPreferredVideoRoleFlags(C.ROLE_FLAG_MAIN)
-//                            // 音频禁止混合 MIME 类型切换（如视频+音频单独切换）
-//                            .setAllowAudioMixedMimeTypeAdaptiveness(false)
-//                            // 视频禁止混合 MIME 类型切换（如视频+音频单独切换）
-//                            .setAllowVideoMixedMimeTypeAdaptiveness(true)
-//                            // 音频禁止非无缝切换
-//                            .setAllowAudioNonSeamlessAdaptiveness(false)
-//                            // 视频禁止非无缝切换
-//                            .setAllowVideoNonSeamlessAdaptiveness(false)
-//                            // 音频混合声道数量的自适应性
-//                            .setAllowAudioMixedChannelCountAdaptiveness(true)
-//                            // 音频混合采样率自适应
-//                            .setAllowAudioMixedSampleRateAdaptiveness(true)
-//                            // 音频混合时解码器支持自适应
-//                            .setAllowAudioMixedDecoderSupportAdaptiveness(true)
-//                            // 音频混合时解码器支持自适应
-//                            .setAllowVideoMixedDecoderSupportAdaptiveness(true)
-//                            .build(),
-//                            new AdaptiveTrackSelection.Factory(
-//                                    10000,// 至少 10 秒后才允许升码率
-//                                    25000, // 最多 2.5 秒后允许降码率
-//                                    25000, //
-//                                    0.7F)));
 
             int decoderType = startArgs.getDecoderType();
             if (LogUtil.DEBUG) {
@@ -2099,11 +2101,16 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
                 label = language;
             }
             int selectionFlags;
-            boolean main = subtitleArgs.isMain();
-            if (main) {
-                selectionFlags = C.SELECTION_FLAG_DEFAULT;
-            } else {
+            if (subtitleArgs.isMain()) {
                 selectionFlags = C.SELECTION_FLAG_AUTOSELECT;
+            } else {
+                selectionFlags = 0;
+            }
+            int roleFlags;
+            if (subtitleArgs.isMain()) {
+                roleFlags = C.ROLE_FLAG_MAIN;
+            } else {
+                roleFlags = C.ROLE_FLAG_SUBTITLE;
             }
 
             String mimeType = null;
@@ -2133,10 +2140,11 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
             MediaItem.SubtitleConfiguration subtitleConfig = new MediaItem.SubtitleConfiguration.Builder(Uri.parse(sutitleUrl))
                     // 主轨道
                     .setSelectionFlags(selectionFlags)
+                    // 描述轨道的「角色 / 用途」ROLE_FLAG_*		MAIN（主轨道）、SUBTITLE（字幕）、COMMENTARY（解说）
+                    .setRoleFlags(roleFlags)
                     .setMimeType(mimeType) // 也可以用 MimeTypes.APPLICATION_SUBRIP
                     .setLanguage(language)
                     .setLabel(label)
-                    .setRoleFlags(hashCode)
                     .setId("subtitle:" + hashCode)
                     .build();
 
