@@ -62,6 +62,7 @@ import androidx.media3.exoplayer.text.TextRenderer;
 import androidx.media3.exoplayer.trackselection.AdaptiveTrackSelection;
 import androidx.media3.exoplayer.trackselection.DefaultTrackSelector;
 import androidx.media3.exoplayer.trackselection.TrackSelector;
+import androidx.media3.exoplayer.upstream.DefaultAllocator;
 import androidx.media3.exoplayer.upstream.DefaultBandwidthMeter;
 import androidx.media3.extractor.ts.DefaultTsPayloadReaderFactory;
 
@@ -223,15 +224,24 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
                             // 初始带宽估算为1Mbps
                             .setInitialBitrateEstimate(1_000_000)
                             .build())
-                    // 缓冲缓存
+//                    .setBufferDurationsMs(
+//                            1000, // 播放器至少要缓冲1 秒的视频数据，才会停止主动加载更多分片, 设得太小：频繁触发加载，易重复请求；设得太大：初始加载慢，缓冲占用多
+//                            5000,   // 播放器最多缓冲5 秒的视频数据，达到后会停止加载，避免过度缓存, 针对 TS 分片：限制单次缓存的分片数量，防止一次性请求过多分片，也避免缓冲溢出后重新加载
+//                            500,    // 播放器只要缓冲了0.5 秒的数据，就可以开始播放, 设得小：播放启动快，但网络波动时易触发重新缓冲（导致 TS 重复请求）；设得大：启动稍慢，但播放更稳定
+//                            1000    // 播放器因缓冲不足暂停后，需要重新缓冲1 秒的数据才会恢复播放, 避免缓冲刚够就恢复播放，减少频繁暂停 / 播放导致的 TS 重复请求
+//                    )
+                    // 增大内存缓存（默认 2MB，按需调整）
                     .setLoadControl(new DefaultLoadControl.Builder()
                             .setBufferDurationsMs(
-                                    1000, // 播放器至少要缓冲1 秒的视频数据，才会停止主动加载更多分片, 设得太小：频繁触发加载，易重复请求；设得太大：初始加载慢，缓冲占用多
-                                    5000,   // 播放器最多缓冲5 秒的视频数据，达到后会停止加载，避免过度缓存, 针对 TS 分片：限制单次缓存的分片数量，防止一次性请求过多分片，也避免缓冲溢出后重新加载
-                                    500,    // 播放器只要缓冲了0.5 秒的数据，就可以开始播放, 设得小：播放启动快，但网络波动时易触发重新缓冲（导致 TS 重复请求）；设得大：启动稍慢，但播放更稳定
-                                    1000    // 播放器因缓冲不足暂停后，需要重新缓冲1 秒的数据才会恢复播放, 避免缓冲刚够就恢复播放，减少频繁暂停 / 播放导致的 TS 重复请求
+                                    1000, // 最小缓冲
+                                    5000, // 最大缓冲
+                                    1000, // 缓冲播放
+                                    1000  // 缓冲重试
                             )
-                            .build());
+                            // 内存分配器
+                            .setAllocator(new DefaultAllocator(true, 16 * 1024))
+                            .build()
+                    );
 
 
             int decoderType = startArgs.getDecoderType();
@@ -2187,11 +2197,12 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
                 throw new Exception("error: mSimpleCache null");
 
             return new CacheDataSource.Factory()
-                    .setFlags(CacheDataSource.FLAG_IGNORE_CACHE_ON_ERROR)
-//                        .setFlags(
-//                                CacheDataSource.FLAG_IGNORE_CACHE_ON_ERROR | // 错误时跳过缓存
-//                                        CacheDataSource.FLAG_IGNORE_CACHE_FOR_UNSET_LENGTH_REQUESTS // 允许缓存未知长度的资源（如直播流）
-//                        )
+                    .setFlags(
+                            // 错误时跳过缓存
+                            CacheDataSource.FLAG_IGNORE_CACHE_ON_ERROR
+//                                    // 允许缓存未知长度的资源（如直播流）
+//                                    | CacheDataSource.FLAG_IGNORE_CACHE_FOR_UNSET_LENGTH_REQUESTS
+                    )
                     .setCache(mSimpleCache)
                     // 网络请求工厂
                     .setUpstreamDataSourceFactory(httpFactory)
