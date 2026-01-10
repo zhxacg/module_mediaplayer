@@ -61,6 +61,7 @@ import androidx.media3.exoplayer.text.TextRenderer;
 import androidx.media3.exoplayer.trackselection.AdaptiveTrackSelection;
 import androidx.media3.exoplayer.trackselection.DefaultTrackSelector;
 import androidx.media3.exoplayer.trackselection.TrackSelector;
+import androidx.media3.exoplayer.upstream.DefaultBandwidthMeter;
 import androidx.media3.extractor.ts.DefaultTsPayloadReaderFactory;
 
 import com.google.common.collect.ImmutableList;
@@ -215,21 +216,22 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
                                     10000,// 至少 10 秒后才允许升码率
                                     25000, // 最多 2.5 秒后允许降码率
                                     25000, //
-                                    0.7F)));
-//                    // 缓冲缓存
-//                    .setLoadControl(new DefaultLoadControl.Builder()
-//                            .setBufferDurationsMs(
-//                                    1000, // 播放器至少要缓冲1 秒的视频数据，才会停止主动加载更多分片, 设得太小：频繁触发加载，易重复请求；设得太大：初始加载慢，缓冲占用多
-//                                    5000,   // 播放器最多缓冲5 秒的视频数据，达到后会停止加载，避免过度缓存, 针对 TS 分片：限制单次缓存的分片数量，防止一次性请求过多分片，也避免缓冲溢出后重新加载
-//                                    1000,    // 播放器只要缓冲了0.5 秒的数据，就可以开始播放, 设得小：播放启动快，但网络波动时易触发重新缓冲（导致 TS 重复请求）；设得大：启动稍慢，但播放更稳定
-//                                    5000    // 播放器因缓冲不足暂停后，需要重新缓冲1 秒的数据才会恢复播放, 避免缓冲刚够就恢复播放，减少频繁暂停 / 播放导致的 TS 重复请求
-//                            )
-//                            .build());
-            // 配置带宽测量器
-//                    .setBandwidthMeter(new DefaultBandwidthMeter.Builder(context)
-//                            // 初始带宽估算为5Mbps（5,000,000 bps）
-//                            .setInitialBitrateEstimate(5_000_000)
-//                            .build())
+                                    0.7F)))
+                    // 配置带宽测量器
+                    .setBandwidthMeter(new DefaultBandwidthMeter.Builder(context)
+                            // 初始带宽估算为1Mbps
+                            .setInitialBitrateEstimate(1_000_000)
+                            .build())
+                    // 缓冲缓存
+                    .setLoadControl(new DefaultLoadContr.Builder()
+                            .setBufferDurationsMs(
+                                    1000, // 播放器至少要缓冲1 秒的视频数据，才会停止主动加载更多分片, 设得太小：频繁触发加载，易重复请求；设得太大：初始加载慢，缓冲占用多
+                                    5000,   // 播放器最多缓冲5 秒的视频数据，达到后会停止加载，避免过度缓存, 针对 TS 分片：限制单次缓存的分片数量，防止一次性请求过多分片，也避免缓冲溢出后重新加载
+                                    1000,    // 播放器只要缓冲了0.5 秒的数据，就可以开始播放, 设得小：播放启动快，但网络波动时易触发重新缓冲（导致 TS 重复请求）；设得大：启动稍慢，但播放更稳定
+                                    5000    // 播放器因缓冲不足暂停后，需要重新缓冲1 秒的数据才会恢复播放, 避免缓冲刚够就恢复播放，减少频繁暂停 / 播放导致的 TS 重复请求
+                            )
+                            .build()))
+
 
             int decoderType = startArgs.getDecoderType();
             if (LogUtil.DEBUG) {
