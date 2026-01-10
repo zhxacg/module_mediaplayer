@@ -137,6 +137,8 @@ public final class UrlArgs implements Serializable {
 
 
     public final static class Item implements Serializable {
+
+        private boolean main;
         private String url;
         private String language;
         private String label;
@@ -148,10 +150,15 @@ public final class UrlArgs implements Serializable {
         }
 
         public Item(Item.Builder builder) {
+            this.main = builder.main;
             this.url = builder.url;
             this.language = builder.language;
             this.label = builder.label;
             this.parser = builder.parser;
+        }
+
+        public boolean isMain() {
+            return main;
         }
 
         @PlayerType.ParserType.Value
@@ -173,11 +180,17 @@ public final class UrlArgs implements Serializable {
 
         public static class Builder implements Serializable {
 
+            private boolean main;
             private String url;
             private String language;
             private String label;
             @PlayerType.ParserType.Value
             private int parser = PlayerType.ParserType.DEFAULT;
+
+            public Item.Builder setMain(boolean v) {
+                this.main = v;
+                return this;
+            }
 
             public Item.Builder setParser(@PlayerType.ParserType.Value int v) {
                 this.parser = v;
@@ -211,6 +224,7 @@ public final class UrlArgs implements Serializable {
         public String toString() {
             return "Item{" +
                     "label='" + label + '\'' +
+                    ", main='" + main + '\'' +
                     ", url='" + url + '\'' +
                     ", language='" + language + '\'' +
                     ", parser=" + parser +

@@ -38,7 +38,6 @@ import androidx.media3.datasource.cache.CacheSpan;
 import androidx.media3.datasource.cache.LeastRecentlyUsedCacheEvictor;
 import androidx.media3.datasource.cache.SimpleCache;
 import androidx.media3.exoplayer.DecoderReuseEvaluation;
-import androidx.media3.exoplayer.DefaultLoadControl;
 import androidx.media3.exoplayer.DefaultRenderersFactory;
 import androidx.media3.exoplayer.ExoPlaybackException;
 import androidx.media3.exoplayer.ExoPlayer;
@@ -163,7 +162,7 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
 
             int connectTimeoutMs = startArgs.getConnectTimeoutMs();
             if (LogUtil.DEBUG) {
-                LogUtil.log(TAG, "checkDecoder -> connectTimeoutMs = "+connectTimeoutMs);
+                LogUtil.log(TAG, "checkDecoder -> connectTimeoutMs = " + connectTimeoutMs);
             }
 
             ExoPlayer.Builder builder = new ExoPlayer.Builder(context)
@@ -2099,6 +2098,13 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
             if (null == label) {
                 label = language;
             }
+            int selectionFlags;
+            boolean main = subtitleArgs.isMain();
+            if (main) {
+                selectionFlags = C.SELECTION_FLAG_DEFAULT;
+            } else {
+                selectionFlags = C.SELECTION_FLAG_AUTOSELECT;
+            }
 
             String mimeType = null;
             if (sutitleUrl.endsWith(PlayerType.SchemeType._VTT)) {
@@ -2125,13 +2131,13 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
                 LogUtil.log(TAG, "buildSubtitleMediaSource -> hashCode = " + hashCode + ", sutitleUrl = " + sutitleUrl);
             }
             MediaItem.SubtitleConfiguration subtitleConfig = new MediaItem.SubtitleConfiguration.Builder(Uri.parse(sutitleUrl))
-                    .setSelectionFlags(C.SELECTION_FLAG_AUTOSELECT)
+                    // 主轨道
+                    .setSelectionFlags(selectionFlags)
                     .setMimeType(mimeType) // 也可以用 MimeTypes.APPLICATION_SUBRIP
                     .setLanguage(language)
                     .setLabel(label)
                     .setRoleFlags(hashCode)
                     .setId("subtitle:" + hashCode)
-                    .setSelectionFlags(hashCode)
                     .build();
 
 //                      .setSubtitleMediaSourceFactory(
