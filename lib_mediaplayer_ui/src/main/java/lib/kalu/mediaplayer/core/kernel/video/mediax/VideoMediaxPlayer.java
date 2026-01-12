@@ -692,7 +692,7 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
         }
     }
 
-    private boolean releaseSimpleCache() {
+    private boolean unInitSimpleCache() {
         try {
             if (null == mSimpleCache)
                 throw new Exception("warning: mSimpleCache null");
@@ -700,12 +700,95 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
             mSimpleCache.release();
             mSimpleCache = null;
             if (LogUtil.DEBUG) {
-                LogUtil.log(TAG, "releaseSimpleCache -> completed");
+                LogUtil.log(TAG, "unInitSimpleCache -> completed");
             }
             return true;
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
-                LogUtil.log(TAG, "releaseSimpleCache -> Exception: " + e.getMessage());
+                LogUtil.log(TAG, "unInitSimpleCache -> Exception: " + e.getMessage());
+            }
+            return false;
+        }
+    }
+
+    private boolean initSimpleCache(Context context, StartArgs args) {
+
+        //
+        boolean unInitSimpleCache = unInitSimpleCache();
+        if (LogUtil.DEBUG) {
+            LogUtil.log(TAG, "initSimpleCache -> unInitSimpleCache " + unInitSimpleCache);
+        }
+
+        try {
+
+            boolean containsMainUrl = args.containsMainUrl();
+            if (!containsMainUrl)
+                throw new Exception("error: containsMainUrl false");
+
+            String url = args.getUrl();
+            if (url.startsWith(PlayerType.SchemeType.FILE))
+                throw new Exception("error: url is file");
+
+            PlayerArgs playerBuilder = PlayerSDK.init().getPlayerBuilder();
+            if (null == playerBuilder)
+                throw new Exception("error: playerBuilder null");
+
+            Cache cache = playerBuilder.getCache();
+            if (null == cache)
+                throw new Exception("error: cache null");
+
+            boolean cacheEnable = cache.isEnable();
+            if (!cacheEnable)
+                throw new Exception("error: cacheEnable false");
+
+            int sizeMB = cache.getSizeMB();
+            if (sizeMB <= 0)
+                throw new Exception("error: sizeMB <= 0, sizeMB = " + sizeMB);
+
+//            if (null == mSimpleCache) {
+
+//            StringBuilder builder = new StringBuilder();
+//            builder.append(cache.getDir(PlayerType.KernelType.MEDIA_V3));
+//            if (urlType == PlayerType.UrlType.VIDEO) {
+//                builder.append("video");
+//            } else if (urlType == PlayerType.UrlType.AUDIO) {
+//                builder.append("audio");
+//            } else if (urlType == PlayerType.UrlType.SUBTITLE) {
+//                builder.append("subtitle");
+//            } else {
+//                builder.append("other");
+//            }
+
+            String dirName = cache.getDir(PlayerType.KernelType.MEDIA_V3);
+            if (LogUtil.DEBUG) {
+                LogUtil.log(TAG, "initSimpleCache -> dirName = " + dirName + ", url = " + url);
+            }
+
+            boolean external = cache.isExternal();
+            File dirFile;
+            if (external) {
+                dirFile = new File(context.getExternalCacheDir(), dirName);
+            } else {
+                dirFile = new File(context.getCacheDir(), dirName);
+            }
+
+            if (!dirFile.exists()) {
+                dirFile.mkdirs();
+            }
+            mSimpleCache = new SimpleCache(dirFile,
+                    //
+                    new LeastRecentlyUsedCacheEvictor(sizeMB),
+                    //
+                    new StandaloneDatabaseProvider(context)
+            );
+            mSimpleCache.addListener("mCacheListener", mCacheListener);
+            if (LogUtil.DEBUG) {
+                LogUtil.log(TAG, "initSimpleCache -> useCache completed");
+            }
+            return true;
+        } catch (Exception e) {
+            if (LogUtil.DEBUG) {
+                LogUtil.log(TAG, "initSimpleCache -> Exception: " + e.getMessage());
             }
             return false;
         }
@@ -770,8 +853,6 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
             LogUtil.log(TAG, "stop");
         }
 
-        stopHandler();
-
         try {
             if (null == mExoPlayer)
                 throw new Exception("mExoPlayer error: null");
@@ -782,6 +863,13 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
                 LogUtil.log(TAG, "stop -> " + e.getMessage());
             }
         }
+
+        stopHandler();
+
+        boolean unInitSimpleCache = unInitSimpleCache();
+        if (LogUtil.DEBUG) {
+            LogUtil.log(TAG, "stop -> SimpleCache unInitSimpleCache " + unInitSimpleCache);
+        }
     }
 
     @Override
@@ -790,18 +878,6 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
         if (LogUtil.DEBUG) {
             LogUtil.log(TAG, "release");
         }
-
-        boolean releaseSimpleCache = releaseSimpleCache();
-        if (LogUtil.DEBUG) {
-            LogUtil.log(TAG, "release -> SimpleCache release " + releaseSimpleCache);
-        }
-
-        boolean releaseHlsManifest = releaseHlsManifest();
-        if (LogUtil.DEBUG) {
-            LogUtil.log(TAG, "release -> HlsManifest release " + releaseHlsManifest);
-        }
-
-        stopHandler();
 
         try {
             if (null == mExoPlayer)
@@ -816,6 +892,18 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
             if (LogUtil.DEBUG) {
                 LogUtil.log(TAG, "release -> " + e.getMessage());
             }
+        }
+
+        stopHandler();
+
+        boolean unInitSimpleCache = unInitSimpleCache();
+        if (LogUtil.DEBUG) {
+            LogUtil.log(TAG, "release -> SimpleCache unInitSimpleCache " + unInitSimpleCache);
+        }
+
+        boolean releaseHlsManifest = releaseHlsManifest();
+        if (LogUtil.DEBUG) {
+            LogUtil.log(TAG, "release -> HlsManifest release " + releaseHlsManifest);
         }
     }
 
@@ -998,7 +1086,8 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
         @Override
         public void onLoadError(EventTime eventTime, LoadEventInfo loadEventInfo, MediaLoadData mediaLoadData, IOException e, boolean b) {
             if (LogUtil.DEBUG) {
-                LogUtil.log(TAG, "onLoadError -> " + e.getMessage());
+                LogUtil.log(TAG, "onLoadError -> loadEventInfo = " + loadEventInfo.dataSpec.uri);
+                LogUtil.log(TAG, "onLoadError -> message = " + e.getMessage());
             }
             stop();
             onEvent(PlayerType.KernelType.MEDIA_V3, PlayerType.EventType.STOP);
@@ -2246,89 +2335,6 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
                 LogUtil.log(TAG, "buildHttpFactory -> Exception: " + e.getMessage());
             }
             return null;
-        }
-    }
-
-    private boolean initSimpleCache(Context context, StartArgs args) {
-
-        //
-        boolean releaseSimpleCache = releaseSimpleCache();
-        if (LogUtil.DEBUG) {
-            LogUtil.log(TAG, "initSimpleCache -> SimpleCache release " + releaseSimpleCache);
-        }
-
-        try {
-
-            boolean containsMainUrl = args.containsMainUrl();
-            if (!containsMainUrl)
-                throw new Exception("error: containsMainUrl false");
-
-            String url = args.getUrl();
-            if (url.startsWith(PlayerType.SchemeType.FILE))
-                throw new Exception("error: url is file");
-
-            PlayerArgs playerBuilder = PlayerSDK.init().getPlayerBuilder();
-            if (null == playerBuilder)
-                throw new Exception("error: playerBuilder null");
-
-            Cache cache = playerBuilder.getCache();
-            if (null == cache)
-                throw new Exception("error: cache null");
-
-            boolean cacheEnable = cache.isEnable();
-            if (!cacheEnable)
-                throw new Exception("error: cacheEnable false");
-
-            int sizeMB = cache.getSizeMB();
-            if (sizeMB <= 0)
-                throw new Exception("error: sizeMB <= 0, sizeMB = " + sizeMB);
-
-//            if (null == mSimpleCache) {
-
-//            StringBuilder builder = new StringBuilder();
-//            builder.append(cache.getDir(PlayerType.KernelType.MEDIA_V3));
-//            if (urlType == PlayerType.UrlType.VIDEO) {
-//                builder.append("video");
-//            } else if (urlType == PlayerType.UrlType.AUDIO) {
-//                builder.append("audio");
-//            } else if (urlType == PlayerType.UrlType.SUBTITLE) {
-//                builder.append("subtitle");
-//            } else {
-//                builder.append("other");
-//            }
-
-            String dirName = cache.getDir(PlayerType.KernelType.MEDIA_V3);
-            if (LogUtil.DEBUG) {
-                LogUtil.log(TAG, "initSimpleCache -> dirName = " + dirName + ", url = " + url);
-            }
-
-            boolean external = cache.isExternal();
-            File dirFile;
-            if (external) {
-                dirFile = new File(context.getExternalCacheDir(), dirName);
-            } else {
-                dirFile = new File(context.getCacheDir(), dirName);
-            }
-
-            if (!dirFile.exists()) {
-                dirFile.mkdirs();
-            }
-            mSimpleCache = new SimpleCache(dirFile,
-                    //
-                    new LeastRecentlyUsedCacheEvictor(sizeMB),
-                    //
-                    new StandaloneDatabaseProvider(context)
-            );
-            mSimpleCache.addListener("mCacheListener", mCacheListener);
-            if (LogUtil.DEBUG) {
-                LogUtil.log(TAG, "initSimpleCache -> useCache completed");
-            }
-            return true;
-        } catch (Exception e) {
-            if (LogUtil.DEBUG) {
-                LogUtil.log(TAG, "initSimpleCache -> Exception: " + e.getMessage());
-            }
-            return false;
         }
     }
 
