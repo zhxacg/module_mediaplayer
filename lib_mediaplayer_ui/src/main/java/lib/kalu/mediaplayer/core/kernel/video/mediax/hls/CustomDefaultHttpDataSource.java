@@ -35,12 +35,20 @@ import java.lang.reflect.Method;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.NoRouteToHostException;
+import java.net.Proxy;
 import java.net.URL;
+import java.security.cert.CertificateException;
+import java.security.cert.X509Certificate;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.zip.GZIPInputStream;
+
+import javax.net.ssl.HttpsURLConnection;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.X509TrustManager;
 
 import lib.kalu.mediaplayer.bean.type.PlayerType;
 import lib.kalu.mediaplayer.proxy.ProxyUrl;
@@ -689,8 +697,60 @@ public final class CustomDefaultHttpDataSource extends BaseDataSource implements
      * Creates an {@link HttpURLConnection} that is connected with the {@code url}.
      */
     @VisibleForTesting
-    /* package */ HttpURLConnection openConnection(URL url) throws IOException {
-        return (HttpURLConnection) url.openConnection();
+    /* package */
+    HttpURLConnection openConnection(URL url) throws IOException {
+
+        boolean enableNoProxy = proxyUrl.enableNoProxy();
+        if (LogUtil.DEBUG) {
+            LogUtil.log(TAG, "openConnection -> enableNoProxy = " + enableNoProxy + ", url = " + url);
+        }
+
+        if (enableNoProxy) {
+            // 1. 核心：设置不使用任何代理
+            HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection(Proxy.NO_PROXY);
+
+            // 2. 清除系统级代理属性（防止系统代理覆盖）
+            System.setProperty("http.proxyHost", "");
+            System.setProperty("http.proxyPort", "");
+            System.setProperty("https.proxyHost", "");
+            System.setProperty("https.proxyPort", "");
+
+            // 3. 如果是 HTTPS 请求，额外配置（可选但建议）：关闭主机名验证，避免代理证书干扰
+            try {
+                if ((httpURLConnection instanceof HttpsURLConnection))
+                    throw new Exception();
+                HttpsURLConnection httpsConn = (HttpsURLConnection) connection;
+                // 忽略证书验证（仅用于禁止代理，生产环境需谨慎）
+                // 信任所有证书
+                TrustManager[] trustAllCerts = new TrustManager[]{
+                        new X509TrustManager() {
+                            @Override
+                            public void checkClientTrusted(X509Certificate[] chain, String authType) throws CertificateException {
+                            }
+
+                            @Override
+                            public void checkServerTrusted(X509Certificate[] chain, String authType) throws CertificateException {
+                            }
+
+                            @Override
+                            public X509Certificate[] getAcceptedIssuers() {
+                                return new X509Certificate[0];
+                            }
+                        }
+                };
+
+                SSLContext sslContext = SSLContext.getInstance("TLS");
+                sslContext.init(null, trustAllCerts, new java.security.SecureRandom());
+
+                httpsConn.setSSLSocketFactory(sslContext.getSocketFactory());
+                httpsConn.setHostnameVerifier((hostname, session) -> true);
+            } catch (Exception e) {
+            }
+
+            return httpURLConnection;
+        } else {
+            return (HttpURLConnection) url.openConnection();
+        }
     }
 
     /**
