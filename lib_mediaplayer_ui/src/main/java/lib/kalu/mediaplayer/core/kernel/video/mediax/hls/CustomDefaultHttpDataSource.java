@@ -77,16 +77,18 @@ public final class CustomDefaultHttpDataSource extends BaseDataSource implements
         private boolean keepPostFor302Redirects;
 
 
+        private boolean noProxy;
         private ProxyUrl proxyUrl;
 
         /**
          * Creates an instance.
          */
-        public Factory(ProxyUrl proxy) {
-            proxyUrl = proxy;
-            defaultRequestProperties = new RequestProperties();
-            connectTimeoutMs = DEFAULT_CONNECT_TIMEOUT_MILLIS;
-            readTimeoutMs = DEFAULT_READ_TIMEOUT_MILLIS;
+        public Factory(ProxyUrl proxy, boolean noProxy) {
+            this.noProxy = noProxy;
+            this.proxyUrl = proxy;
+            this.defaultRequestProperties = new RequestProperties();
+            this.connectTimeoutMs = DEFAULT_CONNECT_TIMEOUT_MILLIS;
+            this.readTimeoutMs = DEFAULT_READ_TIMEOUT_MILLIS;
         }
 
 
@@ -201,6 +203,7 @@ public final class CustomDefaultHttpDataSource extends BaseDataSource implements
         public CustomDefaultHttpDataSource createDataSource() {
             CustomDefaultHttpDataSource dataSource =
                     new CustomDefaultHttpDataSource(
+                            noProxy,
                             proxyUrl,
                             userAgent,
                             connectTimeoutMs,
@@ -240,6 +243,7 @@ public final class CustomDefaultHttpDataSource extends BaseDataSource implements
     private final RequestProperties requestProperties;
     private final boolean keepPostFor302Redirects;
 
+    private final boolean noProxy;
     private final ProxyUrl proxyUrl;
 
     @Nullable
@@ -260,8 +264,8 @@ public final class CustomDefaultHttpDataSource extends BaseDataSource implements
      */
     @SuppressWarnings("deprecation")
     @Deprecated
-    public CustomDefaultHttpDataSource() {
-        this(/* userAgent= */ null, DEFAULT_CONNECT_TIMEOUT_MILLIS, DEFAULT_READ_TIMEOUT_MILLIS);
+    public CustomDefaultHttpDataSource(boolean noProxy) {
+        this(noProxy, null, DEFAULT_CONNECT_TIMEOUT_MILLIS, DEFAULT_READ_TIMEOUT_MILLIS);
     }
 
     /**
@@ -269,8 +273,8 @@ public final class CustomDefaultHttpDataSource extends BaseDataSource implements
      */
     @SuppressWarnings("deprecation")
     @Deprecated
-    public CustomDefaultHttpDataSource(@Nullable String userAgent) {
-        this(userAgent, DEFAULT_CONNECT_TIMEOUT_MILLIS, DEFAULT_READ_TIMEOUT_MILLIS);
+    public CustomDefaultHttpDataSource(boolean noProxy, @Nullable String userAgent) {
+        this(noProxy, userAgent, DEFAULT_CONNECT_TIMEOUT_MILLIS, DEFAULT_READ_TIMEOUT_MILLIS);
     }
 
     /**
@@ -279,8 +283,10 @@ public final class CustomDefaultHttpDataSource extends BaseDataSource implements
     @SuppressWarnings("deprecation")
     @Deprecated
     public CustomDefaultHttpDataSource(
+            boolean noProxy,
             @Nullable String userAgent, int connectTimeoutMillis, int readTimeoutMillis) {
         this(
+                noProxy,
                 userAgent,
                 connectTimeoutMillis,
                 readTimeoutMillis,
@@ -293,12 +299,14 @@ public final class CustomDefaultHttpDataSource extends BaseDataSource implements
      */
     @Deprecated
     public CustomDefaultHttpDataSource(
+            boolean noProxy,
             @Nullable String userAgent,
             int connectTimeoutMillis,
             int readTimeoutMillis,
             boolean allowCrossProtocolRedirects,
             @Nullable RequestProperties defaultRequestProperties) {
         this(
+                noProxy,
                 null,
                 userAgent,
                 connectTimeoutMillis,
@@ -310,6 +318,7 @@ public final class CustomDefaultHttpDataSource extends BaseDataSource implements
     }
 
     private CustomDefaultHttpDataSource(
+            boolean noProxy,
             ProxyUrl proxy,
             @Nullable String userAgent,
             int connectTimeoutMillis,
@@ -319,6 +328,7 @@ public final class CustomDefaultHttpDataSource extends BaseDataSource implements
             @Nullable Predicate<String> contentTypePredicate,
             boolean keepPostFor302Redirects) {
         super(/* isNetwork= */ true);
+        this.noProxy = noProxy;
         this.proxyUrl = proxy;
         this.userAgent = userAgent;
         this.connectTimeoutMillis = connectTimeoutMillis;
@@ -407,7 +417,7 @@ public final class CustomDefaultHttpDataSource extends BaseDataSource implements
         String responseMessage;
         HttpURLConnection connection;
         try {
-            this.connection = makeConnection(dataSpec);
+            this.connection = makeConnection(dataSpec, noProxy);
             connection = this.connection;
             responseCode = connection.getResponseCode();
             responseMessage = connection.getResponseMessage();
@@ -556,7 +566,7 @@ public final class CustomDefaultHttpDataSource extends BaseDataSource implements
     /**
      * Establishes a connection, following redirects to do so where permitted.
      */
-    private HttpURLConnection makeConnection(DataSpec dataSpec) throws IOException {
+    private HttpURLConnection makeConnection(DataSpec dataSpec, boolean noProxy) throws IOException {
 
         String uri = dataSpec.uri.toString();
         URL url = new URL(uri);
@@ -570,6 +580,7 @@ public final class CustomDefaultHttpDataSource extends BaseDataSource implements
             // HttpURLConnection disallows cross-protocol redirects, but otherwise performs redirection
             // automatically. This is the behavior we want, so use it.
             return makeConnection(
+                    noProxy,
                     url,
                     httpMethod,
                     httpBody,
@@ -586,6 +597,7 @@ public final class CustomDefaultHttpDataSource extends BaseDataSource implements
         while (redirectCount++ <= MAX_REDIRECTS) {
             HttpURLConnection connection =
                     makeConnection(
+                            noProxy,
                             url,
                             httpMethod,
                             httpBody,
@@ -645,6 +657,7 @@ public final class CustomDefaultHttpDataSource extends BaseDataSource implements
      * @param requestParameters parameters (HTTP headers) to include in request.
      */
     private HttpURLConnection makeConnection(
+            boolean noProxy,
             URL url,
             @HttpMethod int httpMethod,
             @Nullable byte[] httpBody,
@@ -654,7 +667,7 @@ public final class CustomDefaultHttpDataSource extends BaseDataSource implements
             boolean followRedirects,
             Map<String, String> requestParameters)
             throws IOException {
-        HttpURLConnection connection = openConnection(url);
+        HttpURLConnection connection = openConnection(url, noProxy);
         connection.setConnectTimeout(connectTimeoutMillis);
         connection.setReadTimeout(readTimeoutMillis);
 
@@ -698,14 +711,13 @@ public final class CustomDefaultHttpDataSource extends BaseDataSource implements
      */
     @VisibleForTesting
     /* package */
-    HttpURLConnection openConnection(URL url) throws IOException {
+    HttpURLConnection openConnection(URL url, boolean noProxy) throws IOException {
 
-        boolean enableNoProxy = proxyUrl.enableNoProxy();
         if (LogUtil.DEBUG) {
-            LogUtil.log(TAG, "openConnection -> enableNoProxy = " + enableNoProxy + ", url = " + url);
+            LogUtil.log(TAG, "openConnection -> noProxy = " + noProxy + ", url = " + url);
         }
 
-        if (enableNoProxy) {
+        if (noProxy) {
             // 1. 核心：设置不使用任何代理
             HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection(Proxy.NO_PROXY);
 

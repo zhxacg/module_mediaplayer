@@ -41,6 +41,12 @@ public final class PlayerArgs {
         return cache;
     }
 
+    private boolean noProxy;
+
+    public boolean isNoProxy() {
+        return noProxy;
+    }
+
     public int getConnectTimeoutMs() {
         return connectTimeoutMs;
     }
@@ -108,6 +114,7 @@ public final class PlayerArgs {
         seekType = builder.seekType;
         rotation = builder.rotation;
         cache = builder.cache;
+        noProxy = builder.noProxy;
     }
 
     public Builder newBuilder() {
@@ -125,6 +132,7 @@ public final class PlayerArgs {
         builder.setSeekType(this.seekType);
         builder.setRotation(this.rotation);
         builder.setCache(this.cache);
+        builder.setNoProxy(this.noProxy);
         return builder;
     }
 
@@ -223,6 +231,14 @@ public final class PlayerArgs {
 
         public Builder setCache(Cache v) {
             this.cache = v;
+            return this;
+        }
+
+        // 代理
+        private boolean noProxy = false;
+
+        public Builder setNoProxy(boolean v) {
+            this.noProxy = v;
             return this;
         }
 

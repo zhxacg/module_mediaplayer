@@ -206,6 +206,12 @@ public class StartArgs implements Serializable {
         return menu;
     }
 
+    // 禁止抓包
+    private boolean noProxy;
+    public boolean isNoProxy(){
+        return noProxy;
+    }
+
     // 轨道代理
     private Proxy proxy;
 
@@ -247,6 +253,7 @@ public class StartArgs implements Serializable {
                 ", extraData=" + extraData +
                 ", showSpeed=" + showSpeed +
                 ", menu=" + menu +
+                ", noProxy=" + noProxy +
                 ", proxy=" + proxy +
                 '}';
     }
@@ -275,6 +282,7 @@ public class StartArgs implements Serializable {
         this.extraData = builder.extraData;
         this.showSpeed = builder.showSpeed;
         this.menu = builder.menu;
+        this.noProxy = builder.noProxy;
         this.proxy = builder.proxy;
     }
 
@@ -303,6 +311,7 @@ public class StartArgs implements Serializable {
         builder.extraData = extraData;
         builder.showSpeed = showSpeed;
         builder.menu = menu;
+        builder.noProxy = noProxy;
         builder.proxy = proxy;
         return builder;
     }
@@ -474,8 +483,16 @@ public class StartArgs implements Serializable {
             return this;
         }
 
+        // 禁止抓包
+        private boolean noProxy = playerArgs.isNoProxy();
+
+        public Builder setNoProxy(Boolean v) {
+            this.noProxy = v;
+            return this;
+        }
+
         // 轨道代理
-        private Proxy proxy;
+        private Proxy proxy = null;
 
         public Builder setProxy(Proxy v) {
             this.proxy = v;

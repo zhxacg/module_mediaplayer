@@ -2319,7 +2319,7 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
     private HttpDataSource.Factory buildHttpFactory(StartArgs args) {
         try {
             int connectTimoutMs = args.getConnectTimeoutMs();
-            CustomDefaultHttpDataSource.Factory factory = new CustomDefaultHttpDataSource.Factory(args.getProxyUrl())
+            CustomDefaultHttpDataSource.Factory factory = new CustomDefaultHttpDataSource.Factory(args.getProxyUrl(), args.isNoProxy())
                     .setUserAgent(MediaLibraryInfo.VERSION_SLASHY)
                     .setConnectTimeoutMs(connectTimoutMs)
                     .setReadTimeoutMs(connectTimoutMs)
