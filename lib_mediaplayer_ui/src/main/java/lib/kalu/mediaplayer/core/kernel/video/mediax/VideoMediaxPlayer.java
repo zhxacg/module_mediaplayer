@@ -221,8 +221,8 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
                                     0.7F)))
                     // 配置带宽测量器
                     .setBandwidthMeter(new DefaultBandwidthMeter.Builder(context)
-                            // 初始带宽估算为1Mbps
-                            .setInitialBitrateEstimate(1_000_000)
+                            // 初始带宽估算为100Mbps
+                            .setInitialBitrateEstimate(100_000_000)
                             .build())
 //                    .setBufferDurationsMs(
 //                            1000, // 播放器至少要缓冲1 秒的视频数据，才会停止主动加载更多分片, 设得太小：频繁触发加载，易重复请求；设得太大：初始加载慢，缓冲占用多
@@ -232,14 +232,24 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
 //                    )
                     // 增大内存缓存（默认 2MB，按需调整）
                     .setLoadControl(new DefaultLoadControl.Builder()
+                            /**
+                             * private int minBufferMs = 50000;
+                             *         private int maxBufferMs = 50000;
+                             *         private int bufferForPlaybackMs = 1000;
+                             *         private int bufferForPlaybackAfterRebufferMs = 2000;
+                             */
                             .setBufferDurationsMs(
-                                    1000, // 最小缓冲
-                                    5000, // 最大缓冲
-                                    1000, // 缓冲播放
-                                    1000  // 缓冲重试
+                                    // minBufferMs：播放器至少要缓冲 1 秒的数据后，才会停止主动加载更多数据；如果缓冲低于这个值，会重新开始加载。
+                                    50_000,
+                                    // maxBufferMs：播放器最多缓冲 5 秒的数据，达到这个值后会停止加载，避免占用过多内存。
+                                    50_000,
+                                    // bufferForPlaybackMs：播放器需要至少缓冲 1 秒的数据，才会开始播放（或从暂停恢复播放）。
+                                    1000,
+                                    // bufferForPlaybackAfterRebufferMs：播放器在缓冲不足导致暂停后，需要重新缓冲 1 秒的数据，才会恢复播放。
+                                    2000
                             )
-                            // 内存分配器
-                            .setAllocator(new DefaultAllocator(true, 16 * 1024))
+                            // 内存分配器 默认 64 * 1024 = 65536
+                            .setAllocator(new DefaultAllocator(true, 64 * 1024))
                             .build()
                     );
 
