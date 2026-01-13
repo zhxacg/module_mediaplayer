@@ -93,7 +93,7 @@ public class TestDialog extends DialogFragment {
                     @Override
                     public void onClick(View view) {
 
-                        ((TestTvActivity) getActivity()).toggleTrack(track);
+                        ((TestActivity) getActivity()).toggleTrack(track);
                         //
                         dismiss();
                     }

@@ -2,6 +2,8 @@ package lib.kalu.mediaplayer.core.player.video;
 
 import android.content.Context;
 
+import androidx.annotation.FloatRange;
+
 import java.util.List;
 
 import lib.kalu.mediaplayer.bean.args.StartArgs;

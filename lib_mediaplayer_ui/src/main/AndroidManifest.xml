@@ -14,7 +14,7 @@
             android:exported="false" />
 
         <activity
-            android:name="lib.kalu.mediaplayer.test.TestTvActivity"
+            android:name="lib.kalu.mediaplayer.test.TestActivity"
             android:configChanges="orientation|screenSize|keyboardHidden|keyboard|uiMode"
             android:exported="false"
             android:screenOrientation="landscape"

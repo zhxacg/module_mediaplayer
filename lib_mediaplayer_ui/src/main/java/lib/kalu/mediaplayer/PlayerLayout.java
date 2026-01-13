@@ -9,6 +9,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 
+import androidx.annotation.ColorInt;
+
 import java.util.List;
 
 import lib.kalu.mediaplayer.bean.args.StartArgs;

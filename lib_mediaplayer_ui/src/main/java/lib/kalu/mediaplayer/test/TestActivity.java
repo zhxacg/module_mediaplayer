@@ -30,7 +30,6 @@ import lib.kalu.mediaplayer.listener.OnPlayerEpisodeListener;
 import lib.kalu.mediaplayer.listener.OnPlayerEventListener;
 import lib.kalu.mediaplayer.listener.OnPlayerProgressListener;
 import lib.kalu.mediaplayer.listener.OnPlayerWindowStateChangeListener;
-import lib.kalu.mediaplayer.listener.OnPlayerWindowVisibilityChangedListener;
 import lib.kalu.mediaplayer.proxy.Proxy;
 import lib.kalu.mediaplayer.proxy.ProxyBuried;
 import lib.kalu.mediaplayer.proxy.ProxyTrack;
@@ -41,15 +40,16 @@ import lib.kalu.mediaplayer.util.LogUtil;
  * @description: 横屏全屏视频播放器
  * @date: 2021-05-25 10:37
  */
-public final class TestTvActivity extends Activity {
+public final class TestActivity extends Activity {
 
     public static final String INTENT_ARGS = "intent_args";
+    public static final String INTENT_TV = "intent_tv";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED, WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED);
-        setContentView(R.layout.lib_mp_test_activity_tv);
+        setContentView(R.layout.lib_mp_test_activity);
 
         initComponent();
         initListener();

@@ -24,8 +24,7 @@ import lib.kalu.mediaplayer.bean.args.UrlArgs;
 import lib.kalu.mediaplayer.bean.cache.Cache;
 import lib.kalu.mediaplayer.bean.menu.Menu;
 import lib.kalu.mediaplayer.bean.type.PlayerType;
-import lib.kalu.mediaplayer.test.TestPhoneActivity;
-import lib.kalu.mediaplayer.test.TestTvActivity;
+import lib.kalu.mediaplayer.test.TestActivity;
 
 /**
  * description:
@@ -66,16 +65,9 @@ public class MainActivity extends Activity {
                 .setMenu(createMenu())
                 .build();
 
-        RadioGroup radioGroup = findViewById(R.id.main_platform);
-        int buttonId = radioGroup.getCheckedRadioButtonId();
-        Intent intent;
-        if (buttonId == R.id.main_platform_tv) {
-            intent = new Intent(getApplicationContext(), TestTvActivity.class);
-            intent.putExtra(TestTvActivity.INTENT_ARGS, args);
-        } else {
-            intent = new Intent(getApplicationContext(), TestPhoneActivity.class);
-            intent.putExtra(TestPhoneActivity.INTENT_ARGS, args);
-        }
+        Intent intent = new Intent(getApplicationContext(), TestActivity.class);
+        intent.putExtra(TestActivity.INTENT_ARGS, args);
+        intent.putExtra(TestActivity.INTENT_TV, ((RadioGroup) findViewById(R.id.main_platform)).getCheckedRadioButtonId() == R.id.main_platform_tv);
         startActivity(intent);
     }
 
