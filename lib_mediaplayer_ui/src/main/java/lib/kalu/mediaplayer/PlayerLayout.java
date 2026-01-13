@@ -9,9 +9,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 
-import androidx.annotation.ColorInt;
-import androidx.annotation.RequiresApi;
-
 import java.util.List;
 
 import lib.kalu.mediaplayer.bean.args.StartArgs;
@@ -47,7 +44,7 @@ public class PlayerLayout extends RelativeLayout {
         initPlayerView(context, attrs);
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+    @androidx.annotation.RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     public PlayerLayout(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
         initPlayerView(context, attrs);
