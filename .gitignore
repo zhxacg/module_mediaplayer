@@ -24,4 +24,9 @@
 /lib_mediaxplayer_r1.6.1_lite/build/
 /lib_mediaxplayer_r1.6.1_full/.cxx/
 /lib_mediaxplayer_r1.6.1_full/build/
+
+# 1.8.0
 /lib_mediaxplayer_r1.8.0_mini/build/
+
+# 1.9.0
+/lib_mediaxplayer_r1.9.0_mini/build/
