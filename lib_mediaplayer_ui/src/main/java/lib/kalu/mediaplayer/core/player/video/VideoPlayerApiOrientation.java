@@ -10,9 +10,9 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowInsetsController;
 
-import lib.kalu.mediaplayer.PlayerInitProvider;
 import lib.kalu.mediaplayer.PlayerLayout;
 import lib.kalu.mediaplayer.bean.type.PlayerType;
+import lib.kalu.mediaplayer.util.ContextUtil;
 import lib.kalu.mediaplayer.util.LogUtil;
 
 public interface VideoPlayerApiOrientation extends VideoPlayerApiBase, VideoPlayerApiRender, VideoPlayerApiListener, VideoPlayerApiCall {
@@ -27,7 +27,7 @@ public interface VideoPlayerApiOrientation extends VideoPlayerApiBase, VideoPlay
 
     default boolean isLandscape(Context context) {
         try {
-            Activity activity = PlayerInitProvider.getCurrentActivity();
+            Activity activity = ContextUtil.getActivitySafely(context);
             if (null == activity)
                 throw new Exception("error: activity null");
 
@@ -59,7 +59,7 @@ public interface VideoPlayerApiOrientation extends VideoPlayerApiBase, VideoPlay
 
         try {
 
-            Activity activity = PlayerInitProvider.getCurrentActivity();
+            Activity activity = ContextUtil.getActivitySafely(context);
             if (null == activity)
                 throw new Exception("error: activity null");
 
@@ -119,7 +119,10 @@ public interface VideoPlayerApiOrientation extends VideoPlayerApiBase, VideoPlay
 //        }
 //    }
 
-    default boolean requestScreenOrientation(@PlayerType.ScreenOrientation.Value int value, boolean formatScreen) {
+    default boolean requestScreenOrientation(
+            Context context,
+            @PlayerType.ScreenOrientation.Value int value,
+            boolean formatScreen) {
 
         if (LogUtil.DEBUG) {
             LogUtil.log(TAG, "requestScreenOrientation -> value = " + value);
@@ -127,7 +130,7 @@ public interface VideoPlayerApiOrientation extends VideoPlayerApiBase, VideoPlay
 
         try {
 
-            Activity activity = PlayerInitProvider.getCurrentActivity();
+            Activity activity = ContextUtil.getActivitySafely(context);
             if (null == activity)
                 throw new Exception("error: activity null");
 

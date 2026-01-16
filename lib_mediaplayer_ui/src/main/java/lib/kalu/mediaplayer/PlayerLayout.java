@@ -1029,7 +1029,7 @@ public class PlayerLayout extends RelativeLayout {
             PlayerView playerView = getPlayerView();
             if (null == playerView)
                 throw new Exception("playerView error: null");
-            return playerView.requestScreenOrientation(value, formatScreen);
+            return playerView.requestScreenOrientation(getContext(), value, formatScreen);
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
                 LogUtil.log("ComponentApi -> requestScreenOrientation -> " + e.getMessage());

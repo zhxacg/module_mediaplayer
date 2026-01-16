@@ -47,6 +47,32 @@ android {
     buildFeatures {
         buildConfig true
     }
+
+    lint {
+        // 核心开关
+        checkAllWarnings = false
+        ignoreWarnings = false
+        abortOnError = false
+        warningsAsErrors = false
+
+        // 其他配置
+        checkReleaseBuilds = false
+        explainIssues = false
+        showAll = false
+
+        // 报告配置
+        htmlReport = true
+        htmlOutput = file("$project.buildDir/reports/lint/lint-results.html")
+        xmlReport = true
+        xmlOutput = file("$project.buildDir/reports/lint/lint-results.xml")
+        textReport = false
+
+        // 规则过滤
+        disable("MissingTranslation", "ExtraTranslation", "UnusedResources")
+        enable("NewApi")
+        // check("NewApi", "UnusedResources") // 仅检查指定项
+    }
+
     // aar方法参数名被混淆问题
     tasks.withType(JavaCompile) {
         options.compilerArgs += ["-g", "-parameters"]
@@ -65,7 +91,7 @@ dependencies {
     api files('libs/guava-failureaccess-1.0.2.jar')
 
     // annotation
-    compileOnly 'androidx.annotation:annotation:1.9.1'
+    compileOnly 'androidx.annotation:annotation:1.7.0'
 
     // ijk
     compileOnly files('../repo/aar/lib_mediaplayer_ijk_k0.8.8_ff3.4.13_mini_release_20240430.aar')

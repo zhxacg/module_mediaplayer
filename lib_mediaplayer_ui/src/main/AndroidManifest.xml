@@ -8,11 +8,6 @@
         android:allowBackup="false"
         android:supportsRtl="true">
 
-        <provider
-            android:name="lib.kalu.mediaplayer.PlayerInitProvider"
-            android:authorities="${applicationId}.playerinitprovider"
-            android:exported="false" />
-
         <activity
             android:name="lib.kalu.mediaplayer.test.TestActivity"
             android:configChanges="orientation|screenSize|keyboardHidden|keyboard|uiMode"
