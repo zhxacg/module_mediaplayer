@@ -1095,7 +1095,7 @@ public final class CustomDefaultHttpDataSource extends BaseDataSource implements
         try {
             if (null == proxyUrl)
                 throw new Exception("waring: proxyUrl null");
-            return proxyUrl.formatM3u8Url(url);
+            return proxyUrl.formatSubtitleUrl(url);
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
                 LogUtil.log(TAG, "formatOpenSubtitleUrl -> Exception: " + e.getMessage());
