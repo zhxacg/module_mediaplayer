@@ -1032,8 +1032,12 @@ public final class CustomDefaultHttpDataSource extends BaseDataSource implements
                 formatOpenUrl = formatOpenSegmentUrl(openUrl);
             } else if (openUrl.contains(PlayerType.SchemeType._TS_)) {
                 formatOpenUrl = formatOpenSegmentUrl(openUrl);
-            } else {
+            } else if (openUrl.contains(PlayerType.SchemeType._M3U8)) {
                 formatOpenUrl = formatOpenM3u8Url(openUrl);
+            } else if (openUrl.contains(PlayerType.SchemeType._M3U8_)) {
+                formatOpenUrl = formatOpenM3u8Url(openUrl);
+            } else {
+                formatOpenUrl = openUrl;
             }
 
             if (LogUtil.DEBUG) {
