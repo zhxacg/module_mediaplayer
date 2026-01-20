@@ -78,22 +78,22 @@ android {
         options.compilerArgs += ["-g", "-parameters"]
     }
 
-    // 关键配置：将本地JAR包嵌入AAR的libs目录
-    sourceSets {
-        main {
-            resources {
-                srcDirs 'libs'
-                include '*.jar'
-            }
-        }
-    }
+//    // 关键配置：将本地JAR包嵌入AAR的libs目录
+//    sourceSets {
+//        main {
+//            resources {
+//                srcDirs 'libs'
+//                include '*.jar'
+//            }
+//        }
+//    }
 }
 
 dependencies {
 
     // api
-    api files('libs/guava-33.2.1-android.jar')
-    api files('libs/guava-failureaccess-1.0.2.jar')
+    compileOnly files('libs/guava-33.2.1-android.jar')
+    compileOnly files('libs/guava-failureaccess-1.0.2.jar')
 
     // annotation
     compileOnly 'androidx.annotation:annotation:1.7.0'
