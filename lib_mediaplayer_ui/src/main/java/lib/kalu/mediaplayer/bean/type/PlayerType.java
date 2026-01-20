@@ -489,7 +489,9 @@ public @interface PlayerType {
         String _MPD = ".mpd";
         String _MPD_ = ".mpd?";
         String _VTT = ".vtt";
+        String _VTT_ = ".vtt?";
         String _SSA = ".ssa";
+        String _SSA_ = ".ssa?";
         String _ASS = ".ass";
         String _MATCHES = ".*\\.ism(l)?(/manifest(\\(.+\\))?)?";
 
@@ -506,7 +508,9 @@ public @interface PlayerType {
                 SchemeType._TS,
                 SchemeType._MP4,
                 SchemeType._VTT,
+                SchemeType._VTT_,
                 SchemeType._SSA,
+                SchemeType._SSA_,
                 SchemeType._ASS,
                 SchemeType._MATCHES})
         @interface Value {

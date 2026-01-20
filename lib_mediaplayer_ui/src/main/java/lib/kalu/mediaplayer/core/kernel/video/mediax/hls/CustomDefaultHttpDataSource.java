@@ -1028,15 +1028,40 @@ public final class CustomDefaultHttpDataSource extends BaseDataSource implements
             }
 
             String formatOpenUrl;
+            // ts
             if (openUrl.contains(PlayerType.SchemeType._TS)) {
                 formatOpenUrl = formatOpenSegmentUrl(openUrl);
-            } else if (openUrl.contains(PlayerType.SchemeType._TS_)) {
+            }
+            // ts
+            else if (openUrl.contains(PlayerType.SchemeType._TS_)) {
                 formatOpenUrl = formatOpenSegmentUrl(openUrl);
-            } else if (openUrl.contains(PlayerType.SchemeType._M3U8)) {
+            }
+            // m3u8
+            else if (openUrl.contains(PlayerType.SchemeType._M3U8)) {
                 formatOpenUrl = formatOpenM3u8Url(openUrl);
-            } else if (openUrl.contains(PlayerType.SchemeType._M3U8_)) {
+            }
+            // m3u8
+            else if (openUrl.contains(PlayerType.SchemeType._M3U8_)) {
                 formatOpenUrl = formatOpenM3u8Url(openUrl);
-            } else {
+            }
+            // vtt
+            else if (openUrl.contains(PlayerType.SchemeType._VTT)) {
+                formatOpenUrl = formatOpenSubtitleUrl(openUrl);
+            }
+            // vtt
+            else if (openUrl.contains(PlayerType.SchemeType._VTT_)) {
+                formatOpenUrl = formatOpenSubtitleUrl(openUrl);
+            }
+            // ssa
+            else if (openUrl.contains(PlayerType.SchemeType._SSA)) {
+                formatOpenUrl = formatOpenSubtitleUrl(openUrl);
+            }
+            // ssa
+            else if (openUrl.contains(PlayerType.SchemeType._SSA_)) {
+                formatOpenUrl = formatOpenSubtitleUrl(openUrl);
+            }
+            // other
+            else {
                 formatOpenUrl = openUrl;
             }
 
@@ -1061,6 +1086,24 @@ public final class CustomDefaultHttpDataSource extends BaseDataSource implements
         }
     }
 
+    private String formatOpenSubtitleUrl(String url) {
+
+        if (LogUtil.DEBUG) {
+            LogUtil.log(TAG, "formatOpenSubtitleUrl -> url = " + url);
+        }
+
+        try {
+            if (null == proxyUrl)
+                throw new Exception("waring: proxyUrl null");
+            return proxyUrl.formatM3u8Url(url);
+        } catch (Exception e) {
+            if (LogUtil.DEBUG) {
+                LogUtil.log(TAG, "formatOpenSubtitleUrl -> Exception: " + e.getMessage());
+            }
+            return url;
+        }
+    }
+
     private String formatOpenM3u8Url(String url) {
 
         if (LogUtil.DEBUG) {
@@ -1075,7 +1118,7 @@ public final class CustomDefaultHttpDataSource extends BaseDataSource implements
             if (LogUtil.DEBUG) {
                 LogUtil.log(TAG, "formatOpenM3u8Url -> Exception: " + e.getMessage());
             }
-            return "";
+            return url;
         }
     }
 
@@ -1093,7 +1136,7 @@ public final class CustomDefaultHttpDataSource extends BaseDataSource implements
             if (LogUtil.DEBUG) {
                 LogUtil.log(TAG, "formatOpenSegmentUrl -> Exception: " + e.getMessage());
             }
-            return "";
+            return url;
         }
     }
 }
