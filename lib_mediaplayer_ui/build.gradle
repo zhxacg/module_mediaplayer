@@ -77,13 +77,18 @@ android {
     tasks.withType(JavaCompile) {
         options.compilerArgs += ["-g", "-parameters"]
     }
-}
 
-repositories {
-    flatDir {
-        dirs 'libs'
+    // 关键配置：将本地JAR包嵌入AAR的libs目录
+    sourceSets {
+        main {
+            resources {
+                srcDirs 'libs'
+                include '*.jar'
+            }
+        }
     }
 }
+
 dependencies {
 
     // api
