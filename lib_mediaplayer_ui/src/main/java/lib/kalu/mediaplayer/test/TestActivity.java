@@ -278,6 +278,11 @@ public final class TestActivity extends Activity {
                                 }
 
                                 @Override
+                                public String formatSubtitleUrl(String url) {
+                                    return url;
+                                }
+
+                                @Override
                                 public String formatSegmentUrl(String url) {
                                     if (LogUtil.DEBUG) {
                                         LogUtil.log("TestActivity -> formatOpenUrl -> url = " + url + ", thread = " + Thread.currentThread().getName());
