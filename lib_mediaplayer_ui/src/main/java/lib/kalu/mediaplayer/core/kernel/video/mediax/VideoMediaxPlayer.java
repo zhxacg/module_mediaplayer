@@ -47,11 +47,9 @@ import androidx.media3.exoplayer.Renderer;
 import androidx.media3.exoplayer.RenderersFactory;
 import androidx.media3.exoplayer.analytics.AnalyticsListener;
 import androidx.media3.exoplayer.analytics.DefaultAnalyticsCollector;
-import androidx.media3.exoplayer.hls.HlsExtractorFactory;
 import androidx.media3.exoplayer.hls.HlsManifest;
 import androidx.media3.exoplayer.hls.HlsMediaSource;
 import androidx.media3.exoplayer.hls.playlist.HlsMediaPlaylist;
-import androidx.media3.exoplayer.hls.playlist.HlsPlaylistParserFactory;
 import androidx.media3.exoplayer.source.DefaultMediaSourceFactory;
 import androidx.media3.exoplayer.source.LoadEventInfo;
 import androidx.media3.exoplayer.source.MediaLoadData;
@@ -74,7 +72,6 @@ import com.google.common.collect.ImmutableList;
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Constructor;
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -2073,86 +2070,13 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
             }
             // hls
             else if (metaType == PlayerType.MetaType.VIDEO_HLS) {
-//                Class<?> cls = Class.forName("androidx.media3.exoplayer.hls.HlsMediaSource$Factory");
-//                Constructor<?> constructor = cls.getDeclaredConstructor(DataSource.Factory.class);
-//                constructor.setAccessible(true);
-                DataSource.Factory factory = buildDateFactory(context, httpFactory, args, PlayerType.UrlType.VIDEO, url);
                 if (LogUtil.DEBUG) {
                     LogUtil.log(TAG, "buildVideoMediaFactory -> hls, dataUrl = " + url);
                 }
-                HlsMediaSource.Factory hlsMediaSource = new HlsMediaSource.Factory(factory)
-                        // 播放器可以跳过「预加载切片」的步骤，仅解析 M3U8 元数据就完成准备，从而加快播放启动速度，但可能牺牲首帧加载的稳定性。
-                        .setAllowChunklessPreparation(true);
-
-                //
-                hlsMediaSource.setLoadErrorHandlingPolicy(new DefaultLoadErrorHandlingPolicy() {
-
-                    @Nullable
-                    @Override
-                    public FallbackSelection getFallbackSelectionFor(FallbackOptions fallbackOptions, LoadErrorInfo loadErrorInfo) {
-                        FallbackSelection fallbackSelectionFor = super.getFallbackSelectionFor(fallbackOptions, loadErrorInfo);
-                        if (LogUtil.DEBUG) {
-                            LogUtil.log(TAG, "buildVideoMediaFactory -> getFallbackSelectionFor -> fallbackSelectionFor = " + fallbackSelectionFor);
-                        }
-                        return fallbackSelectionFor;
-                    }
-
-                    @Override
-                    public void onLoadTaskConcluded(long l) {
-
-                        if (LogUtil.DEBUG) {
-                            LogUtil.log(TAG, "buildVideoMediaFactory -> onLoadTaskConcluded -> l = " + l);
-                        }
-
-                        super.onLoadTaskConcluded(l);
-                    }
-
-                    @Override
-                    public int getMinimumLoadableRetryCount(int i) {
-                        int minimumLoadableRetryCount = super.getMinimumLoadableRetryCount(i);
-                        if (LogUtil.DEBUG) {
-                            LogUtil.log(TAG, "buildVideoMediaFactory -> getRetryDelayMsFor -> minimumLoadableRetryCount = " + minimumLoadableRetryCount);
-                        }
-                        return 0;
-                    }
-
-                    @Override
-                    public long getRetryDelayMsFor(LoadErrorInfo loadErrorInfo) {
-                        long retryDelayMsFor = super.getRetryDelayMsFor(loadErrorInfo);
-                        if (LogUtil.DEBUG) {
-                            LogUtil.log(TAG, "buildVideoMediaFactory -> getRetryDelayMsFor -> retryDelayMsFor = " + retryDelayMsFor);
-                        }
-                        return retryDelayMsFor;
-                    }
-                });
-
-                // setPlaylistParserFactory
-                hlsMediaSource.setPlaylistParserFactory(new CustomHlsPlaylistParserFactory(args.getProxyUrl()));
-
-                // setExtractorFactory
-                int parser = item.getParser();
-                int payloadReaderFactoryFlags;
-                if (parser == PlayerType.ParserType.VIDEO) {
-                    payloadReaderFactoryFlags = DefaultTsPayloadReaderFactory.FLAG_IGNORE_AAC_STREAM;
-                } else {
-                    payloadReaderFactoryFlags = 0;
-                }
-                boolean exposeCea608WhenMissingDeclarations;
-                if (parser == PlayerType.ParserType.VIDEO) {
-                    exposeCea608WhenMissingDeclarations = false;
-                } else if (parser == PlayerType.ParserType.AUDIO) {
-                    exposeCea608WhenMissingDeclarations = false;
-                } else if (parser == PlayerType.ParserType.VIDEO_AUDIO) {
-                    exposeCea608WhenMissingDeclarations = false;
-                } else {
-                    exposeCea608WhenMissingDeclarations = true;
-                }
-                if (LogUtil.DEBUG) {
-                    LogUtil.log(TAG, "buildVideoMediaFactory -> hls, parser = " + parser + ", payloadReaderFactoryFlags = " + payloadReaderFactoryFlags + ", exposeCea608WhenMissingDeclarations = " + exposeCea608WhenMissingDeclarations);
-                }
-                hlsMediaSource.setExtractorFactory(new CustomDefaultHlsExtractorFactory(payloadReaderFactoryFlags, exposeCea608WhenMissingDeclarations));
-
-                return hlsMediaSource;
+//                Class<?> cls = Class.forName("androidx.media3.exoplayer.hls.HlsMediaSource$Factory");
+//                Constructor<?> constructor = cls.getDeclaredConstructor(DataSource.Factory.class);
+//                constructor.setAccessible(true);
+                return buildHlsMediaSourceFactory(context, httpFactory, args, metaType, item);
             }
             // SmoothStreaming
             else if (metaType == PlayerType.MetaType.VIDEO_SS) {
@@ -2263,24 +2187,7 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
             if (metaType != PlayerType.MetaType.VIDEO_HLS) {
                 return buildDateFactory(context, httpFactory, args, PlayerType.UrlType.AUDIO, url);
             } else {
-                Class<?> cls = Class.forName("androidx.media3.exoplayer.hls.HlsMediaSource$Factory");
-                Constructor<?> constructor = cls.getDeclaredConstructor(DataSource.Factory.class);
-                constructor.setAccessible(true);
-                DataSource.Factory factory = buildDateFactory(context, httpFactory, args, PlayerType.UrlType.AUDIO, url);
-                if (LogUtil.DEBUG) {
-                    LogUtil.log(TAG, "buildAudioMediaFactory -> hls, dataUrl = " + url);
-                }
-                Object object = constructor.newInstance(factory);
-
-                // setPlaylistParserFactory
-                Method method_setPlaylistParserFactory = cls.getMethod("setPlaylistParserFactory", HlsPlaylistParserFactory.class);
-                method_setPlaylistParserFactory.invoke(object, new CustomHlsPlaylistParserFactory(args.getProxyUrl()));
-
-                // setExtractorFactory
-                Method method_setExtractorFactory = cls.getMethod("setExtractorFactory", HlsExtractorFactory.class);
-                method_setExtractorFactory.invoke(object, new CustomDefaultHlsExtractorFactory(DefaultTsPayloadReaderFactory.FLAG_IGNORE_H264_STREAM, false));
-
-                return object;
+                return buildHlsMediaSourceFactory(context, httpFactory, args, metaType, item);
             }
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
@@ -2610,5 +2517,88 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
             }
             return false;
         }
+    }
+
+    private HlsMediaSource.Factory buildHlsMediaSourceFactory(Context context,
+                                                              HttpDataSource.Factory httpFactory,
+                                                              StartArgs args,
+                                                              @PlayerType.MetaType.Value int metaType,
+                                                              UrlArgs.Item item) {
+
+        DataSource.Factory factory = buildDateFactory(context, httpFactory, args, PlayerType.UrlType.VIDEO, item.getUrl());
+
+        HlsMediaSource.Factory hlsMediaSource = new HlsMediaSource.Factory(factory)
+                // 播放器可以跳过「预加载切片」的步骤，仅解析 M3U8 元数据就完成准备，从而加快播放启动速度，但可能牺牲首帧加载的稳定性。
+                .setAllowChunklessPreparation(true);
+
+        //
+        hlsMediaSource.setLoadErrorHandlingPolicy(new DefaultLoadErrorHandlingPolicy() {
+
+            @Nullable
+            @Override
+            public FallbackSelection getFallbackSelectionFor(FallbackOptions fallbackOptions, LoadErrorInfo loadErrorInfo) {
+                FallbackSelection fallbackSelectionFor = super.getFallbackSelectionFor(fallbackOptions, loadErrorInfo);
+                if (LogUtil.DEBUG) {
+                    LogUtil.log(TAG, "buildHlsMediaSourceFactory -> getFallbackSelectionFor -> fallbackSelectionFor = " + fallbackSelectionFor);
+                }
+                return fallbackSelectionFor;
+            }
+
+            @Override
+            public void onLoadTaskConcluded(long l) {
+
+                if (LogUtil.DEBUG) {
+                    LogUtil.log(TAG, "buildHlsMediaSourceFactory -> onLoadTaskConcluded -> l = " + l);
+                }
+
+                super.onLoadTaskConcluded(l);
+            }
+
+            @Override
+            public int getMinimumLoadableRetryCount(int i) {
+                int minimumLoadableRetryCount = super.getMinimumLoadableRetryCount(i);
+                if (LogUtil.DEBUG) {
+                    LogUtil.log(TAG, "buildHlsMediaSourceFactory -> getRetryDelayMsFor -> minimumLoadableRetryCount = " + minimumLoadableRetryCount);
+                }
+                return minimumLoadableRetryCount;
+            }
+
+            @Override
+            public long getRetryDelayMsFor(LoadErrorInfo loadErrorInfo) {
+                long retryDelayMsFor = super.getRetryDelayMsFor(loadErrorInfo);
+                if (LogUtil.DEBUG) {
+                    LogUtil.log(TAG, "buildHlsMediaSourceFactory -> getRetryDelayMsFor -> retryDelayMsFor = " + retryDelayMsFor);
+                }
+                return retryDelayMsFor;
+            }
+        });
+
+        // setPlaylistParserFactory
+        hlsMediaSource.setPlaylistParserFactory(new CustomHlsPlaylistParserFactory(args.getProxyUrl()));
+
+        // setExtractorFactory
+        int parser = item.getParser();
+        int payloadReaderFactoryFlags;
+        if (parser == PlayerType.ParserType.VIDEO) {
+            payloadReaderFactoryFlags = DefaultTsPayloadReaderFactory.FLAG_IGNORE_AAC_STREAM;
+        } else {
+            payloadReaderFactoryFlags = 0;
+        }
+        boolean exposeCea608WhenMissingDeclarations;
+        if (parser == PlayerType.ParserType.VIDEO) {
+            exposeCea608WhenMissingDeclarations = false;
+        } else if (parser == PlayerType.ParserType.AUDIO) {
+            exposeCea608WhenMissingDeclarations = false;
+        } else if (parser == PlayerType.ParserType.VIDEO_AUDIO) {
+            exposeCea608WhenMissingDeclarations = false;
+        } else {
+            exposeCea608WhenMissingDeclarations = true;
+        }
+        if (LogUtil.DEBUG) {
+            LogUtil.log(TAG, "buildHlsMediaSourceFactory -> hls, parser = " + parser + ", payloadReaderFactoryFlags = " + payloadReaderFactoryFlags + ", exposeCea608WhenMissingDeclarations = " + exposeCea608WhenMissingDeclarations);
+        }
+        hlsMediaSource.setExtractorFactory(new CustomDefaultHlsExtractorFactory(payloadReaderFactoryFlags, exposeCea608WhenMissingDeclarations));
+
+        return hlsMediaSource;
     }
 }
