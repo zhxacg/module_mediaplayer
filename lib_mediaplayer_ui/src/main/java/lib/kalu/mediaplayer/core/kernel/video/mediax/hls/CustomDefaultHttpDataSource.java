@@ -6,6 +6,7 @@ import static androidx.media3.datasource.HttpUtil.buildRangeRequestHeader;
 import static java.lang.Math.min;
 
 import android.net.Uri;
+import android.os.Build;
 
 import androidx.annotation.Nullable;
 import androidx.annotation.VisibleForTesting;
@@ -37,16 +38,18 @@ import java.net.MalformedURLException;
 import java.net.NoRouteToHostException;
 import java.net.Proxy;
 import java.net.URL;
-import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 import java.util.Set;
 import java.util.zip.GZIPInputStream;
 
+import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLSession;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
 
@@ -717,53 +720,67 @@ public final class CustomDefaultHttpDataSource extends BaseDataSource implements
             LogUtil.log(TAG, "openConnection -> noProxy = " + noProxy + ", url = " + url);
         }
 
+        HttpURLConnection httpURLConnection;
         if (noProxy) {
             // 1. 核心：设置不使用任何代理
-            HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection(Proxy.NO_PROXY);
-
+            httpURLConnection = (HttpURLConnection) url.openConnection(Proxy.NO_PROXY);
             // 2. 清除系统级代理属性（防止系统代理覆盖）
             System.setProperty("http.proxyHost", "");
             System.setProperty("http.proxyPort", "");
             System.setProperty("https.proxyHost", "");
             System.setProperty("https.proxyPort", "");
+        } else {
+            httpURLConnection = (HttpURLConnection) url.openConnection();
+        }
 
-            // 3. 如果是 HTTPS 请求，额外配置（可选但建议）：关闭主机名验证，避免代理证书干扰
-            try {
-                if ((httpURLConnection instanceof HttpsURLConnection))
-                    throw new Exception();
-                HttpsURLConnection httpsConn = (HttpsURLConnection) connection;
-                // 忽略证书验证（仅用于禁止代理，生产环境需谨慎）
-                // 信任所有证书
-                TrustManager[] trustAllCerts = new TrustManager[]{
-                        new X509TrustManager() {
-                            @Override
-                            public void checkClientTrusted(X509Certificate[] chain, String authType) throws CertificateException {
-                            }
+        if (LogUtil.DEBUG) {
+            LogUtil.log(TAG, "openConnection -> httpURLConnection = " + httpURLConnection);
+        }
 
-                            @Override
-                            public void checkServerTrusted(X509Certificate[] chain, String authType) throws CertificateException {
-                            }
+        // 3. 如果是 HTTPS 请求，关闭主机名验证，避免代理证书干扰
+        try {
+            X509TrustManager trustAllManager = new X509TrustManager() {
+                @Override
+                public void checkClientTrusted(X509Certificate[] chain, String authType) {
+                }
 
-                            @Override
-                            public X509Certificate[] getAcceptedIssuers() {
-                                return new X509Certificate[0];
-                            }
-                        }
-                };
+                @Override
+                public void checkServerTrusted(X509Certificate[] chain, String authType) {
+                }
 
-                SSLContext sslContext = SSLContext.getInstance("TLS");
-                sslContext.init(null, trustAllCerts, new java.security.SecureRandom());
+                @Override
+                public X509Certificate[] getAcceptedIssuers() {
+                    return new X509Certificate[0];
+                }
+            };
 
-                httpsConn.setSSLSocketFactory(sslContext.getSocketFactory());
-                httpsConn.setHostnameVerifier((hostname, session) -> true);
-            } catch (Exception e) {
+            SSLContext sslContext = SSLContext.getInstance("TLS");
+            sslContext.init(null, new TrustManager[]{trustAllManager}, null);
+
+            // 3. 强制设置 HttpsURLConnection 的默认 SSL 参数
+            HttpsURLConnection.setDefaultSSLSocketFactory(sslContext.getSocketFactory());
+            // 忽略域名验证
+            HttpsURLConnection.setDefaultHostnameVerifier(new HostnameVerifier() {
+                @Override
+                public boolean verify(String hostname, SSLSession session) {
+                    return true;
+                }
+            });
+
+            // 4. 兼容 Android 9+ 的证书透明性检查（可选）
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                Properties props = System.getProperties();
+                props.setProperty("jdk.tls.disableCertificateTransparencyChecks", "true");
             }
 
-            return httpURLConnection;
-        } else {
-            return (HttpURLConnection) url.openConnection();
+//            ((HttpsURLConnection) httpURLConnection).setSSLSocketFactory(sslContext.getSocketFactory());
+//            ((HttpsURLConnection) httpURLConnection).setHostnameVerifier((hostname, session) -> true);
+        } catch (Exception e) {
         }
+
+        return httpURLConnection;
     }
+
 
     /**
      * Handles a redirect.

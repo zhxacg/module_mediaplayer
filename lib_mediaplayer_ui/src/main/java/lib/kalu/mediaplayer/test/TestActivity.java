@@ -274,7 +274,7 @@ public final class TestActivity extends Activity {
                                     if (LogUtil.DEBUG) {
                                         LogUtil.log("TestActivity -> formatM3u8Url -> url = " + url + ", thread = " + Thread.currentThread().getName());
                                     }
-                                    return url + "?token=1";
+                                    return url;
                                 }
 
                                 @Override
@@ -285,9 +285,9 @@ public final class TestActivity extends Activity {
                                 @Override
                                 public String formatSegmentUrl(String url) {
                                     if (LogUtil.DEBUG) {
-                                        LogUtil.log("TestActivity -> formatOpenUrl -> url = " + url + ", thread = " + Thread.currentThread().getName());
+                                        LogUtil.log("TestActivity -> formatSegmentUrl -> url = " + url + ", thread = " + Thread.currentThread().getName());
                                     }
-                                    return url + "?token=1";
+                                    return url;
                                 }
 
                                 @Override
@@ -295,7 +295,7 @@ public final class TestActivity extends Activity {
                                     if (LogUtil.DEBUG) {
                                         LogUtil.log("TestActivity -> formatSegmentPath -> baseUrl = " + baseUrl + ", segmentUrl = " + segmentUrl + ", thread = " + Thread.currentThread().getName());
                                     }
-                                    return segmentUrl + "?install=2";
+                                    return segmentUrl;
                                 }
                             })
                             .setProxyTrack(new ProxyTrack() {

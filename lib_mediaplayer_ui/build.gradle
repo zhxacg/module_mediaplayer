@@ -92,11 +92,13 @@ android {
 dependencies {
 
     // api
-    compileOnly files('libs/guava-33.2.1-android.jar')
-    compileOnly files('libs/guava-failureaccess-1.0.2.jar')
+//    compileOnly files('libs/guava-33.2.1-android.jar')
+//    compileOnly files('libs/guava-failureaccess-1.0.2.jar')
 
     // annotation
     compileOnly 'androidx.annotation:annotation:1.7.0'
+    compileOnly("com.google.guava:failureaccess:1.0.3")
+    compileOnly("com.google.guava:guava:33.5.0-android")
 
     // ijk
     compileOnly files('../repo/aar/lib_mediaplayer_ijk_k0.8.8_ff3.4.13_mini_release_20240430.aar')

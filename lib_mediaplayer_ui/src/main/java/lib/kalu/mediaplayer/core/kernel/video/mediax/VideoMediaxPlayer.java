@@ -65,6 +65,7 @@ import androidx.media3.exoplayer.trackselection.DefaultTrackSelector;
 import androidx.media3.exoplayer.trackselection.TrackSelector;
 import androidx.media3.exoplayer.upstream.DefaultAllocator;
 import androidx.media3.exoplayer.upstream.DefaultBandwidthMeter;
+import androidx.media3.exoplayer.upstream.DefaultLoadErrorHandlingPolicy;
 import androidx.media3.extractor.ts.DefaultTsPayloadReaderFactory;
 
 import com.google.common.collect.ImmutableList;
@@ -172,6 +173,8 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
             }
 
             ExoPlayer.Builder builder = new ExoPlayer.Builder(context)
+                    // 启用懒加载准备
+                    .setUseLazyPreparation(true)
                     // 播放器调试和诊断相关的配置项
                     .setUsePlatformDiagnostics(false)
                     // 创建渲染器工厂
@@ -1035,6 +1038,21 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
             try {
                 if (null == mSimpleCache)
                     throw new Exception("warning: mSimpleCache null");
+
+                // Media3 中 Timeline 和 Window 的使用方式
+                Timeline timeline = mExoPlayer.getCurrentTimeline();
+                if (timeline.isEmpty())
+                    throw new Exception("error: timeline is empty");
+
+                int windowIndex = mExoPlayer.getCurrentWindowIndex();
+                Timeline.Window window = new Timeline.Window();
+                timeline.getWindow(windowIndex, window, Player.REPEAT_MODE_OFF);
+
+                // Media3 中判断是否为直播
+                boolean isLive = window.isLive();
+                if (isLive)
+                    throw new Exception("error: isLive true");
+
                 Object currentManifest = mExoPlayer.getCurrentManifest();
                 if (null == currentManifest)
                     throw new Exception("warning: currentManifest null");
