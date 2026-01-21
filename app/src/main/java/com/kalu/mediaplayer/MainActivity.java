@@ -228,23 +228,8 @@ public class MainActivity extends Activity {
     }
 
     private boolean isLive() {
-        try {
-            RadioGroup radioGroup = findViewById(R.id.main_urls);
-            int childCount = radioGroup.getChildCount();
-            for (int n = 0; n < childCount; n++) {
-                RadioButton radioButton = (RadioButton) radioGroup.getChildAt(n);
-                boolean checked = radioButton.isChecked();
-                if (!checked)
-                    continue;
-                CharSequence text = radioButton.getText();
-                if (!"hls_m3u8_live".equals(text))
-                    continue;
-                return true;
-            }
-            throw new Exception();
-        } catch (Exception e) {
-            return false;
-        }
+        CheckBox checkBox = findViewById(R.id.main_living);
+        return checkBox.isChecked();
     }
 
     private boolean isLooping() {

@@ -105,7 +105,6 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
 
     private String TAG = "VideoMediaxPlayer";
 
-    private boolean isVideoSizeChanged = false;
     private boolean isPrepared = false;
     private boolean isBuffering = false;
     private boolean mPlayWhenReadySeeking = false;
@@ -786,6 +785,9 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
         }
 
         try {
+            boolean live = args.isLive();
+            if (live)
+                throw new Exception("error: live true");
 
             boolean containsMainUrl = args.containsMainUrl();
             if (!containsMainUrl)
@@ -810,20 +812,6 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
             int sizeMB = cache.getSizeMB();
             if (sizeMB <= 0)
                 throw new Exception("error: sizeMB <= 0, sizeMB = " + sizeMB);
-
-//            if (null == mSimpleCache) {
-
-//            StringBuilder builder = new StringBuilder();
-//            builder.append(cache.getDir(PlayerType.KernelType.MEDIA_V3));
-//            if (urlType == PlayerType.UrlType.VIDEO) {
-//                builder.append("video");
-//            } else if (urlType == PlayerType.UrlType.AUDIO) {
-//                builder.append("audio");
-//            } else if (urlType == PlayerType.UrlType.SUBTITLE) {
-//                builder.append("subtitle");
-//            } else {
-//                builder.append("other");
-//            }
 
             String dirName = cache.getDir(PlayerType.KernelType.MEDIA_V3);
             if (LogUtil.DEBUG) {
@@ -2093,28 +2081,8 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
                     LogUtil.log(TAG, "buildVideoMediaFactory -> hls, dataUrl = " + url);
                 }
                 HlsMediaSource.Factory hlsMediaSource = new HlsMediaSource.Factory(factory)
-//                        .setUseLazyPreparation(true) // 懒加载：只加载当前需要的切片
+                        // 播放器可以跳过「预加载切片」的步骤，仅解析 M3U8 元数据就完成准备，从而加快播放启动速度，但可能牺牲首帧加载的稳定性。
                         .setAllowChunklessPreparation(true);
-                        // 关键1：限制预加载的切片数量（核心解决加载过快）
-//                        .setMinLoadableRetryCount(1) // 减少切片重试，避免频繁加载
-//                        .setMaxPlaylistSize(5) // 限制播放列表最大切片数（直播一般5-10个）
-                        // 关键2：调整直播延迟和加载速度
-//                        .setLiveConfiguration(
-//                                HlsMediaSource.LiveConfiguration.Builder()
-//                                        .setTargetOffsetMs(10000) // 增加直播延迟到10秒（默认5秒）
-//                                        .setMaxOffsetMs(15000)    // 最大延迟15秒
-//                                        .setMinOffsetMs(8000)     // 最小延迟8秒
-//                                        .setMaxPlaybackSpeed(1.0f) // 禁止播放器加速追赶（默认1.05）
-//                                        .setMinPlaybackSpeed(1.0f) // 禁止播放器减速
-//                                        .build()
-//                        )
-                        // 关键3：限制切片加载并发数（默认无限制）
-//                        .setLoadingPolicy(
-//                                HlsMediaSource.LoadingPolicy.Builder()
-//                                        .setMinLoadableRetryCount(1)
-//                                        .setMaxConcurrentLoads(1) // 只允许同时加载1个切片（核心！）
-//                                        .build()
-//                        )
 
                 //
                 hlsMediaSource.setLoadErrorHandlingPolicy(new DefaultLoadErrorHandlingPolicy() {
@@ -2145,7 +2113,7 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
                         if (LogUtil.DEBUG) {
                             LogUtil.log(TAG, "buildVideoMediaFactory -> getRetryDelayMsFor -> minimumLoadableRetryCount = " + minimumLoadableRetryCount);
                         }
-                        return 100;
+                        return 0;
                     }
 
                     @Override

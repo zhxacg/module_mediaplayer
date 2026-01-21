@@ -240,6 +240,13 @@
                 android:orientation="horizontal">
 
                 <CheckBox
+                    android:id="@+id/main_living"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:checked="false"
+                    android:text="直播" />
+
+                <CheckBox
                     android:id="@+id/main_net_yes"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
@@ -336,7 +343,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
                 android:hint="输入视频地址: 优先播放此链接" />
-<!--            android:text="https://www.w3schools.com/html/mov_bbb.mp4"-->
+            <!--            android:text="https://www.w3schools.com/html/mov_bbb.mp4"-->
 
             <Button
                 android:id="@+id/main_button1"
