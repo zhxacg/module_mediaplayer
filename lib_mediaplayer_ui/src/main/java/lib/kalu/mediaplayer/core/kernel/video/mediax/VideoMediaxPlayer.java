@@ -16,6 +16,7 @@ import androidx.media3.common.MediaLibraryInfo;
 import androidx.media3.common.PlaybackException;
 import androidx.media3.common.PlaybackParameters;
 import androidx.media3.common.Player;
+import androidx.media3.common.Timeline;
 import androidx.media3.common.TrackGroup;
 import androidx.media3.common.TrackSelectionOverride;
 import androidx.media3.common.TrackSelectionParameters;
@@ -544,10 +545,39 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
                 throw new Exception("mPrepared warning: false");
             if (null == mExoPlayer)
                 throw new Exception("mExoPlayer error: null");
-            long currentPosition = mExoPlayer.getCurrentPosition();
-            if (currentPosition < 0)
-                throw new Exception("currentPosition warning: " + currentPosition);
-            return currentPosition;
+
+            // Media3 中 Timeline 和 Window 的使用方式
+            Timeline timeline = mExoPlayer.getCurrentTimeline();
+            if (timeline.isEmpty())
+                throw new Exception("error: timeline is empty");
+
+            int windowIndex = mExoPlayer.getCurrentWindowIndex();
+            Timeline.Window window = new Timeline.Window();
+            timeline.getWindow(windowIndex, window, Player.REPEAT_MODE_OFF);
+
+            // Media3 中判断是否为直播
+            boolean isLive = window.isLive();
+            if (isLive) {
+                // ========== Media3 通用适配方案 ==========
+                // 1. 直播可回溯的最早位置（替代 getEarliestAvailablePositionMs()）
+                //    window.startPositionMs 是 Media3 中表示窗口起始位置的标准字段
+                long windowStartTimeMs = window.windowStartTimeMs;
+
+                // 2. 直播最新可播放位置（替代 getLatestAvailablePositionMs()）
+                //    方案：直播窗口的 "结束位置" = 起始位置 + 窗口时长（Media3 通用逻辑）
+                long windowDurationMs = window.getDurationMs();
+                long latestAvailablePositionMs = windowStartTimeMs + windowDurationMs;
+
+                // 3. 计算直播偏移（当前位置到最新位置的差距）
+                long currentPositionMs = mExoPlayer.getCurrentPosition();
+                long liveOffsetMs = latestAvailablePositionMs - currentPositionMs;
+                return liveOffsetMs;
+            } else {
+                long currentPosition = mExoPlayer.getCurrentPosition();
+                if (currentPosition < 0)
+                    throw new Exception("currentPosition warning: " + currentPosition);
+                return currentPosition;
+            }
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
                 LogUtil.log(TAG, "getPosition -> " + e.getMessage());
@@ -566,10 +596,35 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
                 throw new Exception("mPrepared warning: false");
             if (null == mExoPlayer)
                 throw new Exception("mExoPlayer error: null");
-            long duration = mExoPlayer.getDuration();
-            if (duration <= 0)
-                throw new Exception("duration warning: " + duration);
-            return duration;
+
+            // Media3 中 Timeline 和 Window 的使用方式
+            Timeline timeline = mExoPlayer.getCurrentTimeline();
+            if (timeline.isEmpty())
+                throw new Exception("error: timeline is empty");
+
+            int windowIndex = mExoPlayer.getCurrentWindowIndex();
+            Timeline.Window window = new Timeline.Window();
+            timeline.getWindow(windowIndex, window, Player.REPEAT_MODE_OFF);
+
+            // Media3 中判断是否为直播
+            boolean isLive = window.isLive();
+            if (isLive) {
+                // ========== Media3 通用适配方案 ==========
+                // 1. 直播可回溯的最早位置（替代 getEarliestAvailablePositionMs()）
+                //    window.startPositionMs 是 Media3 中表示窗口起始位置的标准字段
+                long windowStartTimeMs = window.windowStartTimeMs;
+
+                // 2. 直播最新可播放位置（替代 getLatestAvailablePositionMs()）
+                //    方案：直播窗口的 "结束位置" = 起始位置 + 窗口时长（Media3 通用逻辑）
+                long windowDurationMs = window.getDurationMs();
+                long latestAvailablePositionMs = windowStartTimeMs + windowDurationMs;
+                return latestAvailablePositionMs;
+            } else {
+                long duration = mExoPlayer.getDuration();
+                if (duration <= 0)
+                    throw new Exception("duration warning: " + duration);
+                return duration;
+            }
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
                 LogUtil.log(TAG, "getDuration -> " + e.getMessage());
