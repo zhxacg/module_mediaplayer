@@ -184,8 +184,11 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
                             arrayList.add(textRenderer);
                         }
                     })
+                    // 创建媒体源工厂，开启字幕预解析（核心配置）
                     .setMediaSourceFactory(new DefaultMediaSourceFactory(context)
-                            .experimentalParseSubtitlesDuringExtraction(true))
+                            // 实验性配置：在数据提取阶段解析字幕  true = 预解析字幕，false = 播放时解析（默认）
+                            .experimentalParseSubtitlesDuringExtraction(true)
+                    )
                     // 监听
                     .setAnalyticsCollector(new DefaultAnalyticsCollector(Clock.DEFAULT))
                     // 自适应码率
