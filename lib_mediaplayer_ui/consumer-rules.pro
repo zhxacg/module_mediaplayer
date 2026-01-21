@@ -125,10 +125,10 @@
 -keep class androidx.media3.exoplayer.hls.HlsMediaSource$Factory{
     public <methods>;
 }
--keep class androidx.media3.exoplayer.hls.playlist.HlsPlaylistParserFactory{
-     public Factory setPlaylistParserFactory(androidx.media3.exoplayer.hls.playlist.HlsPlaylistParserFactory);
-     public Factory setExtractorFactory(androidx.media3.exoplayer.hls.HlsExtractorFactory);
-}
+#-keep class androidx.media3.exoplayer.hls.playlist.HlsPlaylistParserFactory{
+#     public Factory setPlaylistParserFactory(androidx.media3.exoplayer.hls.playlist.HlsPlaylistParserFactory);
+#     public Factory setExtractorFactory(androidx.media3.exoplayer.hls.HlsExtractorFactory);
+#}
 -keep class androidx.media3.exoplayer.smoothstreaming.SsMediaSource{
     public <methods>;
 }
