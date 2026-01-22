@@ -39,6 +39,7 @@ import androidx.media3.datasource.cache.CacheSpan;
 import androidx.media3.datasource.cache.LeastRecentlyUsedCacheEvictor;
 import androidx.media3.datasource.cache.SimpleCache;
 import androidx.media3.exoplayer.DecoderReuseEvaluation;
+import androidx.media3.exoplayer.DefaultLivePlaybackSpeedControl;
 import androidx.media3.exoplayer.DefaultLoadControl;
 import androidx.media3.exoplayer.DefaultRenderersFactory;
 import androidx.media3.exoplayer.ExoPlaybackException;
@@ -249,7 +250,24 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
                             // 内存分配器 默认 64 * 1024 = 65536
                             .setAllocator(new DefaultAllocator(true, 64 * 1024))
                             .build()
-                    );
+                    )
+                    // 直播场景
+                    .setLivePlaybackSpeedControl(new DefaultLivePlaybackSpeedControl.Builder()
+                            // 最小直播偏移的平滑因子（用于稳定计算「实时直播位置」）
+                            .setMinPossibleLiveOffsetSmoothingFactor(0.999F)
+                            // 速度调整的最小间隔（多久能调整一次速度）,弱网 / 低延迟场景可缩短至 500ms（调整更频繁）；追求性能可延长至 2000ms
+                            .setMinUpdateIntervalMs(500)
+                            //「保持 1 倍速」的最大偏移误差（超出这个范围才调整速度）,无需修改（默认值已足够平滑，改大易导致偏移计算波动）
+                            .setMaxLiveOffsetErrorMsForUnitSpeed(200)
+                            // 极端场景下的最小速度（如缓存彻底耗尽时的保底速度）,建议 ≥0.8f（过低会导致播放卡顿感明显）
+                            .setFallbackMinPlaybackSpeed(0.8f)
+                            // 极端场景下的最大速度（如缓存严重过剩时的保底速度）,建议 ≤1.2f（过高会让用户感知到快放）
+                            .setFallbackMaxPlaybackSpeed(1.2f)
+                            // 速度调整的「比例控制因子」（偏移越大，速度调整幅度越大）,弱网可调大至 0.005f（更快调整速度）；低延迟可调小至 0.001f（调整更平缓）
+                            .setProportionalControlFactor(0.005f)
+                            // 发生缓冲时，目标直播偏移的增量（缓冲后临时增大目标偏移，避免再次缓冲）,弱网可增大至 2000ms（缓冲后更保守）；低延迟可减小至 500ms（不牺牲太多实时性）
+                            .setTargetLiveOffsetIncrementOnRebufferMs(1000)
+                            .build());
 
 
             int decoderType = startArgs.getDecoderType();
@@ -2305,10 +2323,10 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
 
             return new CacheDataSource.Factory()
                     .setFlags(
-                            // 错误时跳过缓存
+                            // 当发生错误时忽略缓存（比如错误时不读取缓存，直接请求源数据）。
                             CacheDataSource.FLAG_IGNORE_CACHE_ON_ERROR
-//                                    // 允许缓存未知长度的资源（如直播流）
-//                                    | CacheDataSource.FLAG_IGNORE_CACHE_FOR_UNSET_LENGTH_REQUESTS
+                                    // 对于未设置长度的请求忽略缓存（比如请求体长度未知时不使用缓存）。
+                                    | CacheDataSource.FLAG_IGNORE_CACHE_FOR_UNSET_LENGTH_REQUESTS
                     )
                     .setCache(mSimpleCache)
                     // 网络请求工厂

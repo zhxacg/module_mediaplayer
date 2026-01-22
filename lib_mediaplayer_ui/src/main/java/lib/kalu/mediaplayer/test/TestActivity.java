@@ -22,6 +22,7 @@ import lib.kalu.mediaplayer.core.component.ComponentInit;
 import lib.kalu.mediaplayer.core.component.ComponentMenu;
 import lib.kalu.mediaplayer.core.component.ComponentPause;
 import lib.kalu.mediaplayer.core.component.ComponentPrepareGradient;
+import lib.kalu.mediaplayer.core.component.ComponentSeek;
 import lib.kalu.mediaplayer.core.component.ComponentSeek2;
 import lib.kalu.mediaplayer.core.component.ComponentSubtitle;
 import lib.kalu.mediaplayer.core.component.ComponentWarningPlayInfo;
@@ -152,9 +153,6 @@ public final class TestActivity extends Activity {
         ComponentPrepareGradient loading = new ComponentPrepareGradient(getApplicationContext());
         loading.setComponentBackgroundColorInt(Color.BLACK);
         playerLayout.addComponent(loading);
-        // seek
-//        ComponentSeek seek = new ComponentSeek(getApplicationContext());
-//        playerLayout.addComponent(seek);
         // complete
         ComponentComplete end = new ComponentComplete(getApplicationContext());
         playerLayout.addComponent(end);
@@ -181,9 +179,11 @@ public final class TestActivity extends Activity {
         ComponentSubtitle subtitle = new ComponentSubtitle(getApplicationContext());
         playerLayout.addComponent(subtitle);
 
-        // 字幕
-        ComponentSeek2 seek2 = new ComponentSeek2(getApplicationContext());
-        playerLayout.addComponent(seek2);
+        // seek
+        ComponentSeek seek = new ComponentSeek(getApplicationContext());
+        playerLayout.addComponent(seek);
+//        ComponentSeek2 seek2 = new ComponentSeek2(getApplicationContext());
+//        playerLayout.addComponent(seek2);
     }
 
     private void initListener() {
