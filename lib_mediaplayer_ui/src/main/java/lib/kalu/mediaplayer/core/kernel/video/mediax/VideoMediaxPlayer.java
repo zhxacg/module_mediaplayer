@@ -97,6 +97,7 @@ import lib.kalu.mediaplayer.core.kernel.video.mediax.hls.CustomDefaultHlsExtract
 import lib.kalu.mediaplayer.core.kernel.video.mediax.hls.CustomDefaultHttpDataSource;
 import lib.kalu.mediaplayer.core.kernel.video.mediax.hls.CustomHlsPlaylistParserFactory;
 import lib.kalu.mediaplayer.error.UrlError;
+import lib.kalu.mediaplayer.proxy.ProxyUrl;
 import lib.kalu.mediaplayer.util.LogUtil;
 import lib.kalu.mediax.subtitle.OffsetMsTextRenderer;
 
@@ -389,15 +390,26 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
             boolean containsMainUrl = startArgs.containsMainUrl();
             if (!containsMainUrl)
                 throw new UrlError("error: containsMainUrl false");
-            HttpDataSource.Factory httpFactory = buildHttpFactory(startArgs);
-            if (null == httpFactory)
-                throw new Exception("error: args null");
             onEvent(PlayerType.KernelType.MEDIA_V3, PlayerType.EventType.INIT_READY);
+            // 缓存
             boolean initSimpleCache = initSimpleCache(context, startArgs);
             if (LogUtil.DEBUG) {
                 LogUtil.log(TAG, "startDecoder -> initSimpleCache = " + initSimpleCache);
             }
-
+            int connectTimoutMs = startArgs.getConnectTimeoutMs();
+            ProxyUrl proxyUrl = startArgs.getProxyUrl();
+            boolean noProxy = startArgs.isNoProxy();
+            if (LogUtil.DEBUG) {
+                LogUtil.log(TAG, "startDecoder -> connectTimoutMs = " + connectTimoutMs + ", noProxy = " + noProxy + ", proxyUrl = " + proxyUrl);
+            }
+            // HttpClient
+            CustomDefaultHttpDataSource.Factory httpFactory = new CustomDefaultHttpDataSource.Factory(proxyUrl, noProxy)
+                    .setUserAgent(MediaLibraryInfo.VERSION_SLASHY)
+                    .setConnectTimeoutMs(connectTimoutMs)
+                    .setReadTimeoutMs(connectTimoutMs)
+                    .setDefaultRequestProperties(new HashMap<>())
+                    .setAllowCrossProtocolRedirects(true)
+                    .setKeepPostFor302Redirects(true);
             boolean containsExtUrl = startArgs.containsExtUrl();
             UrlArgs urlArgs = startArgs.getUrlArgs();
             UrlArgs.Item mainVideo = urlArgs.getMainVideo();
@@ -2061,28 +2073,6 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
                 LogUtil.log(TAG, "buildVideoMediaSource -> Exception: " + e.getMessage());
-            }
-            return null;
-        }
-    }
-
-    private HttpDataSource.Factory buildHttpFactory(StartArgs args) {
-        try {
-            int connectTimoutMs = args.getConnectTimeoutMs();
-            CustomDefaultHttpDataSource.Factory factory = new CustomDefaultHttpDataSource.Factory(args.getProxyUrl(), args.isNoProxy())
-                    .setUserAgent(MediaLibraryInfo.VERSION_SLASHY)
-                    .setConnectTimeoutMs(connectTimoutMs)
-                    .setReadTimeoutMs(connectTimoutMs)
-                    .setDefaultRequestProperties(new HashMap<>())
-                    .setAllowCrossProtocolRedirects(true)
-                    .setKeepPostFor302Redirects(true);
-            if (LogUtil.DEBUG) {
-                LogUtil.log(TAG, "buildHttpFactory -> completed");
-            }
-            return factory;
-        } catch (Exception e) {
-            if (LogUtil.DEBUG) {
-                LogUtil.log(TAG, "buildHttpFactory -> Exception: " + e.getMessage());
             }
             return null;
         }
