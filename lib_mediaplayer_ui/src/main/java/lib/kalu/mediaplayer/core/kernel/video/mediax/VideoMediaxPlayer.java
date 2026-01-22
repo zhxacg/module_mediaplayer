@@ -1896,19 +1896,11 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
                 }
 
                 DataSource.Factory factory = buildDefaultDataSource(context, httpFactory);
-                if (factory instanceof CacheDataSource.Factory) {
-                    return new DefaultMediaSourceFactory(factory)
-                            .createMediaSource(new MediaItem.Builder()
-                                    .setUri(Uri.parse(url))
-                                    .setMediaId("audio:" + hashCode)
-                                    .build());
-                } else {
-                    return new DefaultMediaSourceFactory(factory)
-                            .createMediaSource(new MediaItem.Builder()
-                                    .setUri(Uri.parse(url))
-                                    .setMediaId("audio:" + hashCode)
-                                    .build());
-                }
+                return new DefaultMediaSourceFactory(factory)
+                        .createMediaSource(new MediaItem.Builder()
+                                .setUri(Uri.parse(url))
+                                .setMediaId("audio:" + hashCode)
+                                .build());
             }
             // 轨道字幕
             else if (urlType == PlayerType.UrlType.SUBTITLE) {
@@ -2056,19 +2048,11 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
                 }
 
                 DataSource.Factory factory = buildDefaultDataSource(context, httpFactory);
-                if (factory instanceof CacheDataSource.Factory) {
-                    return new DefaultMediaSourceFactory(factory)
-                            .createMediaSource(new MediaItem.Builder()
-                                    .setUri(Uri.parse(url))
-                                    .setMediaId("video:" + hashCode)
-                                    .build());
-                } else {
-                    return new DefaultMediaSourceFactory(factory)
-                            .createMediaSource(new MediaItem.Builder()
-                                    .setUri(Uri.parse(url))
-                                    .setMediaId("video:" + hashCode)
-                                    .build());
-                }
+                return new DefaultMediaSourceFactory(factory)
+                        .createMediaSource(new MediaItem.Builder()
+                                .setUri(Uri.parse(url))
+                                .setMediaId("video:" + hashCode)
+                                .build());
             }
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
