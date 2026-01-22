@@ -3,6 +3,7 @@ package lib.kalu.mediaplayer.bean.args;
 import java.io.Serializable;
 
 import lib.kalu.mediaplayer.bean.type.PlayerType;
+import lib.kalu.mediaplayer.util.LogUtil;
 
 public final class UrlArgs implements Serializable {
     private Item mainVideoArgs;
@@ -176,6 +177,62 @@ public final class UrlArgs implements Serializable {
 
         public String getUrl() {
             return url;
+        }
+
+        @PlayerType.MetaType.Value
+        public int getMetaType() {
+            try {
+                // rtmp
+                if (url.startsWith(PlayerType.SchemeType.RTMP)) {
+                    return PlayerType.MetaType.VIDEO_RTMP;
+                }
+                // rtsp
+                else if (url.startsWith(PlayerType.SchemeType.RTSP)) {
+                    return PlayerType.MetaType.VIDEO_RTSP;
+                }
+                // mp41
+                else if (url.endsWith(PlayerType.SchemeType._MP4)) {
+                    return PlayerType.MetaType.VIDEO_MP4;
+                }
+                // mp42
+                else if (url.contains(PlayerType.SchemeType._MP4_)) {
+                    return PlayerType.MetaType.VIDEO_MP4;
+                }
+                // dash1
+                else if (url.endsWith(PlayerType.SchemeType._MPD)) {
+                    return PlayerType.MetaType.VIDEO_DASH;
+                }
+                // dash2
+                else if (url.contains(PlayerType.SchemeType._MPD_)) {
+                    return PlayerType.MetaType.VIDEO_DASH;
+                }
+                // hls1
+                else if (url.endsWith(PlayerType.SchemeType._M3U)) {
+                    return PlayerType.MetaType.VIDEO_HLS;
+                }
+                // hls2
+                else if (url.contains(PlayerType.SchemeType._M3U_)) {
+                    return PlayerType.MetaType.VIDEO_HLS;
+                }
+                // hls3
+                else if (url.endsWith(PlayerType.SchemeType._M3U8)) {
+                    return PlayerType.MetaType.VIDEO_HLS;
+                }
+                // hls4
+                else if (url.contains(PlayerType.SchemeType._M3U8_)) {
+                    return PlayerType.MetaType.VIDEO_HLS;
+                }
+                // SmoothStreaming
+                else if (url.matches(PlayerType.SchemeType._MATCHES)) {
+                    return PlayerType.MetaType.VIDEO_SS;
+                }
+                // other
+                else {
+                    return PlayerType.MetaType.VIDEO_OTHER;
+                }
+            } catch (Exception e) {
+                return PlayerType.MetaType.VIDEO_OTHER;
+            }
         }
 
         public static class Builder implements Serializable {
