@@ -48,9 +48,11 @@ import androidx.media3.exoplayer.Renderer;
 import androidx.media3.exoplayer.RenderersFactory;
 import androidx.media3.exoplayer.analytics.AnalyticsListener;
 import androidx.media3.exoplayer.analytics.DefaultAnalyticsCollector;
+import androidx.media3.exoplayer.dash.DashMediaSource;
 import androidx.media3.exoplayer.hls.HlsManifest;
 import androidx.media3.exoplayer.hls.HlsMediaSource;
 import androidx.media3.exoplayer.hls.playlist.HlsMediaPlaylist;
+import androidx.media3.exoplayer.smoothstreaming.SsMediaSource;
 import androidx.media3.exoplayer.source.DefaultMediaSourceFactory;
 import androidx.media3.exoplayer.source.LoadEventInfo;
 import androidx.media3.exoplayer.source.MediaLoadData;
@@ -1953,44 +1955,43 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
 
             // rtmp
             if (metaType == PlayerType.MetaType.VIDEO_RTMP) {
-                Object factory = buildVideoMediaFactory(context, httpFactory, args, metaType, item);
                 if (LogUtil.DEBUG) {
                     LogUtil.log(TAG, "buildVideoMediaSource -> rtmp, dataUrl = " + url);
                 }
-                return new ProgressiveMediaSource.Factory(((DataSource.Factory) factory)).createMediaSource(new MediaItem.Builder()
+
+                Class<?> cls = Class.forName("ext.rtmp.RtmpDataSource");
+                DataSource.Factory factory = (DataSource.Factory) cls.newInstance();
+                return new ProgressiveMediaSource.Factory(factory).createMediaSource(new MediaItem.Builder()
                         .setUri(Uri.parse(url))
                         .setMediaId("video:" + hashCode)
                         .build());
             }
             // rtsp
             else if (metaType == PlayerType.MetaType.VIDEO_RTSP) {
-                Object factory = buildVideoMediaFactory(context, httpFactory, args, metaType, item);
                 if (LogUtil.DEBUG) {
                     LogUtil.log(TAG, "buildVideoMediaSource -> rtsp, dataUrl = " + url);
                 }
-                return ((MediaSource.Factory) factory).createMediaSource(new MediaItem.Builder()
-                        .setUri(Uri.parse(url))
-                        .setMediaId("video:" + hashCode)
-                        .build());
-            }
-            // mp4
-            else if (metaType == PlayerType.MetaType.VIDEO_MP4) {
-                Object factory = buildVideoMediaFactory(context, httpFactory, args, metaType, item);
-                if (LogUtil.DEBUG) {
-                    LogUtil.log(TAG, "buildVideoMediaSource -> mp4, dataUrl = " + url);
-                }
 
-                return new ProgressiveMediaSource.Factory(((DataSource.Factory) factory)).createMediaSource(new MediaItem.Builder()
+                Class<?> cls = Class.forName("androidx.media3.exoplayer.rtsp.RtspMediaSource$Factory");
+                Constructor<?> constructor = cls.getDeclaredConstructor(DataSource.Factory.class);
+                constructor.setAccessible(true);
+
+                DataSource.Factory obj = buildDefaultDataSource(context, httpFactory, args, PlayerType.UrlType.VIDEO, url);
+                DataSource.Factory factory = (DataSource.Factory) constructor.newInstance(obj);
+                return ((MediaSource.Factory) factory).createMediaSource(new MediaItem.Builder()
                         .setUri(Uri.parse(url))
                         .setMediaId("video:" + hashCode)
                         .build());
             }
             // dash
             else if (metaType == PlayerType.MetaType.VIDEO_DASH) {
-                Object factory = buildVideoMediaFactory(context, httpFactory, args, metaType, item);
                 if (LogUtil.DEBUG) {
                     LogUtil.log(TAG, "buildVideoMediaSource -> dash, dataUrl = " + url);
                 }
+
+                DataSource.Factory obj = buildDefaultDataSource(context, httpFactory, args, PlayerType.UrlType.VIDEO, item.getUrl());
+                DashMediaSource.Factory factory = new DashMediaSource.Factory(obj);
+
                 return ((MediaSource.Factory) factory).createMediaSource(new MediaItem.Builder()
                         .setUri(Uri.parse(url))
                         .setMediaId("video:" + hashCode)
@@ -1998,10 +1999,13 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
             }
             // hls
             else if (metaType == PlayerType.MetaType.VIDEO_HLS) {
-                Object factory = buildVideoMediaFactory(context, httpFactory, args, metaType, item);
                 if (LogUtil.DEBUG) {
                     LogUtil.log(TAG, "buildVideoMediaSource -> hls, dataUrl = " + url);
                 }
+                HlsMediaSource.Factory factory = buildHlsMediaSourceFactory(context, httpFactory, args, PlayerType.UrlType.VIDEO, item);
+                if (null == factory)
+                    throw new Exception("error: factory null");
+
                 return ((MediaSource.Factory) factory).createMediaSource(new MediaItem.Builder()
                         .setUri(Uri.parse(url))
                         .setMediaId("video:" + hashCode)
@@ -2009,115 +2013,55 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
             }
             // SmoothStreaming
             else if (metaType == PlayerType.MetaType.VIDEO_SS) {
-                Object factory = buildVideoMediaFactory(context, httpFactory, args, metaType, item);
-                if (LogUtil.DEBUG) {
-                    LogUtil.log(TAG, "buildVideoMediaSource -> SmoothStreaming, dataUrl = " + url);
-                }
+
+                DataSource.Factory obj = buildDefaultDataSource(context, httpFactory, args, PlayerType.UrlType.VIDEO, item.getUrl());
+                SsMediaSource.Factory factory = new SsMediaSource.Factory(obj);
                 return ((MediaSource.Factory) factory).createMediaSource(new MediaItem.Builder()
+                        .setUri(Uri.parse(url))
+                        .setMediaId("video:" + hashCode)
+                        .build());
+            }
+            // mp4
+            else if (metaType == PlayerType.MetaType.VIDEO_MP4) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log(TAG, "buildVideoMediaSource -> mp4, dataUrl = " + url);
+                }
+                DataSource.Factory factory = buildDefaultDataSource(context, httpFactory, args, PlayerType.UrlType.VIDEO, url);
+                if (null == factory)
+                    throw new Exception("error: factory null");
+
+                return new ProgressiveMediaSource.Factory(((DataSource.Factory) factory)).createMediaSource(new MediaItem.Builder()
                         .setUri(Uri.parse(url))
                         .setMediaId("video:" + hashCode)
                         .build());
             }
             // other
             else {
-                Object factory = buildVideoMediaFactory(context, httpFactory, args, metaType, item);
                 if (LogUtil.DEBUG) {
                     LogUtil.log(TAG, "buildVideoMediaSource -> other, dataUrl = " + url);
                 }
-                return ((DefaultMediaSourceFactory) factory).createMediaSource(new MediaItem.Builder()
-                        .setUri(Uri.parse(url))
-                        .setMediaId("video:" + hashCode)
-                        .build());
+                DataSource.Factory factory = buildDefaultDataSource(context, httpFactory, args, PlayerType.UrlType.VIDEO, url);
+                if (null == factory)
+                    throw new Exception("error: factory null");
+
+                if (factory instanceof CacheDataSource.Factory) {
+                    return new DefaultMediaSourceFactory(factory)
+                            .createMediaSource(new MediaItem.Builder()
+                                    .setUri(Uri.parse(url))
+                                    .setMediaId("video:" + hashCode)
+                                    .build());
+                } else {
+                    return new DefaultMediaSourceFactory(factory)
+                            .createMediaSource(new MediaItem.Builder()
+                                    .setUri(Uri.parse(url))
+                                    .setMediaId("video:" + hashCode)
+                                    .build());
+                }
             }
 
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
                 LogUtil.log(TAG, "buildVideoMediaSource -> Exception: " + e.getMessage());
-            }
-            return null;
-        }
-    }
-
-    private Object buildVideoMediaFactory(Context context,
-                                          HttpDataSource.Factory httpFactory,
-                                          StartArgs args,
-                                          @PlayerType.MetaType.Value int metaType,
-                                          UrlArgs.Item item) {
-
-        try {
-
-            String url = item.getUrl();
-
-            // rtmp
-            if (metaType == PlayerType.MetaType.VIDEO_RTMP) {
-                Class<?> cls = Class.forName("ext.rtmp.RtmpDataSource");
-                DataSource.Factory factory = (DataSource.Factory) cls.newInstance();
-                if (LogUtil.DEBUG) {
-                    LogUtil.log(TAG, "buildVideoMediaFactory -> rtmp, dataUrl = " + url);
-                }
-                return factory;
-            }
-            // rtsp
-            else if (metaType == PlayerType.MetaType.VIDEO_RTSP) {
-                Class<?> cls = Class.forName("androidx.media3.exoplayer.rtsp.RtspMediaSource$Factory");
-                Constructor<?> constructor = cls.getDeclaredConstructor(DataSource.Factory.class);
-                constructor.setAccessible(true);
-                DataSource.Factory factory = buildDateFactory(context, httpFactory, args, PlayerType.UrlType.VIDEO, url);
-                if (LogUtil.DEBUG) {
-                    LogUtil.log(TAG, "buildVideoMediaFactory -> rtsp, dataUrl = " + url);
-                }
-                return constructor.newInstance(factory);
-            }
-            // mp4
-            else if (metaType == PlayerType.MetaType.VIDEO_MP4) {
-                if (LogUtil.DEBUG) {
-                    LogUtil.log(TAG, "buildVideoMediaFactory -> mp4, dataUrl = " + url);
-                }
-                return buildDateFactory(context, httpFactory, args, PlayerType.UrlType.VIDEO, url);
-            }
-            // dash
-            else if (metaType == PlayerType.MetaType.VIDEO_DASH) {
-                Class<?> cls = Class.forName("androidx.media3.exoplayer.dash.DashMediaSource$Factory");
-                Constructor<?> constructor = cls.getDeclaredConstructor(DataSource.Factory.class);
-                constructor.setAccessible(true);
-                DataSource.Factory factory = buildDateFactory(context, httpFactory, args, PlayerType.UrlType.VIDEO, url);
-                if (LogUtil.DEBUG) {
-                    LogUtil.log(TAG, "buildVideoMediaFactory -> dash, dataUrl = " + url);
-                }
-                return constructor.newInstance(factory);
-            }
-            // hls
-            else if (metaType == PlayerType.MetaType.VIDEO_HLS) {
-                if (LogUtil.DEBUG) {
-                    LogUtil.log(TAG, "buildVideoMediaFactory -> hls, dataUrl = " + url);
-                }
-//                Class<?> cls = Class.forName("androidx.media3.exoplayer.hls.HlsMediaSource$Factory");
-//                Constructor<?> constructor = cls.getDeclaredConstructor(DataSource.Factory.class);
-//                constructor.setAccessible(true);
-                return buildHlsMediaSourceFactory(context, httpFactory, args, metaType, item);
-            }
-            // SmoothStreaming
-            else if (metaType == PlayerType.MetaType.VIDEO_SS) {
-                Class<?> cls = Class.forName("androidx.media3.exoplayer.smoothstreaming.SsMediaSource$Factory");
-                Constructor<?> constructor = cls.getDeclaredConstructor(DataSource.Factory.class);
-                constructor.setAccessible(true);
-                DataSource.Factory factory = buildDateFactory(context, httpFactory, args, PlayerType.UrlType.VIDEO, url);
-                if (LogUtil.DEBUG) {
-                    LogUtil.log(TAG, "buildVideoMediaFactory -> SmoothStreaming, dataUrl = " + url);
-                }
-                return constructor.newInstance(factory);
-            }
-            // other
-            else {
-                if (LogUtil.DEBUG) {
-                    LogUtil.log(TAG, "buildVideoMediaFactory -> other, dataUrl = " + url);
-                }
-                return buildDateFactory(context, httpFactory, args, PlayerType.UrlType.VIDEO, url);
-            }
-
-        } catch (Exception e) {
-            if (LogUtil.DEBUG) {
-                LogUtil.log(TAG, "buildVideoMediaFactory -> Exception: " + e.getMessage());
             }
             return null;
         }
@@ -2203,9 +2147,9 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
 
             // hls
             if (metaType != PlayerType.MetaType.VIDEO_HLS) {
-                return buildDateFactory(context, httpFactory, args, PlayerType.UrlType.AUDIO, url);
+                return buildDefaultDataSource(context, httpFactory, args, PlayerType.UrlType.AUDIO, url);
             } else {
-                return buildHlsMediaSourceFactory(context, httpFactory, args, metaType, item);
+                return buildHlsMediaSourceFactory(context, httpFactory, args, PlayerType.UrlType.AUDIO, item);
             }
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
@@ -2266,7 +2210,7 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
             if (null == mimeType)
                 throw new Exception("error: mimeType null");
 
-            Object factory = buildDateFactory(context, httpFactory, args, PlayerType.UrlType.SUBTITLE, sutitleUrl);
+            Object factory = buildDefaultDataSource(context, httpFactory, args, PlayerType.UrlType.SUBTITLE, sutitleUrl);
             if (LogUtil.DEBUG) {
                 LogUtil.log(TAG, "buildSubtitleMediaSource -> factory = " + factory);
             }
@@ -2303,52 +2247,6 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
                 LogUtil.log(TAG, "buildSubtitleMediaSource -> Exception: " + e.getMessage());
             }
             return null;
-        }
-    }
-
-    private DataSource.Factory buildDateFactory(Context context,
-                                                HttpDataSource.Factory httpFactory,
-                                                StartArgs args,
-                                                @PlayerType.UrlType.Value int urlType,
-                                                String dataUrl) {
-
-        if (LogUtil.DEBUG) {
-            LogUtil.log(TAG, "buildDateFactory -> mSimpleCache = " + mSimpleCache);
-        }
-
-        try {
-
-            if (null == mSimpleCache)
-                throw new Exception("error: mSimpleCache null");
-
-            return new CacheDataSource.Factory()
-                    .setFlags(
-                            // 当发生错误时忽略缓存（比如错误时不读取缓存，直接请求源数据）。
-                            CacheDataSource.FLAG_IGNORE_CACHE_ON_ERROR
-                                    // 对于未设置长度的请求忽略缓存（比如请求体长度未知时不使用缓存）。
-                                    | CacheDataSource.FLAG_IGNORE_CACHE_FOR_UNSET_LENGTH_REQUESTS
-                    )
-                    .setCache(mSimpleCache)
-                    // 网络请求工厂
-                    .setUpstreamDataSourceFactory(httpFactory)
-                    // 缓存读取工厂
-                    .setCacheReadDataSourceFactory(new FileDataSource.Factory())
-                    // 写入数据到缓存
-                    .setCacheWriteDataSinkFactory(new CacheDataSink.Factory()
-                            .setFragmentSize(CacheDataSink.DEFAULT_FRAGMENT_SIZE)
-                            .setCache(mSimpleCache))
-                    // 自定义缓存键
-                    .setCacheKeyFactory(new CacheKeyFactory() {
-                        @Override
-                        public String buildCacheKey(DataSpec dataSpec) {
-                            return formatCacheKey(dataSpec.uri);
-                        }
-                    });
-        } catch (Exception e) {
-            if (LogUtil.DEBUG) {
-                LogUtil.log(TAG, "buildDateFactory -> Exception: " + e.getMessage());
-            }
-            return new DefaultDataSource.Factory(context, httpFactory);
         }
     }
 
@@ -2537,13 +2435,61 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
         }
     }
 
+    private DataSource.Factory buildDefaultDataSource(Context context,
+                                                      HttpDataSource.Factory httpFactory,
+                                                      StartArgs args,
+                                                      @PlayerType.UrlType.Value int urlType,
+                                                      String dataUrl) {
+
+        if (LogUtil.DEBUG) {
+            LogUtil.log(TAG, "buildDefaultDataSource -> mSimpleCache = " + mSimpleCache);
+        }
+
+        try {
+
+            if (null == mSimpleCache)
+                throw new Exception("error: mSimpleCache null");
+
+            return new CacheDataSource.Factory()
+                    .setFlags(
+                            // 当发生错误时忽略缓存（比如错误时不读取缓存，直接请求源数据）。
+                            CacheDataSource.FLAG_IGNORE_CACHE_ON_ERROR
+                                    // 对于未设置长度的请求忽略缓存（比如请求体长度未知时不使用缓存）。
+                                    | CacheDataSource.FLAG_IGNORE_CACHE_FOR_UNSET_LENGTH_REQUESTS
+                    )
+                    .setCache(mSimpleCache)
+                    // 网络请求工厂
+                    .setUpstreamDataSourceFactory(httpFactory)
+                    // 缓存读取工厂
+                    .setCacheReadDataSourceFactory(new FileDataSource.Factory())
+                    // 写入数据到缓存
+                    .setCacheWriteDataSinkFactory(new CacheDataSink.Factory()
+                            .setFragmentSize(CacheDataSink.DEFAULT_FRAGMENT_SIZE)
+                            .setCache(mSimpleCache))
+                    // 自定义缓存键
+                    .setCacheKeyFactory(new CacheKeyFactory() {
+                        @Override
+                        public String buildCacheKey(DataSpec dataSpec) {
+                            return formatCacheKey(dataSpec.uri);
+                        }
+                    });
+        } catch (Exception e) {
+            if (LogUtil.DEBUG) {
+                LogUtil.log(TAG, "buildDefaultDataSource -> Exception: " + e.getMessage());
+            }
+            return new DefaultDataSource.Factory(context, httpFactory);
+        }
+    }
+
+
     private HlsMediaSource.Factory buildHlsMediaSourceFactory(Context context,
                                                               HttpDataSource.Factory httpFactory,
                                                               StartArgs args,
-                                                              @PlayerType.MetaType.Value int metaType,
+                                                              @PlayerType.UrlType.Value
+                                                              int urlType,
                                                               UrlArgs.Item item) {
 
-        DataSource.Factory factory = buildDateFactory(context, httpFactory, args, PlayerType.UrlType.VIDEO, item.getUrl());
+        DataSource.Factory factory = buildDefaultDataSource(context, httpFactory, args, urlType, item.getUrl());
 
         HlsMediaSource.Factory hlsMediaSource = new HlsMediaSource.Factory(factory)
                 // 播放器可以跳过「预加载切片」的步骤，仅解析 M3U8 元数据就完成准备，从而加快播放启动速度，但可能牺牲首帧加载的稳定性。

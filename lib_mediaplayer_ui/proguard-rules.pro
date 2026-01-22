@@ -11,39 +11,69 @@
 }
 
 
+# sdk
+-keep class lib.kalu.mediaplayer.PlayerSDK {
+    public <fields>;
+    public <methods>;
+}
+
+# bean
+-keep class lib.kalu.mediaplayer.bean.** {
+    public <methods>;
+}
+-keep class lib.kalu.mediaplayer.bean.**$** {
+    public <methods>;
+}
+
+# proxy
+-keep class lib.kalu.mediaplayer.proxy.Proxy {
+    public <methods>;
+}
+-keep class lib.kalu.mediaplayer.proxy.Proxy$Builder {
+    public <methods>;
+}
+-keep class lib.kalu.mediaplayer.proxy.ProxyUrl {
+    public <methods>;
+}
+-keep class lib.kalu.mediaplayer.proxy.ProxyTrack {
+    public <methods>;
+}
+-keep class lib.kalu.mediaplayer.proxy.ProxyBuried {
+    public <methods>;
+}
+
+# type
 -keep @interface lib.kalu.mediaplayer.bean.type.PlayerType {
     *;
 }
--keep @interface lib.kalu.mediaplayer.bean.type.PlayerType$KernelType {
-    *;
+
+# listener
+-keep class lib.kalu.mediaplayer.listener.** {
+    public <fields>;
+    public <methods>;
 }
--keep @interface lib.kalu.mediaplayer.bean.type.PlayerType$RenderType {
-    *;
+
+# util
+-keep class lib.kalu.mediaplayer.util.UdpUtil {
+    public <fields>;
+    public <methods>;
 }
--keep @interface lib.kalu.mediaplayer.bean.type.PlayerType$WindowType {
-    *;
+
+# test
+-keep class lib.kalu.mediaplayer.test.TestActivity {
+    public <fields>;
+    public <methods>;
 }
--keep @interface lib.kalu.mediaplayer.bean.type.PlayerType$ScaleType {
-    *;
+
+# view
+-keep class lib.kalu.mediaplayer.PlayerLayout {
+    public <methods>;
 }
--keep @interface lib.kalu.mediaplayer.bean.type.PlayerType$SeekType {
-    *;
+-keep class lib.kalu.mediaplayer.PlayerView{
+    public <methods>;
 }
--keep @interface lib.kalu.mediaplayer.bean.type.PlayerType$DecoderType {
-    *;
-}
--keep @interface lib.kalu.mediaplayer.bean.type.PlayerType$EventType {
-    *;
-}
--keep @interface lib.kalu.mediaplayer.bean.type.PlayerType$SpeedType {
-    *;
-}
--keep @interface lib.kalu.mediaplayer.bean.type.PlayerType$TrackType {
-    *;
-}
--keep @interface lib.kalu.mediaplayer.bean.type.PlayerType$ParserType {
-    *;
-}
--keep @interface lib.kalu.mediaplayer.bean.type.PlayerType$ScreenOrientation {
-    *;
+
+# renderers
+-keep class lib.kalu.mediax.renderers.**{
+    public <methods>;
 }

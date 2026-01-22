@@ -208,7 +208,8 @@ public class StartArgs implements Serializable {
 
     // 禁止抓包
     private boolean noProxy;
-    public boolean isNoProxy(){
+
+    public boolean isNoProxy() {
         return noProxy;
     }
 
@@ -505,5 +506,18 @@ public class StartArgs implements Serializable {
         public StartArgs build() {
             return new StartArgs(this);
         }
+    }
+
+    public static final class BufferDurationsMs implements Serializable {
+
+        // 播放器至少要缓冲 50 秒的数据后，才会停止主动加载更多数据；如果缓冲低于这个值，会重新开始加载。
+        private int minBufferMs = 50_000;
+        // 播放器最多缓冲 50 秒的数据，达到这个值后会停止加载，避免占用过多内存。
+        private int maxBufferMs = 50_000;
+        // 启播, 播放器需要至少缓冲 1 秒的数据，才会开始播放（或从暂停恢复播放）。
+        private int bufferForPlaybackMs = 1000;
+        // 播放过程中缓冲，播放器在缓冲不足导致暂停后，需要重新缓冲 2 秒的数据，才会恢复播放。
+        private int bufferForPlaybackAfterRebufferMs = 2000;
+
     }
 }
