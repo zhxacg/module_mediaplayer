@@ -240,13 +240,13 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
                              */
                             .setBufferDurationsMs(
                                     // minBufferMs：播放器至少要缓冲 1 秒的数据后，才会停止主动加载更多数据；如果缓冲低于这个值，会重新开始加载。
-                                    50_000,
+                                    startArgs.getBufferDurationsMsMinBufferMs(),
                                     // maxBufferMs：播放器最多缓冲 5 秒的数据，达到这个值后会停止加载，避免占用过多内存。
-                                    50_000,
+                                    startArgs.getBufferDurationsMsMaxBufferMs(),
                                     // bufferForPlaybackMs：播放器需要至少缓冲 1 秒的数据，才会开始播放（或从暂停恢复播放）。
-                                    1000,
+                                    startArgs.getBufferDurationsMsBufferForPlaybackMs(),
                                     // bufferForPlaybackAfterRebufferMs：播放器在缓冲不足导致暂停后，需要重新缓冲 1 秒的数据，才会恢复播放。
-                                    2000
+                                    startArgs.getBufferDurationsMsBufferForPlaybackAfterRebufferMs()
                             )
                             // 内存分配器 默认 64 * 1024 = 65536
                             .setAllocator(new DefaultAllocator(true, 64 * 1024))
@@ -1879,7 +1879,7 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
 
     private MediaSource buildMediaSource(Context context,
                                          HttpDataSource.Factory httpFactory,
-                                         StartArgs args,
+                                         StartArgs startArgs,
                                          @PlayerType.UrlType.Value
                                          int urlType,
                                          UrlArgs.Item urlItem) {
@@ -1903,8 +1903,8 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
                     LogUtil.log(TAG, "buildMediaSource -> track audio, type = hls, url = " + url);
                 }
 
-                HlsMediaSource.Factory factory = buildHlsMediaSourceFactory(context, httpFactory, args, PlayerType.UrlType.AUDIO, urlItem);
-                MediaItem mediaItem = buildMediaItem(PlayerType.UrlType.AUDIO, urlItem);
+                HlsMediaSource.Factory factory = buildHlsMediaSourceFactory(context, httpFactory, startArgs, PlayerType.UrlType.AUDIO, urlItem);
+                MediaItem mediaItem = buildMediaItem(PlayerType.UrlType.AUDIO, startArgs, urlItem);
                 return ((MediaSource.Factory) factory).createMediaSource(mediaItem);
             }
             // 轨道音频
@@ -1914,7 +1914,7 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
                 }
 
                 DataSource.Factory factory = buildDefaultDataSource(context, httpFactory);
-                MediaItem mediaItem = buildMediaItem(PlayerType.UrlType.AUDIO, urlItem);
+                MediaItem mediaItem = buildMediaItem(PlayerType.UrlType.AUDIO, startArgs, urlItem);
                 return new DefaultMediaSourceFactory(factory).createMediaSource(mediaItem);
             }
             // 轨道字幕
@@ -1942,7 +1942,7 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
 
                 Class<?> cls = Class.forName("ext.rtmp.RtmpDataSource");
                 DataSource.Factory factory = (DataSource.Factory) cls.newInstance();
-                MediaItem mediaItem = buildMediaItem(PlayerType.UrlType.VIDEO, urlItem);
+                MediaItem mediaItem = buildMediaItem(PlayerType.UrlType.VIDEO, startArgs, urlItem);
                 return new ProgressiveMediaSource.Factory(factory).createMediaSource(mediaItem);
             }
             // 轨道视频 rtsp
@@ -1957,7 +1957,7 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
 
                 DataSource.Factory obj = buildDefaultDataSource(context, httpFactory);
                 DataSource.Factory factory = (DataSource.Factory) constructor.newInstance(obj);
-                MediaItem mediaItem = buildMediaItem(PlayerType.UrlType.VIDEO, urlItem);
+                MediaItem mediaItem = buildMediaItem(PlayerType.UrlType.VIDEO, startArgs, urlItem);
                 return ((MediaSource.Factory) factory).createMediaSource(mediaItem);
             }
             // 轨道视频 dash
@@ -1968,7 +1968,7 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
 
                 DataSource.Factory obj = buildDefaultDataSource(context, httpFactory);
                 DashMediaSource.Factory factory = new DashMediaSource.Factory(obj);
-                MediaItem mediaItem = buildMediaItem(PlayerType.UrlType.VIDEO, urlItem);
+                MediaItem mediaItem = buildMediaItem(PlayerType.UrlType.VIDEO, startArgs, urlItem);
                 return ((MediaSource.Factory) factory).createMediaSource(mediaItem);
             }
             // 轨道视频 hls
@@ -1977,8 +1977,8 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
                     LogUtil.log(TAG, "buildMediaSource -> track video, type = hls, url = " + url);
                 }
 
-                HlsMediaSource.Factory factory = buildHlsMediaSourceFactory(context, httpFactory, args, PlayerType.UrlType.VIDEO, urlItem);
-                MediaItem mediaItem = buildMediaItem(PlayerType.UrlType.VIDEO, urlItem);
+                HlsMediaSource.Factory factory = buildHlsMediaSourceFactory(context, httpFactory, startArgs, PlayerType.UrlType.VIDEO, urlItem);
+                MediaItem mediaItem = buildMediaItem(PlayerType.UrlType.VIDEO, startArgs, urlItem);
                 return ((MediaSource.Factory) factory).createMediaSource(mediaItem);
             }
             // 轨道视频 SmoothStreaming
@@ -1989,7 +1989,7 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
 
                 DataSource.Factory obj = buildDefaultDataSource(context, httpFactory);
                 SsMediaSource.Factory factory = new SsMediaSource.Factory(obj);
-                MediaItem mediaItem = buildMediaItem(PlayerType.UrlType.VIDEO, urlItem);
+                MediaItem mediaItem = buildMediaItem(PlayerType.UrlType.VIDEO, startArgs, urlItem);
                 return ((MediaSource.Factory) factory).createMediaSource(mediaItem);
             }
             // 轨道视频 mp4
@@ -1999,7 +1999,7 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
                 }
 
                 DataSource.Factory factory = buildDefaultDataSource(context, httpFactory);
-                MediaItem mediaItem = buildMediaItem(PlayerType.UrlType.VIDEO, urlItem);
+                MediaItem mediaItem = buildMediaItem(PlayerType.UrlType.VIDEO, startArgs, urlItem);
                 return new ProgressiveMediaSource.Factory(factory).createMediaSource(mediaItem);
             }
             // 轨道视频 def
@@ -2009,7 +2009,7 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
                 }
 
                 DataSource.Factory factory = buildDefaultDataSource(context, httpFactory);
-                MediaItem mediaItem = buildMediaItem(PlayerType.UrlType.VIDEO, urlItem);
+                MediaItem mediaItem = buildMediaItem(PlayerType.UrlType.VIDEO, startArgs, urlItem);
                 return new DefaultMediaSourceFactory(factory).createMediaSource(mediaItem);
             }
         } catch (Exception e) {
@@ -2046,6 +2046,7 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
     }
 
     private MediaItem buildMediaItem(@PlayerType.UrlType.Value int urlType,
+                                     StartArgs startArgs,
                                      UrlArgs.Item urlItem) {
 
         try {
@@ -2064,15 +2065,15 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
                         .setMediaId("audio:" + url.hashCode())
                         .setLiveConfiguration(new MediaItem.LiveConfiguration.Builder()
                                 // 播放器追赶直播时允许的最大倍速	1.2f - 1.5f	当播放器落后于直播点时，自动加速播放追赶
-                                .setMaxPlaybackSpeed(1.2f)
+                                .setMaxPlaybackSpeed(startArgs.getLiveConfigurationMaxPlaybackSpeed())
                                 // 播放器为了等待缓冲的最小倍速	0.8f - 1.0f	网络差时，降速播放避免卡顿
-                                .setMinPlaybackSpeed(0.8f)
+                                .setMinPlaybackSpeed(startArgs.getLiveConfigurationMinPlaybackSpeed())
                                 // 目标直播延迟（离直播边缘的距离）	3000 - 5000ms	值越大越稳定（不易触发 BehindLiveWindow），值越小越实时
-                                .setTargetOffsetMs(5000)
+                                .setTargetOffsetMs(startArgs.getLiveConfigurationTargetOffsetMs())
                                 // 最小允许的直播延迟	2000ms	防止播放器离直播边缘太近导致频繁卡顿
-                                .setMinOffsetMs(2000)
+                                .setMinOffsetMs(startArgs.getLiveConfigurationMinOffsetMs())
                                 // 最大允许的直播延迟	10000ms	超过这个值就会自动加速追赶
-                                .setMaxOffsetMs(10000)
+                                .setMaxOffsetMs(startArgs.getLiveConfigurationMaxOffsetMs())
                                 .build())
                         .build();
             } else if (urlType == PlayerType.UrlType.VIDEO) {
@@ -2081,15 +2082,15 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
                         .setMediaId("video:" + url.hashCode())
                         .setLiveConfiguration(new MediaItem.LiveConfiguration.Builder()
                                 // 播放器追赶直播时允许的最大倍速	1.2f - 1.5f	当播放器落后于直播点时，自动加速播放追赶
-                                .setMaxPlaybackSpeed(1.2f)
+                                .setMaxPlaybackSpeed(startArgs.getLiveConfigurationMaxPlaybackSpeed())
                                 // 播放器为了等待缓冲的最小倍速	0.8f - 1.0f	网络差时，降速播放避免卡顿
-                                .setMinPlaybackSpeed(0.8f)
+                                .setMinPlaybackSpeed(startArgs.getLiveConfigurationMinPlaybackSpeed())
                                 // 目标直播延迟（离直播边缘的距离）	3000 - 5000ms	值越大越稳定（不易触发 BehindLiveWindow），值越小越实时
-                                .setTargetOffsetMs(5000)
+                                .setTargetOffsetMs(startArgs.getLiveConfigurationTargetOffsetMs())
                                 // 最小允许的直播延迟	2000ms	防止播放器离直播边缘太近导致频繁卡顿
-                                .setMinOffsetMs(2000)
+                                .setMinOffsetMs(startArgs.getLiveConfigurationMinOffsetMs())
                                 // 最大允许的直播延迟	10000ms	超过这个值就会自动加速追赶
-                                .setMaxOffsetMs(10000)
+                                .setMaxOffsetMs(startArgs.getLiveConfigurationMaxOffsetMs())
                                 .build())
                         .build();
             } else {
