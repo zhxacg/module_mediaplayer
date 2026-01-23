@@ -42,6 +42,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.zip.GZIPInputStream;
 
+import lib.kalu.mediaplayer.bean.type.PlayerType;
+import lib.kalu.mediaplayer.proxy.ProxyUrl;
 import lib.kalu.mediaplayer.util.LogUtil;
 
 public final class CustomDefaultHttpDataSource extends BaseDataSource implements HttpDataSource {
@@ -64,10 +66,15 @@ public final class CustomDefaultHttpDataSource extends BaseDataSource implements
         private boolean allowCrossProtocolRedirects;
         private boolean keepPostFor302Redirects;
 
+        private ProxyUrl proxyUrl;
+        private boolean noProxy;
+
         /**
          * Creates an instance.
          */
-        public Factory() {
+        public Factory(ProxyUrl proxyUrl, boolean noProxy) {
+            this.proxyUrl = proxyUrl;
+            this.noProxy = noProxy;
             defaultRequestProperties = new RequestProperties();
             connectTimeoutMs = DEFAULT_CONNECT_TIMEOUT_MILLIS;
             readTimeoutMs = DEFAULT_READ_TIMEOUT_MILLIS;
@@ -185,6 +192,8 @@ public final class CustomDefaultHttpDataSource extends BaseDataSource implements
         public CustomDefaultHttpDataSource createDataSource() {
             CustomDefaultHttpDataSource dataSource =
                     new CustomDefaultHttpDataSource(
+                            proxyUrl,
+                            noProxy,
                             userAgent,
                             connectTimeoutMs,
                             readTimeoutMs,
@@ -237,6 +246,9 @@ public final class CustomDefaultHttpDataSource extends BaseDataSource implements
     private long bytesToRead;
     private long bytesRead;
 
+    private ProxyUrl proxyUrl;
+    private boolean noProxy;
+
     /**
      * @deprecated Use {@link Factory} instead.
      */
@@ -281,6 +293,8 @@ public final class CustomDefaultHttpDataSource extends BaseDataSource implements
             boolean allowCrossProtocolRedirects,
             @Nullable RequestProperties defaultRequestProperties) {
         this(
+                null,
+                false,
                 userAgent,
                 connectTimeoutMillis,
                 readTimeoutMillis,
@@ -291,6 +305,8 @@ public final class CustomDefaultHttpDataSource extends BaseDataSource implements
     }
 
     private CustomDefaultHttpDataSource(
+            ProxyUrl proxyUrl,
+            boolean noProxy,
             @Nullable String userAgent,
             int connectTimeoutMillis,
             int readTimeoutMillis,
@@ -299,6 +315,8 @@ public final class CustomDefaultHttpDataSource extends BaseDataSource implements
             @Nullable Predicate<String> contentTypePredicate,
             boolean keepPostFor302Redirects) {
         super(/* isNetwork= */ true);
+        this.proxyUrl = proxyUrl;
+        this.noProxy = noProxy;
         this.userAgent = userAgent;
         this.connectTimeoutMillis = connectTimeoutMillis;
         this.readTimeoutMillis = readTimeoutMillis;
@@ -920,30 +938,127 @@ public final class CustomDefaultHttpDataSource extends BaseDataSource implements
         }
     }
 
+    /****************/
+
     private DataSpec formatOpenUrl(DataSpec dataSpec) {
-//        try {
-//            ProxyUrl proxyUrl = PlayerSDK.init().getPlayerBuilder().getProxy().getProxyUrl();
-//            if (null == proxyUrl)
-//                throw new Exception("waring: proxyUrl null");
-//            String openUrl = dataSpec.uri.toString();
-//            if (LogUtil.DEBUG) {
-//                LogUtil.log("CustomDefaultHttpDataSource -> formatOpenUrl -> openUrl =  " + openUrl);
-//            }
-//            String formatOpenUrl = proxyUrl.formatOpenUrl(openUrl);
-//            if (LogUtil.DEBUG) {
-//                LogUtil.log("CustomDefaultHttpDataSource -> formatOpenUrl -> formatOpenUrl =  " + formatOpenUrl);
-//            }
-//            if (null == formatOpenUrl || formatOpenUrl.isEmpty())
-//                throw new Exception("waring: formatOpenUrl null");
-//            return dataSpec.buildUpon()
-//                    .setUri(formatOpenUrl)
-//                    .build();
-//        } catch (Exception e) {
-//            if (LogUtil.DEBUG) {
-//                LogUtil.log("CustomDefaultHttpDataSource -> formatOpenUrl -> Exception: " + e.getMessage());
-//            }
-//            return dataSpec;
-//        }
-        return dataSpec;
+        try {
+            if (null == proxyUrl)
+                throw new Exception("waring: proxyUrl null");
+            String openUrl = dataSpec.uri.toString();
+            if (LogUtil.DEBUG) {
+                LogUtil.log(TAG, "formatOpenUrl -> openUrl =  " + openUrl);
+            }
+
+            String formatOpenUrl;
+            // ts
+            if (openUrl.contains(PlayerType.SchemeType._TS)) {
+                formatOpenUrl = formatOpenSegmentUrl(openUrl);
+            }
+            // ts
+            else if (openUrl.contains(PlayerType.SchemeType._TS_)) {
+                formatOpenUrl = formatOpenSegmentUrl(openUrl);
+            }
+            // m3u8
+            else if (openUrl.contains(PlayerType.SchemeType._M3U8)) {
+                formatOpenUrl = formatOpenM3u8Url(openUrl);
+            }
+            // m3u8
+            else if (openUrl.contains(PlayerType.SchemeType._M3U8_)) {
+                formatOpenUrl = formatOpenM3u8Url(openUrl);
+            }
+            // vtt
+            else if (openUrl.contains(PlayerType.SchemeType._VTT)) {
+                formatOpenUrl = formatOpenSubtitleUrl(openUrl);
+            }
+            // vtt
+            else if (openUrl.contains(PlayerType.SchemeType._VTT_)) {
+                formatOpenUrl = formatOpenSubtitleUrl(openUrl);
+            }
+            // ssa
+            else if (openUrl.contains(PlayerType.SchemeType._SSA)) {
+                formatOpenUrl = formatOpenSubtitleUrl(openUrl);
+            }
+            // ssa
+            else if (openUrl.contains(PlayerType.SchemeType._SSA_)) {
+                formatOpenUrl = formatOpenSubtitleUrl(openUrl);
+            }
+            // other
+            else {
+                formatOpenUrl = openUrl;
+            }
+
+            if (LogUtil.DEBUG) {
+                LogUtil.log(TAG, "formatOpenUrl -> formatUrl =  " + formatOpenUrl);
+            }
+            if (null == formatOpenUrl || formatOpenUrl.isEmpty())
+                throw new Exception("waring: formatOpenUrl null");
+
+            if (LogUtil.DEBUG) {
+                LogUtil.log(TAG, "formatOpenUrl -> reset completed");
+            }
+
+            return dataSpec.buildUpon()
+                    .setUri(formatOpenUrl)
+                    .build();
+        } catch (Exception e) {
+            if (LogUtil.DEBUG) {
+                LogUtil.log(TAG, "formatOpenUrl -> Exception: " + e.getMessage());
+            }
+            return dataSpec;
+        }
+    }
+
+    private String formatOpenSubtitleUrl(String url) {
+
+        if (LogUtil.DEBUG) {
+            LogUtil.log(TAG, "formatOpenSubtitleUrl -> url = " + url);
+        }
+
+        try {
+            if (null == proxyUrl)
+                throw new Exception("waring: proxyUrl null");
+            return proxyUrl.formatSubtitleUrl(url);
+        } catch (Exception e) {
+            if (LogUtil.DEBUG) {
+                LogUtil.log(TAG, "formatOpenSubtitleUrl -> Exception: " + e.getMessage());
+            }
+            return url;
+        }
+    }
+
+    private String formatOpenM3u8Url(String url) {
+
+        if (LogUtil.DEBUG) {
+            LogUtil.log(TAG, "formatOpenM3u8Url -> url = " + url);
+        }
+
+        try {
+            if (null == proxyUrl)
+                throw new Exception("waring: proxyUrl null");
+            return proxyUrl.formatM3u8Url(url);
+        } catch (Exception e) {
+            if (LogUtil.DEBUG) {
+                LogUtil.log(TAG, "formatOpenM3u8Url -> Exception: " + e.getMessage());
+            }
+            return url;
+        }
+    }
+
+    private String formatOpenSegmentUrl(String url) {
+
+        if (LogUtil.DEBUG) {
+            LogUtil.log(TAG, "formatOpenSegmentUrl -> url = " + url);
+        }
+
+        try {
+            if (null == proxyUrl)
+                throw new Exception("waring: proxyUrl null");
+            return proxyUrl.formatSegmentUrl(url);
+        } catch (Exception e) {
+            if (LogUtil.DEBUG) {
+                LogUtil.log(TAG, "formatOpenSegmentUrl -> Exception: " + e.getMessage());
+            }
+            return url;
+        }
     }
 }

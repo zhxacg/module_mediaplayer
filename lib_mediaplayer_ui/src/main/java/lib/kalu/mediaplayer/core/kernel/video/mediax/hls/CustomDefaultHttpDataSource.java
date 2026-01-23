@@ -1034,7 +1034,6 @@ public final class CustomDefaultHttpDataSource extends BaseDataSource implements
 
     /****************/
 
-
     private DataSpec formatOpenUrl(DataSpec dataSpec) {
         try {
             if (null == proxyUrl)

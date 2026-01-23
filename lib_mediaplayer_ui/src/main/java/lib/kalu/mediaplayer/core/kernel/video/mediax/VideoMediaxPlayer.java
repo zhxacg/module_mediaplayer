@@ -25,7 +25,6 @@ import androidx.media3.common.VideoSize;
 import androidx.media3.common.text.Cue;
 import androidx.media3.common.text.CueGroup;
 import androidx.media3.common.util.Clock;
-import androidx.media3.common.util.UnstableApi;
 import androidx.media3.database.StandaloneDatabaseProvider;
 import androidx.media3.datasource.DataSource;
 import androidx.media3.datasource.DataSpec;
@@ -101,7 +100,6 @@ import lib.kalu.mediaplayer.proxy.ProxyUrl;
 import lib.kalu.mediaplayer.util.LogUtil;
 import lib.kalu.mediax.subtitle.OffsetMsTextRenderer;
 
-@UnstableApi
 public final class VideoMediaxPlayer extends VideoBasePlayer {
 
     private String TAG = "VideoMediaxPlayer";
@@ -647,6 +645,31 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
         }
     }
 
+
+    @Override
+    public boolean isLive() {
+        try {
+            if (null == mExoPlayer)
+                throw new Exception("mExoPlayer error: null");
+            boolean live = super.isLive();
+            if (live) {
+                return true;
+            } else {
+                // Media3 中 Timeline 和 Window 的使用方式
+                Timeline timeline = mExoPlayer.getCurrentTimeline();
+                if (timeline.isEmpty())
+                    throw new Exception("error: timeline is empty");
+                int windowIndex = mExoPlayer.getCurrentWindowIndex();
+                Timeline.Window window = new Timeline.Window();
+                timeline.getWindow(windowIndex, window, Player.REPEAT_MODE_OFF);
+                // Media3 中判断是否为直播
+                return window.isLive();
+            }
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
     /**
      * 获取当前播放的位置
      */
@@ -658,18 +681,19 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
             if (null == mExoPlayer)
                 throw new Exception("mExoPlayer error: null");
 
-            // Media3 中 Timeline 和 Window 的使用方式
-            Timeline timeline = mExoPlayer.getCurrentTimeline();
-            if (timeline.isEmpty())
-                throw new Exception("error: timeline is empty");
-
-            int windowIndex = mExoPlayer.getCurrentWindowIndex();
-            Timeline.Window window = new Timeline.Window();
-            timeline.getWindow(windowIndex, window, Player.REPEAT_MODE_OFF);
-
+            boolean live = isLive();
             // Media3 中判断是否为直播
-            boolean isLive = window.isLive();
-            if (isLive) {
+            if (live) {
+
+                // Media3 中 Timeline 和 Window 的使用方式
+                Timeline timeline = mExoPlayer.getCurrentTimeline();
+                if (timeline.isEmpty())
+                    throw new Exception("error: timeline is empty");
+
+                int windowIndex = mExoPlayer.getCurrentWindowIndex();
+                Timeline.Window window = new Timeline.Window();
+                timeline.getWindow(windowIndex, window, Player.REPEAT_MODE_OFF);
+
                 // ========== Media3 通用适配方案 ==========
                 // 1. 直播可回溯的最早位置（替代 getEarliestAvailablePositionMs()）
                 //    window.startPositionMs 是 Media3 中表示窗口起始位置的标准字段
@@ -709,18 +733,19 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
             if (null == mExoPlayer)
                 throw new Exception("mExoPlayer error: null");
 
-            // Media3 中 Timeline 和 Window 的使用方式
-            Timeline timeline = mExoPlayer.getCurrentTimeline();
-            if (timeline.isEmpty())
-                throw new Exception("error: timeline is empty");
-
-            int windowIndex = mExoPlayer.getCurrentWindowIndex();
-            Timeline.Window window = new Timeline.Window();
-            timeline.getWindow(windowIndex, window, Player.REPEAT_MODE_OFF);
-
             // Media3 中判断是否为直播
-            boolean isLive = window.isLive();
-            if (isLive) {
+            boolean live = isLive();
+            if (live) {
+
+                // Media3 中 Timeline 和 Window 的使用方式
+                Timeline timeline = mExoPlayer.getCurrentTimeline();
+                if (timeline.isEmpty())
+                    throw new Exception("error: timeline is empty");
+
+                int windowIndex = mExoPlayer.getCurrentWindowIndex();
+                Timeline.Window window = new Timeline.Window();
+                timeline.getWindow(windowIndex, window, Player.REPEAT_MODE_OFF);
+
                 // ========== Media3 通用适配方案 ==========
                 // 1. 直播可回溯的最早位置（替代 getEarliestAvailablePositionMs()）
                 //    window.startPositionMs 是 Media3 中表示窗口起始位置的标准字段
@@ -894,10 +919,6 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
         }
 
         try {
-            boolean live = args.isLive();
-            if (live)
-                throw new Exception("error: live true");
-
             boolean containsMainUrl = args.containsMainUrl();
             if (!containsMainUrl)
                 throw new Exception("error: containsMainUrl false");

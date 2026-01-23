@@ -216,12 +216,14 @@ public class CustomHlsPlaylistParser implements ParsingLoadable.Parser<HlsPlayli
     @Nullable
     private final HlsMediaPlaylist previousMediaPlaylist;
 
+    private final ProxyUrl proxyUrl;
+
     /**
      * Creates an instance where media playlists are parsed without inheriting attributes from a
      * multivariant playlist.
      */
-    public CustomHlsPlaylistParser() {
-        this(HlsMultivariantPlaylist.EMPTY, /* previousMediaPlaylist= */ null);
+    public CustomHlsPlaylistParser(ProxyUrl proxyUrl) {
+        this(proxyUrl, HlsMultivariantPlaylist.EMPTY, /* previousMediaPlaylist= */ null);
     }
 
     /**
@@ -234,8 +236,10 @@ public class CustomHlsPlaylistParser implements ParsingLoadable.Parser<HlsPlayli
      *                              inherit skipped segments.
      */
     public CustomHlsPlaylistParser(
+            ProxyUrl proxyUrl,
             HlsMultivariantPlaylist multivariantPlaylist,
             @Nullable HlsMediaPlaylist previousMediaPlaylist) {
+        this.proxyUrl = proxyUrl;
         this.multivariantPlaylist = multivariantPlaylist;
         this.previousMediaPlaylist = previousMediaPlaylist;
     }
@@ -278,6 +282,7 @@ public class CustomHlsPlaylistParser implements ParsingLoadable.Parser<HlsPlayli
                         || line.equals(TAG_ENDLIST)) {
                     extraLines.add(line);
                     HlsMediaPlaylist hlsMediaPlaylist = parseMediaPlaylist(
+                            proxyUrl,
                             multivariantPlaylist,
                             previousMediaPlaylist,
                             new LineIterator(extraLines, reader),
@@ -641,6 +646,7 @@ public class CustomHlsPlaylistParser implements ParsingLoadable.Parser<HlsPlayli
     }
 
     private static HlsMediaPlaylist parseMediaPlaylist(
+            ProxyUrl proxyUrl,
             HlsMultivariantPlaylist multivariantPlaylist,
             @Nullable HlsMediaPlaylist previousMediaPlaylist,
             LineIterator iterator,
@@ -743,7 +749,7 @@ public class CustomHlsPlaylistParser implements ParsingLoadable.Parser<HlsPlayli
                 }
                 initializationSegment =
                         new HlsMediaPlaylist.Segment(
-                                formatSegmentPath(baseUri, uri),
+                                formatSegmentPath(proxyUrl, baseUri, uri),
                                 segmentByteRangeOffset,
                                 segmentByteRangeLength,
                                 fullSegmentEncryptionKeyUri,
@@ -986,7 +992,7 @@ public class CustomHlsPlaylistParser implements ParsingLoadable.Parser<HlsPlayli
                     // the playlist to provide an initialization vector for it.
                     inferredInitSegment =
                             new HlsMediaPlaylist.Segment(
-                                    formatSegmentPath(baseUri, segmentUri),
+                                    formatSegmentPath(proxyUrl, baseUri, segmentUri),
                                     /* byteRangeOffset= */ 0,
                                     segmentByteRangeOffset,
                                     /* fullSegmentEncryptionKeyUri= */ null,
@@ -1004,7 +1010,7 @@ public class CustomHlsPlaylistParser implements ParsingLoadable.Parser<HlsPlayli
 
                 segments.add(
                         new HlsMediaPlaylist.Segment(
-                                formatSegmentPath(baseUri, segmentUri),
+                                formatSegmentPath(proxyUrl, baseUri, segmentUri),
                                 initializationSegment != null ? initializationSegment : inferredInitSegment,
                                 segmentTitle,
                                 segmentDurationUs,
@@ -1338,27 +1344,93 @@ public class CustomHlsPlaylistParser implements ParsingLoadable.Parser<HlsPlayli
         }
     }
 
-    private static String formatSegmentPath(String baseUrl, String segmentPath) {
-//        try {
-//            ProxyUrl proxyUrl = PlayerSDK.init().getPlayerBuilder().getProxy().getProxyUrl();
-//            if (null == proxyUrl)
-//                throw new Exception("waring: proxyUrl null");
-//            if (LogUtil.DEBUG) {
-//                LogUtil.log("CustomHlsPlaylistParser -> formatSegmentPath -> baseUrl = " + baseUrl + ", segmentPath = " + segmentPath);
+    /***********/
+
+    private static androidx.media3.common.Format formatHlsFormat(androidx.media3.common.Format format) {
+
+        if (LogUtil.DEBUG) {
+            LogUtil.log("CustomHlsPlaylistParser -> formatHlsFormat -> format = " + format);
+        }
+        return format;
+    }
+
+    private static androidx.media3.exoplayer.hls.playlist.HlsMultivariantPlaylist formatHlsMultivariantPlaylist(androidx.media3.exoplayer.hls.playlist.HlsMultivariantPlaylist hlsMultivariantPlaylist) {
+
+        if (LogUtil.DEBUG) {
+            LogUtil.log("CustomHlsPlaylistParser -> formatHlsMultivariantPlaylist ->");
+        }
+        return hlsMultivariantPlaylist;
+    }
+
+    private static androidx.media3.exoplayer.hls.playlist.HlsMediaPlaylist formatHlsMediaPlaylist(androidx.media3.exoplayer.hls.playlist.HlsMediaPlaylist hlsMediaPlaylist) {
+
+        //        /**
+//         * # 新增 EXT-X-STREAM-INF 标签，指定语言（核心修改）
+//         * #EXT-X-STREAM-INF:BANDWIDTH=2000000,CODECS="avc1.4D401F,mp4a.40.2",LANGUAGE="zh-CN"
+//         */
+//        tags1.add("#EXT-X-STREAM-INF:LANGUAGE=\"zh-CN\",LABEL=\"简体中文\"");
+
+        if (LogUtil.DEBUG) {
+            LogUtil.log("CustomHlsPlaylistParser -> formatHlsMediaPlaylist -> hlsMediaPlaylist.tags = " + hlsMediaPlaylist.tags);
+        }
+
+        try {
+
+            // 解析 HLS 媒体源的 Manifest
+//            for (HlsMediaPlaylist playlist : hlsMediaPlaylist) {
+//                if (playlist.type == HlsMediaPlaylist.TYPE_AUDIO) {
+//                    // 从 HLS Manifest 中获取语言和标签
+//                    String language = playlist.language;
+//                    String label = playlist.name;
+//
+//                    // 遍历播放器的音频轨道，匹配并补充信息
+//                    TrackGroupArray trackGroups = player.getCurrentTrackGroups();
+//                    for (int i = 0; i < trackGroups.length; i++) {
+//                        TrackGroup group = trackGroups.get(i);
+//                        for (int j = 0; j < group.length; j++) {
+//                            Format format = group.getFormat(j);
+//                            if (format.sampleMimeType.startsWith("audio/")) {
+//                                // 构建新的 Format，补充语言和标签
+//                                Format newFormat = new Format.Builder(format)
+//                                        .setLanguage(language)
+//                                        .setLabel(label)
+//                                        .build();
+//                                // 替换轨道的 Format（需通过自定义 TrackSelector 实现）
+//                                updateTrackFormat(player, i, j, newFormat);
+//                            }
+//                        }
+//                    }
+//                }
 //            }
-//            String formatSegmentPath = proxyUrl.formatSegmentPath(baseUrl, segmentPath);
-//            if (LogUtil.DEBUG) {
-//                LogUtil.log("CustomHlsPlaylistParser -> formatSegmentPath -> formatSegmentPath = " + formatSegmentPath);
-//            }
-//            if (null == formatSegmentPath || formatSegmentPath.isEmpty())
-//                throw new Exception("waring: formatSegmentPath null");
-//            return formatSegmentPath;
-//        } catch (Exception e) {
-//            if (LogUtil.DEBUG) {
-//                LogUtil.log("CustomHlsPlaylistParser -> formatSegmentPath -> Exception: " + e.getMessage());
-//            }
-//            return segmentPath;
+        } catch (Exception e) {
+        }
+
+//        if (LogUtil.DEBUG) {
+//            LogUtil.log("CustomHlsPlaylistParser -> formatHlsMediaPlaylist -> hlsMediaPlaylist.tags = " + hlsMediaPlaylist.tags);
 //        }
-        return segmentPath;
+
+        return hlsMediaPlaylist;
+    }
+
+    private static String formatSegmentPath(ProxyUrl proxyUrl, String baseUrl, String segmentPath) {
+        try {
+            if (null == proxyUrl)
+                throw new Exception("waring: proxyUrl null");
+            if (LogUtil.DEBUG) {
+                LogUtil.log("CustomHlsPlaylistParser -> formatSegmentPath -> baseUrl = " + baseUrl + ", segmentPath = " + segmentPath);
+            }
+            String formatSegmentPath = proxyUrl.formatSegmentPath(baseUrl, segmentPath);
+            if (LogUtil.DEBUG) {
+                LogUtil.log("CustomHlsPlaylistParser -> formatSegmentPath -> formatSegmentPath = " + formatSegmentPath);
+            }
+            if (null == formatSegmentPath || formatSegmentPath.isEmpty())
+                throw new Exception("waring: formatSegmentPath null");
+            return formatSegmentPath;
+        } catch (Exception e) {
+            if (LogUtil.DEBUG) {
+                LogUtil.log("CustomHlsPlaylistParser -> formatSegmentPath -> Exception: " + e.getMessage());
+            }
+            return segmentPath;
+        }
     }
 }
