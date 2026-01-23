@@ -1896,7 +1896,6 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
 
             String url = urlItem.getUrl();
             int metaType = urlItem.getMetaType();
-            int hashCode = url.hashCode();
 
             // 轨道音频 hls
             if (metaType == PlayerType.MetaType.VIDEO_HLS && urlType == PlayerType.UrlType.AUDIO) {
@@ -1905,10 +1904,8 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
                 }
 
                 HlsMediaSource.Factory factory = buildHlsMediaSourceFactory(context, httpFactory, args, PlayerType.UrlType.AUDIO, urlItem);
-                return ((MediaSource.Factory) factory).createMediaSource(new MediaItem.Builder()
-                        .setUri(Uri.parse(url))
-                        .setMediaId("audio:" + hashCode)
-                        .build());
+                MediaItem mediaItem = buildMediaItem(PlayerType.UrlType.AUDIO, urlItem);
+                return ((MediaSource.Factory) factory).createMediaSource(mediaItem);
             }
             // 轨道音频
             else if (urlType == PlayerType.UrlType.AUDIO) {
@@ -1917,68 +1914,24 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
                 }
 
                 DataSource.Factory factory = buildDefaultDataSource(context, httpFactory);
-                return new DefaultMediaSourceFactory(factory)
-                        .createMediaSource(new MediaItem.Builder()
-                                .setUri(Uri.parse(url))
-                                .setMediaId("audio:" + hashCode)
-                                .build());
+                MediaItem mediaItem = buildMediaItem(PlayerType.UrlType.AUDIO, urlItem);
+                return new DefaultMediaSourceFactory(factory).createMediaSource(mediaItem);
             }
             // 轨道字幕
             else if (urlType == PlayerType.UrlType.SUBTITLE) {
 
-                String language = urlItem.getLanguage();
-                String label = urlItem.getLabel();
-                if (null == label) {
-                    label = language;
-                }
-                int selectionFlags;
-                if (urlItem.isMain()) {
-                    selectionFlags = C.SELECTION_FLAG_AUTOSELECT;
-                } else {
-                    selectionFlags = 0;
-                }
-                int roleFlags;
-                if (urlItem.isMain()) {
-                    roleFlags = C.ROLE_FLAG_MAIN;
-                } else {
-                    roleFlags = C.ROLE_FLAG_SUBTITLE;
-                }
-
-                String mimeType;
-                if (url.endsWith(PlayerType.SchemeType._SSA)) {
-                    mimeType = PlayerType.TrackType.TEXT_SSA;
-                } else if (url.endsWith(PlayerType.SchemeType._ASS)) {
-                    mimeType = PlayerType.TrackType.TEXT_ASS;
-                } else {
-                    mimeType = PlayerType.TrackType.TEXT_VTT;
-                }
-
                 if (LogUtil.DEBUG) {
-                    LogUtil.log(TAG, "buildMediaSource -> track subtitle, type = def, mimeType = " + mimeType + ", url = " + url);
+                    LogUtil.log(TAG, "buildMediaSource -> track subtitle, type = def, url = " + url);
                 }
 
                 Object factory = buildDefaultDataSource(context, httpFactory);
-                MediaItem.SubtitleConfiguration subtitleConfig = new MediaItem.SubtitleConfiguration.Builder(Uri.parse(url))
-                        // 主轨道
-                        .setSelectionFlags(selectionFlags)
-                        // 描述轨道的「角色 / 用途」ROLE_FLAG_*		MAIN（主轨道）、SUBTITLE（字幕）、COMMENTARY（解说）
-                        .setRoleFlags(roleFlags)
-                        .setMimeType(mimeType) // 也可以用 MimeTypes.APPLICATION_SUBRIP
-                        .setLanguage(language)
-                        .setLabel(label)
-                        .setId("subtitle:" + hashCode)
-                        .build();
-
-//                      .setSubtitleMediaSourceFactory(
-//                            SingleSampleMediaSource.Factory(defaultDataSourceFactory) // 字幕用非缓存数据源
-//                    )
-
+                MediaItem.SubtitleConfiguration subtitleConfiguration = buildMediaItemSubtitleConfiguration(urlItem);
                 if (factory instanceof CacheDataSource.Factory) {
                     return new SingleSampleMediaSource.Factory((CacheDataSource.Factory) factory)
-                            .createMediaSource(subtitleConfig, C.TIME_UNSET);
+                            .createMediaSource(subtitleConfiguration, C.TIME_UNSET);
                 } else {
                     return new SingleSampleMediaSource.Factory((DataSource.Factory) factory)
-                            .createMediaSource(subtitleConfig, C.TIME_UNSET);
+                            .createMediaSource(subtitleConfiguration, C.TIME_UNSET);
                 }
             }
             // 轨道视频 rtmp
@@ -1989,10 +1942,8 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
 
                 Class<?> cls = Class.forName("ext.rtmp.RtmpDataSource");
                 DataSource.Factory factory = (DataSource.Factory) cls.newInstance();
-                return new ProgressiveMediaSource.Factory(factory).createMediaSource(new MediaItem.Builder()
-                        .setUri(Uri.parse(url))
-                        .setMediaId("video:" + hashCode)
-                        .build());
+                MediaItem mediaItem = buildMediaItem(PlayerType.UrlType.VIDEO, urlItem);
+                return new ProgressiveMediaSource.Factory(factory).createMediaSource(mediaItem);
             }
             // 轨道视频 rtsp
             else if (metaType == PlayerType.MetaType.VIDEO_RTSP && urlType == PlayerType.UrlType.VIDEO) {
@@ -2006,10 +1957,8 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
 
                 DataSource.Factory obj = buildDefaultDataSource(context, httpFactory);
                 DataSource.Factory factory = (DataSource.Factory) constructor.newInstance(obj);
-                return ((MediaSource.Factory) factory).createMediaSource(new MediaItem.Builder()
-                        .setUri(Uri.parse(url))
-                        .setMediaId("video:" + hashCode)
-                        .build());
+                MediaItem mediaItem = buildMediaItem(PlayerType.UrlType.VIDEO, urlItem);
+                return ((MediaSource.Factory) factory).createMediaSource(mediaItem);
             }
             // 轨道视频 dash
             else if (metaType == PlayerType.MetaType.VIDEO_DASH && urlType == PlayerType.UrlType.VIDEO) {
@@ -2019,11 +1968,8 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
 
                 DataSource.Factory obj = buildDefaultDataSource(context, httpFactory);
                 DashMediaSource.Factory factory = new DashMediaSource.Factory(obj);
-
-                return ((MediaSource.Factory) factory).createMediaSource(new MediaItem.Builder()
-                        .setUri(Uri.parse(url))
-                        .setMediaId("video:" + hashCode)
-                        .build());
+                MediaItem mediaItem = buildMediaItem(PlayerType.UrlType.VIDEO, urlItem);
+                return ((MediaSource.Factory) factory).createMediaSource(mediaItem);
             }
             // 轨道视频 hls
             else if (metaType == PlayerType.MetaType.VIDEO_HLS && urlType == PlayerType.UrlType.VIDEO) {
@@ -2032,10 +1978,8 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
                 }
 
                 HlsMediaSource.Factory factory = buildHlsMediaSourceFactory(context, httpFactory, args, PlayerType.UrlType.VIDEO, urlItem);
-                return ((MediaSource.Factory) factory).createMediaSource(new MediaItem.Builder()
-                        .setUri(Uri.parse(url))
-                        .setMediaId("video:" + hashCode)
-                        .build());
+                MediaItem mediaItem = buildMediaItem(PlayerType.UrlType.VIDEO, urlItem);
+                return ((MediaSource.Factory) factory).createMediaSource(mediaItem);
             }
             // 轨道视频 SmoothStreaming
             else if (metaType == PlayerType.MetaType.VIDEO_SS && urlType == PlayerType.UrlType.VIDEO) {
@@ -2045,10 +1989,8 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
 
                 DataSource.Factory obj = buildDefaultDataSource(context, httpFactory);
                 SsMediaSource.Factory factory = new SsMediaSource.Factory(obj);
-                return ((MediaSource.Factory) factory).createMediaSource(new MediaItem.Builder()
-                        .setUri(Uri.parse(url))
-                        .setMediaId("video:" + hashCode)
-                        .build());
+                MediaItem mediaItem = buildMediaItem(PlayerType.UrlType.VIDEO, urlItem);
+                return ((MediaSource.Factory) factory).createMediaSource(mediaItem);
             }
             // 轨道视频 mp4
             else if (metaType == PlayerType.MetaType.VIDEO_MP4 && urlType == PlayerType.UrlType.VIDEO) {
@@ -2057,10 +1999,8 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
                 }
 
                 DataSource.Factory factory = buildDefaultDataSource(context, httpFactory);
-                return new ProgressiveMediaSource.Factory(factory).createMediaSource(new MediaItem.Builder()
-                        .setUri(Uri.parse(url))
-                        .setMediaId("video:" + hashCode)
-                        .build());
+                MediaItem mediaItem = buildMediaItem(PlayerType.UrlType.VIDEO, urlItem);
+                return new ProgressiveMediaSource.Factory(factory).createMediaSource(mediaItem);
             }
             // 轨道视频 def
             else {
@@ -2069,11 +2009,8 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
                 }
 
                 DataSource.Factory factory = buildDefaultDataSource(context, httpFactory);
-                return new DefaultMediaSourceFactory(factory)
-                        .createMediaSource(new MediaItem.Builder()
-                                .setUri(Uri.parse(url))
-                                .setMediaId("video:" + hashCode)
-                                .build());
+                MediaItem mediaItem = buildMediaItem(PlayerType.UrlType.VIDEO, urlItem);
+                return new DefaultMediaSourceFactory(factory).createMediaSource(mediaItem);
             }
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
@@ -2105,6 +2042,128 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
                 LogUtil.log(TAG, "formatBaseUrl -> Exception: " + e.getMessage());
             }
             return "";
+        }
+    }
+
+    private MediaItem buildMediaItem(@PlayerType.UrlType.Value int urlType,
+                                     UrlArgs.Item urlItem) {
+
+        try {
+
+            if (null == urlItem)
+                throw new Exception("error: urlItem null");
+            String url = urlItem.getUrl();
+            if (null == url)
+                throw new Exception("error: url null");
+            if (url.isEmpty())
+                throw new Exception("error: url isEmpty");
+
+            if (urlType == PlayerType.UrlType.AUDIO) {
+                return new MediaItem.Builder()
+                        .setUri(Uri.parse(url))
+                        .setMediaId("audio:" + url.hashCode())
+                        .setLiveConfiguration(new MediaItem.LiveConfiguration.Builder()
+                                // 播放器追赶直播时允许的最大倍速	1.2f - 1.5f	当播放器落后于直播点时，自动加速播放追赶
+                                .setMaxPlaybackSpeed(1.2f)
+                                // 播放器为了等待缓冲的最小倍速	0.8f - 1.0f	网络差时，降速播放避免卡顿
+                                .setMinPlaybackSpeed(0.8f)
+                                // 目标直播延迟（离直播边缘的距离）	3000 - 5000ms	值越大越稳定（不易触发 BehindLiveWindow），值越小越实时
+                                .setTargetOffsetMs(5000)
+                                // 最小允许的直播延迟	2000ms	防止播放器离直播边缘太近导致频繁卡顿
+                                .setMinOffsetMs(2000)
+                                // 最大允许的直播延迟	10000ms	超过这个值就会自动加速追赶
+                                .setMaxOffsetMs(10000)
+                                .build())
+                        .build();
+            } else if (urlType == PlayerType.UrlType.VIDEO) {
+                return new MediaItem.Builder()
+                        .setUri(Uri.parse(url))
+                        .setMediaId("video:" + url.hashCode())
+                        .setLiveConfiguration(new MediaItem.LiveConfiguration.Builder()
+                                // 播放器追赶直播时允许的最大倍速	1.2f - 1.5f	当播放器落后于直播点时，自动加速播放追赶
+                                .setMaxPlaybackSpeed(1.2f)
+                                // 播放器为了等待缓冲的最小倍速	0.8f - 1.0f	网络差时，降速播放避免卡顿
+                                .setMinPlaybackSpeed(0.8f)
+                                // 目标直播延迟（离直播边缘的距离）	3000 - 5000ms	值越大越稳定（不易触发 BehindLiveWindow），值越小越实时
+                                .setTargetOffsetMs(5000)
+                                // 最小允许的直播延迟	2000ms	防止播放器离直播边缘太近导致频繁卡顿
+                                .setMinOffsetMs(2000)
+                                // 最大允许的直播延迟	10000ms	超过这个值就会自动加速追赶
+                                .setMaxOffsetMs(10000)
+                                .build())
+                        .build();
+            } else {
+                return new MediaItem.Builder()
+                        .setUri(Uri.parse(url))
+                        .build();
+            }
+        } catch (Exception e) {
+            if (LogUtil.DEBUG) {
+                LogUtil.log(TAG, "buildMediaItem -> Exception: " + e.getMessage());
+            }
+            return null;
+        }
+    }
+
+    private MediaItem.SubtitleConfiguration buildMediaItemSubtitleConfiguration(UrlArgs.Item urlItem) {
+
+        try {
+
+            if (null == urlItem)
+                throw new Exception("error: urlItem null");
+            String url = urlItem.getUrl();
+            if (null == url)
+                throw new Exception("error: url null");
+            if (url.isEmpty())
+                throw new Exception("error: url isEmpty");
+
+            String language = urlItem.getLanguage();
+            String label = urlItem.getLabel();
+            if (null == label) {
+                label = language;
+            }
+            int selectionFlags;
+            if (urlItem.isMain()) {
+                selectionFlags = C.SELECTION_FLAG_AUTOSELECT;
+            } else {
+                selectionFlags = 0;
+            }
+            int roleFlags;
+            if (urlItem.isMain()) {
+                roleFlags = C.ROLE_FLAG_MAIN;
+            } else {
+                roleFlags = C.ROLE_FLAG_SUBTITLE;
+            }
+
+            String mimeType;
+            if (url.endsWith(PlayerType.SchemeType._SSA)) {
+                mimeType = PlayerType.TrackType.TEXT_SSA;
+            } else if (url.endsWith(PlayerType.SchemeType._ASS)) {
+                mimeType = PlayerType.TrackType.TEXT_ASS;
+            } else {
+                mimeType = PlayerType.TrackType.TEXT_VTT;
+            }
+
+            return new MediaItem.SubtitleConfiguration.Builder(Uri.parse(url))
+                    // 主轨道
+                    .setSelectionFlags(selectionFlags)
+                    // 描述轨道的「角色 / 用途」ROLE_FLAG_*		MAIN（主轨道）、SUBTITLE（字幕）、COMMENTARY（解说）
+                    .setRoleFlags(roleFlags)
+                    .setMimeType(mimeType) // 也可以用 MimeTypes.APPLICATION_SUBRIP
+                    .setLanguage(language)
+                    .setLabel(label)
+                    .setId("subtitle:" + url.hashCode())
+                    .build();
+
+//                      .setSubtitleMediaSourceFactory(
+//                            SingleSampleMediaSource.Factory(defaultDataSourceFactory) // 字幕用非缓存数据源
+//                    )
+
+        } catch (Exception e) {
+            if (LogUtil.DEBUG) {
+                LogUtil.log(TAG, "buildMediaItemSubtitleConfiguration -> Exception: " + e.getMessage());
+            }
+            return null;
         }
     }
 
