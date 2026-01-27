@@ -240,13 +240,13 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
                              */
                             .setBufferDurationsMs(
                                     // minBufferMs：播放器至少要缓冲 1 秒的数据后，才会停止主动加载更多数据；如果缓冲低于这个值，会重新开始加载。
-                                    startArgs.getBufferDurationsMsMinBufferMs(),
+                                    startArgs.getBufferDurationsMs().getMinBufferMs(),
                                     // maxBufferMs：播放器最多缓冲 5 秒的数据，达到这个值后会停止加载，避免占用过多内存。
-                                    startArgs.getBufferDurationsMsMaxBufferMs(),
+                                    startArgs.getBufferDurationsMs().getMaxBufferMs(),
                                     // bufferForPlaybackMs：播放器需要至少缓冲 1 秒的数据，才会开始播放（或从暂停恢复播放）。
-                                    startArgs.getBufferDurationsMsBufferForPlaybackMs(),
+                                    startArgs.getBufferDurationsMs().getBufferForPlaybackMs(),
                                     // bufferForPlaybackAfterRebufferMs：播放器在缓冲不足导致暂停后，需要重新缓冲 1 秒的数据，才会恢复播放。
-                                    startArgs.getBufferDurationsMsBufferForPlaybackAfterRebufferMs()
+                                    startArgs.getBufferDurationsMs().getBufferForPlaybackAfterRebufferMs()
                             )
                             // 内存分配器 默认 64 * 1024 = 65536
                             .setAllocator(new DefaultAllocator(true, 64 * 1024))
@@ -255,19 +255,19 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
                     // 直播场景
                     .setLivePlaybackSpeedControl(new DefaultLivePlaybackSpeedControl.Builder()
                             // 最小直播偏移的平滑因子（用于稳定计算「实时直播位置」）
-                            .setMinPossibleLiveOffsetSmoothingFactor(0.999F)
+                            .setMinPossibleLiveOffsetSmoothingFactor(startArgs.getLivePlaybackSpeedControl().getMinPossibleLiveOffsetSmoothingFactor())
                             // 速度调整的最小间隔（多久能调整一次速度）,弱网 / 低延迟场景可缩短至 500ms（调整更频繁）；追求性能可延长至 2000ms
-                            .setMinUpdateIntervalMs(500)
+                            .setMinUpdateIntervalMs(startArgs.getLivePlaybackSpeedControl().getMinUpdateIntervalMs())
                             //「保持 1 倍速」的最大偏移误差（超出这个范围才调整速度）,无需修改（默认值已足够平滑，改大易导致偏移计算波动）
-                            .setMaxLiveOffsetErrorMsForUnitSpeed(200)
+                            .setMaxLiveOffsetErrorMsForUnitSpeed(startArgs.getLivePlaybackSpeedControl().getMaxLiveOffsetErrorUsForUnitSpeed())
                             // 极端场景下的最小速度（如缓存彻底耗尽时的保底速度）,建议 ≥0.8f（过低会导致播放卡顿感明显）
-                            .setFallbackMinPlaybackSpeed(0.8f)
+                            .setFallbackMinPlaybackSpeed(startArgs.getLivePlaybackSpeedControl().getFallbackMinPlaybackSpeed())
                             // 极端场景下的最大速度（如缓存严重过剩时的保底速度）,建议 ≤1.2f（过高会让用户感知到快放）
-                            .setFallbackMaxPlaybackSpeed(1.2f)
+                            .setFallbackMaxPlaybackSpeed(startArgs.getLivePlaybackSpeedControl().getFallbackMaxPlaybackSpeed())
                             // 速度调整的「比例控制因子」（偏移越大，速度调整幅度越大）,弱网可调大至 0.005f（更快调整速度）；低延迟可调小至 0.001f（调整更平缓）
-                            .setProportionalControlFactor(0.005f)
+                            .setProportionalControlFactor(startArgs.getLivePlaybackSpeedControl().getProportionalControlFactorUs())
                             // 发生缓冲时，目标直播偏移的增量（缓冲后临时增大目标偏移，避免再次缓冲）,弱网可增大至 2000ms（缓冲后更保守）；低延迟可减小至 500ms（不牺牲太多实时性）
-                            .setTargetLiveOffsetIncrementOnRebufferMs(1000)
+                            .setTargetLiveOffsetIncrementOnRebufferMs(startArgs.getLivePlaybackSpeedControl().getTargetLiveOffsetIncrementOnRebufferUs())
                             .build());
 
 
@@ -2065,15 +2065,15 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
                         .setMediaId("audio:" + url.hashCode())
                         .setLiveConfiguration(new MediaItem.LiveConfiguration.Builder()
                                 // 播放器追赶直播时允许的最大倍速	1.2f - 1.5f	当播放器落后于直播点时，自动加速播放追赶
-                                .setMaxPlaybackSpeed(startArgs.getLiveConfigurationMaxPlaybackSpeed())
+                                .setMaxPlaybackSpeed(startArgs.getLiveConfiguration().getMaxPlaybackSpeed())
                                 // 播放器为了等待缓冲的最小倍速	0.8f - 1.0f	网络差时，降速播放避免卡顿
-                                .setMinPlaybackSpeed(startArgs.getLiveConfigurationMinPlaybackSpeed())
+                                .setMinPlaybackSpeed(startArgs.getLiveConfiguration().getMinPlaybackSpeed())
                                 // 目标直播延迟（离直播边缘的距离）	3000 - 5000ms	值越大越稳定（不易触发 BehindLiveWindow），值越小越实时
-                                .setTargetOffsetMs(startArgs.getLiveConfigurationTargetOffsetMs())
+                                .setTargetOffsetMs(startArgs.getLiveConfiguration().getTargetOffsetMs())
                                 // 最小允许的直播延迟	2000ms	防止播放器离直播边缘太近导致频繁卡顿
-                                .setMinOffsetMs(startArgs.getLiveConfigurationMinOffsetMs())
+                                .setMinOffsetMs(startArgs.getLiveConfiguration().getMinOffsetMs())
                                 // 最大允许的直播延迟	10000ms	超过这个值就会自动加速追赶
-                                .setMaxOffsetMs(startArgs.getLiveConfigurationMaxOffsetMs())
+                                .setMaxOffsetMs(startArgs.getLiveConfiguration().getMaxOffsetMs())
                                 .build())
                         .build();
             } else if (urlType == PlayerType.UrlType.VIDEO) {
@@ -2082,15 +2082,15 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
                         .setMediaId("video:" + url.hashCode())
                         .setLiveConfiguration(new MediaItem.LiveConfiguration.Builder()
                                 // 播放器追赶直播时允许的最大倍速	1.2f - 1.5f	当播放器落后于直播点时，自动加速播放追赶
-                                .setMaxPlaybackSpeed(startArgs.getLiveConfigurationMaxPlaybackSpeed())
+                                .setMaxPlaybackSpeed(startArgs.getLiveConfiguration().getMaxPlaybackSpeed())
                                 // 播放器为了等待缓冲的最小倍速	0.8f - 1.0f	网络差时，降速播放避免卡顿
-                                .setMinPlaybackSpeed(startArgs.getLiveConfigurationMinPlaybackSpeed())
+                                .setMinPlaybackSpeed(startArgs.getLiveConfiguration().getMinPlaybackSpeed())
                                 // 目标直播延迟（离直播边缘的距离）	3000 - 5000ms	值越大越稳定（不易触发 BehindLiveWindow），值越小越实时
-                                .setTargetOffsetMs(startArgs.getLiveConfigurationTargetOffsetMs())
+                                .setTargetOffsetMs(startArgs.getLiveConfiguration().getTargetOffsetMs())
                                 // 最小允许的直播延迟	2000ms	防止播放器离直播边缘太近导致频繁卡顿
-                                .setMinOffsetMs(startArgs.getLiveConfigurationMinOffsetMs())
+                                .setMinOffsetMs(startArgs.getLiveConfiguration().getMinOffsetMs())
                                 // 最大允许的直播延迟	10000ms	超过这个值就会自动加速追赶
-                                .setMaxOffsetMs(startArgs.getLiveConfigurationMaxOffsetMs())
+                                .setMaxOffsetMs(startArgs.getLiveConfiguration().getMaxOffsetMs())
                                 .build())
                         .build();
             } else {
