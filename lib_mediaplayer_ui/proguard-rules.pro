@@ -46,6 +46,9 @@
 -keep @interface lib.kalu.mediaplayer.bean.type.PlayerType {
     *;
 }
+-keep @interface lib.kalu.mediaplayer.bean.type.PlayerType$* {
+    *;
+}
 
 # listener
 -keep class lib.kalu.mediaplayer.listener.** {
