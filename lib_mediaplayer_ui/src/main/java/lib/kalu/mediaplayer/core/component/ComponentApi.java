@@ -859,6 +859,35 @@ public interface ComponentApi {
 //        }
 //    }
 
+
+    default int getStatusBarHeight() {
+        try {
+            PlayerView playerView = getPlayerView();
+            if (null == playerView)
+                throw new Exception("playerView error: null");
+            return playerView.getStatusBarHeight(((View) this).getContext());
+        } catch (Exception e) {
+            if (LogUtil.DEBUG) {
+                LogUtil.log("ComponentApi -> getStatusBarHeight -> " + e.getMessage());
+            }
+            return 0;
+        }
+    }
+
+    default int getNavigationBarHeight() {
+        try {
+            PlayerView playerView = getPlayerView();
+            if (null == playerView)
+                throw new Exception("playerView error: null");
+            return playerView.getNavigationBarHeight(((View) this).getContext());
+        } catch (Exception e) {
+            if (LogUtil.DEBUG) {
+                LogUtil.log("ComponentApi -> getNavigationBarHeight -> " + e.getMessage());
+            }
+            return 0;
+        }
+    }
+
     default boolean requestScreenOrientation(
             @PlayerType.ScreenOrientation.Value int value) {
         return requestScreenOrientation(value, false);

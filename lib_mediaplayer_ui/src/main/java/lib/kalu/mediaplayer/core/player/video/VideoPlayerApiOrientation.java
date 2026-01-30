@@ -304,4 +304,52 @@ public interface VideoPlayerApiOrientation extends VideoPlayerApiBase, VideoPlay
             return false;
         }
     }
+
+    default int getNavigationBarHeight(Context context) {
+        try {
+            int navBarHeight = 0;
+            // 1. 优先从系统资源获取
+            int resourceId = context.getResources().getIdentifier("navigation_bar_height", "dimen", "android");
+            if (resourceId > 0) {
+                navBarHeight = context.getResources().getDimensionPixelSize(resourceId);
+            }
+            // 2. 备用方案：通过WindowInsets获取（Android 11+）
+            if (navBarHeight == 0 && Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                try {
+                    WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
+                    navBarHeight = wm.getCurrentWindowMetrics().getWindowInsets()
+                            .getInsets(android.view.WindowInsets.Type.navigationBars()).bottom;
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+            return navBarHeight;
+        } catch (Exception e) {
+            return 0;
+        }
+    }
+
+    default int getStatusBarHeight(Context context) {
+        try {
+            int statusBarHeight = 0;
+            // 1. 优先从系统资源获取（最可靠）
+            int resourceId = context.getResources().getIdentifier("status_bar_height", "dimen", "android");
+            if (resourceId > 0) {
+                statusBarHeight = context.getResources().getDimensionPixelSize(resourceId);
+            }
+            // 2. 备用方案：通过WindowInsets获取（Android 11+）
+            if (statusBarHeight == 0 && Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                try {
+                    WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
+                    statusBarHeight = wm.getCurrentWindowMetrics().getWindowInsets()
+                            .getInsets(android.view.WindowInsets.Type.statusBars()).top;
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+            return statusBarHeight;
+        } catch (Exception e) {
+            return 0;
+        }
+    }
 }
