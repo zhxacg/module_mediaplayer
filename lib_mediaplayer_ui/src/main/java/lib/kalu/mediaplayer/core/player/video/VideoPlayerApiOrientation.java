@@ -267,11 +267,12 @@ public interface VideoPlayerApiOrientation extends VideoPlayerApiBase, VideoPlay
                                         new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
                                             @Override
                                             public void run() {
-                                                if (!activity.isFinishing()) {
+                                                try {
                                                     int requestedOrientation = activity.getRequestedOrientation();
                                                     if (requestedOrientation == ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE) {
                                                         controller.hide(android.view.WindowInsets.Type.systemBars());
                                                     }
+                                                } catch (Exception e) {
                                                 }
                                             }
                                         }, 1000);
@@ -296,7 +297,7 @@ public interface VideoPlayerApiOrientation extends VideoPlayerApiBase, VideoPlay
                                     new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
                                         @Override
                                         public void run() {
-                                            if (!activity.isFinishing()) {
+                                            try {
                                                 int requestedOrientation = activity.getRequestedOrientation();
                                                 if (requestedOrientation == ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE) {
                                                     window.getDecorView().setSystemUiVisibility(
@@ -307,6 +308,7 @@ public interface VideoPlayerApiOrientation extends VideoPlayerApiBase, VideoPlay
                                                                     | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
                                                     );
                                                 }
+                                            } catch (Exception e) {
                                             }
                                         }
                                     }, 1000);
