@@ -5,9 +5,11 @@ import android.content.Context;
 import android.content.pm.ActivityInfo;
 import android.graphics.Rect;
 import android.os.Build;
+import android.view.DisplayCutout;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.view.WindowInsets;
 import android.view.WindowInsetsController;
 import android.view.WindowManager;
 
@@ -307,23 +309,47 @@ public interface VideoPlayerApiOrientation extends VideoPlayerApiBase, VideoPlay
 
     default int getNavigationBarHeight(Context context) {
         try {
-            int navBarHeight = 0;
-            // 1. 优先从系统资源获取
+
+            Activity activity = ContextUtil.getActivitySafely(context);
+            if (null == activity)
+                throw new Exception("error: activity null");
+
+            Window window = activity.getWindow();
+            int height = 0;
+
+            // 方案1：系统资源兜底（所有版本）
             int resourceId = context.getResources().getIdentifier("navigation_bar_height", "dimen", "android");
             if (resourceId > 0) {
-                navBarHeight = context.getResources().getDimensionPixelSize(resourceId);
+                height = context.getResources().getDimensionPixelSize(resourceId);
             }
-            // 2. 备用方案：通过WindowInsets获取（Android 11+）
-            if (navBarHeight == 0 && Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+
+            // 方案2：API 30+ 从WindowInsets获取真实显示的高度（关键适配）
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R && window != null) {
                 try {
-                    WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
-                    navBarHeight = wm.getCurrentWindowMetrics().getWindowInsets()
-                            .getInsets(android.view.WindowInsets.Type.navigationBars()).bottom;
+                    WindowInsets insets = window.getDecorView().getRootWindowInsets();
+                    if (insets != null) {
+                        // 获取导航栏底部高度（横屏时是right/left）
+                        height = insets.getInsets(WindowInsets.Type.navigationBars()).bottom;
+                    }
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
-            return navBarHeight;
+            // 方案3：API 19-29 备用
+            else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT && height == 0 && window != null) {
+                Rect rect = new Rect();
+                window.getDecorView().getWindowVisibleDisplayFrame(rect);
+                // 屏幕总高度 - 可见区域高度 = 导航栏高度
+                int screenHeight = window.getDecorView().getHeight();
+                height = screenHeight - rect.bottom;
+            }
+
+//            // 关键：判断导航栏是否真的显示（比如全面屏手势导航时高度为0）
+//            if (!isNavigationBarVisible(window)) {
+//                height = 0;
+//            }
+
+            return height;
         } catch (Exception e) {
             return 0;
         }
@@ -331,23 +357,48 @@ public interface VideoPlayerApiOrientation extends VideoPlayerApiBase, VideoPlay
 
     default int getStatusBarHeight(Context context) {
         try {
-            int statusBarHeight = 0;
-            // 1. 优先从系统资源获取（最可靠）
+
+            Activity activity = ContextUtil.getActivitySafely(context);
+            if (null == activity)
+                throw new Exception("error: activity null");
+
+            Window window = activity.getWindow();
+            int height = 0;
+
+            // 方案1：优先从系统资源获取（所有版本通用，基础兜底）
             int resourceId = context.getResources().getIdentifier("status_bar_height", "dimen", "android");
             if (resourceId > 0) {
-                statusBarHeight = context.getResources().getDimensionPixelSize(resourceId);
+                height = context.getResources().getDimensionPixelSize(resourceId);
             }
-            // 2. 备用方案：通过WindowInsets获取（Android 11+）
-            if (statusBarHeight == 0 && Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+
+            // 方案2：API 30+ 补充WindowInsets获取（适配异形屏、动态调整的情况）
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R && window != null) {
                 try {
-                    WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
-                    statusBarHeight = wm.getCurrentWindowMetrics().getWindowInsets()
-                            .getInsets(android.view.WindowInsets.Type.statusBars()).top;
+                    // 新版API：从WindowInsets获取真实显示的状态栏高度
+                    WindowInsets insets = window.getDecorView().getRootWindowInsets();
+                    if (insets != null) {
+                        height = insets.getInsets(WindowInsets.Type.statusBars()).top;
+                    }
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
-            return statusBarHeight;
+            // 方案3：API 28-29 兼容（备用）
+            else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P && window != null) {
+                // 适配刘海屏：获取包含刘海的状态栏高度
+                DisplayCutout cutout = window.getDecorView().getRootWindowInsets().getDisplayCutout();
+                if (cutout != null) {
+                    height = cutout.getSafeInsetTop();
+                }
+            }
+            // 方案4：API 19-27 备用（旧版本兜底）
+            else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT && height == 0) {
+                Rect rect = new Rect();
+                window.getDecorView().getWindowVisibleDisplayFrame(rect);
+                height = rect.top;
+            }
+
+            return height;
         } catch (Exception e) {
             return 0;
         }
