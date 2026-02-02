@@ -2118,6 +2118,36 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
             if (url.isEmpty())
                 throw new Exception("error: url isEmpty");
 
+            String mimeType = null;
+            // ssa字幕
+            if (Pattern.compile("\\." + PlayerType.SchemeType._SSA + "$", Pattern.CASE_INSENSITIVE).matcher(url).find()) {
+                mimeType = PlayerType.TrackType.TEXT_SSA;
+            } else if (Pattern.compile("\\." + PlayerType.SchemeType._SSA_, Pattern.CASE_INSENSITIVE).matcher(url).find()) {
+                mimeType = PlayerType.TrackType.TEXT_SSA;
+            }
+            // ass字幕
+            else if (Pattern.compile("\\." + PlayerType.SchemeType._ASS + "$", Pattern.CASE_INSENSITIVE).matcher(url).find()) {
+                mimeType = PlayerType.TrackType.TEXT_ASS;
+            } else if (Pattern.compile("\\." + PlayerType.SchemeType._ASS_, Pattern.CASE_INSENSITIVE).matcher(url).find()) {
+                mimeType = PlayerType.TrackType.TEXT_SSA;
+            }
+            // srt字幕
+            else if (Pattern.compile("\\." + PlayerType.SchemeType._SRT + "$", Pattern.CASE_INSENSITIVE).matcher(url).find()) {
+                mimeType = PlayerType.TrackType.TEXT_SRT;
+            } else if (Pattern.compile("\\." + PlayerType.SchemeType._SRT_, Pattern.CASE_INSENSITIVE).matcher(url).find()) {
+                mimeType = PlayerType.TrackType.TEXT_SSA;
+            }
+            // vtt字幕
+            else if (Pattern.compile("\\." + PlayerType.SchemeType._VTT + "$", Pattern.CASE_INSENSITIVE).matcher(url).find()) {
+                mimeType = PlayerType.TrackType.TEXT_VTT;
+            } else if (Pattern.compile("\\." + PlayerType.SchemeType._VTT_, Pattern.CASE_INSENSITIVE).matcher(url).find()) {
+                mimeType = PlayerType.TrackType.TEXT_SSA;
+            }
+
+            // 不支持的类型
+            if (null == mimeType)
+                throw new Exception("error: not support " + url);
+
             String language = urlItem.getLanguage();
             String label = urlItem.getLabel();
             if (null == label) {
@@ -2134,24 +2164,6 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
                 roleFlags = C.ROLE_FLAG_MAIN;
             } else {
                 roleFlags = C.ROLE_FLAG_SUBTITLE;
-            }
-
-            String mimeType;
-            // ssa字幕
-            if (url.endsWith(PlayerType.SchemeType._SSA)) {
-                mimeType = PlayerType.TrackType.TEXT_SSA;
-            }
-            // ass字幕
-            else if (url.endsWith(PlayerType.SchemeType._ASS)) {
-                mimeType = PlayerType.TrackType.TEXT_ASS;
-            }
-            // srt字幕
-            else if (url.endsWith(PlayerType.SchemeType._SRT)) {
-                mimeType = PlayerType.TrackType.TEXT_SRT;
-            }
-            // vtt字幕
-            else {
-                mimeType = PlayerType.TrackType.TEXT_VTT;
             }
 
             return new MediaItem.SubtitleConfiguration.Builder(Uri.parse(url))

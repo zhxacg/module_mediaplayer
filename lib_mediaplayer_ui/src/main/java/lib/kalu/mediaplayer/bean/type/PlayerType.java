@@ -495,7 +495,9 @@ public @interface PlayerType {
         String _SSA = ".ssa";
         String _SSA_ = ".ssa?";
         String _ASS = ".ass";
+        String _ASS_ = ".ass?";
         String _SRT = ".srt";
+        String _SRT_ = ".srt?";
         String _MATCHES = ".*\\.ism(l)?(/manifest(\\(.+\\))?)?";
 
         @Documented
@@ -515,7 +517,9 @@ public @interface PlayerType {
                 SchemeType._SSA,
                 SchemeType._SSA_,
                 SchemeType._ASS,
+                SchemeType._ASS_,
                 SchemeType._SRT,
+                SchemeType._SRT_,
                 SchemeType._MATCHES})
         @interface Value {
         }
