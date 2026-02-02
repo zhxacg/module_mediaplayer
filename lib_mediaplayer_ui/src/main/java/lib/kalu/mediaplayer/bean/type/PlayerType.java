@@ -320,6 +320,7 @@ public @interface PlayerType {
         String TEXT_VTT = "text/vtt";
         String TEXT_SSA = "text/x-ssa";
         String TEXT_ASS = "text/x-ass";
+        String TEXT_SRT = "application/x-subrip";
 
         String AUDIO_MP4 = "audio/mp4";
         String AUDIO_AAC = "audio/mp4a-latm";
@@ -362,6 +363,7 @@ public @interface PlayerType {
         @StringDef(value = {
                 TrackType.TEXT_VTT,
                 TrackType.TEXT_SSA,
+                TrackType.TEXT_SRT,
                 TrackType.AUDIO_MP4,
                 TrackType.AUDIO_AAC,
                 TrackType.AUDIO_MATROSKA,
@@ -493,6 +495,7 @@ public @interface PlayerType {
         String _SSA = ".ssa";
         String _SSA_ = ".ssa?";
         String _ASS = ".ass";
+        String _SRT = ".srt";
         String _MATCHES = ".*\\.ism(l)?(/manifest(\\(.+\\))?)?";
 
         @Documented
@@ -512,6 +515,7 @@ public @interface PlayerType {
                 SchemeType._SSA,
                 SchemeType._SSA_,
                 SchemeType._ASS,
+                SchemeType._SRT,
                 SchemeType._MATCHES})
         @interface Value {
         }

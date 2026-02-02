@@ -12,7 +12,6 @@ import androidx.annotation.Nullable;
 import androidx.media3.common.C;
 import androidx.media3.common.Format;
 import androidx.media3.common.MediaItem;
-import androidx.media3.common.MediaLibraryInfo;
 import androidx.media3.common.PlaybackException;
 import androidx.media3.common.PlaybackParameters;
 import androidx.media3.common.Player;
@@ -2138,11 +2137,20 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
             }
 
             String mimeType;
+            // ssa字幕
             if (url.endsWith(PlayerType.SchemeType._SSA)) {
                 mimeType = PlayerType.TrackType.TEXT_SSA;
-            } else if (url.endsWith(PlayerType.SchemeType._ASS)) {
+            }
+            // ass字幕
+            else if (url.endsWith(PlayerType.SchemeType._ASS)) {
                 mimeType = PlayerType.TrackType.TEXT_ASS;
-            } else {
+            }
+            // srt字幕
+            else if (url.endsWith(PlayerType.SchemeType._SRT)) {
+                mimeType = PlayerType.TrackType.TEXT_SRT;
+            }
+            // vtt字幕
+            else {
                 mimeType = PlayerType.TrackType.TEXT_VTT;
             }
 
