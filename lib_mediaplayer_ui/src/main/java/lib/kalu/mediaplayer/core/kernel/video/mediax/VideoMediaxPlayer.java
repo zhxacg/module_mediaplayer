@@ -1924,14 +1924,18 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
                     LogUtil.log(TAG, "buildMediaSource -> track subtitle, type = def, url = " + url);
                 }
 
-                Object factory = buildDefaultDataSource(context, httpFactory);
                 MediaItem.SubtitleConfiguration subtitleConfiguration = buildMediaItemSubtitleConfiguration(urlItem);
-                if (factory instanceof CacheDataSource.Factory) {
-                    return new SingleSampleMediaSource.Factory((CacheDataSource.Factory) factory)
-                            .createMediaSource(subtitleConfiguration, C.TIME_UNSET);
+                if (null == subtitleConfiguration) {
+                    return null;
                 } else {
-                    return new SingleSampleMediaSource.Factory((DataSource.Factory) factory)
-                            .createMediaSource(subtitleConfiguration, C.TIME_UNSET);
+                    Object factory = buildDefaultDataSource(context, httpFactory);
+                    if (factory instanceof CacheDataSource.Factory) {
+                        return new SingleSampleMediaSource.Factory((CacheDataSource.Factory) factory)
+                                .createMediaSource(subtitleConfiguration, C.TIME_UNSET);
+                    } else {
+                        return new SingleSampleMediaSource.Factory((DataSource.Factory) factory)
+                                .createMediaSource(subtitleConfiguration, C.TIME_UNSET);
+                    }
                 }
             }
             // 轨道视频 rtmp
