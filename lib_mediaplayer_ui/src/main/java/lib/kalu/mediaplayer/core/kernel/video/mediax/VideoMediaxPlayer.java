@@ -25,6 +25,7 @@ import androidx.media3.common.VideoSize;
 import androidx.media3.common.text.Cue;
 import androidx.media3.common.text.CueGroup;
 import androidx.media3.common.util.Clock;
+import androidx.media3.common.util.Util;
 import androidx.media3.database.StandaloneDatabaseProvider;
 import androidx.media3.datasource.DataSource;
 import androidx.media3.datasource.DataSpec;
@@ -402,7 +403,7 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
             }
             // HttpClient
             CustomDefaultHttpDataSource.Factory httpFactory = new CustomDefaultHttpDataSource.Factory(proxyUrl, noProxy)
-                    .setUserAgent(MediaLibraryInfo.VERSION_SLASHY)
+                    .setUserAgent(Util.getUserAgent(context, context.getApplicationInfo().name))
                     .setConnectTimeoutMs(connectTimoutMs)
                     .setReadTimeoutMs(connectTimoutMs)
                     .setDefaultRequestProperties(new HashMap<>())
