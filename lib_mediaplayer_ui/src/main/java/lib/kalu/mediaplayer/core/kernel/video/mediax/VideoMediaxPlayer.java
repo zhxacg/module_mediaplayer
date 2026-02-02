@@ -2120,33 +2120,57 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
 
             String mimeType = null;
             // ssa字幕
-            if (Pattern.compile("\\." + PlayerType.SchemeType._SSA + "$", Pattern.CASE_INSENSITIVE).matcher(url).find()) {
+            if (Pattern.matches(".*\\" + PlayerType.SchemeType._SSA + "$", url)) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log(TAG, "buildMediaItemSubtitleConfiguration -> ssa 1");
+                }
                 mimeType = PlayerType.TrackType.TEXT_SSA;
-            } else if (Pattern.compile("\\." + PlayerType.SchemeType._SSA_, Pattern.CASE_INSENSITIVE).matcher(url).find()) {
+            } else if (Pattern.matches(".*\\" + PlayerType.SchemeType._SSA_ + "\\?.*", url)) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log(TAG, "buildMediaItemSubtitleConfiguration -> ssa 2");
+                }
                 mimeType = PlayerType.TrackType.TEXT_SSA;
             }
             // ass字幕
-            else if (Pattern.compile("\\." + PlayerType.SchemeType._ASS + "$", Pattern.CASE_INSENSITIVE).matcher(url).find()) {
+            else if (Pattern.matches(".*\\" + PlayerType.SchemeType._ASS + "$", url)) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log(TAG, "buildMediaItemSubtitleConfiguration -> ass 1");
+                }
                 mimeType = PlayerType.TrackType.TEXT_ASS;
-            } else if (Pattern.compile("\\." + PlayerType.SchemeType._ASS_, Pattern.CASE_INSENSITIVE).matcher(url).find()) {
+            } else if (Pattern.matches(".*\\" + PlayerType.SchemeType._ASS_ + "\\?.*", url)) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log(TAG, "buildMediaItemSubtitleConfiguration -> ass 2");
+                }
                 mimeType = PlayerType.TrackType.TEXT_SSA;
             }
             // srt字幕
-            else if (Pattern.compile("\\." + PlayerType.SchemeType._SRT + "$", Pattern.CASE_INSENSITIVE).matcher(url).find()) {
+            else if (Pattern.matches(".*\\" + PlayerType.SchemeType._SRT + "$", url)) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log(TAG, "buildMediaItemSubtitleConfiguration -> srt 1");
+                }
                 mimeType = PlayerType.TrackType.TEXT_SRT;
-            } else if (Pattern.compile("\\." + PlayerType.SchemeType._SRT_, Pattern.CASE_INSENSITIVE).matcher(url).find()) {
+            } else if (Pattern.matches(".*\\" + PlayerType.SchemeType._SRT_ + "\\?.*", url)) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log(TAG, "buildMediaItemSubtitleConfiguration -> srt 2");
+                }
                 mimeType = PlayerType.TrackType.TEXT_SSA;
             }
             // vtt字幕
-            else if (Pattern.compile("\\." + PlayerType.SchemeType._VTT + "$", Pattern.CASE_INSENSITIVE).matcher(url).find()) {
+            else if (Pattern.matches(".*\\" + PlayerType.SchemeType._VTT + "$", url)) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log(TAG, "buildMediaItemSubtitleConfiguration -> vtt 1");
+                }
                 mimeType = PlayerType.TrackType.TEXT_VTT;
-            } else if (Pattern.compile("\\." + PlayerType.SchemeType._VTT_, Pattern.CASE_INSENSITIVE).matcher(url).find()) {
-                mimeType = PlayerType.TrackType.TEXT_SSA;
+            } else if (Pattern.matches(".*\\" + PlayerType.SchemeType._VTT_ + "\\?.*", url)) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log(TAG, "buildMediaItemSubtitleConfiguration -> vtt 2");
+                }
+                mimeType = PlayerType.TrackType.TEXT_VTT;
             }
-
-            // 不支持的类型
-            if (null == mimeType)
+            // 不支持
+            else {
                 throw new Exception("error: not support " + url);
+            }
 
             String language = urlItem.getLanguage();
             String label = urlItem.getLabel();
