@@ -58,7 +58,9 @@
 
 # util
 -keep class lib.kalu.mediaplayer.util.UdpUtil {
-    public <fields>;
+    public <methods>;
+}
+-keep class lib.kalu.mediaplayer.util.LogUtil {
     public <methods>;
 }
 
