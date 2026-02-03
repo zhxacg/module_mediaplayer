@@ -645,7 +645,7 @@ public class MainActivity extends Activity {
                 // 画面比例（自动 全屏 原始 1:1 4:3 5:4 16:9 16:10）
                 .setScaleType(scaleType)
                 // 超时时间（默认20s）
-                .setConnectTimeoutMs(20_000)
+                .setConnectTimeoutMs(100_000)
                 // 缓冲超时重播（默认false）
                 .setBufferingTimeoutRetry(false)
                 // 播放器每次播放器都销毁（默认false）

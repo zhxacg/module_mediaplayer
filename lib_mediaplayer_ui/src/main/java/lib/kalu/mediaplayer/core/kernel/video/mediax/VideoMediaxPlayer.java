@@ -1154,6 +1154,11 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
          */
         @Override
         public void onTimelineChanged(AnalyticsListener.EventTime eventTime, int i) {
+
+            if (LogUtil.DEBUG) {
+                LogUtil.log(TAG, "onTimelineChanged -> i = " + i + ", eventTime.currentPlaybackPositionMs = " + eventTime.currentPlaybackPositionMs);
+            }
+
             try {
                 if (null == mSimpleCache)
                     throw new Exception("warning: mSimpleCache null");
