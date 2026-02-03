@@ -63,6 +63,12 @@ public class MainActivity extends Activity {
                 .setTrySeeDuration(getTrySeeDuration())
                 .setShowSpeed(isShowNet())
                 .setMenu(createMenu())
+                .setLiveConfiguration(new StartArgs.LiveConfiguration.Builder()
+                        .setMaxOffsetMs(Integer.MAX_VALUE)
+                        .setMaxPlaybackSpeed(Integer.MAX_VALUE)
+                        .setMinOffsetMs(Integer.MAX_VALUE)
+                        .setMinPlaybackSpeed(Integer.MAX_VALUE)
+                        .build())
                 .build();
 
         Intent intent = new Intent(getApplicationContext(), TestActivity.class);

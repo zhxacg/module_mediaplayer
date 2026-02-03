@@ -1,6 +1,7 @@
 package lib.kalu.mediaplayer.core.kernel.video.mediax;
 
 import android.content.Context;
+import android.media.MediaFormat;
 import android.net.Uri;
 import android.os.Handler;
 import android.os.Looper;
@@ -67,6 +68,7 @@ import androidx.media3.exoplayer.trackselection.TrackSelector;
 import androidx.media3.exoplayer.upstream.DefaultAllocator;
 import androidx.media3.exoplayer.upstream.DefaultBandwidthMeter;
 import androidx.media3.exoplayer.upstream.DefaultLoadErrorHandlingPolicy;
+import androidx.media3.exoplayer.video.VideoFrameMetadataListener;
 import androidx.media3.extractor.ts.DefaultTsPayloadReaderFactory;
 
 import com.google.common.collect.ImmutableList;
@@ -854,6 +856,32 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
         try {
             if (null == mExoPlayer)
                 throw new Exception("error: mExoPlayer null");
+//            mExoPlayer.setVideoFrameMetadataListener(new VideoFrameMetadataListener() {
+//                @Override
+//                public void onVideoFrameAboutToBeRendered(long presentationTimeUs, long releaseTimeNs, Format format, @Nullable MediaFormat mediaFormat) {
+//
+//                    /**
+//                     * PTS（Presentation Time Stamp，显示时间戳
+//                     * DTS（Decoding Time Stamp，解码时间戳
+//                     * 这两个时间戳是控制媒体帧解码和显示时序的核心参数。
+//                     */
+//
+//                    if (null != mediaFormat) {
+//                        // presentationTimeUs = PTS（微秒级）
+//                        long ptsMs = presentationTimeUs / 1000; // 转换为毫秒
+////                        // DTS：ExoPlayer 中视频帧的 DTS 通常和 PTS 相同（I/P 帧），B 帧会提前
+////                        // 可通过 mediaFormat 获取更底层的 DTS
+//
+//                        boolean containsKey = mediaFormat.containsKey("dts_us");
+//                        long dtsUs = mediaFormat.getLong("dts_us", -1);
+//                        long dtsMs = dtsUs / 1000;
+//
+//                        if (LogUtil.DEBUG) {
+//                            LogUtil.log(TAG, "onVideoFrameAboutToBeRendered -> ptsMs = " + ptsMs + ", dtsMs = " + dtsMs + ", containsKey = " + containsKey);
+//                        }
+//                    }
+//                }
+//            });
             mExoPlayer.addAnalyticsListener(mAnalyticsListener);
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
@@ -1155,6 +1183,14 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
     };
 
     private final AnalyticsListener mAnalyticsListener = new AnalyticsListener() {
+
+        @Override
+        public void onVideoFrameProcessingOffset(EventTime eventTime, long l, int i) {
+
+            if (LogUtil.DEBUG) {
+                LogUtil.log(TAG, "onVideoFrameProcessingOffset -> l = " + l + ", i = " + i);
+            }
+        }
 
         /**
          * 初始化当前的 本地所有缓存
