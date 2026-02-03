@@ -171,7 +171,16 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
                 LogUtil.log(TAG, "checkDecoder -> connectTimeoutMs = " + connectTimeoutMs);
             }
 
+
             ExoPlayer.Builder builder = new ExoPlayer.Builder(context)
+                    // 核心：配置缓冲卡死超时（解决你最初的 StuckPlayerException）
+                    .setStuckBufferingDetectionTimeoutMs(startArgs.getStuckDetectorMs().getBufferingDetectionTimeoutMs())
+                    // 配置播放状态卡死超时（画面/声音静止检测）
+                    .setStuckPlayingDetectionTimeoutMs(startArgs.getStuckDetectorMs().getPlayingDetectionTimeoutMs())
+                    // 配置播放未结束卡死超时（播放完成异常检测）
+                    .setStuckPlayingNotEndingTimeoutMs(startArgs.getStuckDetectorMs().getPlayingNotEndingTimeoutMs())
+                    // 配置抑制状态卡死超时（后台播放/焦点丢失检测）
+                    .setStuckSuppressedDetectionTimeoutMs(startArgs.getStuckDetectorMs().getSuppressedDetectionTimeoutMs())
                     // 启用懒加载准备
                     .setUseLazyPreparation(true)
                     // 播放器调试和诊断相关的配置项
@@ -1163,19 +1172,9 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
                 if (null == mSimpleCache)
                     throw new Exception("warning: mSimpleCache null");
 
-                // Media3 中 Timeline 和 Window 的使用方式
-                Timeline timeline = mExoPlayer.getCurrentTimeline();
-                if (timeline.isEmpty())
-                    throw new Exception("error: timeline is empty");
-
-                int windowIndex = mExoPlayer.getCurrentWindowIndex();
-                Timeline.Window window = new Timeline.Window();
-                timeline.getWindow(windowIndex, window, Player.REPEAT_MODE_OFF);
-
-                // Media3 中判断是否为直播
-                boolean isLive = window.isLive();
-                if (isLive)
-                    throw new Exception("error: isLive true");
+                boolean live = isLive();
+                if (live)
+                    throw new Exception("warning: current is live");
 
                 Object currentManifest = mExoPlayer.getCurrentManifest();
                 if (null == currentManifest)
@@ -1234,8 +1233,10 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
 
         @Override
         public void onPlayerErrorChanged(EventTime eventTime, @Nullable PlaybackException e) {
-            if (LogUtil.DEBUG) {
-                LogUtil.log(TAG, "onPlayerErrorChanged -> message = " + e.getMessage(), e);
+            if (null != e) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log(TAG, "onPlayerErrorChanged -> message = " + e.getMessage(), e);
+                }
             }
         }
 
@@ -1301,10 +1302,45 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
         @Override
         public void onLoadCompleted(EventTime eventTime, LoadEventInfo loadEventInfo, MediaLoadData mediaLoadData) {
             if (LogUtil.DEBUG) {
-//                long position = loadEventInfo.dataSpec.position;
-                LogUtil.log(TAG, "onLoadCompleted -> mediaLoadData.dataType = " + mediaLoadData.dataType + ", loadEventInfo.dataSpec.position = " + loadEventInfo.dataSpec.position + ", loadEventInfo.dataSpec.uri = " + loadEventInfo.dataSpec.uri);
+                LogUtil.log(TAG, "onLoadCompleted -> loadEventInfo.dataSpec.uri = " + loadEventInfo.dataSpec.uri + ", eventTime.currentPlaybackPositionMs = " + eventTime.currentPlaybackPositionMs);
+
+                int dataType = mediaLoadData.dataType;
+                if (dataType == C.DATA_TYPE_MANIFEST) {
+                    LogUtil.log(TAG, "onLoadCompleted -> current dataType DATA_TYPE_MANIFEST");
+                } else if (dataType == C.DATA_TYPE_MEDIA) {
+                    LogUtil.log(TAG, "onLoadCompleted -> current dataType DATA_TYPE_MEDIA");
+                }
+
+                int trackType = mediaLoadData.trackType;
+                if (trackType == C.TRACK_TYPE_DEFAULT) {
+                    LogUtil.log(TAG, "onLoadCompleted -> current trackType TRACK_TYPE_DEFAULT");
+                } else if (trackType == C.TRACK_TYPE_VIDEO) {
+                    LogUtil.log(TAG, "onLoadCompleted -> current trackType TRACK_TYPE_VIDEO");
+                } else if (trackType == C.TRACK_TYPE_AUDIO) {
+                    LogUtil.log(TAG, "onLoadCompleted -> current trackType TRACK_TYPE_AUDIO");
+                } else if (trackType == C.TRACK_TYPE_TEXT) {
+                    LogUtil.log(TAG, "onLoadCompleted -> current trackType TRACK_TYPE_TEXT");
+                }
+
+                if (trackType == C.TRACK_TYPE_DEFAULT || trackType == C.TRACK_TYPE_VIDEO) {
+                    long mediaStartTimeMs = mediaLoadData.mediaStartTimeMs;
+                    long mediaEndTimeMs = mediaLoadData.mediaEndTimeMs;
+                    long mediaDuration = mediaEndTimeMs - mediaStartTimeMs;
+                    LogUtil.log(TAG, "onLoadCompleted -> mediaStartTimeMs = " + mediaStartTimeMs + ", mediaEndTimeMs = " + mediaEndTimeMs + ", mediaDuration = " + mediaDuration);
+                }
             }
-            loadHlsSpanInfo(loadEventInfo, mediaLoadData);
+
+
+            try {
+                boolean live = isLive();
+                if (live)
+                    throw new Exception("warning: current is live");
+                loadHlsSpanInfo(loadEventInfo, mediaLoadData);
+            } catch (Exception e) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log(TAG, "onLoadCompleted -> Exception: " + e.getMessage());
+                }
+            }
         }
 
         @Override
@@ -2072,18 +2108,6 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
                 return new MediaItem.Builder()
                         .setUri(Uri.parse(url))
                         .setMediaId("audio:" + url.hashCode())
-                        .setLiveConfiguration(new MediaItem.LiveConfiguration.Builder()
-                                // 播放器追赶直播时允许的最大倍速	1.2f - 1.5f	当播放器落后于直播点时，自动加速播放追赶
-                                .setMaxPlaybackSpeed(startArgs.getLiveConfiguration().getMaxPlaybackSpeed())
-                                // 播放器为了等待缓冲的最小倍速	0.8f - 1.0f	网络差时，降速播放避免卡顿
-                                .setMinPlaybackSpeed(startArgs.getLiveConfiguration().getMinPlaybackSpeed())
-                                // 目标直播延迟（离直播边缘的距离）	3000 - 5000ms	值越大越稳定（不易触发 BehindLiveWindow），值越小越实时
-                                .setTargetOffsetMs(startArgs.getLiveConfiguration().getTargetOffsetMs())
-                                // 最小允许的直播延迟	2000ms	防止播放器离直播边缘太近导致频繁卡顿
-                                .setMinOffsetMs(startArgs.getLiveConfiguration().getMinOffsetMs())
-                                // 最大允许的直播延迟	10000ms	超过这个值就会自动加速追赶
-                                .setMaxOffsetMs(startArgs.getLiveConfiguration().getMaxOffsetMs())
-                                .build())
                         .build();
             } else if (urlType == PlayerType.UrlType.VIDEO) {
                 return new MediaItem.Builder()

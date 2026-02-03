@@ -258,6 +258,13 @@ public class StartArgs implements Serializable {
         return adaptiveTrackSelection;
     }
 
+    // 卡顿检测
+    private StuckDetectorMs stuckDetectorMs;
+
+    public StuckDetectorMs getStuckDetectorMs() {
+        return stuckDetectorMs;
+    }
+
     @Override
     public String toString() {
         return "StartArgs{" +
@@ -290,6 +297,7 @@ public class StartArgs implements Serializable {
                 ", liveConfiguration=" + liveConfiguration +
                 ", livePlaybackSpeedControl=" + livePlaybackSpeedControl +
                 ", adaptiveTrackSelection=" + adaptiveTrackSelection +
+                ", stuckDetectorMs=" + stuckDetectorMs +
                 '}';
     }
 
@@ -323,6 +331,7 @@ public class StartArgs implements Serializable {
         this.liveConfiguration = builder.liveConfiguration;
         this.livePlaybackSpeedControl = builder.livePlaybackSpeedControl;
         this.adaptiveTrackSelection = builder.adaptiveTrackSelection;
+        this.stuckDetectorMs = builder.stuckDetectorMs;
     }
 
     public Builder newBuilder() {
@@ -356,12 +365,11 @@ public class StartArgs implements Serializable {
         builder.liveConfiguration = liveConfiguration;
         builder.livePlaybackSpeedControl = livePlaybackSpeedControl;
         builder.adaptiveTrackSelection = adaptiveTrackSelection;
+        builder.stuckDetectorMs = stuckDetectorMs;
         return builder;
     }
 
     public static class Builder implements Serializable {
-
-        private String TAG = "StartArgs22.Builder";
 
         private final PlayerArgs playerArgs = PlayerSDK.init().getPlayerBuilder();
 
@@ -436,9 +444,6 @@ public class StartArgs implements Serializable {
 
         public Builder setTrySeeDuration(long v) {
             this.trySeeDuration = v;
-            if (LogUtil.DEBUG) {
-                LogUtil.log(TAG, "setTrySeeDuration -> trySeeDuration = " + trySeeDuration);
-            }
             return this;
         }
 
@@ -447,9 +452,6 @@ public class StartArgs implements Serializable {
 
         public Builder setPlayWhenReadySeekToPosition(long v) {
             this.playWhenReadySeekToPosition = v;
-            if (LogUtil.DEBUG) {
-                LogUtil.log(TAG, "setPlayWhenReadySeekToPosition -> playWhenReadySeekToPosition = " + playWhenReadySeekToPosition);
-            }
             return this;
         }
 
@@ -574,11 +576,98 @@ public class StartArgs implements Serializable {
             return this;
         }
 
+        // 卡顿检测
+        private StuckDetectorMs stuckDetectorMs = new StuckDetectorMs.Builder().build();
+
+        private Builder setStuckDetectorMs(StuckDetectorMs v) {
+            this.stuckDetectorMs = v;
+            return this;
+        }
+
         public Builder() {
         }
 
         public StartArgs build() {
             return new StartArgs(this);
+        }
+    }
+
+
+    public static final class StuckDetectorMs implements Serializable {
+        private int bufferingDetectionTimeoutMs;
+        private int playingDetectionTimeoutMs;
+        private int playingNotEndingTimeoutMs;
+        private int suppressedDetectionTimeoutMs;
+
+        public int getBufferingDetectionTimeoutMs() {
+            return bufferingDetectionTimeoutMs;
+        }
+
+        public int getPlayingDetectionTimeoutMs() {
+            return playingDetectionTimeoutMs;
+        }
+
+        public int getPlayingNotEndingTimeoutMs() {
+            return playingNotEndingTimeoutMs;
+        }
+
+        public int getSuppressedDetectionTimeoutMs() {
+            return suppressedDetectionTimeoutMs;
+        }
+
+        public StuckDetectorMs(StuckDetectorMs.Builder builder) {
+            this.bufferingDetectionTimeoutMs = builder.bufferingDetectionTimeoutMs;
+            this.playingDetectionTimeoutMs = builder.playingDetectionTimeoutMs;
+            this.playingNotEndingTimeoutMs = builder.playingNotEndingTimeoutMs;
+            this.suppressedDetectionTimeoutMs = builder.suppressedDetectionTimeoutMs;
+        }
+
+        public StuckDetectorMs.Builder newBuilder() {
+            StuckDetectorMs.Builder builder = new StuckDetectorMs.Builder();
+            builder.bufferingDetectionTimeoutMs = bufferingDetectionTimeoutMs;
+            builder.playingDetectionTimeoutMs = playingDetectionTimeoutMs;
+            builder.playingNotEndingTimeoutMs = playingNotEndingTimeoutMs;
+            builder.suppressedDetectionTimeoutMs = suppressedDetectionTimeoutMs;
+            return builder;
+        }
+
+        public static class Builder implements Serializable {
+
+            // 缓冲状态卡死检测超时	4000ms (4 秒)	播放器处于 STATE_BUFFERING 但无加载进度时触发（你最初遇到的异常就是这个场景）
+            private int bufferingDetectionTimeoutMs = 600_000;
+            // 10000ms (10 秒)	播放器处于 STATE_READY/PLAYING 但音频 / 视频帧长时间无更新（如画面静止、无声音）
+            private int playingDetectionTimeoutMs = 10000;
+            // 播放未结束卡死检测超时	30000ms (30 秒)	播放器本应播放结束，但长时间停留在播放状态且未触发 onPlaybackEnded
+            private int playingNotEndingTimeoutMs = 30000;
+            // 抑制状态卡死检测超时	10000ms (10 秒)	播放器被抑制（如音频焦点丢失、后台播放限制）但长时间无法恢复正常状态
+            private int suppressedDetectionTimeoutMs = 600_000;
+
+            public StuckDetectorMs.Builder setBufferingDetectionTimeoutMs(int v) {
+                this.bufferingDetectionTimeoutMs = v;
+                return this;
+            }
+
+            public StuckDetectorMs.Builder setPlayingDetectionTimeoutMs(int v) {
+                this.playingDetectionTimeoutMs = v;
+                return this;
+            }
+
+            public StuckDetectorMs.Builder setPlayingNotEndingTimeoutMs(int v) {
+                this.playingNotEndingTimeoutMs = v;
+                return this;
+            }
+
+            public StuckDetectorMs.Builder setSuppressedDetectionTimeoutMs(int v) {
+                this.suppressedDetectionTimeoutMs = v;
+                return this;
+            }
+
+            public Builder() {
+            }
+
+            public StuckDetectorMs build() {
+                return new StuckDetectorMs(this);
+            }
         }
     }
 
@@ -895,8 +984,6 @@ public class StartArgs implements Serializable {
         private final int maxHeightToDiscard;
         private final float bandwidthFraction;
         private final float bufferedFractionToLiveEdgeForQualityIncrease;
-
-
 
 
         public AdaptiveTrackSelection(AdaptiveTrackSelection.Builder builder) {
