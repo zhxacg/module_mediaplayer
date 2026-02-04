@@ -413,7 +413,7 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
             }
             // HttpClient
             CustomDefaultHttpDataSource.Factory httpFactory = new CustomDefaultHttpDataSource.Factory(proxyUrl, noProxy)
-                    .setUserAgent(Util.getUserAgent(context, context.getApplicationInfo().name))
+                    .setUserAgent(Util.getUserAgent(context, context.getApplicationInfo().packageName))
                     .setConnectTimeoutMs(connectTimoutMs)
                     .setReadTimeoutMs(connectTimoutMs)
                     .setDefaultRequestProperties(new HashMap<>())
