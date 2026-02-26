@@ -1334,6 +1334,9 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
                 if (e instanceof java.net.SocketTimeoutException)
                     throw new Exception("warning: ignore this error");
 
+                if (e instanceof java.net.ProtocolException)
+                    throw new Exception("warning: ignore this error");
+
                 stop();
                 onEvent(PlayerType.KernelType.MEDIA_V3, PlayerType.EventType.STOP);
                 onEvent(PlayerType.KernelType.MEDIA_V3, PlayerType.EventType.ERROR);
