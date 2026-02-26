@@ -1329,9 +1329,19 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
                 LogUtil.log(TAG, "onLoadError -> loadEventInfo = " + loadEventInfo.dataSpec.uri);
                 LogUtil.log(TAG, "onLoadError -> message = " + e.getMessage());
             }
-            stop();
-            onEvent(PlayerType.KernelType.MEDIA_V3, PlayerType.EventType.STOP);
-            onEvent(PlayerType.KernelType.MEDIA_V3, PlayerType.EventType.ERROR);
+
+            try {
+                if (e instanceof java.net.SocketTimeoutException)
+                    throw new Exception("warning: ignore this error");
+
+                stop();
+                onEvent(PlayerType.KernelType.MEDIA_V3, PlayerType.EventType.STOP);
+                onEvent(PlayerType.KernelType.MEDIA_V3, PlayerType.EventType.ERROR);
+            } catch (Exception e1) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log(TAG, "onLoadError -> Exception: " + e1.getMessage());
+                }
+            }
         }
 
         @Override

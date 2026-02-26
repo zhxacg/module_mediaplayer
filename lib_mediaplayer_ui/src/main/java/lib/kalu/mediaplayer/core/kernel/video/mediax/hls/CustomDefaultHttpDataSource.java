@@ -403,10 +403,14 @@ public final class CustomDefaultHttpDataSource extends BaseDataSource implements
     @Override
     public long open(DataSpec dataSpec1) throws HttpDataSourceException {
 
+        // init
+        formatOpenInit();
+
         if (LogUtil.DEBUG) {
-            LogUtil.log("CustomDefaultHttpDataSource -> open -> dataSpec1.uri = " + dataSpec1.uri);
+            LogUtil.log("CustomDefaultHttpDataSource -> open -> dataSpec.uri = " + dataSpec1.uri);
         }
 
+        // url
         dataSpec = formatOpenUrl(dataSpec1);
 
         if (LogUtil.DEBUG) {
@@ -1033,6 +1037,23 @@ public final class CustomDefaultHttpDataSource extends BaseDataSource implements
     }
 
     /****************/
+
+    private void formatOpenInit() {
+
+        if (LogUtil.DEBUG) {
+            LogUtil.log(TAG, "formatOpenInit ->");
+        }
+
+        try {
+            if (null == proxyUrl)
+                throw new Exception("waring: proxyUrl null");
+            proxyUrl.formatInit();
+        } catch (Exception e) {
+            if (LogUtil.DEBUG) {
+                LogUtil.log(TAG, "formatOpenInit -> Exception: " + e.getMessage());
+            }
+        }
+    }
 
     private DataSpec formatOpenUrl(DataSpec dataSpec) {
         try {

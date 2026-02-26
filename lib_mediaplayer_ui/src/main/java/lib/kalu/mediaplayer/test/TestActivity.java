@@ -270,6 +270,11 @@ public final class TestActivity extends Activity {
                             .setProxyUrl(new ProxyUrl() {
 
                                 @Override
+                                public void formatInit() {
+
+                                }
+
+                                @Override
                                 public String formatM3u8Url(String url) {
                                     if (LogUtil.DEBUG) {
                                         LogUtil.log("TestActivity -> formatM3u8Url -> url = " + url + ", thread = " + Thread.currentThread().getName());

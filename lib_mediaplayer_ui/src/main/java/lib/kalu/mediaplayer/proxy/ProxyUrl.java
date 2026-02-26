@@ -4,6 +4,8 @@ import java.io.Serializable;
 
 public interface ProxyUrl extends Serializable {
 
+    void formatInit();
+
     String formatM3u8Url(String url);
 
     String formatSubtitleUrl(String url);
