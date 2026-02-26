@@ -297,6 +297,14 @@ public final class TestActivity extends Activity {
                                     }
                                     return segmentUrl;
                                 }
+
+                                @Override
+                                public String formatMultivariantReferencePath(String baseUrl, String referencePath) {
+                                    if (LogUtil.DEBUG) {
+                                        LogUtil.log("TestActivity -> formatMultivariantReferencePath -> baseUrl = " + baseUrl + ", referencePath = " + referencePath + ", thread = " + Thread.currentThread().getName());
+                                    }
+                                    return referencePath;
+                                }
                             })
                             .setProxyTrack(new ProxyTrack() {
                                 @Override

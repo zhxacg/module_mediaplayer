@@ -1,7 +1,6 @@
 package lib.kalu.mediaplayer.core.kernel.video.mediax;
 
 import android.content.Context;
-import android.media.MediaFormat;
 import android.net.Uri;
 import android.os.Handler;
 import android.os.Looper;

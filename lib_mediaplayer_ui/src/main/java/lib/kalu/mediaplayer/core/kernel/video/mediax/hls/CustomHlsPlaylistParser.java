@@ -59,7 +59,6 @@ import java.util.TreeMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import lib.kalu.mediaplayer.PlayerSDK;
 import lib.kalu.mediaplayer.proxy.ProxyUrl;
 import lib.kalu.mediaplayer.util.LogUtil;
 
@@ -325,7 +324,7 @@ public final class CustomHlsPlaylistParser implements ParsingLoadable.Parser<Hls
     public HlsPlaylist parse(Uri uri, InputStream inputStream) throws IOException {
 
         if (LogUtil.DEBUG) {
-            LogUtil.log("CustomHlsPlaylistParser -> parse -> uri = " + uri);
+            LogUtil.log("CustomHlsPlaylistParser -> todo parse -> uri = " + uri);
         }
 
         BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
@@ -342,7 +341,7 @@ public final class CustomHlsPlaylistParser implements ParsingLoadable.Parser<Hls
                     // Do nothing.
                 } else if (line.startsWith(TAG_STREAM_INF)) {
                     extraLines.add(line);
-                    return parseMultivariantPlaylist(new LineIterator(extraLines, reader), uri.toString());
+                    return parseMultivariantPlaylist(proxyUrl, new LineIterator(extraLines, reader), uri.toString());
                 } else if (line.startsWith(TAG_TARGET_DURATION)
                         || line.startsWith(TAG_MEDIA_SEQUENCE)
                         || line.startsWith(TAG_MEDIA_DURATION)
@@ -423,10 +422,12 @@ public final class CustomHlsPlaylistParser implements ParsingLoadable.Parser<Hls
     }
 
     private static HlsMultivariantPlaylist parseMultivariantPlaylist(
-            LineIterator iterator, String baseUri) throws IOException {
+            ProxyUrl proxyUrl,
+            LineIterator iterator,
+            String baseUri) throws IOException {
 
         if (LogUtil.DEBUG) {
-            LogUtil.log("CustomHlsPlaylistParser -> parseMultivariantPlaylist -> baseUri = " + baseUri);
+            LogUtil.log("CustomHlsPlaylistParser -> todo parseMultivariantPlaylist -> baseUri = " + baseUri);
         }
 
 
@@ -531,17 +532,31 @@ public final class CustomHlsPlaylistParser implements ParsingLoadable.Parser<Hls
                         parseOptionalStringAttr(line, REGEX_SUBTITLES, variableDefinitions);
                 String closedCaptionsGroupId =
                         parseOptionalStringAttr(line, REGEX_CLOSED_CAPTIONS, variableDefinitions);
+
                 Uri uri;
                 if (isIFrameOnlyVariant) {
+                    String format = parseStringAttr(line, REGEX_URI, variableDefinitions);
+                    String result = formatMultivariantReferencePath(proxyUrl, baseUri, format);
+                    if (LogUtil.DEBUG) {
+                        LogUtil.log("CustomHlsPlaylistParser -> todo parseMultivariantPlaylist aa -> baseUri = " + baseUri + ", referencePath = " + result);
+                    }
                     uri =
-                            UriUtil.resolveToUri(baseUri, parseStringAttr(line, REGEX_URI, variableDefinitions));
+                            UriUtil.resolveToUri(baseUri, result);
                 } else if (!iterator.hasNext()) {
                     throw ParserException.createForMalformedManifest(
                             "#EXT-X-STREAM-INF must be followed by another line", /* cause= */ null);
                 } else {
                     // The following line contains #EXT-X-STREAM-INF's URI.
                     line = replaceVariableReferences(iterator.next(), variableDefinitions);
-                    uri = UriUtil.resolveToUri(baseUri, line);
+                    String result = formatMultivariantReferencePath(proxyUrl, baseUri, line);
+                    if (LogUtil.DEBUG) {
+                        LogUtil.log("CustomHlsPlaylistParser -> todo parseMultivariantPlaylist bb -> baseUri = " + baseUri + ", referencePath = " + result);
+                    }
+                    uri = UriUtil.resolveToUri(baseUri, result);
+                }
+
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("CustomHlsPlaylistParser -> todo parseMultivariantPlaylist bb -> baseUri = " + baseUri + ", uri = " + uri);
                 }
 
                 Format format1 =
@@ -609,8 +624,18 @@ public final class CustomHlsPlaylistParser implements ParsingLoadable.Parser<Hls
                             .setRoleFlags(parseRoleFlags(line, variableDefinitions))
                             .setLanguage(parseOptionalStringAttr(line, REGEX_LANGUAGE, variableDefinitions));
 
-            @Nullable String referenceUri = parseOptionalStringAttr(line, REGEX_URI, variableDefinitions);
+            @Nullable
+            String referenceUri = formatMultivariantReferencePath(proxyUrl, baseUri, parseOptionalStringAttr(line, REGEX_URI, variableDefinitions));
+
+            if (LogUtil.DEBUG) {
+                LogUtil.log("CustomHlsPlaylistParser -> todo parseMultivariantPlaylist -> baseUri = " + baseUri + ", referenceUri = " + referenceUri + ", i = " + i);
+            }
+
             @Nullable Uri uri = referenceUri == null ? null : UriUtil.resolveToUri(baseUri, referenceUri);
+            if (LogUtil.DEBUG) {
+                LogUtil.log("CustomHlsPlaylistParser -> todo parseMultivariantPlaylist -> i = " + i + ", uri = " + uri);
+            }
+
             Metadata metadata =
                     new Metadata(new CustomHlsTrackMetadataEntry(groupId, name, Collections.emptyList()));
             switch (parseStringAttr(line, REGEX_TYPE, variableDefinitions)) {
@@ -768,7 +793,12 @@ public final class CustomHlsPlaylistParser implements ParsingLoadable.Parser<Hls
             throws IOException {
 
         if (LogUtil.DEBUG) {
-            LogUtil.log("CustomHlsPlaylistParser -> parseMediaPlaylist -> baseUri = " + baseUri);
+            LogUtil.log("CustomHlsPlaylistParser -> todo parseMediaPlaylist -> baseUri = " + baseUri);
+        }
+        if (LogUtil.DEBUG) {
+            if (null != multivariantPlaylist) {
+                LogUtil.log("CustomHlsPlaylistParser -> todo parseMediaPlaylist -> multivariantPlaylist.baseUri = " + multivariantPlaylist.baseUri);
+            }
         }
 
         @HlsMediaPlaylist.PlaylistType int playlistType = HlsMediaPlaylist.PLAYLIST_TYPE_UNKNOWN;
@@ -1701,7 +1731,7 @@ public final class CustomHlsPlaylistParser implements ParsingLoadable.Parser<Hls
     private static Format formatHlsFormat(Format format) {
 
         if (LogUtil.DEBUG) {
-            LogUtil.log("CustomHlsPlaylistParser -> formatHlsFormat -> format = " + format);
+            LogUtil.log("CustomHlsPlaylistParser -> todo formatHlsFormat -> format = " + format);
         }
         return format;
     }
@@ -1709,8 +1739,25 @@ public final class CustomHlsPlaylistParser implements ParsingLoadable.Parser<Hls
     private static HlsMultivariantPlaylist formatHlsMultivariantPlaylist(HlsMultivariantPlaylist hlsMultivariantPlaylist) {
 
         if (LogUtil.DEBUG) {
-            LogUtil.log("CustomHlsPlaylistParser -> formatHlsMultivariantPlaylist ->");
+            LogUtil.log("CustomHlsPlaylistParser -> todo formatHlsMultivariantPlaylist ->");
         }
+
+        if (LogUtil.DEBUG) {
+            LogUtil.log("CustomHlsPlaylistParser -> todo formatHlsMultivariantPlaylist -> hlsMultivariantPlaylist.baseUri = " + hlsMultivariantPlaylist.baseUri);
+        }
+
+        if (LogUtil.DEBUG) {
+            LogUtil.log("CustomHlsPlaylistParser -> todo formatHlsMultivariantPlaylist -> hlsMultivariantPlaylist.videos = " + hlsMultivariantPlaylist.videos.size());
+        }
+
+        if (LogUtil.DEBUG) {
+            LogUtil.log("CustomHlsPlaylistParser -> todo formatHlsMultivariantPlaylist -> hlsMultivariantPlaylist.audios = " + hlsMultivariantPlaylist.audios.size());
+        }
+
+        if (LogUtil.DEBUG) {
+            LogUtil.log("CustomHlsPlaylistParser -> todo formatHlsMultivariantPlaylist -> hlsMultivariantPlaylist.subtitles = " + hlsMultivariantPlaylist.subtitles.size());
+        }
+
         return hlsMultivariantPlaylist;
     }
 
@@ -1762,6 +1809,28 @@ public final class CustomHlsPlaylistParser implements ParsingLoadable.Parser<Hls
 //        }
 
         return hlsMediaPlaylist;
+    }
+
+    private static String formatMultivariantReferencePath(ProxyUrl proxyUrl, String baseUrl, String referencePath) {
+        try {
+            if (null == proxyUrl)
+                throw new Exception("waring: proxyUrl null");
+            if (LogUtil.DEBUG) {
+                LogUtil.log("CustomHlsPlaylistParser -> formatMultivariantReferencePath -> baseUrl = " + baseUrl + ", referencePath = " + referencePath);
+            }
+            String formatSegmentPath = proxyUrl.formatMultivariantReferencePath(baseUrl, referencePath);
+            if (LogUtil.DEBUG) {
+                LogUtil.log("CustomHlsPlaylistParser -> formatMultivariantReferencePath -> formatSegmentPath = " + formatSegmentPath);
+            }
+            if (null == formatSegmentPath || formatSegmentPath.isEmpty())
+                throw new Exception("waring: formatSegmentPath null");
+            return formatSegmentPath;
+        } catch (Exception e) {
+            if (LogUtil.DEBUG) {
+                LogUtil.log("CustomHlsPlaylistParser -> formatMultivariantReferencePath -> Exception: " + e.getMessage());
+            }
+            return referencePath;
+        }
     }
 
     private static String formatSegmentPath(ProxyUrl proxyUrl, String baseUrl, String segmentPath) {

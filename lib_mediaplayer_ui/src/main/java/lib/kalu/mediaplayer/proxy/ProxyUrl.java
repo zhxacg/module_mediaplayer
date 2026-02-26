@@ -11,4 +11,6 @@ public interface ProxyUrl extends Serializable {
     String formatSegmentUrl(String url);
 
     String formatSegmentPath(String baseUrl, String segmentPath);
+
+    String formatMultivariantReferencePath(String baseUrl, String referencePath);
 }
