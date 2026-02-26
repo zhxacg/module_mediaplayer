@@ -270,8 +270,10 @@ public final class TestActivity extends Activity {
                             .setProxyUrl(new ProxyUrl() {
 
                                 @Override
-                                public void formatInit() {
-
+                                public void formatInit(String url) {
+                                    if (LogUtil.DEBUG) {
+                                        LogUtil.log("TestActivity -> formatInit -> url = " + url + ", thread = " + Thread.currentThread().getName());
+                                    }
                                 }
 
                                 @Override

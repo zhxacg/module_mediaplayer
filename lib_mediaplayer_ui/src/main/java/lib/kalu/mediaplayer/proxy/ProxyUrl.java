@@ -4,7 +4,7 @@ import java.io.Serializable;
 
 public interface ProxyUrl extends Serializable {
 
-    void formatInit();
+    void formatInit(String url);
 
     String formatM3u8Url(String url);
 
