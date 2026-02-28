@@ -67,7 +67,6 @@ import androidx.media3.exoplayer.trackselection.TrackSelector;
 import androidx.media3.exoplayer.upstream.DefaultAllocator;
 import androidx.media3.exoplayer.upstream.DefaultBandwidthMeter;
 import androidx.media3.exoplayer.upstream.DefaultLoadErrorHandlingPolicy;
-import androidx.media3.exoplayer.video.VideoFrameMetadataListener;
 import androidx.media3.extractor.ts.DefaultTsPayloadReaderFactory;
 
 import com.google.common.collect.ImmutableList;
@@ -98,6 +97,7 @@ import lib.kalu.mediaplayer.core.kernel.video.mediax.hls.CustomDefaultHttpDataSo
 import lib.kalu.mediaplayer.core.kernel.video.mediax.hls.CustomHlsPlaylistParserFactory;
 import lib.kalu.mediaplayer.error.UrlError;
 import lib.kalu.mediaplayer.proxy.ProxyUrl;
+import lib.kalu.mediaplayer.util.DisplayRefreshRateUtils;
 import lib.kalu.mediaplayer.util.LogUtil;
 import lib.kalu.mediax.subtitle.OffsetMsTextRenderer;
 
@@ -172,7 +172,6 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
                 LogUtil.log(TAG, "checkDecoder -> connectTimeoutMs = " + connectTimeoutMs);
             }
 
-
             ExoPlayer.Builder builder = new ExoPlayer.Builder(context)
                     // 核心：配置缓冲卡死超时（解决你最初的 StuckPlayerException）
                     .setStuckBufferingDetectionTimeoutMs(startArgs.getStuckDetectorMs().getBufferingDetectionTimeoutMs())
@@ -186,7 +185,7 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
                     .setUseLazyPreparation(true)
                     // 播放器调试和诊断相关的配置项
                     .setUsePlatformDiagnostics(false)
-                    // 创建渲染器工厂
+                    // 创建渲染器工厂 开启帧率同步
                     .setRenderersFactory(new DefaultRenderersFactory(context) {
                         @Override
                         protected void buildTextRenderers(Context context, TextOutput textOutput, Looper looper, int i, ArrayList<Renderer> arrayList) {
@@ -196,7 +195,10 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
                             textRenderer.experimentalSetLegacyDecodingEnabled(true);
                             arrayList.add(textRenderer);
                         }
-                    })
+                    }
+                            .setEnableDecoderFallback(true)
+                            .setAllowedVideoJoiningTimeMs(1000)
+                            .forceEnableMediaCodecAsynchronousQueueing())
                     // 创建媒体源工厂，开启字幕预解析（核心配置）
                     .setMediaSourceFactory(new DefaultMediaSourceFactory(context)
                             // 实验性配置：在数据提取阶段解析字幕  true = 预解析字幕，false = 播放时解析（默认）
@@ -207,6 +209,10 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
                     // 自适应码率
                     .setTrackSelector(new DefaultTrackSelector(context, DefaultTrackSelector.Parameters.getDefaults(context)
                             .buildUpon()
+                            // 限制最大帧率为设备当前刷新率
+                            .setMaxVideoFrameRate((int) DisplayRefreshRateUtils.getCurrentRefreshRate(context))
+                            // 关闭非整数倍帧率适配（减少跳帧）
+                            .setForceHighestSupportedBitrate(false)
                             // 主字幕轨道
                             .setPreferredTextRoleFlags(C.ROLE_FLAG_MAIN)
                             // 主音频轨道
