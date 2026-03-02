@@ -1289,10 +1289,10 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
 
         @Override
         public void onPlayerErrorChanged(EventTime eventTime, @Nullable PlaybackException e) {
-            if (null != e) {
-                if (LogUtil.DEBUG) {
-                    LogUtil.log(TAG, "onPlayerErrorChanged -> message = " + e.getMessage());
-                }
+            if (LogUtil.DEBUG) {
+                int errorCode = null == e ? -9 : e.errorCode;
+                String errorMessage = null == e ? "null" : e.getMessage();
+                LogUtil.log(TAG, "onPlayerErrorChanged -> errorCode = " + errorCode + ", errorMessage = " + errorMessage);
             }
         }
 
@@ -1303,9 +1303,6 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
             }
 
             try {
-                if (null == error)
-                    throw new Exception("PlaybackException error: null");
-
                 if (error.errorCode == PlaybackException.ERROR_CODE_BEHIND_LIVE_WINDOW) {
                     // 步骤2：跳转到直播最新位置（核心修复）
                     mExoPlayer.seekToDefaultPosition();
@@ -1316,15 +1313,15 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
                     // 确保播放器恢复播放
                     mExoPlayer.play();
                 } else {
-                    if (!(error instanceof ExoPlaybackException))
-                        throw new Exception("PlaybackException error: not instanceof ExoPlaybackException");
+//                    if (!(error instanceof ExoPlaybackException))
+//                        throw new Exception("PlaybackException error: not instanceof ExoPlaybackException");
                     stop();
                     onEvent(PlayerType.KernelType.MEDIA_V3, PlayerType.EventType.STOP);
                     onEvent(PlayerType.KernelType.MEDIA_V3, PlayerType.EventType.ERROR);
                 }
             } catch (Exception e) {
                 if (LogUtil.DEBUG) {
-                    LogUtil.log(TAG, "onPlayerError -> error = " + error.getMessage());
+                    LogUtil.log(TAG, "onPlayerError -> Exception: " + e.getMessage());
                 }
             }
         }
