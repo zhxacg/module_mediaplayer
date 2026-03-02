@@ -1,8 +1,6 @@
 package lib.kalu.mediaplayer.bean.args;
 
 
-import androidx.media3.common.util.Util;
-
 import org.json.JSONObject;
 
 import java.io.Serializable;
@@ -265,6 +263,13 @@ public class StartArgs implements Serializable {
         return stuckDetectorMs;
     }
 
+    // Hls重试次数
+    private int hlsRetryCount;
+
+    public int getHlsRetryCount() {
+        return hlsRetryCount;
+    }
+
     @Override
     public String toString() {
         return "StartArgs{" +
@@ -298,6 +303,7 @@ public class StartArgs implements Serializable {
                 ", livePlaybackSpeedControl=" + livePlaybackSpeedControl +
                 ", adaptiveTrackSelection=" + adaptiveTrackSelection +
                 ", stuckDetectorMs=" + stuckDetectorMs +
+                ", hlsRetryCount=" + hlsRetryCount +
                 '}';
     }
 
@@ -332,6 +338,7 @@ public class StartArgs implements Serializable {
         this.livePlaybackSpeedControl = builder.livePlaybackSpeedControl;
         this.adaptiveTrackSelection = builder.adaptiveTrackSelection;
         this.stuckDetectorMs = builder.stuckDetectorMs;
+        this.hlsRetryCount = builder.hlsRetryCount;
     }
 
     public Builder newBuilder() {
@@ -366,6 +373,7 @@ public class StartArgs implements Serializable {
         builder.livePlaybackSpeedControl = livePlaybackSpeedControl;
         builder.adaptiveTrackSelection = adaptiveTrackSelection;
         builder.stuckDetectorMs = stuckDetectorMs;
+        builder.hlsRetryCount = hlsRetryCount;
         return builder;
     }
 
@@ -581,6 +589,14 @@ public class StartArgs implements Serializable {
 
         private Builder setStuckDetectorMs(StuckDetectorMs v) {
             this.stuckDetectorMs = v;
+            return this;
+        }
+
+        // Hls重试次数
+        private int hlsRetryCount = 3;
+
+        private Builder setHlsRetryCount(int v) {
+            this.hlsRetryCount = v;
             return this;
         }
 
@@ -820,11 +836,11 @@ public class StartArgs implements Serializable {
         public static class Builder implements Serializable {
 
             // 目标直播延迟（离直播边缘的距离）	3000 - 5000ms	值越大越稳定（不易触发 BehindLiveWindow），值越小越实时
-            private long targetOffsetMs = 5000;
+            private long targetOffsetMs = 2_000;
             // 最小允许的直播延迟	2000ms	防止播放器离直播边缘太近导致频繁卡顿
-            private long minOffsetMs = 2000;
+            private long minOffsetMs = 1_000;
             // 最大允许的直播延迟	10000ms	超过这个值就会自动加速追赶
-            private long maxOffsetMs = 10_000;
+            private long maxOffsetMs = 2_000;
             // 播放器为了等待缓冲的最小倍速	0.8f - 1.0f	网络差时，降速播放避免卡顿
             private float minPlaybackSpeed = 0.8f;
             // 播放器追赶直播时允许的最大倍速	1.2f - 1.5f	当播放器落后于直播点时，自动加速播放追赶
@@ -917,19 +933,19 @@ public class StartArgs implements Serializable {
 
 
             // 极端场景下的最小速度（如缓存彻底耗尽时的保底速度）,建议 ≥0.8f（过低会导致播放卡顿感明显）
-            private float fallbackMinPlaybackSpeed = 0.97F;
+            private float fallbackMinPlaybackSpeed = 0.8F;
             // 极端场景下的最大速度（如缓存严重过剩时的保底速度）,建议 ≤1.2f（过高会让用户感知到快放）
-            private float fallbackMaxPlaybackSpeed = 1.03F;
+            private float fallbackMaxPlaybackSpeed = 1.2F;
             // 速度调整的最小间隔（多久能调整一次速度）,弱网 / 低延迟场景可缩短至 500ms（调整更频繁）；追求性能可延长至 2000ms
-            private long minUpdateIntervalMs = 1000L;
+            private long minUpdateIntervalMs = 500;
             // 速度调整的「比例控制因子」（偏移越大，速度调整幅度越大）,弱网可调大至 0.005f（更快调整速度）；低延迟可调小至 0.001f（调整更平缓）
-            private float proportionalControlFactorUs = 1.0E-7F;
+            private float proportionalControlFactorUs = 0.000001f;
             //「保持 1 倍速」的最大偏移误差（超出这个范围才调整速度）,无需修改（默认值已足够平滑，改大易导致偏移计算波动）
-            private long maxLiveOffsetErrorUsForUnitSpeed = Util.msToUs(20L);
+            private long maxLiveOffsetErrorUsForUnitSpeed = 1_000_000;
             // 发生缓冲时，目标直播偏移的增量（缓冲后临时增大目标偏移，避免再次缓冲）,弱网可增大至 2000ms（缓冲后更保守）；低延迟可减小至 500ms（不牺牲太多实时性）
-            private long targetLiveOffsetIncrementOnRebufferUs = Util.msToUs(500L);
+            private long targetLiveOffsetIncrementOnRebufferUs = 2_000_000;
             // 最小直播偏移的平滑因子（用于稳定计算「实时直播位置」）
-            private float minPossibleLiveOffsetSmoothingFactor = 0.999F;
+            private float minPossibleLiveOffsetSmoothingFactor = 0.05f;
 
             public Builder setFallbackMinPlaybackSpeed(float v) {
                 this.fallbackMinPlaybackSpeed = v;

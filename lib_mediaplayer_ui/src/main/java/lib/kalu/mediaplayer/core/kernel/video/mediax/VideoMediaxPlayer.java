@@ -94,6 +94,7 @@ import lib.kalu.mediaplayer.collect.HlsSpanList;
 import lib.kalu.mediaplayer.core.kernel.video.VideoBasePlayer;
 import lib.kalu.mediaplayer.core.kernel.video.mediax.hls.CustomDefaultHlsExtractorFactory;
 import lib.kalu.mediaplayer.core.kernel.video.mediax.hls.CustomDefaultHttpDataSource;
+import lib.kalu.mediaplayer.core.kernel.video.mediax.hls.CustomHlsLoadErrorHandlingPolicy;
 import lib.kalu.mediaplayer.core.kernel.video.mediax.hls.CustomHlsPlaylistParserFactory;
 import lib.kalu.mediaplayer.error.UrlError;
 import lib.kalu.mediaplayer.proxy.ProxyUrl;
@@ -270,20 +271,20 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
                     )
                     // 直播场景
                     .setLivePlaybackSpeedControl(new DefaultLivePlaybackSpeedControl.Builder()
-                            // 最小直播偏移的平滑因子（用于稳定计算「实时直播位置」）
-                            .setMinPossibleLiveOffsetSmoothingFactor(startArgs.getLivePlaybackSpeedControl().getMinPossibleLiveOffsetSmoothingFactor())
-                            // 速度调整的最小间隔（多久能调整一次速度）,弱网 / 低延迟场景可缩短至 500ms（调整更频繁）；追求性能可延长至 2000ms
-                            .setMinUpdateIntervalMs(startArgs.getLivePlaybackSpeedControl().getMinUpdateIntervalMs())
-                            //「保持 1 倍速」的最大偏移误差（超出这个范围才调整速度）,无需修改（默认值已足够平滑，改大易导致偏移计算波动）
-                            .setMaxLiveOffsetErrorMsForUnitSpeed(startArgs.getLivePlaybackSpeedControl().getMaxLiveOffsetErrorUsForUnitSpeed())
-                            // 极端场景下的最小速度（如缓存彻底耗尽时的保底速度）,建议 ≥0.8f（过低会导致播放卡顿感明显）
+                            // 兜底最小播放速度：当无法计算动态速度时，使用的保底最小速度（最终 minPlaybackSpeed 会等于该值）
                             .setFallbackMinPlaybackSpeed(startArgs.getLivePlaybackSpeedControl().getFallbackMinPlaybackSpeed())
-                            // 极端场景下的最大速度（如缓存严重过剩时的保底速度）,建议 ≤1.2f（过高会让用户感知到快放）
+                            // 兜底最大播放速度：同上，保底最大速度（最终 maxPlaybackSpeed 会等于该值）
                             .setFallbackMaxPlaybackSpeed(startArgs.getLivePlaybackSpeedControl().getFallbackMaxPlaybackSpeed())
-                            // 速度调整的「比例控制因子」（偏移越大，速度调整幅度越大）,弱网可调大至 0.005f（更快调整速度）；低延迟可调小至 0.001f（调整更平缓）
+                            // 速度更新最小间隔：两次速度调整的最小时间差（避免频繁变速）
+                            .setMinUpdateIntervalMs(startArgs.getLivePlaybackSpeedControl().getMinUpdateIntervalMs())
+                            // 比例控制因子：速度调整的 “灵敏度”—— 延迟差值越大，速度调整幅度越大（核心算法参数）
                             .setProportionalControlFactor(startArgs.getLivePlaybackSpeedControl().getProportionalControlFactorUs())
-                            // 发生缓冲时，目标直播偏移的增量（缓冲后临时增大目标偏移，避免再次缓冲）,弱网可增大至 2000ms（缓冲后更保守）；低延迟可减小至 500ms（不牺牲太多实时性）
+                            // 匀速阈值：直播延迟误差小于该值时，使用 1.0f 匀速播放（不调整速度）
+                            .setMaxLiveOffsetErrorMsForUnitSpeed(startArgs.getLivePlaybackSpeedControl().getMaxLiveOffsetErrorUsForUnitSpeed())
+                            // 缓冲保护阈值：当直播延迟低于「目标延迟 - 该值」时，触发减速，避免缓冲不足导致卡顿
                             .setTargetLiveOffsetIncrementOnRebufferMs(startArgs.getLivePlaybackSpeedControl().getTargetLiveOffsetIncrementOnRebufferUs())
+                            // 最小延迟平滑因子：对 “最小可播放延迟” 进行平滑处理的系数（避免延迟波动导致速度频繁变化）
+                            .setMinPossibleLiveOffsetSmoothingFactor(startArgs.getLivePlaybackSpeedControl().getMinPossibleLiveOffsetSmoothingFactor())
                             .build());
 
 
@@ -2158,31 +2159,35 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
             if (url.isEmpty())
                 throw new Exception("error: url isEmpty");
 
+            MediaItem.LiveConfiguration liveConfiguration = new MediaItem.LiveConfiguration.Builder()
+                    // 播放器追赶直播时允许的最大倍速	1.2f - 1.5f	当播放器落后于直播点时，自动加速播放追赶
+                    .setMaxPlaybackSpeed(startArgs.getLiveConfiguration().getMaxPlaybackSpeed())
+                    // 播放器为了等待缓冲的最小倍速	0.8f - 1.0f	网络差时，降速播放避免卡顿
+                    .setMinPlaybackSpeed(startArgs.getLiveConfiguration().getMinPlaybackSpeed())
+                    // 目标直播延迟（离直播边缘的距离）	3000 - 5000ms	值越大越稳定（不易触发 BehindLiveWindow），值越小越实时
+                    .setTargetOffsetMs(startArgs.getLiveConfiguration().getTargetOffsetMs())
+                    // 最小允许的直播延迟	2000ms	防止播放器离直播边缘太近导致频繁卡顿
+                    .setMinOffsetMs(startArgs.getLiveConfiguration().getMinOffsetMs())
+                    // 最大允许的直播延迟	10000ms	超过这个值就会自动加速追赶
+                    .setMaxOffsetMs(startArgs.getLiveConfiguration().getMaxOffsetMs())
+                    .build();
+
             if (urlType == PlayerType.UrlType.AUDIO) {
                 return new MediaItem.Builder()
                         .setUri(Uri.parse(url))
                         .setMediaId("audio:" + url.hashCode())
+                        .setLiveConfiguration(liveConfiguration)
                         .build();
             } else if (urlType == PlayerType.UrlType.VIDEO) {
                 return new MediaItem.Builder()
                         .setUri(Uri.parse(url))
                         .setMediaId("video:" + url.hashCode())
-                        .setLiveConfiguration(new MediaItem.LiveConfiguration.Builder()
-                                // 播放器追赶直播时允许的最大倍速	1.2f - 1.5f	当播放器落后于直播点时，自动加速播放追赶
-                                .setMaxPlaybackSpeed(startArgs.getLiveConfiguration().getMaxPlaybackSpeed())
-                                // 播放器为了等待缓冲的最小倍速	0.8f - 1.0f	网络差时，降速播放避免卡顿
-                                .setMinPlaybackSpeed(startArgs.getLiveConfiguration().getMinPlaybackSpeed())
-                                // 目标直播延迟（离直播边缘的距离）	3000 - 5000ms	值越大越稳定（不易触发 BehindLiveWindow），值越小越实时
-                                .setTargetOffsetMs(startArgs.getLiveConfiguration().getTargetOffsetMs())
-                                // 最小允许的直播延迟	2000ms	防止播放器离直播边缘太近导致频繁卡顿
-                                .setMinOffsetMs(startArgs.getLiveConfiguration().getMinOffsetMs())
-                                // 最大允许的直播延迟	10000ms	超过这个值就会自动加速追赶
-                                .setMaxOffsetMs(startArgs.getLiveConfiguration().getMaxOffsetMs())
-                                .build())
+                        .setLiveConfiguration(liveConfiguration)
                         .build();
             } else {
                 return new MediaItem.Builder()
                         .setUri(Uri.parse(url))
+                        .setLiveConfiguration(liveConfiguration)
                         .build();
             }
         } catch (Exception e) {
@@ -2496,47 +2501,7 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
                 .setAllowChunklessPreparation(true);
 
         //
-        hlsMediaSource.setLoadErrorHandlingPolicy(new DefaultLoadErrorHandlingPolicy() {
-
-            @Nullable
-            @Override
-            public FallbackSelection getFallbackSelectionFor(FallbackOptions fallbackOptions, LoadErrorInfo loadErrorInfo) {
-                FallbackSelection fallbackSelectionFor = super.getFallbackSelectionFor(fallbackOptions, loadErrorInfo);
-                if (LogUtil.DEBUG) {
-                    LogUtil.log(TAG, "buildHlsMediaSourceFactory -> getFallbackSelectionFor -> fallbackSelectionFor = " + fallbackSelectionFor);
-                }
-                return fallbackSelectionFor;
-            }
-
-            @Override
-            public void onLoadTaskConcluded(long l) {
-
-                if (LogUtil.DEBUG) {
-                    LogUtil.log(TAG, "buildHlsMediaSourceFactory -> onLoadTaskConcluded -> l = " + l);
-                }
-
-                super.onLoadTaskConcluded(l);
-            }
-
-            @Override
-            public int getMinimumLoadableRetryCount(int i) {
-                int minimumLoadableRetryCount = super.getMinimumLoadableRetryCount(i);
-                if (LogUtil.DEBUG) {
-                    LogUtil.log(TAG, "buildHlsMediaSourceFactory -> getRetryDelayMsFor -> minimumLoadableRetryCount = " + minimumLoadableRetryCount);
-                }
-                return minimumLoadableRetryCount;
-            }
-
-            @Override
-            public long getRetryDelayMsFor(LoadErrorInfo loadErrorInfo) {
-                long retryDelayMsFor = super.getRetryDelayMsFor(loadErrorInfo);
-                if (LogUtil.DEBUG) {
-                    LogUtil.log(TAG, "buildHlsMediaSourceFactory -> getRetryDelayMsFor -> retryDelayMsFor = " + retryDelayMsFor);
-                }
-                return retryDelayMsFor;
-            }
-        });
-
+        hlsMediaSource.setLoadErrorHandlingPolicy(new CustomHlsLoadErrorHandlingPolicy(args.getHlsRetryCount()));
         // setPlaylistParserFactory
         hlsMediaSource.setPlaylistParserFactory(new CustomHlsPlaylistParserFactory(args.getProxyUrl()));
 
