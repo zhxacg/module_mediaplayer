@@ -41,7 +41,6 @@ import androidx.media3.exoplayer.DecoderReuseEvaluation;
 import androidx.media3.exoplayer.DefaultLivePlaybackSpeedControl;
 import androidx.media3.exoplayer.DefaultLoadControl;
 import androidx.media3.exoplayer.DefaultRenderersFactory;
-import androidx.media3.exoplayer.ExoPlaybackException;
 import androidx.media3.exoplayer.ExoPlayer;
 import androidx.media3.exoplayer.Renderer;
 import androidx.media3.exoplayer.RenderersFactory;
@@ -1282,8 +1281,7 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
         @Override
         public void onLoadError(EventTime eventTime, LoadEventInfo loadEventInfo, MediaLoadData mediaLoadData, IOException e, boolean b) {
             if (LogUtil.DEBUG) {
-                LogUtil.log(TAG, "onLoadError -> loadEventInfo = " + loadEventInfo.dataSpec.uri);
-                LogUtil.log(TAG, "onLoadError -> message = " + e.getMessage());
+                LogUtil.log(TAG, "onLoadError -> message = " + e.getMessage() + "loadUrl = " + loadEventInfo.dataSpec.uri);
             }
         }
 
