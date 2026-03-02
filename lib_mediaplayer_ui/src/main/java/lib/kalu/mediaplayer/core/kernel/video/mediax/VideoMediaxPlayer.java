@@ -1291,7 +1291,7 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
         public void onPlayerErrorChanged(EventTime eventTime, @Nullable PlaybackException e) {
             if (null != e) {
                 if (LogUtil.DEBUG) {
-                    LogUtil.log(TAG, "onPlayerErrorChanged -> message = " + e.getMessage(), e);
+                    LogUtil.log(TAG, "onPlayerErrorChanged -> message = " + e.getMessage());
                 }
             }
         }
