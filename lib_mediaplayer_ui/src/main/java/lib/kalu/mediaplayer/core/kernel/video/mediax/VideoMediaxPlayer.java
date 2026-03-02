@@ -1280,6 +1280,14 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
         }
 
         @Override
+        public void onLoadError(EventTime eventTime, LoadEventInfo loadEventInfo, MediaLoadData mediaLoadData, IOException e, boolean b) {
+            if (LogUtil.DEBUG) {
+                LogUtil.log(TAG, "onLoadError -> loadEventInfo = " + loadEventInfo.dataSpec.uri);
+                LogUtil.log(TAG, "onLoadError -> message = " + e.getMessage());
+            }
+        }
+
+        @Override
         public void onPlayerErrorChanged(EventTime eventTime, @Nullable PlaybackException e) {
             if (null != e) {
                 if (LogUtil.DEBUG) {
@@ -1338,30 +1346,6 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
         public void onIsPlayingChanged(AnalyticsListener.EventTime eventTime, boolean isPlaying) {
             if (LogUtil.DEBUG) {
                 LogUtil.log(TAG, "onIsPlayingChanged -> isPlaying = " + isPlaying);
-            }
-        }
-
-        @Override
-        public void onLoadError(EventTime eventTime, LoadEventInfo loadEventInfo, MediaLoadData mediaLoadData, IOException e, boolean b) {
-            if (LogUtil.DEBUG) {
-                LogUtil.log(TAG, "onLoadError -> loadEventInfo = " + loadEventInfo.dataSpec.uri);
-                LogUtil.log(TAG, "onLoadError -> message = " + e.getMessage());
-            }
-
-            try {
-                if (e instanceof java.net.SocketTimeoutException)
-                    throw new Exception("warning: ignore this error");
-
-                if (e instanceof java.net.ProtocolException)
-                    throw new Exception("warning: ignore this error");
-
-                stop();
-                onEvent(PlayerType.KernelType.MEDIA_V3, PlayerType.EventType.STOP);
-                onEvent(PlayerType.KernelType.MEDIA_V3, PlayerType.EventType.ERROR);
-            } catch (Exception e1) {
-                if (LogUtil.DEBUG) {
-                    LogUtil.log(TAG, "onLoadError -> Exception: " + e1.getMessage());
-                }
             }
         }
 
