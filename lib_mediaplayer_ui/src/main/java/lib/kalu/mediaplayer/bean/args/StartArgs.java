@@ -850,7 +850,7 @@ public class StartArgs implements Serializable {
                 return this;
             }
 
-            public LiveConfiguration.Builder setMaxPlaybackSpeed(long v) {
+            public LiveConfiguration.Builder setMaxPlaybackSpeed(float v) {
                 this.maxPlaybackSpeed = v;
                 return this;
             }
