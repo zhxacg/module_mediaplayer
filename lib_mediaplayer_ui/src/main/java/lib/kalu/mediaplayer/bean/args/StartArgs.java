@@ -587,7 +587,7 @@ public class StartArgs implements Serializable {
         // 卡顿检测
         private StuckDetectorMs stuckDetectorMs = new StuckDetectorMs.Builder().build();
 
-        private Builder setStuckDetectorMs(StuckDetectorMs v) {
+        public Builder setStuckDetectorMs(StuckDetectorMs v) {
             this.stuckDetectorMs = v;
             return this;
         }
@@ -595,7 +595,7 @@ public class StartArgs implements Serializable {
         // Hls重试次数
         private int hlsRetryCount = 3;
 
-        private Builder setHlsRetryCount(int v) {
+        public Builder setHlsRetryCount(int v) {
             this.hlsRetryCount = v;
             return this;
         }

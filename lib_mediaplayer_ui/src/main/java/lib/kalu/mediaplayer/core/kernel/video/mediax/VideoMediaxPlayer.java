@@ -66,7 +66,6 @@ import androidx.media3.exoplayer.trackselection.DefaultTrackSelector;
 import androidx.media3.exoplayer.trackselection.TrackSelector;
 import androidx.media3.exoplayer.upstream.DefaultAllocator;
 import androidx.media3.exoplayer.upstream.DefaultBandwidthMeter;
-import androidx.media3.exoplayer.upstream.DefaultLoadErrorHandlingPolicy;
 import androidx.media3.extractor.ts.DefaultTsPayloadReaderFactory;
 
 import com.google.common.collect.ImmutableList;
@@ -1274,6 +1273,13 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
         }
 
         @Override
+        public void onPlayWhenReadyChanged(AnalyticsListener.EventTime eventTime, boolean playWhenReady, int reason) {
+            if (LogUtil.DEBUG) {
+                LogUtil.log(TAG, "onPlayWhenReadyChanged -> playWhenReady = " + playWhenReady + ", reason = " + reason);
+            }
+        }
+
+        @Override
         public void onPlayerErrorChanged(EventTime eventTime, @Nullable PlaybackException e) {
             if (null != e) {
                 if (LogUtil.DEBUG) {
@@ -1283,26 +1289,31 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
         }
 
         @Override
-        public void onPlayWhenReadyChanged(AnalyticsListener.EventTime eventTime, boolean playWhenReady, int reason) {
-            if (LogUtil.DEBUG) {
-                LogUtil.log(TAG, "onPlayWhenReadyChanged -> playWhenReady = " + playWhenReady + ", reason = " + reason);
-            }
-        }
-
-        @Override
         public void onPlayerError(AnalyticsListener.EventTime eventTime, PlaybackException error) {
             if (LogUtil.DEBUG) {
-                LogUtil.log(TAG, "onPlayerError -> " + error.getMessage());
+                LogUtil.log(TAG, "onPlayerError -> errorCode = " + error.errorCode + ", errMessage" + error.getMessage());
             }
 
             try {
                 if (null == error)
                     throw new Exception("PlaybackException error: null");
-                if (!(error instanceof ExoPlaybackException))
-                    throw new Exception("PlaybackException error: not instanceof ExoPlaybackException");
-                stop();
-                onEvent(PlayerType.KernelType.MEDIA_V3, PlayerType.EventType.STOP);
-                onEvent(PlayerType.KernelType.MEDIA_V3, PlayerType.EventType.ERROR);
+
+                if (error.errorCode == PlaybackException.ERROR_CODE_BEHIND_LIVE_WINDOW) {
+                    // 步骤2：跳转到直播最新位置（核心修复）
+                    mExoPlayer.seekToDefaultPosition();
+                    // 步骤3：重新准备并播放（避免播放器停留在错误状态）
+                    if (mExoPlayer.getPlaybackState() != Player.STATE_READY) {
+                        mExoPlayer.prepare();
+                    }
+                    // 确保播放器恢复播放
+                    mExoPlayer.play();
+                } else {
+                    if (!(error instanceof ExoPlaybackException))
+                        throw new Exception("PlaybackException error: not instanceof ExoPlaybackException");
+                    stop();
+                    onEvent(PlayerType.KernelType.MEDIA_V3, PlayerType.EventType.STOP);
+                    onEvent(PlayerType.KernelType.MEDIA_V3, PlayerType.EventType.ERROR);
+                }
             } catch (Exception e) {
                 if (LogUtil.DEBUG) {
                     LogUtil.log(TAG, "onPlayerError -> error = " + error.getMessage());
