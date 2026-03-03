@@ -629,6 +629,31 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
         }
     }
 
+    private void seekToDefaultPosition() {
+        try {
+
+            if (null == mExoPlayer)
+                throw new Exception("error: mMediaPlayer null");
+
+            boolean live = isLive();
+            if (!live)
+                throw new Exception("warning: live false");
+
+            mExoPlayer.seekToDefaultPosition();
+            if (mExoPlayer.getPlaybackState() != Player.STATE_READY) {
+                mExoPlayer.prepare();
+            }
+            mExoPlayer.play();
+            if (LogUtil.DEBUG) {
+                LogUtil.log(TAG, "seekToDefaultPosition -> completed");
+            }
+        } catch (Exception e) {
+            if (LogUtil.DEBUG) {
+                LogUtil.log(TAG, "seekToDefaultPosition -> " + e.getMessage());
+            }
+        }
+    }
+
     @Override
     public void seekTo(long seek) {
         try {
@@ -651,7 +676,7 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
             onEvent(PlayerType.KernelType.MEDIA_V3, seek < position ? PlayerType.EventType.SEEK_START_REWIND : PlayerType.EventType.SEEK_START_FORWARD);
             mExoPlayer.seekTo(seek);
             if (LogUtil.DEBUG) {
-                LogUtil.log(TAG, "seekTo ->");
+                LogUtil.log(TAG, "seekTo -> completed");
             }
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
@@ -1302,14 +1327,7 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
 
             try {
                 if (error.errorCode == PlaybackException.ERROR_CODE_BEHIND_LIVE_WINDOW) {
-                    // 步骤2：跳转到直播最新位置（核心修复）
-                    mExoPlayer.seekToDefaultPosition();
-                    // 步骤3：重新准备并播放（避免播放器停留在错误状态）
-                    if (mExoPlayer.getPlaybackState() != Player.STATE_READY) {
-                        mExoPlayer.prepare();
-                    }
-                    // 确保播放器恢复播放
-                    mExoPlayer.play();
+                    seekToDefaultPosition();
                 } else {
 //                    if (!(error instanceof ExoPlaybackException))
 //                        throw new Exception("PlaybackException error: not instanceof ExoPlaybackException");
