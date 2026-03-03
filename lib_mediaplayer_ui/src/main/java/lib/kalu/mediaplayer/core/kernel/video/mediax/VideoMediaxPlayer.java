@@ -1164,8 +1164,37 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
                 LogUtil.log(TAG, "onTimelineChanged -> i = " + i + ", eventTime.currentPlaybackPositionMs = " + eventTime.currentPlaybackPositionMs);
             }
 
+            // 追播
             try {
-                if (null == mSimpleCache) throw new Exception("warning: mSimpleCache null");
+                boolean live = isLive();
+                if (!live)
+                    throw new Exception("warning: current not live");
+
+                StartArgs startArgs = getStartArgs();
+                StartArgs.LiveTimelineConfiguration liveTimelineConfiguration = startArgs.getLiveTimelineConfiguration();
+                long minCurrentPlaybackPositionMs = liveTimelineConfiguration.getMinCurrentPlaybackPositionMs();
+                long currentPlaybackPositionMs = eventTime.currentPlaybackPositionMs;
+                if (LogUtil.DEBUG) {
+                    LogUtil.log(TAG, "onTimelineChanged1 -> minCurrentPlaybackPositionMs = " + minCurrentPlaybackPositionMs + ", currentPlaybackPositionMs = " + currentPlaybackPositionMs);
+                }
+
+                if (currentPlaybackPositionMs < minCurrentPlaybackPositionMs) {
+                    if (LogUtil.DEBUG) {
+                        LogUtil.log(TAG, "onTimelineChanged1 -> seekToDefaultPosition");
+                    }
+                    seekToDefaultPosition();
+                }
+
+            } catch (Exception e) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log(TAG, "onTimelineChanged1 -> Exception: " + e.getMessage());
+                }
+            }
+
+            // 缓存
+            try {
+                if (null == mSimpleCache)
+                    throw new Exception("warning: mSimpleCache null");
 
                 boolean live = isLive();
                 if (live) throw new Exception("warning: current is live");
@@ -1209,11 +1238,11 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
 
                 }
                 if (LogUtil.DEBUG) {
-                    LogUtil.log(TAG, "onTimelineChanged -> load segments completed, mHlsSpanInfos.size = " + mHlsSpanInfos.size());
+                    LogUtil.log(TAG, "onTimelineChanged2 -> load segments completed, mHlsSpanInfos.size = " + mHlsSpanInfos.size());
                 }
             } catch (Exception e) {
                 if (LogUtil.DEBUG) {
-                    LogUtil.log(TAG, "onTimelineChanged -> Exception: " + e.getMessage());
+                    LogUtil.log(TAG, "onTimelineChanged2 -> Exception: " + e.getMessage());
                 }
             }
         }

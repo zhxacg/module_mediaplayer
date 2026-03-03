@@ -265,6 +265,13 @@ public class StartArgs implements Serializable {
         return stuckDetectorMs;
     }
 
+    // 直播Timeline
+    private LiveTimelineConfiguration liveTimelineConfiguration;
+
+    public LiveTimelineConfiguration getLiveTimelineConfiguration() {
+        return liveTimelineConfiguration;
+    }
+
     // Hls重试次数
     private int retryCount;
 
@@ -274,39 +281,7 @@ public class StartArgs implements Serializable {
 
     @Override
     public String toString() {
-        return "StartArgs{" +
-                "seekType=" + seekType +
-                ", renderType=" + renderType +
-                ", scaleType=" + scaleType +
-                ", decoderType=" + decoderType +
-                ", kernelType=" + kernelType +
-                ", connectTimeoutMs=" + connectTimeoutMs +
-                ", log=" + log +
-                ", bufferingTimeoutRetry=" + bufferingTimeoutRetry +
-                ", initRelease=" + initRelease +
-                ", urlArgs='" + urlArgs + '\'' +
-                ", title='" + title + '\'' +
-                ", trySeeDuration=" + trySeeDuration +
-                ", live=" + live +
-                ", looping=" + looping +
-                ", mute=" + mute +
-                ", playWhenReady=" + playWhenReady +
-                ", playWhenReadyDelayedTime=" + playWhenReadyDelayedTime +
-                ", playWhenReadySeekToPosition=" + playWhenReadySeekToPosition +
-                ", prepareAsync=" + prepareAsync +
-                ", rotation=" + rotation +
-                ", extraData=" + extraData +
-                ", showSpeed=" + showSpeed +
-                ", menu=" + menu +
-                ", noProxy=" + noProxy +
-                ", proxy=" + proxy +
-                ", bufferDurationsMs=" + bufferDurationsMs +
-                ", liveConfiguration=" + liveConfiguration +
-                ", livePlaybackSpeedControl=" + livePlaybackSpeedControl +
-                ", adaptiveTrackSelection=" + adaptiveTrackSelection +
-                ", stuckDetectorMs=" + stuckDetectorMs +
-                ", retryCount=" + retryCount +
-                '}';
+        return "StartArgs{" + "seekType=" + seekType + ", renderType=" + renderType + ", scaleType=" + scaleType + ", decoderType=" + decoderType + ", kernelType=" + kernelType + ", connectTimeoutMs=" + connectTimeoutMs + ", log=" + log + ", bufferingTimeoutRetry=" + bufferingTimeoutRetry + ", initRelease=" + initRelease + ", urlArgs='" + urlArgs + '\'' + ", title='" + title + '\'' + ", trySeeDuration=" + trySeeDuration + ", live=" + live + ", looping=" + looping + ", mute=" + mute + ", playWhenReady=" + playWhenReady + ", playWhenReadyDelayedTime=" + playWhenReadyDelayedTime + ", playWhenReadySeekToPosition=" + playWhenReadySeekToPosition + ", prepareAsync=" + prepareAsync + ", rotation=" + rotation + ", extraData=" + extraData + ", showSpeed=" + showSpeed + ", menu=" + menu + ", noProxy=" + noProxy + ", proxy=" + proxy + ", bufferDurationsMs=" + bufferDurationsMs + ", liveConfiguration=" + liveConfiguration + ", livePlaybackSpeedControl=" + livePlaybackSpeedControl + ", adaptiveTrackSelection=" + adaptiveTrackSelection + ", stuckDetectorMs=" + stuckDetectorMs + ", retryCount=" + retryCount + ", liveTimelineConfiguration=" + liveTimelineConfiguration + '}';
     }
 
     public StartArgs(Builder builder) {
@@ -341,6 +316,7 @@ public class StartArgs implements Serializable {
         this.adaptiveTrackSelection = builder.adaptiveTrackSelection;
         this.stuckDetectorMs = builder.stuckDetectorMs;
         this.retryCount = builder.retryCount;
+        this.liveTimelineConfiguration = builder.liveTimelineConfiguration;
     }
 
     public Builder newBuilder() {
@@ -376,6 +352,7 @@ public class StartArgs implements Serializable {
         builder.adaptiveTrackSelection = adaptiveTrackSelection;
         builder.stuckDetectorMs = stuckDetectorMs;
         builder.retryCount = retryCount;
+        builder.liveTimelineConfiguration = liveTimelineConfiguration;
         return builder;
     }
 
@@ -602,6 +579,14 @@ public class StartArgs implements Serializable {
             return this;
         }
 
+        // 直播Timeline
+        private LiveTimelineConfiguration liveTimelineConfiguration = new LiveTimelineConfiguration.Builder().build();
+
+        public Builder setLiveTimelineConfiguration(LiveTimelineConfiguration v) {
+            this.liveTimelineConfiguration = v;
+            return this;
+        }
+
         public Builder() {
         }
 
@@ -730,12 +715,7 @@ public class StartArgs implements Serializable {
 
         @Override
         public String toString() {
-            return "BufferDurationsMs{" +
-                    "minBufferMs=" + minBufferMs +
-                    ", maxBufferMs=" + maxBufferMs +
-                    ", bufferForPlaybackMs=" + bufferForPlaybackMs +
-                    ", bufferForPlaybackAfterRebufferMs=" + bufferForPlaybackAfterRebufferMs +
-                    '}';
+            return "BufferDurationsMs{" + "minBufferMs=" + minBufferMs + ", maxBufferMs=" + maxBufferMs + ", bufferForPlaybackMs=" + bufferForPlaybackMs + ", bufferForPlaybackAfterRebufferMs=" + bufferForPlaybackAfterRebufferMs + '}';
         }
 
         public static class Builder implements Serializable {
@@ -774,6 +754,47 @@ public class StartArgs implements Serializable {
 
             public BufferDurationsMs build() {
                 return new BufferDurationsMs(this);
+            }
+        }
+    }
+
+    public static final class LiveTimelineConfiguration implements Serializable {
+
+        private long minCurrentPlaybackPositionMs;
+
+        public long getMinCurrentPlaybackPositionMs() {
+            return minCurrentPlaybackPositionMs;
+        }
+
+        public LiveTimelineConfiguration(LiveTimelineConfiguration.Builder builder) {
+            this.minCurrentPlaybackPositionMs = builder.minCurrentPlaybackPositionMs;
+        }
+
+        public LiveTimelineConfiguration.Builder newBuilder() {
+            LiveTimelineConfiguration.Builder builder = new LiveTimelineConfiguration.Builder();
+            builder.minCurrentPlaybackPositionMs = minCurrentPlaybackPositionMs;
+            return builder;
+        }
+
+        @Override
+        public String toString() {
+            return "LiveTimelineConfiguration{" + ", minCurrentPlaybackPositionMs=" + minCurrentPlaybackPositionMs + '}';
+        }
+
+        public static class Builder implements Serializable {
+
+            private long minCurrentPlaybackPositionMs = -2_000L;
+
+            public LiveTimelineConfiguration.Builder setMinCurrentPlaybackPositionMs(long v) {
+                this.minCurrentPlaybackPositionMs = v;
+                return this;
+            }
+
+            public Builder() {
+            }
+
+            public LiveTimelineConfiguration build() {
+                return new LiveTimelineConfiguration(this);
             }
         }
     }
@@ -826,26 +847,20 @@ public class StartArgs implements Serializable {
 
         @Override
         public String toString() {
-            return "LiveConfiguration{" +
-                    "targetOffsetMs=" + targetOffsetMs +
-                    ", minOffsetMs=" + minOffsetMs +
-                    ", maxOffsetMs=" + maxOffsetMs +
-                    ", minPlaybackSpeed=" + minPlaybackSpeed +
-                    ", maxPlaybackSpeed=" + maxPlaybackSpeed +
-                    '}';
+            return "LiveConfiguration{" + "targetOffsetMs=" + targetOffsetMs + ", minOffsetMs=" + minOffsetMs + ", maxOffsetMs=" + maxOffsetMs + ", minPlaybackSpeed=" + minPlaybackSpeed + ", maxPlaybackSpeed=" + maxPlaybackSpeed + '}';
         }
 
         public static class Builder implements Serializable {
 
-            // 目标直播延迟（离直播边缘的距离）	3000 - 5000ms	值越大越稳定（不易触发 BehindLiveWindow），值越小越实时
+            // 目标直播延迟（离直播边缘的距离）	3000 - 5000ms	值越大越稳定（不易触发 BehindLiveWindow），值越小越实时 eg:-9223372036854775807L
             private long targetOffsetMs = -9223372036854775807L;
-            // 最小允许的直播延迟	2000ms	防止播放器离直播边缘太近导致频繁卡顿
+            // 最小允许的直播延迟	2000ms	防止播放器离直播边缘太近导致频繁卡顿 eg:-9223372036854775807L
             private long minOffsetMs = -9223372036854775807L;
-            // 最大允许的直播延迟	10000ms	超过这个值就会自动加速追赶
+            // 最大允许的直播延迟	10000ms	超过这个值就会自动加速追赶 eg:-9223372036854775807L
             private long maxOffsetMs = -9223372036854775807L;
-            // 播放器为了等待缓冲的最小倍速	0.8f - 1.0f	网络差时，降速播放避免卡顿
+            // 播放器为了等待缓冲的最小倍速	0.8f - 1.0f	网络差时，降速播放避免卡顿 eg:-Float.MAX_VALUE
             private float minPlaybackSpeed = -Float.MAX_VALUE;
-            // 播放器追赶直播时允许的最大倍速	1.2f - 1.5f	当播放器落后于直播点时，自动加速播放追赶
+            // 播放器追赶直播时允许的最大倍速	1.2f - 1.5f	当播放器落后于直播点时，自动加速播放追赶 eg:-Float.MAX_VALUE
             private float maxPlaybackSpeed = -Float.MAX_VALUE;
 
             public LiveConfiguration.Builder setTargetOffsetMs(long v) {
@@ -932,7 +947,6 @@ public class StartArgs implements Serializable {
         }
 
         public static class Builder implements Serializable {
-
 
             // 极端场景下的最小速度（如缓存彻底耗尽时的保底速度）,建议 ≥0.8f（过低会导致播放卡顿感明显）
             private float fallbackMinPlaybackSpeed = 0.8F;
