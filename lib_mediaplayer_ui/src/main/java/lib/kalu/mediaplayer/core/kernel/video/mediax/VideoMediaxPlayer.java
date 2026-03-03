@@ -137,8 +137,7 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
     @Override
     public void releaseDecoder(boolean isFromUser) {
         try {
-            if (null == mExoPlayer)
-                throw new Exception("mExoPlayer error: null");
+            if (null == mExoPlayer) throw new Exception("mExoPlayer error: null");
             if (isFromUser) {
                 setEvent(null);
             }
@@ -157,14 +156,12 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
     @Override
     public void checkDecoder(Context context, StartArgs startArgs) {
         try {
-            if (null != mExoPlayer)
-                throw new Exception("warning: null != mExoPlayer");
+            if (null != mExoPlayer) throw new Exception("warning: null != mExoPlayer");
             if (LogUtil.DEBUG) {
                 LogUtil.log(TAG, "checkDecoder ->");
             }
 
-            if (null == startArgs)
-                throw new Exception("error: startArgs null");
+            if (null == startArgs) throw new Exception("error: startArgs null");
 
             int connectTimeoutMs = startArgs.getConnectTimeoutMs();
             if (LogUtil.DEBUG) {
@@ -194,20 +191,15 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
                             textRenderer.experimentalSetLegacyDecodingEnabled(true);
                             arrayList.add(textRenderer);
                         }
-                    }
-                            .setEnableDecoderFallback(true)
-                            .setAllowedVideoJoiningTimeMs(1000)
-                            .forceEnableMediaCodecAsynchronousQueueing())
+                    }.setEnableDecoderFallback(true).setAllowedVideoJoiningTimeMs(1000).forceEnableMediaCodecAsynchronousQueueing())
                     // 创建媒体源工厂，开启字幕预解析（核心配置）
                     .setMediaSourceFactory(new DefaultMediaSourceFactory(context)
                             // 实验性配置：在数据提取阶段解析字幕  true = 预解析字幕，false = 播放时解析（默认）
-                            .experimentalParseSubtitlesDuringExtraction(true)
-                    )
+                            .experimentalParseSubtitlesDuringExtraction(true))
                     // 监听
                     .setAnalyticsCollector(new DefaultAnalyticsCollector(Clock.DEFAULT))
                     // 自适应码率
-                    .setTrackSelector(new DefaultTrackSelector(context, DefaultTrackSelector.Parameters.getDefaults(context)
-                            .buildUpon()
+                    .setTrackSelector(new DefaultTrackSelector(context, DefaultTrackSelector.Parameters.getDefaults(context).buildUpon()
                             // 限制最大帧率为设备当前刷新率
                             .setMaxVideoFrameRate((int) DisplayRefreshRateUtils.getCurrentRefreshRate(context))
                             // 关闭非整数倍帧率适配（减少跳帧）
@@ -218,33 +210,29 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
                             .setPreferredAudioRoleFlags(C.ROLE_FLAG_MAIN)
                             // 主视频轨道
                             .setPreferredVideoRoleFlags(C.ROLE_FLAG_MAIN)
-                            // 音频禁止混合 MIME 类型切换（如视频+音频单独切换）
-                            .setAllowAudioMixedMimeTypeAdaptiveness(false)
                             // 视频禁止混合 MIME 类型切换（如视频+音频单独切换）
-                            .setAllowVideoMixedMimeTypeAdaptiveness(true)
-                            // 音频禁止非无缝切换
-                            .setAllowAudioNonSeamlessAdaptiveness(false)
+                            .setAllowVideoMixedMimeTypeAdaptiveness(false)
+                            // 音频混合时解码器支持自适应
+                            .setAllowVideoMixedDecoderSupportAdaptiveness(false)
                             // 视频禁止非无缝切换
                             .setAllowVideoNonSeamlessAdaptiveness(false)
+                            // 音频禁止混合 MIME 类型切换（如视频+音频单独切换）
+                            .setAllowAudioMixedMimeTypeAdaptiveness(false)
+                            // 音频禁止非无缝切换
+                            .setAllowAudioNonSeamlessAdaptiveness(false)
                             // 音频混合声道数量的自适应性
-                            .setAllowAudioMixedChannelCountAdaptiveness(true)
+                            .setAllowAudioMixedChannelCountAdaptiveness(false)
                             // 音频混合采样率自适应
-                            .setAllowAudioMixedSampleRateAdaptiveness(true)
+                            .setAllowAudioMixedSampleRateAdaptiveness(false)
                             // 音频混合时解码器支持自适应
-                            .setAllowAudioMixedDecoderSupportAdaptiveness(true)
-                            // 音频混合时解码器支持自适应
-                            .setAllowVideoMixedDecoderSupportAdaptiveness(true)
-                            .build(),
-                            new AdaptiveTrackSelection.Factory(
-                                    10000,// 至少 10 秒后才允许升码率
-                                    25000, // 最多 2.5 秒后允许降码率
-                                    25000, //
-                                    0.7F)))
+                            .setAllowAudioMixedDecoderSupportAdaptiveness(false).build(), new AdaptiveTrackSelection.Factory(10000,// 至少 10 秒后才允许升码率
+                            25000, // 最多 2.5 秒后允许降码率
+                            25000, //
+                            0.7F)))
                     // 配置带宽测量器
                     .setBandwidthMeter(new DefaultBandwidthMeter.Builder(context)
                             // 初始带宽估算为100Mbps
-                            .setInitialBitrateEstimate(100_000_000)
-                            .build())
+                            .setInitialBitrateEstimate(100_000_000).build())
                     // 增大内存缓存（默认 2MB，按需调整）
                     .setLoadControl(new DefaultLoadControl.Builder()
                             /**
@@ -252,8 +240,7 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
                              *         private int maxBufferMs = 50000;
                              *         private int bufferForPlaybackMs = 1000;
                              *         private int bufferForPlaybackAfterRebufferMs = 2000;
-                             */
-                            .setBufferDurationsMs(
+                             */.setBufferDurationsMs(
                                     // minBufferMs：播放器至少要缓冲 1 秒的数据后，才会停止主动加载更多数据；如果缓冲低于这个值，会重新开始加载。
                                     startArgs.getBufferDurationsMs().getMinBufferMs(),
                                     // maxBufferMs：播放器最多缓冲 5 秒的数据，达到这个值后会停止加载，避免占用过多内存。
@@ -261,12 +248,9 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
                                     // bufferForPlaybackMs：播放器需要至少缓冲 1 秒的数据，才会开始播放（或从暂停恢复播放）。
                                     startArgs.getBufferDurationsMs().getBufferForPlaybackMs(),
                                     // bufferForPlaybackAfterRebufferMs：播放器在缓冲不足导致暂停后，需要重新缓冲 1 秒的数据，才会恢复播放。
-                                    startArgs.getBufferDurationsMs().getBufferForPlaybackAfterRebufferMs()
-                            )
+                                    startArgs.getBufferDurationsMs().getBufferForPlaybackAfterRebufferMs())
                             // 内存分配器 默认 64 * 1024 = 65536
-                            .setAllocator(new DefaultAllocator(true, 64 * 1024))
-                            .build()
-                    )
+                            .setAllocator(new DefaultAllocator(true, 64 * 1024)).build())
                     // 直播场景
                     .setLivePlaybackSpeedControl(new DefaultLivePlaybackSpeedControl.Builder()
                             // 兜底最小播放速度：当无法计算动态速度时，使用的保底最小速度（最终 minPlaybackSpeed 会等于该值）
@@ -282,8 +266,7 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
                             // 缓冲保护阈值：当直播延迟低于「目标延迟 - 该值」时，触发减速，避免缓冲不足导致卡顿
                             .setTargetLiveOffsetIncrementOnRebufferMs(startArgs.getLivePlaybackSpeedControl().getTargetLiveOffsetIncrementOnRebufferUs())
                             // 最小延迟平滑因子：对 “最小可播放延迟” 进行平滑处理的系数（避免延迟波动导致速度频繁变化）
-                            .setMinPossibleLiveOffsetSmoothingFactor(startArgs.getLivePlaybackSpeedControl().getMinPossibleLiveOffsetSmoothingFactor())
-                            .build());
+                            .setMinPossibleLiveOffsetSmoothingFactor(startArgs.getLivePlaybackSpeedControl().getMinPossibleLiveOffsetSmoothingFactor()).build());
 
 
             int decoderType = startArgs.getDecoderType();
@@ -396,13 +379,10 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
     @Override
     public void startDecoder(Context context, StartArgs startArgs) {
         try {
-            if (null == mExoPlayer)
-                throw new Exception("mExoPlayer error: null");
-            if (null == startArgs)
-                throw new Exception("error: startArgs null");
+            if (null == mExoPlayer) throw new Exception("mExoPlayer error: null");
+            if (null == startArgs) throw new Exception("error: startArgs null");
             boolean containsMainUrl = startArgs.containsMainUrl();
-            if (!containsMainUrl)
-                throw new UrlError("error: containsMainUrl false");
+            if (!containsMainUrl) throw new UrlError("error: containsMainUrl false");
             onEvent(PlayerType.KernelType.MEDIA_V3, PlayerType.EventType.INIT_READY);
             // 缓存
             boolean initSimpleCache = initSimpleCache(context, startArgs);
@@ -416,13 +396,7 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
                 LogUtil.log(TAG, "startDecoder -> connectTimoutMs = " + connectTimoutMs + ", noProxy = " + noProxy + ", proxyUrl = " + proxyUrl);
             }
             // HttpClient
-            CustomDefaultHttpDataSource.Factory httpFactory = new CustomDefaultHttpDataSource.Factory(proxyUrl, noProxy)
-                    .setUserAgent(Util.getUserAgent(context, context.getApplicationInfo().packageName))
-                    .setConnectTimeoutMs(connectTimoutMs)
-                    .setReadTimeoutMs(connectTimoutMs)
-                    .setDefaultRequestProperties(new HashMap<>())
-                    .setAllowCrossProtocolRedirects(true)
-                    .setKeepPostFor302Redirects(true);
+            CustomDefaultHttpDataSource.Factory httpFactory = new CustomDefaultHttpDataSource.Factory(proxyUrl, noProxy).setUserAgent(Util.getUserAgent(context, context.getApplicationInfo().packageName)).setConnectTimeoutMs(connectTimoutMs).setReadTimeoutMs(connectTimoutMs).setDefaultRequestProperties(new HashMap<>()).setAllowCrossProtocolRedirects(true).setKeepPostFor302Redirects(true);
             boolean containsExtUrl = startArgs.containsExtUrl();
             UrlArgs urlArgs = startArgs.getUrlArgs();
             UrlArgs.Item mainVideo = urlArgs.getMainVideo();
@@ -469,8 +443,7 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
                         if (LogUtil.DEBUG) {
                             LogUtil.log(TAG, "startDecoder -> 外挂音频轨道: mediaSource = " + mediaSource);
                         }
-                        if (null == mediaSource)
-                            continue;
+                        if (null == mediaSource) continue;
                         mediaSources[++index] = mediaSource;
                     }
                 }
@@ -486,8 +459,7 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
                         if (LogUtil.DEBUG) {
                             LogUtil.log(TAG, "startDecoder -> 外挂字幕轨道: mediaSource = " + mediaSource);
                         }
-                        if (null == mediaSource)
-                            continue;
+                        if (null == mediaSource) continue;
                         mediaSources[++index] = mediaSource;
                     }
                 }
@@ -530,8 +502,7 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
     public void initOptions(Context context, StartArgs args) {
 
         try {
-            if (null == mExoPlayer)
-                throw new Exception("mExoPlayer warning: null");
+            if (null == mExoPlayer) throw new Exception("mExoPlayer warning: null");
             boolean mute = args.isMute();
             if (mute) {
                 mExoPlayer.setVolume(0f);
@@ -549,8 +520,7 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
         }
 
         try {
-            if (null == mExoPlayer)
-                throw new Exception("error: mExoPlayer null");
+            if (null == mExoPlayer) throw new Exception("error: mExoPlayer null");
             int seekParameters = args.getSeekType();
             if (seekParameters == PlayerType.SeekType.EXO_CLOSEST_SYNC) {
                 mExoPlayer.setSeekParameters(androidx.media3.exoplayer.SeekParameters.CLOSEST_SYNC);
@@ -571,10 +541,8 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
 
         // log
         try {
-            if (null == mExoPlayer)
-                throw new Exception("error: mExoPlayer null");
-            if (null == args)
-                throw new Exception("error: args null");
+            if (null == mExoPlayer) throw new Exception("error: mExoPlayer null");
+            if (null == args) throw new Exception("error: args null");
             boolean log = args.isLog();
             lib.kalu.mediax.util.MediaLogUtil.setDebug(log);
         } catch (Exception e) {
@@ -587,11 +555,9 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
     @Override
     public void setSurface(Surface surface, int w, int h) {
         try {
-            if (null == mExoPlayer)
-                throw new Exception("error: mExoPlayer null");
+            if (null == mExoPlayer) throw new Exception("error: mExoPlayer null");
             mExoPlayer.clearVideoSurface();
-            if (null == surface)
-                throw new Exception("error: surface null");
+            if (null == surface) throw new Exception("error: surface null");
             mExoPlayer.setVideoSurface(surface);
             if (LogUtil.DEBUG) {
                 LogUtil.log(TAG, "setSurface -> completed");
@@ -609,10 +575,8 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
     @Override
     public boolean isPlaying() {
         try {
-            if (!isPrepared)
-                throw new Exception("mPrepared warning: false");
-            if (null == mExoPlayer)
-                throw new Exception("mExoPlayer error: null");
+            if (!isPrepared) throw new Exception("mPrepared warning: false");
+            if (null == mExoPlayer) throw new Exception("mExoPlayer error: null");
             int state = mExoPlayer.getPlaybackState();
             if (state == Player.STATE_BUFFERING || state == Player.STATE_READY) {
                 return mExoPlayer.getPlayWhenReady();
@@ -632,12 +596,10 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
     private void seekToDefaultPosition() {
         try {
 
-            if (null == mExoPlayer)
-                throw new Exception("error: mMediaPlayer null");
+            if (null == mExoPlayer) throw new Exception("error: mMediaPlayer null");
 
             boolean live = isLive();
-            if (!live)
-                throw new Exception("warning: live false");
+            if (!live) throw new Exception("warning: live false");
 
             mExoPlayer.seekToDefaultPosition();
             if (mExoPlayer.getPlaybackState() != Player.STATE_READY) {
@@ -658,13 +620,10 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
     public void seekTo(long seek) {
         try {
 
-            if (seek < 0L)
-                throw new Exception("error: seek<0");
-            if (null == mExoPlayer)
-                throw new Exception("error: mMediaPlayer null");
+            if (seek < 0L) throw new Exception("error: seek<0");
+            if (null == mExoPlayer) throw new Exception("error: mMediaPlayer null");
             StartArgs args = getStartArgs();
-            if (null == args)
-                throw new Exception("error: args null");
+            if (null == args) throw new Exception("error: args null");
 
             long duration = getDuration();
             if (duration > 0L && seek > duration) {
@@ -689,16 +648,14 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
     @Override
     public boolean isLive() {
         try {
-            if (null == mExoPlayer)
-                throw new Exception("mExoPlayer error: null");
+            if (null == mExoPlayer) throw new Exception("mExoPlayer error: null");
             boolean live = super.isLive();
             if (live) {
                 return true;
             } else {
                 // Media3 中 Timeline 和 Window 的使用方式
                 Timeline timeline = mExoPlayer.getCurrentTimeline();
-                if (timeline.isEmpty())
-                    throw new Exception("error: timeline is empty");
+                if (timeline.isEmpty()) throw new Exception("error: timeline is empty");
                 int windowIndex = mExoPlayer.getCurrentWindowIndex();
                 Timeline.Window window = new Timeline.Window();
                 timeline.getWindow(windowIndex, window, Player.REPEAT_MODE_OFF);
@@ -716,10 +673,8 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
     @Override
     public long getPosition() {
         try {
-            if (!isPrepared)
-                throw new Exception("mPrepared warning: false");
-            if (null == mExoPlayer)
-                throw new Exception("mExoPlayer error: null");
+            if (!isPrepared) throw new Exception("mPrepared warning: false");
+            if (null == mExoPlayer) throw new Exception("mExoPlayer error: null");
 
             boolean live = isLive();
             // Media3 中判断是否为直播
@@ -727,8 +682,7 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
 
                 // Media3 中 Timeline 和 Window 的使用方式
                 Timeline timeline = mExoPlayer.getCurrentTimeline();
-                if (timeline.isEmpty())
-                    throw new Exception("error: timeline is empty");
+                if (timeline.isEmpty()) throw new Exception("error: timeline is empty");
 
                 int windowIndex = mExoPlayer.getCurrentWindowIndex();
                 Timeline.Window window = new Timeline.Window();
@@ -768,10 +722,8 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
     @Override
     public long getDuration() {
         try {
-            if (!isPrepared)
-                throw new Exception("mPrepared warning: false");
-            if (null == mExoPlayer)
-                throw new Exception("mExoPlayer error: null");
+            if (!isPrepared) throw new Exception("mPrepared warning: false");
+            if (null == mExoPlayer) throw new Exception("mExoPlayer error: null");
 
             // Media3 中判断是否为直播
             boolean live = isLive();
@@ -779,8 +731,7 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
 
                 // Media3 中 Timeline 和 Window 的使用方式
                 Timeline timeline = mExoPlayer.getCurrentTimeline();
-                if (timeline.isEmpty())
-                    throw new Exception("error: timeline is empty");
+                if (timeline.isEmpty()) throw new Exception("error: timeline is empty");
 
                 int windowIndex = mExoPlayer.getCurrentWindowIndex();
                 Timeline.Window window = new Timeline.Window();
@@ -798,8 +749,7 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
                 return latestAvailablePositionMs;
             } else {
                 long duration = mExoPlayer.getDuration();
-                if (duration <= 0)
-                    throw new Exception("duration warning: " + duration);
+                if (duration <= 0) throw new Exception("duration warning: " + duration);
                 return duration;
             }
         } catch (Exception e) {
@@ -823,8 +773,7 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
     @Override
     public void setSpeed(float speed) {
         try {
-            if (null == mExoPlayer)
-                throw new Exception("mMediaPlayer error: null");
+            if (null == mExoPlayer) throw new Exception("mMediaPlayer error: null");
             PlaybackParameters playbackParameters = mExoPlayer.getPlaybackParameters();
             if (null != playbackParameters) {
                 playbackParameters = playbackParameters.withSpeed(speed);
@@ -842,8 +791,7 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
     @Override
     public float getSpeed() {
         try {
-            if (null == mExoPlayer)
-                throw new Exception("mMediaPlayer error: null");
+            if (null == mExoPlayer) throw new Exception("mMediaPlayer error: null");
             return mExoPlayer.getPlaybackParameters().speed;
         } catch (Exception e) {
             return 1.0f;
@@ -853,11 +801,9 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
     @Override
     public void setVolume(float v1, float v2) {
         try {
-            if (null == mExoPlayer)
-                throw new Exception("mExoPlayer error: null");
+            if (null == mExoPlayer) throw new Exception("mExoPlayer error: null");
             float volume = Math.max(v1, v2);
-            if (volume < 0)
-                throw new Exception("error: volume < 0");
+            if (volume < 0) throw new Exception("error: volume < 0");
             mExoPlayer.setVolume(volume);
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
@@ -869,8 +815,7 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
     @Override
     public float getVolume() {
         try {
-            if (null == mExoPlayer)
-                throw new Exception("mExoPlayer error: null");
+            if (null == mExoPlayer) throw new Exception("mExoPlayer error: null");
             return mExoPlayer.getVolume();
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
@@ -883,8 +828,7 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
     @Override
     public void registListener() {
         try {
-            if (null == mExoPlayer)
-                throw new Exception("error: mExoPlayer null");
+            if (null == mExoPlayer) throw new Exception("error: mExoPlayer null");
 //            mExoPlayer.setVideoFrameMetadataListener(new VideoFrameMetadataListener() {
 //                @Override
 //                public void onVideoFrameAboutToBeRendered(long presentationTimeUs, long releaseTimeNs, Format format, @Nullable MediaFormat mediaFormat) {
@@ -922,8 +866,7 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
     @Override
     public void unRegistListener() {
         try {
-            if (null == mExoPlayer)
-                throw new Exception("error: mExoPlayer null");
+            if (null == mExoPlayer) throw new Exception("error: mExoPlayer null");
             mExoPlayer.removeAnalyticsListener(mAnalyticsListener);
             mExoPlayer.setPlaybackParameters(null);
         } catch (Exception e) {
@@ -959,8 +902,7 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
 
     private boolean unInitSimpleCache() {
         try {
-            if (null == mSimpleCache)
-                throw new Exception("warning: mSimpleCache null");
+            if (null == mSimpleCache) throw new Exception("warning: mSimpleCache null");
             mSimpleCache.removeListener("mCacheListener", mCacheListener);
             mSimpleCache.release();
             mSimpleCache = null;
@@ -986,28 +928,23 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
 
         try {
             boolean containsMainUrl = args.containsMainUrl();
-            if (!containsMainUrl)
-                throw new Exception("error: containsMainUrl false");
+            if (!containsMainUrl) throw new Exception("error: containsMainUrl false");
 
             String url = args.getUrl();
             if (url.startsWith(PlayerType.SchemeType.FILE))
                 throw new Exception("error: url is file");
 
             PlayerArgs playerBuilder = PlayerSDK.init().getPlayerBuilder();
-            if (null == playerBuilder)
-                throw new Exception("error: playerBuilder null");
+            if (null == playerBuilder) throw new Exception("error: playerBuilder null");
 
             Cache cache = playerBuilder.getCache();
-            if (null == cache)
-                throw new Exception("error: cache null");
+            if (null == cache) throw new Exception("error: cache null");
 
             boolean cacheEnable = cache.isEnable();
-            if (!cacheEnable)
-                throw new Exception("error: cacheEnable false");
+            if (!cacheEnable) throw new Exception("error: cacheEnable false");
 
             int sizeMB = cache.getSizeMB();
-            if (sizeMB <= 0)
-                throw new Exception("error: sizeMB <= 0, sizeMB = " + sizeMB);
+            if (sizeMB <= 0) throw new Exception("error: sizeMB <= 0, sizeMB = " + sizeMB);
 
             String dirName = cache.getDir(PlayerType.KernelType.MEDIA_V3);
             if (LogUtil.DEBUG) {
@@ -1029,8 +966,7 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
                     //
                     new LeastRecentlyUsedCacheEvictor(sizeMB),
                     //
-                    new StandaloneDatabaseProvider(context)
-            );
+                    new StandaloneDatabaseProvider(context));
             mSimpleCache.addListener("mCacheListener", mCacheListener);
             if (LogUtil.DEBUG) {
                 LogUtil.log(TAG, "initSimpleCache -> useCache completed");
@@ -1060,8 +996,7 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
         }
 
         try {
-            if (null == mExoPlayer)
-                throw new Exception("mExoPlayer error: null");
+            if (null == mExoPlayer) throw new Exception("mExoPlayer error: null");
             mExoPlayer.play();
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
@@ -1081,10 +1016,8 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
         }
 
         try {
-            if (!isPrepared)
-                throw new Exception("mPrepared warning: false");
-            if (null == mExoPlayer)
-                throw new Exception("mMediaPlayer error: null");
+            if (!isPrepared) throw new Exception("mPrepared warning: false");
+            if (null == mExoPlayer) throw new Exception("mMediaPlayer error: null");
             mExoPlayer.pause();
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
@@ -1104,8 +1037,7 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
         }
 
         try {
-            if (null == mExoPlayer)
-                throw new Exception("mExoPlayer error: null");
+            if (null == mExoPlayer) throw new Exception("mExoPlayer error: null");
             mExoPlayer.pause();
             mExoPlayer.stop();
         } catch (Exception e) {
@@ -1130,8 +1062,7 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
         }
 
         try {
-            if (null == mExoPlayer)
-                throw new Exception("error: mExoPlayer null");
+            if (null == mExoPlayer) throw new Exception("error: mExoPlayer null");
             mExoPlayer.setVideoSurface(null);
             mExoPlayer.release();
             mExoPlayer = null;
@@ -1234,42 +1165,33 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
             }
 
             try {
-                if (null == mSimpleCache)
-                    throw new Exception("warning: mSimpleCache null");
+                if (null == mSimpleCache) throw new Exception("warning: mSimpleCache null");
 
                 boolean live = isLive();
-                if (live)
-                    throw new Exception("warning: current is live");
+                if (live) throw new Exception("warning: current is live");
 
                 Object currentManifest = mExoPlayer.getCurrentManifest();
-                if (null == currentManifest)
-                    throw new Exception("warning: currentManifest null");
+                if (null == currentManifest) throw new Exception("warning: currentManifest null");
                 if (!(currentManifest instanceof HlsManifest))
                     throw new Exception("warning: currentManifest not instanceof HlsManifest");
                 HlsMediaPlaylist hlsMediaPlaylist = ((HlsManifest) currentManifest).mediaPlaylist;
-                if (null == hlsMediaPlaylist)
-                    throw new Exception("warning: hlsMediaPlaylist null");
+                if (null == hlsMediaPlaylist) throw new Exception("warning: hlsMediaPlaylist null");
                 List<HlsMediaPlaylist.Segment> segments = hlsMediaPlaylist.segments;
-                if (null == segments)
-                    throw new Exception("warning: segments null");
+                if (null == segments) throw new Exception("warning: segments null");
                 String url = hlsMediaPlaylist.baseUri;
                 String baseUrl = formatBaseUrl(url);
                 for (HlsMediaPlaylist.Segment segment : segments) {
-                    if (null == segment)
-                        continue;
+                    if (null == segment) continue;
 
                     String segmentUrl = baseUrl + PlayerType.MarkType.SEPARATOR + segment.url;
                     String cacheKey = formatCacheKey(segmentUrl);
 
                     NavigableSet<CacheSpan> cachedSpans = mSimpleCache.getCachedSpans(cacheKey);
-                    if (cachedSpans.isEmpty())
-                        continue;
+                    if (cachedSpans.isEmpty()) continue;
 
                     for (CacheSpan span : cachedSpans) {
-                        if (null == span)
-                            continue;
-                        if (!span.isCached)
-                            continue;
+                        if (null == span) continue;
+                        if (!span.isCached) continue;
                         HlsSpanInfo hlsSpanInfo = new HlsSpanInfo();
                         String segmentPath = span.file.getAbsolutePath();
                         hlsSpanInfo.setPath(segmentPath);
@@ -1396,8 +1318,7 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
 
             try {
                 boolean live = isLive();
-                if (live)
-                    throw new Exception("warning: current is live");
+                if (live) throw new Exception("warning: current is live");
                 loadHlsSpanInfo(loadEventInfo, mediaLoadData);
             } catch (Exception e) {
                 if (LogUtil.DEBUG) {
@@ -1430,8 +1351,7 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
                     LogUtil.log(TAG, "onPlaybackStateChanged -> state[Player.STATE_READY] = " + state);
                 }
                 try {
-                    if (!isPrepared)
-                        throw new Exception("warning: isPrepared false");
+                    if (!isPrepared) throw new Exception("warning: isPrepared false");
 
                     // buffering
                     if (isBuffering) {
@@ -1478,8 +1398,7 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
                         onEvent(PlayerType.KernelType.MEDIA_V3, playWhenReady ? PlayerType.EventType.START_PLAY_WHEN_READY_TRUE : PlayerType.EventType.START_PLAY_WHEN_READY_FALSE);
                         if (playWhenReady) {
                             boolean playing = isPlaying();
-                            if (playing)
-                                throw new Exception("warning: isPlaying true");
+                            if (playing) throw new Exception("warning: isPlaying true");
                             start();
                         } else {
                             pause();
@@ -1499,8 +1418,7 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
                     LogUtil.log(TAG, "onPlaybackStateChanged -> state[Player.STATE_BUFFERING] = " + state);
                 }
                 try {
-                    if (!isPrepared)
-                        throw new Exception("mPrepared warning: false");
+                    if (!isPrepared) throw new Exception("mPrepared warning: false");
                     isBuffering = true;
                     onEvent(PlayerType.KernelType.MEDIA_V3, PlayerType.EventType.BUFFERING_START);
                 } catch (Exception e) {
@@ -1525,10 +1443,8 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
             // 视频信息
             try {
                 StartArgs args = getStartArgs();
-                if (null == args)
-                    throw new Exception("error: args null");
-                @PlayerType.ScaleType.Value
-                int scaleType = args.getscaleType();
+                if (null == args) throw new Exception("error: args null");
+                @PlayerType.ScaleType.Value int scaleType = args.getscaleType();
                 int rotation = args.getRotation();
 //                int rotation = (videoSize.unappliedRotationDegrees > 0 ? videoSize.unappliedRotationDegrees : PlayerType.RotationType.DEFAULT);
                 onVideoFormatChanged(PlayerType.KernelType.MEDIA_V3, rotation, scaleType, format.width, format.height, format.bitrate);
@@ -1540,8 +1456,7 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
 
             // 起播快进??
             try {
-                if (isPrepared)
-                    throw new Exception("warning: isPrepared true");
+                if (isPrepared) throw new Exception("warning: isPrepared true");
                 isPrepared = true;
                 onEvent(PlayerType.KernelType.MEDIA_V3, PlayerType.EventType.PREPARE);
                 onEvent(PlayerType.KernelType.MEDIA_V3, PlayerType.EventType.VIDEO_RENDERING_START);
@@ -1615,10 +1530,8 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
             }
 
             try {
-                if (null == cues)
-                    throw new Exception();
-                if (cues.size() == 0)
-                    throw new Exception();
+                if (null == cues) throw new Exception();
+                if (cues.size() == 0) throw new Exception();
 
                 //
                 for (Cue cue : cues) {
@@ -1709,25 +1622,18 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
     @Override
     public boolean toggleTrack(TrackInfo trackInfo) {
         try {
-            if (null == trackInfo)
-                throw new Exception("error: trackArgs null");
+            if (null == trackInfo) throw new Exception("error: trackArgs null");
             int groupIndex = trackInfo.getGroupIndex();
-            if (groupIndex == -1)
-                throw new Exception("error: groupIndex == -1");
+            if (groupIndex == -1) throw new Exception("error: groupIndex == -1");
             int trackIndex = trackInfo.getTrackIndex();
-            if (trackIndex == -1)
-                throw new Exception("error: trackIndex == -1");
-            if (null == mExoPlayer)
-                throw new Exception("error: mExoPlayer null");
+            if (trackIndex == -1) throw new Exception("error: trackIndex == -1");
+            if (null == mExoPlayer) throw new Exception("error: mExoPlayer null");
             Tracks tracks = mExoPlayer.getCurrentTracks();
             ImmutableList<Tracks.Group> tracksGroups = tracks.getGroups();
             TrackGroup trackGroup = tracksGroups.get(groupIndex).getMediaTrackGroup();
 
             TrackSelector trackSelector = mExoPlayer.getTrackSelector();
-            TrackSelectionParameters selectionParameters = trackSelector.getParameters()
-                    .buildUpon()
-                    .setOverrideForType(new TrackSelectionOverride(trackGroup, trackIndex))
-                    .build();
+            TrackSelectionParameters selectionParameters = trackSelector.getParameters().buildUpon().setOverrideForType(new TrackSelectionOverride(trackGroup, trackIndex)).build();
             trackSelector.setParameters(selectionParameters);
             return true;
         } catch (Exception e) {
@@ -1743,8 +1649,7 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
 
 
         try {
-            if (null == mExoPlayer)
-                throw new Exception("error: mExoPlayer null");
+            if (null == mExoPlayer) throw new Exception("error: mExoPlayer null");
 
             //
             LinkedList<TrackInfo> list = new LinkedList<>();
@@ -1755,8 +1660,7 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
             int groupCount = groups.size();
             for (int groupIndex = 0; groupIndex < groupCount; groupIndex++) {
                 Tracks.Group group = groups.get(groupIndex);
-                if (null == group)
-                    continue;
+                if (null == group) continue;
 
                 if (LogUtil.DEBUG) {
                     TrackGroup trackGroup = group.getMediaTrackGroup();
@@ -1773,8 +1677,7 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
 
                     // 轨道是否支持
                     boolean isTrackSupported = group.isTrackSupported(trackIndex);
-                    if (!isTrackSupported)
-                        continue;
+                    if (!isTrackSupported) continue;
 
                     // 轨道是否被选中
                     boolean isTrackSelected = group.isTrackSelected(trackIndex);
@@ -1925,8 +1828,7 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
             }
 
             //
-            if (list.isEmpty())
-                throw new Exception("error: list empty");
+            if (list.isEmpty()) throw new Exception("error: list empty");
 
             return list;
         } catch (Exception e) {
@@ -1940,8 +1842,7 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
     @Override
     public HlsSpanList getSegments() {
         try {
-            if (null == mHlsSpanInfos)
-                throw new Exception("warning: mHlsSpanInfo null");
+            if (null == mHlsSpanInfos) throw new Exception("warning: mHlsSpanInfo null");
             return mHlsSpanInfos;
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
@@ -1954,16 +1855,13 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
     @Override
     public boolean subtitleOffsetMs(int offsetMs) {
         try {
-            if (null == mExoPlayer)
-                throw new Exception("error: mExoPlayer null");
+            if (null == mExoPlayer) throw new Exception("error: mExoPlayer null");
             int rendererCount = mExoPlayer.getRendererCount();
             for (int i = 0; i < rendererCount; i++) {
                 int rendererType = mExoPlayer.getRendererType(i);
-                if (rendererType != C.TRACK_TYPE_TEXT)
-                    continue;
+                if (rendererType != C.TRACK_TYPE_TEXT) continue;
                 Renderer renderer = mExoPlayer.getRenderer(i);
-                if (null == renderer)
-                    continue;
+                if (null == renderer) continue;
                 if (renderer instanceof OffsetMsTextRenderer) {
                     ((OffsetMsTextRenderer) renderer).appendOffsetMs(offsetMs);
                     onUpdateSubtitle(PlayerType.KernelType.MEDIA_V3, "");
@@ -1981,17 +1879,11 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
 
     /************************/
 
-    private MediaSource buildMediaSource(Context context,
-                                         HttpDataSource.Factory httpFactory,
-                                         StartArgs startArgs,
-                                         @PlayerType.UrlType.Value
-                                         int urlType,
-                                         UrlArgs.Item urlItem) {
+    private MediaSource buildMediaSource(Context context, HttpDataSource.Factory httpFactory, StartArgs startArgs, @PlayerType.UrlType.Value int urlType, UrlArgs.Item urlItem) {
 
         try {
 
-            if (null == urlItem)
-                throw new Exception("error: urlItem null");
+            if (null == urlItem) throw new Exception("error: urlItem null");
 
 
             if (LogUtil.DEBUG) {
@@ -2034,11 +1926,9 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
                 } else {
                     Object factory = buildDefaultDataSource(context, httpFactory);
                     if (factory instanceof CacheDataSource.Factory) {
-                        return new SingleSampleMediaSource.Factory((CacheDataSource.Factory) factory)
-                                .createMediaSource(subtitleConfiguration, C.TIME_UNSET);
+                        return new SingleSampleMediaSource.Factory((CacheDataSource.Factory) factory).createMediaSource(subtitleConfiguration, C.TIME_UNSET);
                     } else {
-                        return new SingleSampleMediaSource.Factory((DataSource.Factory) factory)
-                                .createMediaSource(subtitleConfiguration, C.TIME_UNSET);
+                        return new SingleSampleMediaSource.Factory((DataSource.Factory) factory).createMediaSource(subtitleConfiguration, C.TIME_UNSET);
                     }
                 }
             }
@@ -2136,11 +2026,7 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
             if (lastIndexOf > 0) {
                 path = path.substring(0, lastIndexOf);
             }
-            String baseUrl = new StringBuilder().append(uri.getScheme())
-                    .append("://")
-                    .append(uri.getHost())
-                    .append(path)
-                    .toString();
+            String baseUrl = new StringBuilder().append(uri.getScheme()).append("://").append(uri.getHost()).append(path).toString();
 //            if (LogUtil.DEBUG) {
 //                 LogUtil.log(TAG, "formatBaseUrl -> url =  " + url + ", baseUrl = " + baseUrl);
 //            }
@@ -2153,19 +2039,14 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
         }
     }
 
-    private MediaItem buildMediaItem(@PlayerType.UrlType.Value int urlType,
-                                     StartArgs startArgs,
-                                     UrlArgs.Item urlItem) {
+    private MediaItem buildMediaItem(@PlayerType.UrlType.Value int urlType, StartArgs startArgs, UrlArgs.Item urlItem) {
 
         try {
 
-            if (null == urlItem)
-                throw new Exception("error: urlItem null");
+            if (null == urlItem) throw new Exception("error: urlItem null");
             String url = urlItem.getUrl();
-            if (null == url)
-                throw new Exception("error: url null");
-            if (url.isEmpty())
-                throw new Exception("error: url isEmpty");
+            if (null == url) throw new Exception("error: url null");
+            if (url.isEmpty()) throw new Exception("error: url isEmpty");
 
             MediaItem.LiveConfiguration liveConfiguration = new MediaItem.LiveConfiguration.Builder()
                     // 播放器追赶直播时允许的最大倍速	1.2f - 1.5f	当播放器落后于直播点时，自动加速播放追赶
@@ -2177,26 +2058,14 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
                     // 最小允许的直播延迟	2000ms	防止播放器离直播边缘太近导致频繁卡顿
                     .setMinOffsetMs(startArgs.getLiveConfiguration().getMinOffsetMs())
                     // 最大允许的直播延迟	10000ms	超过这个值就会自动加速追赶
-                    .setMaxOffsetMs(startArgs.getLiveConfiguration().getMaxOffsetMs())
-                    .build();
+                    .setMaxOffsetMs(startArgs.getLiveConfiguration().getMaxOffsetMs()).build();
 
             if (urlType == PlayerType.UrlType.AUDIO) {
-                return new MediaItem.Builder()
-                        .setUri(Uri.parse(url))
-                        .setMediaId("audio:" + url.hashCode())
-                        .setLiveConfiguration(liveConfiguration)
-                        .build();
+                return new MediaItem.Builder().setUri(Uri.parse(url)).setMediaId("audio:" + url.hashCode()).setLiveConfiguration(liveConfiguration).build();
             } else if (urlType == PlayerType.UrlType.VIDEO) {
-                return new MediaItem.Builder()
-                        .setUri(Uri.parse(url))
-                        .setMediaId("video:" + url.hashCode())
-                        .setLiveConfiguration(liveConfiguration)
-                        .build();
+                return new MediaItem.Builder().setUri(Uri.parse(url)).setMediaId("video:" + url.hashCode()).setLiveConfiguration(liveConfiguration).build();
             } else {
-                return new MediaItem.Builder()
-                        .setUri(Uri.parse(url))
-                        .setLiveConfiguration(liveConfiguration)
-                        .build();
+                return new MediaItem.Builder().setUri(Uri.parse(url)).setLiveConfiguration(liveConfiguration).build();
             }
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
@@ -2210,13 +2079,10 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
 
         try {
 
-            if (null == urlItem)
-                throw new Exception("error: urlItem null");
+            if (null == urlItem) throw new Exception("error: urlItem null");
             String url = urlItem.getUrl();
-            if (null == url)
-                throw new Exception("error: url null");
-            if (url.isEmpty())
-                throw new Exception("error: url isEmpty");
+            if (null == url) throw new Exception("error: url null");
+            if (url.isEmpty()) throw new Exception("error: url isEmpty");
 
             String mimeType = null;
             // ssa字幕
@@ -2294,12 +2160,8 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
                     // 主轨道
                     .setSelectionFlags(selectionFlags)
                     // 描述轨道的「角色 / 用途」ROLE_FLAG_*		MAIN（主轨道）、SUBTITLE（字幕）、COMMENTARY（解说）
-                    .setRoleFlags(roleFlags)
-                    .setMimeType(mimeType) // 也可以用 MimeTypes.APPLICATION_SUBRIP
-                    .setLanguage(language)
-                    .setLabel(label)
-                    .setId("subtitle:" + url.hashCode())
-                    .build();
+                    .setRoleFlags(roleFlags).setMimeType(mimeType) // 也可以用 MimeTypes.APPLICATION_SUBRIP
+                    .setLanguage(language).setLabel(label).setId("subtitle:" + url.hashCode()).build();
 
 //                      .setSubtitleMediaSourceFactory(
 //                            SingleSampleMediaSource.Factory(defaultDataSourceFactory) // 字幕用非缓存数据源
@@ -2315,10 +2177,8 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
 
     private String formatCacheKey(String url) {
         try {
-            if (null == url)
-                throw new Exception("error: url null");
-            if (url.isEmpty())
-                throw new Exception("error: url isEmpty");
+            if (null == url) throw new Exception("error: url null");
+            if (url.isEmpty()) throw new Exception("error: url isEmpty");
             return formatCacheKey(Uri.parse(url));
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
@@ -2330,13 +2190,8 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
 
     private String formatCacheKey(Uri uri) {
         try {
-            if (null == uri)
-                throw new Exception("error: uri null");
-            String newKey = new StringBuilder().append(uri.getScheme())
-                    .append("://")
-                    .append(uri.getHost())
-                    .append(uri.getPath())
-                    .toString();
+            if (null == uri) throw new Exception("error: uri null");
+            String newKey = new StringBuilder().append(uri.getScheme()).append("://").append(uri.getHost()).append(uri.getPath()).toString();
 //            if (LogUtil.DEBUG) {
 //                 LogUtil.log(TAG, "formatCacheKey -> url =  " + url + ", newKey = " + newKey);
 //            }
@@ -2353,8 +2208,7 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
         try {
             Pattern pattern = Pattern.compile(".*?(\\d+)\\.ts");
             Matcher matcher = pattern.matcher(segmentUrl);
-            if (!matcher.find())
-                throw new Exception("error: not find1");
+            if (!matcher.find()) throw new Exception("error: not find1");
             String segmentPosition = matcher.group(1);
             if (null == segmentPosition || segmentPosition.isEmpty())
                 throw new Exception("error: not find2");
@@ -2372,12 +2226,9 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
 
     private boolean loadHlsSpanInfo(LoadEventInfo loadEventInfo, MediaLoadData mediaLoadData) {
         try {
-            if (null == mSimpleCache)
-                throw new Exception("warning: mSimpleCache null");
-            if (null == loadEventInfo)
-                throw new Exception("warning: loadEventInfo null");
-            if (null == mediaLoadData)
-                throw new Exception("warning: mediaLoadData null");
+            if (null == mSimpleCache) throw new Exception("warning: mSimpleCache null");
+            if (null == loadEventInfo) throw new Exception("warning: loadEventInfo null");
+            if (null == mediaLoadData) throw new Exception("warning: mediaLoadData null");
 
             if (LogUtil.DEBUG) {
                 LogUtil.log(TAG, "loadHlsSpanInfo -> mediaLoadData.dataType = " + mediaLoadData.dataType + ", mediaLoadData.trackType = " + mediaLoadData.trackType + ", mediaLoadData.mediaStartTimeMs = " + mediaLoadData.mediaStartTimeMs + ", mediaLoadData.mediaEndTimeMs = " + mediaLoadData.mediaEndTimeMs);
@@ -2392,16 +2243,13 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
                 DataSpec dataSpec = loadEventInfo.dataSpec;
 
                 Uri uri = dataSpec.uri;
-                if (null == uri)
-                    throw new Exception("warning: uri null");
+                if (null == uri) throw new Exception("warning: uri null");
 
                 String segmentUrl = uri.toString();
-                if (segmentUrl.isEmpty())
-                    throw new Exception("warning: segmentUrl isEmpty");
+                if (segmentUrl.isEmpty()) throw new Exception("warning: segmentUrl isEmpty");
 
                 int segmentPosition = formatSegmentPosition(segmentUrl);
-                if (segmentPosition < 0)
-                    throw new Exception("warning: segmentPosition < 0");
+                if (segmentPosition < 0) throw new Exception("warning: segmentPosition < 0");
 
                 if (null == mHlsSpanInfos) {
                     mHlsSpanInfos = new HlsSpanList();
@@ -2411,22 +2259,18 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
                     throw new Exception("warning: spanInfos already contains, segmentPosition = " + segmentPosition);
 
                 String cacheKey = formatCacheKey(segmentUrl);
-                if (cacheKey.isEmpty())
-                    throw new Exception("warning: cacheKey isEmpty");
+                if (cacheKey.isEmpty()) throw new Exception("warning: cacheKey isEmpty");
 
                 if (LogUtil.DEBUG) {
                     LogUtil.log(TAG, "loadHlsSpanInfo -> .m3u8 缓存文件, cacheKey = " + cacheKey + ", segmentUrl = " + segmentUrl);
                 }
 
                 NavigableSet<CacheSpan> cachedSpans = mSimpleCache.getCachedSpans(cacheKey);
-                if (cachedSpans.isEmpty())
-                    throw new Exception("warning: cachedSpans isEmpty");
+                if (cachedSpans.isEmpty()) throw new Exception("warning: cachedSpans isEmpty");
 
                 for (CacheSpan span : cachedSpans) {
-                    if (null == span)
-                        continue;
-                    if (!span.isCached)
-                        continue;
+                    if (null == span) continue;
+                    if (!span.isCached) continue;
                     HlsSpanInfo hlsSpanInfo = new HlsSpanInfo();
                     hlsSpanInfo.setPath(span.file.getAbsolutePath());
                     hlsSpanInfo.setUrl(segmentUrl);
@@ -2451,8 +2295,7 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
         }
     }
 
-    private DataSource.Factory buildDefaultDataSource(Context context,
-                                                      HttpDataSource.Factory httpFactory) {
+    private DataSource.Factory buildDefaultDataSource(Context context, HttpDataSource.Factory httpFactory) {
 
         if (LogUtil.DEBUG) {
             LogUtil.log(TAG, "buildDefaultDataSource -> mSimpleCache = " + mSimpleCache);
@@ -2460,25 +2303,19 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
 
         try {
 
-            if (null == mSimpleCache)
-                throw new Exception("error: mSimpleCache null");
+            if (null == mSimpleCache) throw new Exception("error: mSimpleCache null");
 
-            return new CacheDataSource.Factory()
-                    .setFlags(
+            return new CacheDataSource.Factory().setFlags(
                             // 当发生错误时忽略缓存（比如错误时不读取缓存，直接请求源数据）。
                             CacheDataSource.FLAG_IGNORE_CACHE_ON_ERROR
                                     // 对于未设置长度的请求忽略缓存（比如请求体长度未知时不使用缓存）。
-                                    | CacheDataSource.FLAG_IGNORE_CACHE_FOR_UNSET_LENGTH_REQUESTS
-                    )
-                    .setCache(mSimpleCache)
+                                    | CacheDataSource.FLAG_IGNORE_CACHE_FOR_UNSET_LENGTH_REQUESTS).setCache(mSimpleCache)
                     // 网络请求工厂
                     .setUpstreamDataSourceFactory(httpFactory)
                     // 缓存读取工厂
                     .setCacheReadDataSourceFactory(new FileDataSource.Factory())
                     // 写入数据到缓存
-                    .setCacheWriteDataSinkFactory(new CacheDataSink.Factory()
-                            .setFragmentSize(CacheDataSink.DEFAULT_FRAGMENT_SIZE)
-                            .setCache(mSimpleCache))
+                    .setCacheWriteDataSinkFactory(new CacheDataSink.Factory().setFragmentSize(CacheDataSink.DEFAULT_FRAGMENT_SIZE).setCache(mSimpleCache))
                     // 自定义缓存键
                     .setCacheKeyFactory(new CacheKeyFactory() {
                         @Override
@@ -2495,12 +2332,7 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
     }
 
 
-    private HlsMediaSource.Factory buildHlsMediaSourceFactory(Context context,
-                                                              HttpDataSource.Factory httpFactory,
-                                                              StartArgs args,
-                                                              @PlayerType.UrlType.Value
-                                                              int urlType,
-                                                              UrlArgs.Item item) {
+    private HlsMediaSource.Factory buildHlsMediaSourceFactory(Context context, HttpDataSource.Factory httpFactory, StartArgs args, @PlayerType.UrlType.Value int urlType, UrlArgs.Item item) {
 
         DataSource.Factory factory = buildDefaultDataSource(context, httpFactory);
 
@@ -2509,7 +2341,7 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
                 .setAllowChunklessPreparation(true);
 
         //
-        hlsMediaSource.setLoadErrorHandlingPolicy(new CustomHlsLoadErrorHandlingPolicy(args.getHlsRetryCount()));
+        hlsMediaSource.setLoadErrorHandlingPolicy(new CustomHlsLoadErrorHandlingPolicy(args.getRetryCount()));
         // setPlaylistParserFactory
         hlsMediaSource.setPlaylistParserFactory(new CustomHlsPlaylistParserFactory(args.getProxyUrl()));
 
