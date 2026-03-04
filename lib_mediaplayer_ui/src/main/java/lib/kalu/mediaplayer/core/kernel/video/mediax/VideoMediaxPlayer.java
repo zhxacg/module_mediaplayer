@@ -1291,7 +1291,7 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
         @Override
         public void onLoadError(EventTime eventTime, LoadEventInfo loadEventInfo, MediaLoadData mediaLoadData, IOException e, boolean b) {
             if (LogUtil.DEBUG) {
-                LogUtil.log(TAG, "onLoadError -> message = " + e.getMessage() + "loadUrl = " + loadEventInfo.dataSpec.uri);
+                LogUtil.log(TAG, "onLoadError -> message = " + e.getMessage() + ", loadUrl = " + loadEventInfo.dataSpec.uri);
             }
         }
 
