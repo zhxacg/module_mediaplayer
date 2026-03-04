@@ -1005,6 +1005,36 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
         }
     }
 
+    @Override
+    public void resume() {
+
+        if (LogUtil.DEBUG) {
+            LogUtil.log(TAG, "resume ->");
+        }
+
+        try {
+            if (!isPrepared)
+                throw new Exception("mPrepared warning: false");
+            if (null == mExoPlayer)
+                throw new Exception("mMediaPlayer error: null");
+
+            start();
+
+            boolean live = isLive();
+            if (live) {
+                seekToDefaultPosition();
+            }
+
+            if (LogUtil.DEBUG) {
+                LogUtil.log(TAG, "resume -> completed");
+            }
+        } catch (Exception e) {
+            if (LogUtil.DEBUG) {
+                LogUtil.log(TAG, "resume -> " + e.getMessage());
+            }
+        }
+    }
+
     /**
      * 暂停
      */
@@ -1012,13 +1042,17 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
     public void pause() {
 
         if (LogUtil.DEBUG) {
-            LogUtil.log(TAG, "pause");
+            LogUtil.log(TAG, "pause ->");
         }
 
         try {
             if (!isPrepared) throw new Exception("mPrepared warning: false");
             if (null == mExoPlayer) throw new Exception("mMediaPlayer error: null");
             mExoPlayer.pause();
+
+            if (LogUtil.DEBUG) {
+                LogUtil.log(TAG, "pause -> completed");
+            }
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
                 LogUtil.log(TAG, "pause -> " + e.getMessage());

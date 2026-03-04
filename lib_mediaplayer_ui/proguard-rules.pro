@@ -60,6 +60,9 @@
 -keep class lib.kalu.mediaplayer.util.UdpUtil {
     public <methods>;
 }
+-keep class lib.kalu.mediaplayer.util.NetworkUtil {
+    public <methods>;
+}
 -keep class lib.kalu.mediaplayer.util.LogUtil {
     public <methods>;
 }

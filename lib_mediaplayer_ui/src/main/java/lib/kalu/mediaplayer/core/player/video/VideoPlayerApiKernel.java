@@ -473,7 +473,7 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
             // 埋点
             onBuriedResume();
             // 执行
-            kernel.start();
+            kernel.resume();
             setScreenKeep(true);
             if (!callEvent)
                 throw new Exception("warning: callEvent false");

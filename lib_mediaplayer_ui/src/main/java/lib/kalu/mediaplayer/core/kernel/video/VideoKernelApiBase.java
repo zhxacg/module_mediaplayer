@@ -5,7 +5,6 @@ import android.content.Context;
 import java.util.List;
 
 import lib.kalu.mediaplayer.bean.info.TrackInfo;
-import lib.kalu.mediaplayer.bean.type.PlayerType;
 import lib.kalu.mediaplayer.core.player.video.VideoPlayerApi;
 
 
@@ -39,6 +38,10 @@ interface VideoKernelApiBase {
     void start();
 
     void pause();
+
+    default void resume() {
+        start();
+    }
 
     void stop();
 
