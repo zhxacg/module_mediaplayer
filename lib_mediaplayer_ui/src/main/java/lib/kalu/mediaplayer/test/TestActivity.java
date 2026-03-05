@@ -306,9 +306,9 @@ public final class TestActivity extends Activity {
                                 }
 
                                 @Override
-                                public String formatMultivariantReferencePath(String baseUrl, String referencePath) {
+                                public String formatReferenceM3u8Url(String baseUrl, String referencePath) {
                                     if (LogUtil.DEBUG) {
-                                        LogUtil.log("TestActivity -> formatMultivariantReferencePath -> baseUrl = " + baseUrl + ", referencePath = " + referencePath + ", thread = " + Thread.currentThread().getName());
+                                        LogUtil.log("TestActivity -> formatReferenceM3u8Url -> baseUrl = " + baseUrl + ", referencePath = " + referencePath + ", thread = " + Thread.currentThread().getName());
                                     }
                                     return referencePath;
                                 }

@@ -17,8 +17,9 @@
 
     <string-array name="urls">
         <item />
+        <item>https://amg01131-tracetv-tracelatina-xiaomi-395yt.amagi.tv/ts-us-e2-n1/playlist/amg01131-tracetv-tracelatina-xiaomi/cb573d1c7a6c618d84c83a78d2f14582ca7722d8016f9c2a6eb4548975d10701c1f8b180e754f0391cc6498129143e0e007ed90d887e5395de7ca959297d1f72c885b37a8f980f01b1db5a3728e67b4d53fe0b4086705274ebe77067ed9236777f71cb272c331185b407fc546dffb27be85fb25f60ef4b0d0c1906ce7763dd0edafdddd92514863bebe9430d870d7d6b451eebe676c1aaec31c616dc2fa04aca88c089c7285ab1b071f51ff8f125060204a6e7d7eaf83788fad004188f7829092d5de7ad94f64f35bc00291dd9efc2b96ae75c9fc775cf3077f3088c5b9423d024e508b7e848afb5f5dc4d4c70d6a421012dc2b0f96a9ab8ab79cb9df1bf1a053eb93a37069f4c821c6d91ce/59/640x360_1020800/index.m3u8</item>
 <!--        <item>http://hubby.cx/LEO2000/xmeoz1t4Wt/11011</item>-->
-        <item>http://live.myzapptv.com/live/fa23pshjlc00.m3u8</item>
+<!--        <item>http://live.myzapptv.com/live/fa23pshjlc00.m3u8</item>-->
 <!--        <item>http://live.myzapptv.com/live/f2ij0whsn7r4.m3u8</item>-->
         <item>https://media-1347269025.cos.sa-saopaulo.myqcloud.com/movie/387923cf/720p/index.m3u8</item>
         <item>http://streams.smooth.vertigo.com/elephantsdream/Elephants_Dream_1024 - h264 - st - aac.ism/manifest</item>
