@@ -70,13 +70,6 @@ public class StartArgs implements Serializable {
         return log;
     }
 
-    // 缓冲超时, 是否重新播放
-    private boolean bufferingTimeoutRetry;
-
-    public boolean isBufferingTimeoutRetry() {
-        return bufferingTimeoutRetry;
-    }
-
     // 开始播放前，是否销毁已存在的播放器相关实例
     private boolean initRelease;
 
@@ -279,9 +272,16 @@ public class StartArgs implements Serializable {
         return retryCount;
     }
 
+    // 缓冲超时 默认不检测
+    private BufferingTimeoutConfiguration bufferingTimeoutConfiguration;
+
+    public BufferingTimeoutConfiguration getBufferingTimeoutConfiguration() {
+        return bufferingTimeoutConfiguration;
+    }
+
     @Override
     public String toString() {
-        return "StartArgs{" + "seekType=" + seekType + ", renderType=" + renderType + ", scaleType=" + scaleType + ", decoderType=" + decoderType + ", kernelType=" + kernelType + ", connectTimeoutMs=" + connectTimeoutMs + ", log=" + log + ", bufferingTimeoutRetry=" + bufferingTimeoutRetry + ", initRelease=" + initRelease + ", urlArgs='" + urlArgs + '\'' + ", title='" + title + '\'' + ", trySeeDuration=" + trySeeDuration + ", live=" + live + ", looping=" + looping + ", mute=" + mute + ", playWhenReady=" + playWhenReady + ", playWhenReadyDelayedTime=" + playWhenReadyDelayedTime + ", playWhenReadySeekToPosition=" + playWhenReadySeekToPosition + ", prepareAsync=" + prepareAsync + ", rotation=" + rotation + ", extraData=" + extraData + ", showSpeed=" + showSpeed + ", menu=" + menu + ", noProxy=" + noProxy + ", proxy=" + proxy + ", bufferDurationsMs=" + bufferDurationsMs + ", liveConfiguration=" + liveConfiguration + ", livePlaybackSpeedControl=" + livePlaybackSpeedControl + ", adaptiveTrackSelection=" + adaptiveTrackSelection + ", stuckDetectorMs=" + stuckDetectorMs + ", retryCount=" + retryCount + ", liveTimelineConfiguration=" + liveTimelineConfiguration + '}';
+        return "StartArgs{" + "seekType=" + seekType + ", renderType=" + renderType + ", scaleType=" + scaleType + ", decoderType=" + decoderType + ", kernelType=" + kernelType + ", connectTimeoutMs=" + connectTimeoutMs + ", log=" + log + ", bufferingTimeoutConfiguration=" + bufferingTimeoutConfiguration + ", initRelease=" + initRelease + ", urlArgs='" + urlArgs + '\'' + ", title='" + title + '\'' + ", trySeeDuration=" + trySeeDuration + ", live=" + live + ", looping=" + looping + ", mute=" + mute + ", playWhenReady=" + playWhenReady + ", playWhenReadyDelayedTime=" + playWhenReadyDelayedTime + ", playWhenReadySeekToPosition=" + playWhenReadySeekToPosition + ", prepareAsync=" + prepareAsync + ", rotation=" + rotation + ", extraData=" + extraData + ", showSpeed=" + showSpeed + ", menu=" + menu + ", noProxy=" + noProxy + ", proxy=" + proxy + ", bufferDurationsMs=" + bufferDurationsMs + ", liveConfiguration=" + liveConfiguration + ", livePlaybackSpeedControl=" + livePlaybackSpeedControl + ", adaptiveTrackSelection=" + adaptiveTrackSelection + ", stuckDetectorMs=" + stuckDetectorMs + ", retryCount=" + retryCount + ", liveTimelineConfiguration=" + liveTimelineConfiguration + '}';
     }
 
     public StartArgs(Builder builder) {
@@ -292,7 +292,7 @@ public class StartArgs implements Serializable {
         this.kernelType = builder.kernelType;
         this.connectTimeoutMs = builder.connectTimeoutMs;
         this.log = builder.log;
-        this.bufferingTimeoutRetry = builder.bufferingTimeoutRetry;
+        this.bufferingTimeoutConfiguration = builder.bufferingTimeoutConfiguration;
         this.initRelease = builder.initRelease;
         this.urlArgs = builder.urlArgs;
         this.title = builder.title;
@@ -328,7 +328,7 @@ public class StartArgs implements Serializable {
         builder.kernelType = kernelType;
         builder.connectTimeoutMs = connectTimeoutMs;
         builder.log = log;
-        builder.bufferingTimeoutRetry = bufferingTimeoutRetry;
+        builder.bufferingTimeoutConfiguration = bufferingTimeoutConfiguration;
         builder.initRelease = initRelease;
         builder.urlArgs = urlArgs;
         builder.title = title;
@@ -375,8 +375,6 @@ public class StartArgs implements Serializable {
         private int connectTimeoutMs = playerArgs.getConnectTimeoutMs();
         // 日志
         private boolean log = playerArgs.isLog();
-        // 缓冲超时, 是否重新播放
-        private boolean bufferingTimeoutRetry = playerArgs.getBufferingTimeoutRetry();
         // 开始播放前，是否销毁已存在的播放器相关实例
         private boolean initRelease = playerArgs.isInitRelease();
 
@@ -584,6 +582,14 @@ public class StartArgs implements Serializable {
 
         public Builder setLiveTimelineConfiguration(LiveTimelineConfiguration v) {
             this.liveTimelineConfiguration = v;
+            return this;
+        }
+
+        // 缓冲超时 默认不检测
+        private BufferingTimeoutConfiguration bufferingTimeoutConfiguration = new BufferingTimeoutConfiguration.Builder().build();
+
+        public Builder setBufferingTimeoutConfiguration(BufferingTimeoutConfiguration v) {
+            this.bufferingTimeoutConfiguration = v;
             return this;
         }
 
@@ -1078,6 +1084,48 @@ public class StartArgs implements Serializable {
 
             public AdaptiveTrackSelection build() {
                 return new AdaptiveTrackSelection(this);
+            }
+        }
+    }
+
+    public static final class BufferingTimeoutConfiguration implements Serializable {
+
+        private long maxTimeMs;
+
+        public long getMaxTimeMs() {
+            return maxTimeMs;
+        }
+
+        public BufferingTimeoutConfiguration(BufferingTimeoutConfiguration.Builder builder) {
+            this.maxTimeMs = builder.maxTimeMs;
+        }
+
+        public BufferingTimeoutConfiguration.Builder newBuilder() {
+            BufferingTimeoutConfiguration.Builder builder = new BufferingTimeoutConfiguration.Builder();
+            builder.maxTimeMs = maxTimeMs;
+            return builder;
+        }
+
+        @Override
+        public String toString() {
+            return "BufferingTimeoutConfiguration{" + ", maxTimeMs=" + maxTimeMs + '}';
+        }
+
+        public static class Builder implements Serializable {
+
+            // 默认不检测 缓冲超时
+            private long maxTimeMs = 0L;
+
+            public BufferingTimeoutConfiguration.Builder setMaxTimeMs(long v) {
+                this.maxTimeMs = v;
+                return this;
+            }
+
+            public Builder() {
+            }
+
+            public BufferingTimeoutConfiguration build() {
+                return new BufferingTimeoutConfiguration(this);
             }
         }
     }

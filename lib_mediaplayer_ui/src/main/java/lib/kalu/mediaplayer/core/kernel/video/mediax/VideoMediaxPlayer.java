@@ -1198,32 +1198,32 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
                 LogUtil.log(TAG, "onTimelineChanged -> i = " + i + ", eventTime.currentPlaybackPositionMs = " + eventTime.currentPlaybackPositionMs);
             }
 
-            // 追播
-            try {
-                boolean live = isLive();
-                if (!live)
-                    throw new Exception("warning: current not live");
-
-                StartArgs startArgs = getStartArgs();
-                StartArgs.LiveTimelineConfiguration liveTimelineConfiguration = startArgs.getLiveTimelineConfiguration();
-                long minCurrentPlaybackPositionMs = liveTimelineConfiguration.getMinCurrentPlaybackPositionMs();
-                long currentPlaybackPositionMs = eventTime.currentPlaybackPositionMs;
-                if (LogUtil.DEBUG) {
-                    LogUtil.log(TAG, "onTimelineChanged1 -> minCurrentPlaybackPositionMs = " + minCurrentPlaybackPositionMs + ", currentPlaybackPositionMs = " + currentPlaybackPositionMs);
-                }
-
-                if (currentPlaybackPositionMs < minCurrentPlaybackPositionMs) {
-                    if (LogUtil.DEBUG) {
-                        LogUtil.log(TAG, "onTimelineChanged1 -> seekToDefaultPosition");
-                    }
-                    seekToDefaultPosition();
-                }
-
-            } catch (Exception e) {
-                if (LogUtil.DEBUG) {
-                    LogUtil.log(TAG, "onTimelineChanged1 -> Exception: " + e.getMessage());
-                }
-            }
+//            // 追播
+//            try {
+//                boolean live = isLive();
+//                if (!live)
+//                    throw new Exception("warning: current not live");
+//
+//                StartArgs startArgs = getStartArgs();
+//                StartArgs.LiveTimelineConfiguration liveTimelineConfiguration = startArgs.getLiveTimelineConfiguration();
+//                long minCurrentPlaybackPositionMs = liveTimelineConfiguration.getMinCurrentPlaybackPositionMs();
+//                long currentPlaybackPositionMs = eventTime.currentPlaybackPositionMs;
+//                if (LogUtil.DEBUG) {
+//                    LogUtil.log(TAG, "onTimelineChanged1 -> minCurrentPlaybackPositionMs = " + minCurrentPlaybackPositionMs + ", currentPlaybackPositionMs = " + currentPlaybackPositionMs);
+//                }
+//
+//                if (currentPlaybackPositionMs < minCurrentPlaybackPositionMs) {
+//                    if (LogUtil.DEBUG) {
+//                        LogUtil.log(TAG, "onTimelineChanged1 -> seekToDefaultPosition");
+//                    }
+//                    seekToDefaultPosition();
+//                }
+//
+//            } catch (Exception e) {
+//                if (LogUtil.DEBUG) {
+//                    LogUtil.log(TAG, "onTimelineChanged1 -> Exception: " + e.getMessage());
+//                }
+//            }
 
             // 缓存
             try {

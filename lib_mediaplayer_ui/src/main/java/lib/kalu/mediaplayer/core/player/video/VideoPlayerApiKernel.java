@@ -585,18 +585,21 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
                         case PlayerType.EventType.BUFFERING_START:
                             // 埋点
                             onBuriedBufferingStart();
-                            //
-                            boolean bufferingTimeoutRetry = args.isBufferingTimeoutRetry();
-                            long connectTimout = args.getConnectTimeoutMs();
-                            long timeMillis1 = System.currentTimeMillis();
-                            kernelApi.sendMessageBufferingTimeout(kernel, bufferingTimeoutRetry, timeMillis1, connectTimout);
+                            // 检测：缓冲超时
+                            StartArgs.BufferingTimeoutConfiguration bufferingTimeoutConfiguration = args.getBufferingTimeoutConfiguration();
+                            if (null != bufferingTimeoutConfiguration) {
+                                long maxTimeMs = bufferingTimeoutConfiguration.getMaxTimeMs();
+                                if (maxTimeMs > 0L) {
+                                    kernelApi.startMessageBufferingTimeout(kernel, maxTimeMs);
+                                }
+                            }
                             break;
                         // 缓冲结束
                         case PlayerType.EventType.BUFFERING_STOP:
                             // 埋点
                             onBuriedBufferingStop();
                             //
-                            kernelApi.removeMessagesBufferingTimeout();
+                            kernelApi.closeMessagesBufferingTimeout();
                             break;
                         // 视频首帧
                         case PlayerType.EventType.VIDEO_RENDERING_START:

@@ -191,46 +191,77 @@ public interface VideoKernelApiHandler extends VideoKernelApiBase, VideoKernelAp
         }
     }
 
-    default void sendMessageBufferingTimeout(@PlayerType.KernelType.Value int kernelType, boolean bufferingTimeoutRetry, long timeMillis, long timeout) {
+    default void startMessageBufferingTimeout(@PlayerType.KernelType.Value int kernelType, long maxTimeoutMs) {
 
         if (LogUtil.DEBUG) {
-            LogUtil.log(TAG, "sendMessageBufferingTimeout ->");
+            LogUtil.log(TAG, "startMessageBufferingTimeout -> kernelType = " + kernelType + ", maxTimeoutMs = " + maxTimeoutMs);
         }
 
         try {
+            if (maxTimeoutMs <= 0)
+                throw new Exception("warning: maxTimeoutMs <= 0, maxTimeoutMs = " + maxTimeoutMs);
             Handler handler = getHandler();
             if (null == handler)
                 throw new Exception("warning: handler null");
             Message message = Message.obtain();
             message.what = WHAT_BufferingTimeout;
             message.arg1 = kernelType;
-            message.arg2 = bufferingTimeoutRetry ? 1 : 0;
-            message.obj = new long[]{timeMillis, timeMillis};
+            message.obj = new long[]{System.currentTimeMillis(), maxTimeoutMs};
             handler.sendMessageDelayed(message, 1000);
+            if (LogUtil.DEBUG) {
+                LogUtil.log(TAG, "startMessageBufferingTimeout -> completed");
+            }
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
-                LogUtil.log(TAG, "sendMessageBufferingTimeout -> Exception " + e.getMessage());
+                LogUtil.log(TAG, "startMessageBufferingTimeout -> Exception " + e.getMessage());
             }
         }
     }
 
-    default void removeMessagesBufferingTimeout() {
+    default void closeMessagesBufferingTimeout() {
 
         if (LogUtil.DEBUG) {
-            LogUtil.log(TAG, "removeMessagesBufferingTimeout ->");
+            LogUtil.log(TAG, "closeMessagesBufferingTimeout ->");
         }
 
         try {
             Handler handler = getHandler();
             if (null == handler)
                 throw new Exception("warning: handler null");
-            if (LogUtil.DEBUG) {
-                LogUtil.log(TAG, "removeMessagesBufferingTimeout ->");
-            }
             handler.removeMessages(WHAT_BufferingTimeout);
+            if (LogUtil.DEBUG) {
+                LogUtil.log(TAG, "closeMessagesBufferingTimeout -> completed");
+            }
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
-                LogUtil.log(TAG, "removeMessagesBufferingTimeout -> Exception " + e.getMessage());
+                LogUtil.log(TAG, "closeMessagesBufferingTimeout -> Exception " + e.getMessage());
+            }
+        }
+    }
+
+    default void nextMessageBufferingTimeout(@PlayerType.KernelType.Value int kernelType, long startTimeMillis, long maxTimeoutMs) {
+
+        if (LogUtil.DEBUG) {
+            LogUtil.log(TAG, "nextMessageBufferingTimeout -> kernelType = " + kernelType + ", startTimeMillis = " + startTimeMillis + ", maxTimeoutMs = " + maxTimeoutMs);
+        }
+
+        try {
+            if (maxTimeoutMs <= 0)
+                throw new Exception("warning: maxTimeoutMs <= 0, maxTimeoutMs = " + maxTimeoutMs);
+            Handler handler = getHandler();
+            if (null == handler)
+                throw new Exception("warning: handler null");
+            Message message = Message.obtain();
+            message.what = WHAT_BufferingTimeout;
+            message.arg1 = kernelType;
+            message.obj = new long[]{startTimeMillis, maxTimeoutMs};
+            handler.sendMessageDelayed(message, 1000);
+            if (LogUtil.DEBUG) {
+                LogUtil.log(TAG, "nextMessageBufferingTimeout -> completed");
+            }
+        } catch (Exception e) {
+            if (LogUtil.DEBUG) {
+                LogUtil.log(TAG, "nextMessageBufferingTimeout -> Exception " + e.getMessage());
             }
         }
     }
@@ -299,11 +330,19 @@ public interface VideoKernelApiHandler extends VideoKernelApiBase, VideoKernelAp
                 throw new Exception("warning: msg null");
             // 延迟播放
             if (msg.what == WHAT_PlayWhenReadyDelayedTime) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log(TAG, "formatMessage -> WHAT_PlayWhenReadyDelayedTime");
+                }
+
                 onEvent(msg.arg1, PlayerType.EventType.INIT_PLAY_WHEN_READY_DELAYED_TIME_COMPLETE);
                 initDecoderPlayWhenReadyDelayed((Context) msg.obj);
             }
             // 网络超时
             else if (msg.what == WHAT_ConnectTimeout) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log(TAG, "formatMessage -> WHAT_ConnectTimeout");
+                }
+
                 if (isPrepared())
                     throw new Exception("warning: isPrepared true");
                 long timeout = ((long[]) msg.obj)[1];
@@ -319,6 +358,10 @@ public interface VideoKernelApiHandler extends VideoKernelApiBase, VideoKernelAp
             }
             // 解决部分盒子不回调 info code=3
             else if (msg.what == WHAT_CheckPreparedPlaying) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log(TAG, "formatMessage -> WHAT_CheckPreparedPlaying");
+                }
+
 //                if (isPrepared())
 //                    throw new Exception("warning: isPrepared true");
 //                boolean playing = isPlaying();
@@ -341,6 +384,10 @@ public interface VideoKernelApiHandler extends VideoKernelApiBase, VideoKernelAp
             }
             // 更新进度条
             else if (msg.what == WHAT_ProgressUpdate) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log(TAG, "formatMessage -> WHAT_ProgressUpdate");
+                }
+
                 if (isPrepared()) {
                     long position = getPosition();
                     long duration = getDuration();
@@ -351,38 +398,74 @@ public interface VideoKernelApiHandler extends VideoKernelApiBase, VideoKernelAp
             }
             // 缓冲超时
             else if (msg.what == WHAT_BufferingTimeout) {
-                if (isPrepared())
-                    throw new Exception("warning: isPrepared true");
-                long timeout = ((long[]) msg.obj)[1];
-                long start = ((long[]) msg.obj)[0];
-                long cast = System.currentTimeMillis() - start;
-                if (cast >= timeout) {
-                    onEvent(msg.arg1, PlayerType.EventType.ERROR_TIMEOUT_BUFFERING);
-                    //
-                    removeMessagesBufferingTimeout();
-                    //
-                    getPlayerApi().stop(true);
-                    //
-                    if (msg.arg2 != 1)
-                        throw new Exception("warning: bufferingTimeoutRetry false");
+                if (LogUtil.DEBUG) {
+                    LogUtil.log(TAG, "formatMessage -> WHAT_BufferingTimeout");
+                }
+
+                boolean prepared = isPrepared();
+                if (LogUtil.DEBUG) {
+                    LogUtil.log(TAG, "formatMessage -> WHAT_BufferingTimeout, prepared = " + prepared);
+                }
+                if (!prepared)
+                    throw new Exception("warning: prepared false");
+
+                boolean buffering = isBuffering();
+                if (LogUtil.DEBUG) {
+                    LogUtil.log(TAG, "formatMessage -> WHAT_BufferingTimeout, buffering = " + buffering);
+                }
+                if (!buffering)
+                    throw new Exception("warning: buffering false");
+
+                long startTimeMillis = ((long[]) msg.obj)[0];
+                long maxTimeoutMs = ((long[]) msg.obj)[1];
+                long currentTimeMillis = System.currentTimeMillis();
+                long castTimeMs = currentTimeMillis - startTimeMillis;
+
+                if (LogUtil.DEBUG) {
+                    LogUtil.log(TAG, "formatMessage -> WHAT_BufferingTimeout, startTimeMillis = " + startTimeMillis + ", currentTimeMillis = " + currentTimeMillis + ", maxTimeoutMs = " + maxTimeoutMs + ", castTimeMs = " + castTimeMs);
+                }
+
+                if (castTimeMs >= maxTimeoutMs) {
+
                     //
                     boolean live = isLive();
+                    if (LogUtil.DEBUG) {
+                        LogUtil.log(TAG, "formatMessage -> WHAT_BufferingTimeout, live = " + live);
+                    }
+
+                    if (LogUtil.DEBUG) {
+                        LogUtil.log(TAG, "formatMessage -> WHAT_BufferingTimeout, retry");
+                    }
+
+                    closeMessagesBufferingTimeout();
+                    onEvent(msg.arg1, PlayerType.EventType.ERROR_TIMEOUT_BUFFERING);
+
+                    if (LogUtil.DEBUG) {
+                        LogUtil.log(TAG, "formatMessage -> WHAT_BufferingTimeout, retry stop");
+                    }
+                    getPlayerApi().stop(true);
+
+                    if (LogUtil.DEBUG) {
+                        LogUtil.log(TAG, "formatMessage -> WHAT_BufferingTimeout, retry restart");
+                    }
                     if (live) {
                         getPlayerApi().restart(false);
                     } else {
                         getPlayerApi().restart(true);
                     }
                 } else {
-                    boolean buffering = isBuffering();
-                    if (buffering) {
-                        sendMessageConnectTimeout(msg.arg1, start, timeout, true);
-                    } else {
-                        removeMessagesBufferingTimeout();
+                    if (LogUtil.DEBUG) {
+                        LogUtil.log(TAG, "formatMessage -> WHAT_BufferingTimeout, next");
                     }
+                    nextMessageBufferingTimeout(msg.arg1, currentTimeMillis, maxTimeoutMs);
                 }
             }
             // 更新网速
             else if (msg.what == WHAT_UPDATE_SPEED) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log(TAG, "formatMessage -> WHAT_UPDATE_SPEED");
+                }
+
                 if (!isPrepared()) {
                     onUpdateNetSpeed(msg.arg1);
                     sendMessageSpeedUpdate(msg.arg1, true);
