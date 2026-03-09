@@ -539,6 +539,11 @@ public final class VideoIjkPlayer extends VideoBasePlayer {
     }
 
     @Override
+    public void seekToDefaultPosition() {
+        seekTo(0);
+    }
+
+    @Override
     public void seekTo(long seek) {
         try {
             if (seek < 0)

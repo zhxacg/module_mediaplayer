@@ -222,6 +222,11 @@ public final class VideoVlcPlayer extends VideoBasePlayer {
         }
     }
 
+    @Override
+    public void seekToDefaultPosition() {
+        seekTo(0);
+    }
+
     /**
      * 调整进度
      */

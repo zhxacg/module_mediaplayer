@@ -593,14 +593,17 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
         }
     }
 
-    private void seekToDefaultPosition() {
+    @Override
+    public void seekToDefaultPosition() {
         try {
 
             if (null == mExoPlayer) throw new Exception("error: mMediaPlayer null");
 
             boolean live = isLive();
-            if (!live) throw new Exception("warning: live false");
+            if (!live)
+                throw new Exception("warning: live false");
 
+            mSeeking = true;
             mExoPlayer.seekToDefaultPosition();
             if (mExoPlayer.getPlaybackState() != Player.STATE_READY) {
                 mExoPlayer.prepare();

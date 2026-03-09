@@ -266,6 +266,19 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
         }
     }
 
+    default void seekToDefaultPosition() {
+        try {
+            VideoKernelApi kernel = getVideoKernel();
+            if (null == kernel)
+                throw new Exception("warning: kernel null");
+            kernel.seekToDefaultPosition();
+        } catch (Exception e) {
+            if (LogUtil.DEBUG) {
+                LogUtil.log(TAG, "seekToDefaultPosition -> " + e.getMessage());
+            }
+        }
+    }
+
     default void seekTo(long position) {
         try {
             if (position < 0) {
@@ -586,11 +599,11 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
                             // 埋点
                             onBuriedBufferingStart();
                             // 检测：缓冲超时
-                            StartArgs.BufferingTimeoutConfiguration bufferingTimeoutConfiguration = args.getBufferingTimeoutConfiguration();
-                            if (null != bufferingTimeoutConfiguration) {
-                                long maxTimeMs = bufferingTimeoutConfiguration.getMaxTimeMs();
-                                if (maxTimeMs > 0L) {
-                                    kernelApi.startMessageBufferingTimeout(kernel, maxTimeMs);
+                            StartArgs.BufferingConfiguration bufferingConfiguration = args.getBufferingConfiguration();
+                            if (null != bufferingConfiguration) {
+                                long maxBufferingTimeoutMs = bufferingConfiguration.getMaxBufferingTimeoutMs();
+                                if (maxBufferingTimeoutMs > 0L) {
+                                    kernelApi.startMessageBufferingTimeout(kernel, maxBufferingTimeoutMs);
                                 }
                             }
                             break;

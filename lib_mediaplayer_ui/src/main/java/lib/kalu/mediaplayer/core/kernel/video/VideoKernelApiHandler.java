@@ -194,7 +194,7 @@ public interface VideoKernelApiHandler extends VideoKernelApiBase, VideoKernelAp
     default void startMessageBufferingTimeout(@PlayerType.KernelType.Value int kernelType, long maxTimeoutMs) {
 
         if (LogUtil.DEBUG) {
-            LogUtil.log(TAG, "startMessageBufferingTimeout -> kernelType = " + kernelType + ", maxTimeoutMs = " + maxTimeoutMs);
+            LogUtil.log(TAG, "startMessageBufferingTimeout -> WHAT_BufferingTimeout, kernelType = " + kernelType + ", maxTimeoutMs = " + maxTimeoutMs);
         }
 
         try {
@@ -209,11 +209,11 @@ public interface VideoKernelApiHandler extends VideoKernelApiBase, VideoKernelAp
             message.obj = new long[]{System.currentTimeMillis(), maxTimeoutMs};
             handler.sendMessageDelayed(message, 1000);
             if (LogUtil.DEBUG) {
-                LogUtil.log(TAG, "startMessageBufferingTimeout -> completed");
+                LogUtil.log(TAG, "startMessageBufferingTimeout -> WHAT_BufferingTimeout, completed");
             }
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
-                LogUtil.log(TAG, "startMessageBufferingTimeout -> Exception " + e.getMessage());
+                LogUtil.log(TAG, "startMessageBufferingTimeout -> WHAT_BufferingTimeout, Exception " + e.getMessage());
             }
         }
     }
@@ -221,7 +221,7 @@ public interface VideoKernelApiHandler extends VideoKernelApiBase, VideoKernelAp
     default void closeMessagesBufferingTimeout() {
 
         if (LogUtil.DEBUG) {
-            LogUtil.log(TAG, "closeMessagesBufferingTimeout ->");
+            LogUtil.log(TAG, "closeMessagesBufferingTimeout -> WHAT_BufferingTimeout, ");
         }
 
         try {
@@ -230,11 +230,11 @@ public interface VideoKernelApiHandler extends VideoKernelApiBase, VideoKernelAp
                 throw new Exception("warning: handler null");
             handler.removeMessages(WHAT_BufferingTimeout);
             if (LogUtil.DEBUG) {
-                LogUtil.log(TAG, "closeMessagesBufferingTimeout -> completed");
+                LogUtil.log(TAG, "closeMessagesBufferingTimeout -> WHAT_BufferingTimeout, completed");
             }
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
-                LogUtil.log(TAG, "closeMessagesBufferingTimeout -> Exception " + e.getMessage());
+                LogUtil.log(TAG, "closeMessagesBufferingTimeout -> WHAT_BufferingTimeout, Exception " + e.getMessage());
             }
         }
     }
@@ -242,7 +242,7 @@ public interface VideoKernelApiHandler extends VideoKernelApiBase, VideoKernelAp
     default void nextMessageBufferingTimeout(@PlayerType.KernelType.Value int kernelType, long startTimeMillis, long maxTimeoutMs) {
 
         if (LogUtil.DEBUG) {
-            LogUtil.log(TAG, "nextMessageBufferingTimeout -> kernelType = " + kernelType + ", startTimeMillis = " + startTimeMillis + ", maxTimeoutMs = " + maxTimeoutMs);
+            LogUtil.log(TAG, "nextMessageBufferingTimeout -> WHAT_BufferingTimeout, kernelType = " + kernelType + ", startTimeMillis = " + startTimeMillis + ", maxTimeoutMs = " + maxTimeoutMs);
         }
 
         try {
@@ -257,11 +257,11 @@ public interface VideoKernelApiHandler extends VideoKernelApiBase, VideoKernelAp
             message.obj = new long[]{startTimeMillis, maxTimeoutMs};
             handler.sendMessageDelayed(message, 1000);
             if (LogUtil.DEBUG) {
-                LogUtil.log(TAG, "nextMessageBufferingTimeout -> completed");
+                LogUtil.log(TAG, "nextMessageBufferingTimeout -> WHAT_BufferingTimeout, completed");
             }
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
-                LogUtil.log(TAG, "nextMessageBufferingTimeout -> Exception " + e.getMessage());
+                LogUtil.log(TAG, "nextMessageBufferingTimeout -> WHAT_BufferingTimeout, Exception " + e.getMessage());
             }
         }
     }
@@ -443,21 +443,21 @@ public interface VideoKernelApiHandler extends VideoKernelApiBase, VideoKernelAp
                     if (LogUtil.DEBUG) {
                         LogUtil.log(TAG, "formatMessage -> WHAT_BufferingTimeout, retry stop");
                     }
-                    getPlayerApi().stop(true);
-
-                    if (LogUtil.DEBUG) {
-                        LogUtil.log(TAG, "formatMessage -> WHAT_BufferingTimeout, retry restart");
-                    }
-                    if (live) {
-                        getPlayerApi().restart(false);
-                    } else {
-                        getPlayerApi().restart(true);
-                    }
+                    getPlayerApi().seekToDefaultPosition();
+//                    getPlayerApi().stop(true);
+//                    if (LogUtil.DEBUG) {
+//                        LogUtil.log(TAG, "formatMessage -> WHAT_BufferingTimeout, retry restart");
+//                    }
+//                    if (live) {
+//                        getPlayerApi().restart(false);
+//                    } else {
+//                        getPlayerApi().restart(true);
+//                    }
                 } else {
                     if (LogUtil.DEBUG) {
                         LogUtil.log(TAG, "formatMessage -> WHAT_BufferingTimeout, next");
                     }
-                    nextMessageBufferingTimeout(msg.arg1, currentTimeMillis, maxTimeoutMs);
+                    nextMessageBufferingTimeout(msg.arg1, startTimeMillis, maxTimeoutMs);
                 }
             }
             // 更新网速

@@ -613,6 +613,20 @@ public final class VideoExo2Player extends VideoBasePlayer {
     }
 
     @Override
+    public void seekToDefaultPosition() {
+        try {
+            if (null == mExoPlayer)
+                throw new Exception("error: mMediaPlayer null");
+            mSeeking = true;
+            mExoPlayer.seekToDefaultPosition();
+        } catch (Exception e) {
+            if (LogUtil.DEBUG) {
+                LogUtil.log(TAG, "seekToDefaultPosition -> " + e.getMessage());
+            }
+        }
+    }
+
+    @Override
     public void seekTo(long seek) {
         try {
 

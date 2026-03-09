@@ -312,6 +312,11 @@ public final class VideoAndroidPlayer extends VideoBasePlayer {
         }
     }
 
+    @Override
+    public void seekToDefaultPosition() {
+        seekTo(0);
+    }
+
     /**
      * 调整进度
      */
