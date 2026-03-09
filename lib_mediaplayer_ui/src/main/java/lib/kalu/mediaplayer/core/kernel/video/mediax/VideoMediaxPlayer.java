@@ -137,7 +137,8 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
     @Override
     public void releaseDecoder(boolean isFromUser) {
         try {
-            if (null == mExoPlayer) throw new Exception("mExoPlayer error: null");
+            if (null == mExoPlayer)
+                throw new Exception("mExoPlayer error: null");
             if (isFromUser) {
                 setEvent(null);
             }
@@ -1110,6 +1111,10 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
             if (LogUtil.DEBUG) {
                 LogUtil.log(TAG, "release -> " + e.getMessage());
             }
+        }
+
+        if (null != mStartArgs) {
+            mStartArgs = null;
         }
 
         stopHandler();
