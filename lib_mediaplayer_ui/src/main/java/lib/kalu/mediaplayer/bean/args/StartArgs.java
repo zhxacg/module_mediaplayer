@@ -56,13 +56,6 @@ public class StartArgs implements Serializable {
         return kernelType;
     }
 
-    // 超时时间
-    private int connectTimeoutMs;
-
-    public int getConnectTimeoutMs() {
-        return connectTimeoutMs;
-    }
-
     // 日志
     private boolean log;
 
@@ -272,9 +265,16 @@ public class StartArgs implements Serializable {
         return bufferingConfiguration;
     }
 
+    // 超时
+    private TimeoutConfiguration timeoutConfiguration;
+
+    public TimeoutConfiguration getTimeoutConfiguration() {
+        return timeoutConfiguration;
+    }
+
     @Override
     public String toString() {
-        return "StartArgs{" + "seekType=" + seekType + ", renderType=" + renderType + ", scaleType=" + scaleType + ", decoderType=" + decoderType + ", kernelType=" + kernelType + ", connectTimeoutMs=" + connectTimeoutMs + ", log=" + log + ", initRelease=" + initRelease + ", urlArgs='" + urlArgs + '\'' + ", title='" + title + '\'' + ", trySeeDuration=" + trySeeDuration + ", live=" + live + ", looping=" + looping + ", mute=" + mute + ", playWhenReady=" + playWhenReady + ", playWhenReadyDelayedTime=" + playWhenReadyDelayedTime + ", playWhenReadySeekToPosition=" + playWhenReadySeekToPosition + ", prepareAsync=" + prepareAsync + ", rotation=" + rotation + ", extraData=" + extraData + ", showSpeed=" + showSpeed + ", menu=" + menu + ", noProxy=" + noProxy + ", proxy=" + proxy + ", bufferDurationsMs=" + bufferDurationsMs + ", liveConfiguration=" + liveConfiguration + ", livePlaybackSpeedControl=" + livePlaybackSpeedControl + ", adaptiveTrackSelection=" + adaptiveTrackSelection + ", stuckDetectorMs=" + stuckDetectorMs + ", retryCount=" + retryCount + ", bufferingConfiguration=" + bufferingConfiguration + '}';
+        return "StartArgs{" + "seekType=" + seekType + ", renderType=" + renderType + ", scaleType=" + scaleType + ", decoderType=" + decoderType + ", kernelType=" + kernelType + ", log=" + log + ", initRelease=" + initRelease + ", urlArgs='" + urlArgs + '\'' + ", title='" + title + '\'' + ", trySeeDuration=" + trySeeDuration + ", live=" + live + ", looping=" + looping + ", mute=" + mute + ", playWhenReady=" + playWhenReady + ", playWhenReadyDelayedTime=" + playWhenReadyDelayedTime + ", playWhenReadySeekToPosition=" + playWhenReadySeekToPosition + ", prepareAsync=" + prepareAsync + ", rotation=" + rotation + ", extraData=" + extraData + ", showSpeed=" + showSpeed + ", menu=" + menu + ", noProxy=" + noProxy + ", proxy=" + proxy + ", bufferDurationsMs=" + bufferDurationsMs + ", liveConfiguration=" + liveConfiguration + ", livePlaybackSpeedControl=" + livePlaybackSpeedControl + ", adaptiveTrackSelection=" + adaptiveTrackSelection + ", stuckDetectorMs=" + stuckDetectorMs + ", retryCount=" + retryCount + ", bufferingConfiguration=" + bufferingConfiguration + ", timeoutConfiguration=" + timeoutConfiguration + '}';
     }
 
     public StartArgs(Builder builder) {
@@ -283,7 +283,6 @@ public class StartArgs implements Serializable {
         this.renderType = builder.renderType;
         this.scaleType = builder.scaleType;
         this.kernelType = builder.kernelType;
-        this.connectTimeoutMs = builder.connectTimeoutMs;
         this.log = builder.log;
         this.initRelease = builder.initRelease;
         this.urlArgs = builder.urlArgs;
@@ -309,6 +308,7 @@ public class StartArgs implements Serializable {
         this.stuckDetectorMs = builder.stuckDetectorMs;
         this.retryCount = builder.retryCount;
         this.bufferingConfiguration = builder.bufferingConfiguration;
+        this.timeoutConfiguration = builder.timeoutConfiguration;
     }
 
     public Builder newBuilder() {
@@ -318,7 +318,6 @@ public class StartArgs implements Serializable {
         builder.renderType = renderType;
         builder.scaleType = scaleType;
         builder.kernelType = kernelType;
-        builder.connectTimeoutMs = connectTimeoutMs;
         builder.log = log;
         builder.initRelease = initRelease;
         builder.urlArgs = urlArgs;
@@ -344,6 +343,7 @@ public class StartArgs implements Serializable {
         builder.stuckDetectorMs = stuckDetectorMs;
         builder.retryCount = retryCount;
         builder.bufferingConfiguration = bufferingConfiguration;
+        builder.timeoutConfiguration = timeoutConfiguration;
         return builder;
     }
 
@@ -362,8 +362,6 @@ public class StartArgs implements Serializable {
         // 旋转角度
         @PlayerType.RotationType.Value
         private int rotation = playerArgs.getRotation();
-        // 超时时间
-        private int connectTimeoutMs = playerArgs.getConnectTimeoutMs();
         // 日志
         private boolean log = playerArgs.isLog();
         // 开始播放前，是否销毁已存在的播放器相关实例
@@ -573,6 +571,16 @@ public class StartArgs implements Serializable {
 
         public Builder setBufferingConfiguration(BufferingConfiguration v) {
             this.bufferingConfiguration = v;
+            return this;
+        }
+
+        // 超时时间
+        private TimeoutConfiguration timeoutConfiguration = new TimeoutConfiguration.Builder()
+                .setConnectTimeoutMs(playerArgs.getConnectTimeoutMs())
+                .build();
+
+        public Builder setTimeoutConfiguration(TimeoutConfiguration v) {
+            this.timeoutConfiguration = v;
             return this;
         }
 
@@ -1086,6 +1094,53 @@ public class StartArgs implements Serializable {
 
             public BufferingConfiguration build() {
                 return new BufferingConfiguration(this);
+            }
+        }
+    }
+
+
+    /**
+     * 超时 默认10s
+     */
+    public static final class TimeoutConfiguration implements Serializable {
+
+        private int connectTimeoutMs;
+
+        public int getConnectTimeoutMs() {
+            return connectTimeoutMs;
+        }
+
+        public TimeoutConfiguration(TimeoutConfiguration.Builder builder) {
+            this.connectTimeoutMs = builder.connectTimeoutMs;
+        }
+
+        public TimeoutConfiguration.Builder newBuilder() {
+            TimeoutConfiguration.Builder builder = new TimeoutConfiguration.Builder();
+            builder.connectTimeoutMs = connectTimeoutMs;
+            return builder;
+        }
+
+        @Override
+        public String toString() {
+            return "TimeoutConfiguration{" +
+                    "connectTimeoutMs=" + connectTimeoutMs +
+                    '}';
+        }
+
+        public static class Builder implements Serializable {
+
+            private int connectTimeoutMs = 20_000;
+
+            public TimeoutConfiguration.Builder setConnectTimeoutMs(int v) {
+                this.connectTimeoutMs = v;
+                return this;
+            }
+
+            public Builder() {
+            }
+
+            public TimeoutConfiguration build() {
+                return new TimeoutConfiguration(this);
             }
         }
     }

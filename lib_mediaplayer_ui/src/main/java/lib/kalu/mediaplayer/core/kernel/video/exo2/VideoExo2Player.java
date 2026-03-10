@@ -166,7 +166,8 @@ public final class VideoExo2Player extends VideoBasePlayer {
             if (null == startArgs)
                 throw new Exception("error: startArgs null");
 
-            int connectTimeoutMs = startArgs.getConnectTimeoutMs();
+            StartArgs.TimeoutConfiguration timeoutConfiguration = startArgs.getTimeoutConfiguration();
+            int connectTimeoutMs = timeoutConfiguration.getConnectTimeoutMs();
             if (LogUtil.DEBUG) {
                 LogUtil.log(TAG, "checkDecoder -> connectTimeoutMs = " + connectTimeoutMs);
             }
@@ -392,7 +393,8 @@ public final class VideoExo2Player extends VideoBasePlayer {
             if (LogUtil.DEBUG) {
                 LogUtil.log(TAG, "startDecoder -> initSimpleCache = " + initSimpleCache);
             }
-            int connectTimoutMs = startArgs.getConnectTimeoutMs();
+            StartArgs.TimeoutConfiguration timeoutConfiguration = startArgs.getTimeoutConfiguration();
+            int connectTimoutMs = timeoutConfiguration.getConnectTimeoutMs();
             ProxyUrl proxyUrl = startArgs.getProxyUrl();
             boolean noProxy = startArgs.isNoProxy();
             if (LogUtil.DEBUG) {

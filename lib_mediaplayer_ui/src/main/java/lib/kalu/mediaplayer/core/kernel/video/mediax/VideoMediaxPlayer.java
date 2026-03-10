@@ -164,7 +164,8 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
 
             if (null == startArgs) throw new Exception("error: startArgs null");
 
-            int connectTimeoutMs = startArgs.getConnectTimeoutMs();
+            StartArgs.TimeoutConfiguration timeoutConfiguration = startArgs.getTimeoutConfiguration();
+            int connectTimeoutMs = timeoutConfiguration.getConnectTimeoutMs();
             if (LogUtil.DEBUG) {
                 LogUtil.log(TAG, "checkDecoder -> connectTimeoutMs = " + connectTimeoutMs);
             }
@@ -390,7 +391,8 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
             if (LogUtil.DEBUG) {
                 LogUtil.log(TAG, "startDecoder -> initSimpleCache = " + initSimpleCache);
             }
-            int connectTimoutMs = startArgs.getConnectTimeoutMs();
+            StartArgs.TimeoutConfiguration timeoutConfiguration = startArgs.getTimeoutConfiguration();
+            int connectTimoutMs = timeoutConfiguration.getConnectTimeoutMs();
             ProxyUrl proxyUrl = startArgs.getProxyUrl();
             boolean noProxy = startArgs.isNoProxy();
             if (LogUtil.DEBUG) {
@@ -1321,6 +1323,19 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
             try {
                 if (error.errorCode == PlaybackException.ERROR_CODE_BEHIND_LIVE_WINDOW) {
                     seekToDefaultPosition();
+                }
+                // timeout
+                else if (error.errorCode == PlaybackException.ERROR_CODE_TIMEOUT) {
+                    // seekToDefaultPosition();
+                    stop();
+                    onEvent(PlayerType.KernelType.MEDIA_V3, PlayerType.EventType.STOP);
+                    onEvent(PlayerType.KernelType.MEDIA_V3, PlayerType.EventType.ERROR);
+                }
+                // errorCode=-9 的常见原因分析 媒体资源 URL 无效 / 过期：URL 拼写错误、资源被删除、CDN 节点失效；
+                else if (error.errorCode == -9) {
+                    stop();
+                    onEvent(PlayerType.KernelType.MEDIA_V3, PlayerType.EventType.STOP);
+                    onEvent(PlayerType.KernelType.MEDIA_V3, PlayerType.EventType.ERROR);
                 } else {
 //                    if (!(error instanceof ExoPlaybackException))
 //                        throw new Exception("PlaybackException error: not instanceof ExoPlaybackException");

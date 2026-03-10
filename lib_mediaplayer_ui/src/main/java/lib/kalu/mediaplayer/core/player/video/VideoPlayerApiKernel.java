@@ -588,7 +588,8 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
                                 kernelApi.sendMessageSpeedUpdate(kernel, false);
                             }
                             //
-                            long connectTimeout = args.getConnectTimeoutMs();
+                            StartArgs.TimeoutConfiguration timeoutConfiguration = args.getTimeoutConfiguration();
+                            int connectTimeout = timeoutConfiguration.getConnectTimeoutMs();
                             @PlayerType.KernelType.Value
                             int kernelType = args.getKernelType();
                             long timeMillis = System.currentTimeMillis();

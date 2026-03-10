@@ -173,6 +173,24 @@ public interface VideoKernelApiHandler extends VideoKernelApiBase, VideoKernelAp
         }
     }
 
+    default void removeAllMessages() {
+
+        if (LogUtil.DEBUG) {
+            LogUtil.log(TAG, "removeAllMessages ->");
+        }
+
+        try {
+            Handler handler = getHandler();
+            if (null == handler)
+                throw new Exception("warning: handler null");
+            handler.removeCallbacksAndMessages(null);
+        } catch (Exception e) {
+            if (LogUtil.DEBUG) {
+                LogUtil.log(TAG, "removeAllMessages -> Exception " + e.getMessage());
+            }
+        }
+    }
+
     default void removeMessagesSpeedUpdate() {
 
         if (LogUtil.DEBUG) {
