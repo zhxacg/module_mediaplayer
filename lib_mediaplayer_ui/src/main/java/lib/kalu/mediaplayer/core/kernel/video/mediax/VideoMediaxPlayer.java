@@ -381,11 +381,14 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
     @Override
     public void startDecoder(Context context, StartArgs startArgs) {
         try {
-            if (null == mExoPlayer) throw new Exception("mExoPlayer error: null");
-            if (null == startArgs) throw new Exception("error: startArgs null");
-            boolean containsMainUrl = startArgs.containsMainUrl();
-            if (!containsMainUrl) throw new UrlError("error: containsMainUrl false");
+            if (null == mExoPlayer)
+                throw new Exception("mExoPlayer error: null");
+            if (null == startArgs)
+                throw new Exception("error: startArgs null");
             onEvent(PlayerType.KernelType.MEDIA_V3, PlayerType.EventType.INIT_READY);
+            boolean containsMainUrl = startArgs.containsMainUrl();
+            if (!containsMainUrl)
+                throw new UrlError("error: containsMainUrl false");
             // 缓存
             boolean initSimpleCache = initSimpleCache(context, startArgs);
             if (LogUtil.DEBUG) {
