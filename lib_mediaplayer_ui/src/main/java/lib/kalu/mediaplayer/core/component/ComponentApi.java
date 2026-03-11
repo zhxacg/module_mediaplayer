@@ -923,15 +923,28 @@ public interface ComponentApi {
         }
     }
 
-    default void restart(boolean isPlaySeek) {
+    default void restart() {
         try {
             PlayerView playerView = getPlayerView();
             if (null == playerView)
                 throw new Exception("playerView error: null");
-            playerView.restart(isPlaySeek);
+            playerView.restart();
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
                 LogUtil.log("ComponentApi -> restart -> " + e.getMessage());
+            }
+        }
+    }
+
+    default void restartSeekToPosition() {
+        try {
+            PlayerView playerView = getPlayerView();
+            if (null == playerView)
+                throw new Exception("playerView error: null");
+            playerView.restartSeekToPosition();
+        } catch (Exception e) {
+            if (LogUtil.DEBUG) {
+                LogUtil.log("ComponentApi -> restartSeekToPosition -> " + e.getMessage());
             }
         }
     }
