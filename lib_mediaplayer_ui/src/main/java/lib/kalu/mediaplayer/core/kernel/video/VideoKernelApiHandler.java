@@ -455,22 +455,14 @@ public interface VideoKernelApiHandler extends VideoKernelApiBase, VideoKernelAp
                         LogUtil.log(TAG, "formatMessage -> WHAT_BufferingTimeout, retry");
                     }
 
-                    closeMessagesBufferingTimeout();
+                    removeAllMessages();
                     onEvent(msg.arg1, PlayerType.EventType.ERROR_TIMEOUT_BUFFERING);
 
                     if (LogUtil.DEBUG) {
                         LogUtil.log(TAG, "formatMessage -> WHAT_BufferingTimeout, retry stop");
                     }
-                    getPlayerApi().seekToDefaultPosition();
-//                    getPlayerApi().stop(true);
-//                    if (LogUtil.DEBUG) {
-//                        LogUtil.log(TAG, "formatMessage -> WHAT_BufferingTimeout, retry restart");
-//                    }
-//                    if (live) {
-//                        getPlayerApi().restart(false);
-//                    } else {
-//                        getPlayerApi().restart(true);
-//                    }
+                    getPlayerApi().stop();
+                    getPlayerApi().restartSeekToPosition();
                 } else {
                     if (LogUtil.DEBUG) {
                         LogUtil.log(TAG, "formatMessage -> WHAT_BufferingTimeout, next");
