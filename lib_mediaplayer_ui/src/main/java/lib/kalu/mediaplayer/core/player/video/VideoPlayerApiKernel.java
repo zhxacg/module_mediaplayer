@@ -252,8 +252,7 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
             if (!live) {
                 position = getPosition();
             }
-            StartArgs newArgs = startArgs.
-                    newBuilder()
+            StartArgs newArgs = startArgs.newBuilder()
                     .setPlayWhenReadySeekToPosition(position)
                     .build();
             start(newArgs);
@@ -685,6 +684,14 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
                         case PlayerType.EventType.RESUME:
                             // 停止轮训
                             kernelApi.sendMessageProgressUpdate(kernel, false);
+                            break;
+                        // 播放结束
+                        case PlayerType.EventType.RETRY_BUFFERING_TIMEOUT:
+                            // 停止轮训
+                            kernelApi.removeAllMessages();
+                            stop();
+                            callEvent(PlayerType.EventType.STOP);
+                            restartSeekToPosition();
                             break;
                         // 播放结束
                         case PlayerType.EventType.END:

@@ -88,15 +88,13 @@ public @interface PlayerType {
         int COMPONENT_MENU_HIDE = 3_032;
         int COMPONENT_SEEK_SHOW = 3_033;
         int COMPONENT_SEEK_HIDE = 3_034;
-
-
-        int RESTART = 3_035;          // 重播
+        int RETRY_BUFFERING_TIMEOUT = 3_035;
+        int RESTART = 3_036;
 
         @Documented
         @Retention(CLASS)
         @Target({METHOD, PARAMETER, FIELD, LOCAL_VARIABLE, ANNOTATION_TYPE, PACKAGE})
         @IntDef({
-                RESTART,
                 INIT,
                 INIT_PLAY_WHEN_READY_DELAYED_TIME_START,
                 INIT_PLAY_WHEN_READY_DELAYED_TIME_COMPLETE,
@@ -131,7 +129,9 @@ public @interface PlayerType {
                 COMPONENT_SEEK_HIDE,
                 ERROR,
                 ERROR_URL,
-                ERROR_TIMEOUT_BUFFERING})
+                ERROR_TIMEOUT_BUFFERING,
+                RETRY_BUFFERING_TIMEOUT,
+                RESTART})
         @interface Value {
         }
     }

@@ -456,13 +456,11 @@ public interface VideoKernelApiHandler extends VideoKernelApiBase, VideoKernelAp
                     }
 
                     removeAllMessages();
-                    onEvent(msg.arg1, PlayerType.EventType.ERROR_TIMEOUT_BUFFERING);
+                    onEvent(msg.arg1, PlayerType.EventType.RETRY_BUFFERING_TIMEOUT);
 
                     if (LogUtil.DEBUG) {
                         LogUtil.log(TAG, "formatMessage -> WHAT_BufferingTimeout, retry stop");
                     }
-                    getPlayerApi().stop();
-                    getPlayerApi().restartSeekToPosition();
                 } else {
                     if (LogUtil.DEBUG) {
                         LogUtil.log(TAG, "formatMessage -> WHAT_BufferingTimeout, next");
