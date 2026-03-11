@@ -571,15 +571,28 @@ public class PlayerLayout extends RelativeLayout {
         }
     }
 
-    public void restart(boolean isPlaySeek) {
+    public void restart() {
         try {
             PlayerView playerView = getPlayerView();
             if (null == playerView)
                 throw new Exception("playerView error: null");
-            playerView.restart(isPlaySeek);
+            playerView.restart();
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
                 LogUtil.log("PlayerLayout -> restart -> " + e.getMessage());
+            }
+        }
+    }
+
+    public void restartSeekToPosition() {
+        try {
+            PlayerView playerView = getPlayerView();
+            if (null == playerView)
+                throw new Exception("playerView error: null");
+            playerView.restartSeekToPosition();
+        } catch (Exception e) {
+            if (LogUtil.DEBUG) {
+                LogUtil.log("PlayerLayout -> restartSeekToPosition -> " + e.getMessage());
             }
         }
     }
@@ -1021,7 +1034,7 @@ public class PlayerLayout extends RelativeLayout {
 //    }
 
     public final boolean requestScreenOrientation(@PlayerType.ScreenOrientation.Value int value) {
-       return requestScreenOrientation(value, false);
+        return requestScreenOrientation(value, false);
     }
 
     public final boolean requestScreenOrientation(@PlayerType.ScreenOrientation.Value int value, boolean formatScreen) {

@@ -220,10 +220,7 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
         }
     }
 
-    default void restart(boolean isPlaySeek) {
-        if (LogUtil.DEBUG) {
-            LogUtil.log(TAG, "restart -> isPlaySeek = " + isPlaySeek);
-        }
+    default void restart() {
         try {
             StartArgs startArgs = getStartArgs();
             if (null == startArgs)
@@ -232,8 +229,27 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
             if (!containsMainUrl)
                 throw new Exception("error: containsMainUrl false");
             callEvent(PlayerType.EventType.RESTART);
+            start(startArgs);
+        } catch (Exception e) {
+            if (LogUtil.DEBUG) {
+                LogUtil.log(TAG, "restart -> " + e.getMessage());
+            }
+        }
+    }
+
+    default void restartSeekToPosition() {
+        try {
+            StartArgs startArgs = getStartArgs();
+            if (null == startArgs)
+                throw new Exception("error: args null");
+            boolean containsMainUrl = startArgs.containsMainUrl();
+            if (!containsMainUrl)
+                throw new Exception("error: containsMainUrl false");
+            callEvent(PlayerType.EventType.RESTART);
+
             long position = 0L;
-            if (isPlaySeek) {
+            boolean live = isLive();
+            if (!live) {
                 position = getPosition();
             }
             StartArgs newArgs = startArgs.
@@ -241,9 +257,12 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
                     .setPlayWhenReadySeekToPosition(position)
                     .build();
             start(newArgs);
+            if (live) {
+                seekToDefaultPosition();
+            }
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
-                LogUtil.log(TAG, "restart -> " + e.getMessage());
+                LogUtil.log(TAG, "restartSeekToPosition -> " + e.getMessage());
             }
         }
     }
@@ -676,7 +695,7 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
                             //
                             boolean looping = args.isLooping();
                             if (looping) {
-                                restart(false);
+                                restart();
                             }
 //                            // 多剧集
 //                            int episodeItemCount = args.getEpisodeItemCount();
