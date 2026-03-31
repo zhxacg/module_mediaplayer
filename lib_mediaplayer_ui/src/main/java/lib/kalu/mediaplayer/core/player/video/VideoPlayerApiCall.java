@@ -5,8 +5,9 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import lib.kalu.mediaplayer.PlayerSDK;
-import lib.kalu.mediaplayer.bean.args.PlayerArgs;
+import lib.kalu.mediaplayer.bean.args.ConfigArgs;
 import lib.kalu.mediaplayer.bean.args.StartArgs;
+import lib.kalu.mediaplayer.bean.info.PlayInfo;
 import lib.kalu.mediaplayer.bean.type.PlayerType;
 import lib.kalu.mediaplayer.core.component.ComponentApi;
 import lib.kalu.mediaplayer.listener.OnPlayerEpisodeListener;
@@ -476,8 +477,9 @@ public interface VideoPlayerApiCall extends VideoPlayerApiBase, VideoPlayerApiLi
                 duration = 0L;
             }
             float speed = ((VideoPlayerApi) this).getSpeed();
+            int scale = ((VideoPlayerApi) this).getVideoScale();
             if (LogUtil.DEBUG) {
-                LogUtil.log(TAG, "callBuried -> buriedType = " + value + ", position = " + position + ", duration = " + duration+", speed = "+speed);
+                LogUtil.log(TAG, "callBuried -> buriedType = " + value + ", position = " + position + ", duration = " + duration + ", speed = " + speed + ", scale = " + scale);
             }
 
 
@@ -486,16 +488,16 @@ public interface VideoPlayerApiCall extends VideoPlayerApiBase, VideoPlayerApiLi
             if (null != proxy) {
                 ProxyBuried proxyBuried = proxy.getProxyBuried();
                 if (null != proxyBuried) {
-                    proxyBuried.onCall(value, startArgs, position, duration, speed);
+                    proxyBuried.onCall(value, startArgs, new PlayInfo(duration, speed, position, scale));
                 }
             }
 
             //
-            PlayerArgs playerBuilder = PlayerSDK.init().getPlayerBuilder();
+            ConfigArgs playerBuilder = PlayerSDK.init().getPlayerBuilder();
             if (null != playerBuilder) {
                 ProxyBuried proxyBuried = playerBuilder.getProxyBuried();
                 if (null != proxyBuried) {
-                    proxyBuried.onCall(value, startArgs, position, duration, speed);
+                    proxyBuried.onCall(value, startArgs, new PlayInfo(duration, speed, position, scale));
                 }
             }
 

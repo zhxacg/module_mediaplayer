@@ -84,7 +84,7 @@ import java.util.regex.Pattern;
 
 import lib.kalu.exoplayer2.subtitle.OffsetMsTextRenderer;
 import lib.kalu.mediaplayer.PlayerSDK;
-import lib.kalu.mediaplayer.bean.args.PlayerArgs;
+import lib.kalu.mediaplayer.bean.args.ConfigArgs;
 import lib.kalu.mediaplayer.bean.args.StartArgs;
 import lib.kalu.mediaplayer.bean.args.UrlArgs;
 import lib.kalu.mediaplayer.bean.cache.Cache;
@@ -941,7 +941,7 @@ public final class VideoExo2Player extends VideoBasePlayer {
             if (url.startsWith(PlayerType.SchemeType.FILE))
                 throw new Exception("error: url is file");
 
-            PlayerArgs playerBuilder = PlayerSDK.init().getPlayerBuilder();
+            ConfigArgs playerBuilder = PlayerSDK.init().getPlayerBuilder();
             if (null == playerBuilder)
                 throw new Exception("error: playerBuilder null");
 

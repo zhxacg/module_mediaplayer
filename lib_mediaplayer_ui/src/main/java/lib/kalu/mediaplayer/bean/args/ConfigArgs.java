@@ -3,7 +3,6 @@ package lib.kalu.mediaplayer.bean.args;
 
 import lib.kalu.mediaplayer.bean.cache.Cache;
 import lib.kalu.mediaplayer.bean.type.PlayerType;
-import lib.kalu.mediaplayer.proxy.Proxy;
 import lib.kalu.mediaplayer.proxy.ProxyBuried;
 
 /**
@@ -11,7 +10,7 @@ import lib.kalu.mediaplayer.proxy.ProxyBuried;
  * @date: 2021-05-12 14:43
  */
 
-public final class PlayerArgs {
+public final class ConfigArgs {
 
     private boolean log;// 日志log
     private boolean initRelease;
@@ -108,7 +107,7 @@ public final class PlayerArgs {
 
     /****************/
 
-    private PlayerArgs(Builder builder) {
+    private ConfigArgs(Builder builder) {
         log = builder.log;
         initRelease = builder.initRelease;
         supportAutoRelease = builder.supportAutoRelease;
@@ -260,8 +259,8 @@ public final class PlayerArgs {
             return this;
         }
 
-        public PlayerArgs build() {
-            return new PlayerArgs(this);
+        public ConfigArgs build() {
+            return new ConfigArgs(this);
         }
     }
 }

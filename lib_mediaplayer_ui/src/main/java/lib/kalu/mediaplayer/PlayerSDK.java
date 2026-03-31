@@ -1,17 +1,16 @@
 package lib.kalu.mediaplayer;
 
 
-import lib.kalu.mediaplayer.bean.args.PlayerArgs;
+import lib.kalu.mediaplayer.bean.args.ConfigArgs;
 import lib.kalu.mediaplayer.bean.cache.Cache;
 import lib.kalu.mediaplayer.bean.type.PlayerType;
-import lib.kalu.mediaplayer.proxy.Proxy;
 import lib.kalu.mediaplayer.proxy.ProxyBuried;
 
 
 public final class PlayerSDK {
 
-    private PlayerArgs mConfig = null;
-    private PlayerArgs.Builder mPlayerBuilder;
+    private ConfigArgs mConfig = null;
+    private ConfigArgs.Builder mPlayerBuilder;
 
     /***************/
 
@@ -26,7 +25,7 @@ public final class PlayerSDK {
     /***************/
 
     private PlayerSDK() {
-        mPlayerBuilder = new PlayerArgs.Builder();
+        mPlayerBuilder = new ConfigArgs.Builder();
     }
 
     public PlayerSDK setConnectTimeoutMs(int v) {
@@ -99,7 +98,7 @@ public final class PlayerSDK {
         mConfig = mPlayerBuilder.build();
     }
 
-    public PlayerArgs getPlayerBuilder() {
+    public ConfigArgs getPlayerBuilder() {
         updatePlayerBuilder(true);
         return mConfig;
     }
