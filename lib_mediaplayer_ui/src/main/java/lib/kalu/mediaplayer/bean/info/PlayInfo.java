@@ -21,7 +21,8 @@ public class PlayInfo {
     @Override
     public String toString() {
         return "PlayInfo{" +
-                "position=" + position +
+                "isLive=" + isLive +
+                ", position=" + position +
                 ", duration=" + duration +
                 ", speed=" + speed +
                 ", scale=" + scale +
