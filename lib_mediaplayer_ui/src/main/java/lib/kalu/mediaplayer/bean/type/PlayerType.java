@@ -452,7 +452,6 @@ public @interface PlayerType {
         }
     }
 
-
     @Documented
     @Retention(CLASS)
     @Target({METHOD, PARAMETER, FIELD, LOCAL_VARIABLE, ANNOTATION_TYPE, PACKAGE})
@@ -566,6 +565,48 @@ public @interface PlayerType {
                 AUDIO,
                 SUBTITLE,
                 DEFAULT})
+        @interface Value {
+        }
+    }
+
+    @Documented
+    @Retention(CLASS)
+    @Target({METHOD, PARAMETER, FIELD, LOCAL_VARIABLE, ANNOTATION_TYPE, PACKAGE})
+    @interface BuriedType {
+        int VIDEO_RENDERING_START = 1;
+        int START = 2;
+        int ERROR = 3;
+        int PAUSE = 4;
+        int RESUME = 5;
+        int STOP = 6;
+        int COMPLETED = 7;
+        int BUFFERING_START = 8;
+        int BUFFERING_STOP = 9;
+        int SEEK_START_FORWARD = 10;
+        int SEEK_START_REWIND = 11;
+        int SEEK_FINISH = 12;
+        int UPDATE_WINDOW = 13;
+        int UPDATE_EVENT = 14;
+
+        @Documented
+        @Retention(CLASS)
+        @Target({METHOD, PARAMETER, FIELD, LOCAL_VARIABLE, ANNOTATION_TYPE, PACKAGE})
+        @IntDef(value = {
+                BuriedType.VIDEO_RENDERING_START,
+                BuriedType.START,
+                BuriedType.ERROR,
+                BuriedType.PAUSE,
+                BuriedType.RESUME,
+                BuriedType.STOP,
+                BuriedType.COMPLETED,
+                BuriedType.BUFFERING_START,
+                BuriedType.BUFFERING_STOP,
+                BuriedType.SEEK_START_FORWARD,
+                BuriedType.SEEK_START_REWIND,
+                BuriedType.SEEK_FINISH,
+                BuriedType.UPDATE_WINDOW,
+                BuriedType.UPDATE_EVENT,
+        })
         @interface Value {
         }
     }
