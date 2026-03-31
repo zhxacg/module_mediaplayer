@@ -4,13 +4,15 @@ import lib.kalu.mediaplayer.bean.type.PlayerType;
 
 public class PlayInfo {
 
+    private boolean isTrysee = false;
     private boolean isLive = false;
     private long position;
     private long duration;
     private float speed;
     private @PlayerType.ScaleType int scale;
 
-    public PlayInfo(boolean isLive, long position, long duration, float speed, int scale) {
+    public PlayInfo(boolean isTrysee, boolean isLive, long position, long duration, float speed, int scale) {
+        this.isTrysee = isTrysee;
         this.isLive = isLive;
         this.duration = duration;
         this.speed = speed;
@@ -21,12 +23,17 @@ public class PlayInfo {
     @Override
     public String toString() {
         return "PlayInfo{" +
-                "isLive=" + isLive +
+                "isTrysee=" + isTrysee +
+                ", isLive=" + isLive +
                 ", position=" + position +
                 ", duration=" + duration +
                 ", speed=" + speed +
                 ", scale=" + scale +
                 '}';
+    }
+
+    public boolean isTrysee() {
+        return isTrysee;
     }
 
     public boolean isLive() {
