@@ -18,7 +18,7 @@ public final class PlayerSDK {
         private static final PlayerSDK mInstance = new PlayerSDK();
     }
 
-    public static PlayerSDK init() {
+    public static PlayerSDK getInstance() {
         return Holder.mInstance;
     }
 
@@ -94,7 +94,7 @@ public final class PlayerSDK {
         return this;
     }
 
-    public void build() {
+    public void init() {
         mConfig = mConfigBuilder.build();
     }
 
