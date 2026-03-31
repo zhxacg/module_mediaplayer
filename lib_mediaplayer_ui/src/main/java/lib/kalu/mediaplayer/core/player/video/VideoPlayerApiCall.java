@@ -407,10 +407,6 @@ public interface VideoPlayerApiCall extends VideoPlayerApiBase, VideoPlayerApiLi
 
     /***************/
 
-    default void onBuriedSubtitleOffsetMs(int offsetMs) {
-        callBuried(PlayerType.BuriedType.SUBTITLE_OFFSET_MS, offsetMs);
-    }
-
     default void onBuriedVideoRenderingStart() {
         callBuried(PlayerType.BuriedType.VIDEO_RENDERING_START);
     }
@@ -463,6 +459,10 @@ public interface VideoPlayerApiCall extends VideoPlayerApiBase, VideoPlayerApiLi
         callBuried(PlayerType.BuriedType.UPDATE_WINDOW);
     }
 
+    default void onBuriedSubtitleOffsetMs(int offsetMs) {
+        callBuried(PlayerType.BuriedType.UPDATE_SUBTITLE_OFFSET_MS, offsetMs);
+    }
+
     default void callBuried(@PlayerType.BuriedType int value, Object... objs) {
 
         try {
@@ -496,7 +496,7 @@ public interface VideoPlayerApiCall extends VideoPlayerApiBase, VideoPlayerApiLi
                 LogUtil.log(TAG, "callBuried -> buriedType = " + value + ", position = " + position + ", duration = " + duration + ", speed = " + speed + ", scale = " + scale + ", live = " + live + ", trysee = " + trysee);
             }
 
-            if (value == PlayerType.BuriedType.SUBTITLE_OFFSET_MS) {
+            if (value == PlayerType.BuriedType.UPDATE_SUBTITLE_OFFSET_MS) {
                 playBuried.onCall(value, startArgs, new PlayInfo(((int) objs[0]), trysee, live, position, duration, speed, scale));
             } else {
                 playBuried.onCall(value, startArgs, new PlayInfo(0, trysee, live, position, duration, speed, scale));
