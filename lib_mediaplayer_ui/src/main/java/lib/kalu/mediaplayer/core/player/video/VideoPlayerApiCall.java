@@ -468,6 +468,15 @@ public interface VideoPlayerApiCall extends VideoPlayerApiBase, VideoPlayerApiLi
             if (null == startArgs)
                 throw new Exception("error: startArgs null");
 
+            //
+            ConfigArgs configArgs = PlayerSDK.init().getConfigArgs();
+            if (null == configArgs)
+                throw new Exception("error: configArgs null");
+
+            PlayBuried playBuried = configArgs.getPlayBuried();
+            if (null == playBuried)
+                throw new Exception("error: playBuried null");
+
             long position = ((VideoPlayerApi) this).getPosition();
             if (position < 0L) {
                 position = 0L;
@@ -481,26 +490,7 @@ public interface VideoPlayerApiCall extends VideoPlayerApiBase, VideoPlayerApiLi
             if (LogUtil.DEBUG) {
                 LogUtil.log(TAG, "callBuried -> buriedType = " + value + ", position = " + position + ", duration = " + duration + ", speed = " + speed + ", scale = " + scale);
             }
-
-
-            //
-            Proxy proxy = startArgs.getProxy();
-            if (null != proxy) {
-                PlayBuried proxyBuried = proxy.getProxyBuried();
-                if (null != proxyBuried) {
-                    proxyBuried.onCall(value, startArgs, new PlayInfo(position, duration, speed, scale));
-                }
-            }
-
-            //
-            ConfigArgs playerBuilder = PlayerSDK.init().getPlayerBuilder();
-            if (null != playerBuilder) {
-                PlayBuried proxyBuried = playerBuilder.getProxyBuried();
-                if (null != proxyBuried) {
-                    proxyBuried.onCall(value, startArgs, new PlayInfo(position, duration, speed, scale));
-                }
-            }
-
+            playBuried.onCall(value, startArgs, new PlayInfo(position, duration, speed, scale));
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
                 LogUtil.log(TAG, "callBuried -> Exception " + e.getMessage());

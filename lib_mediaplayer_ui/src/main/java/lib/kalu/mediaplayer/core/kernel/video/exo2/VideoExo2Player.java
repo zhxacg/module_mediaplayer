@@ -941,11 +941,11 @@ public final class VideoExo2Player extends VideoBasePlayer {
             if (url.startsWith(PlayerType.SchemeType.FILE))
                 throw new Exception("error: url is file");
 
-            ConfigArgs playerBuilder = PlayerSDK.init().getPlayerBuilder();
-            if (null == playerBuilder)
-                throw new Exception("error: playerBuilder null");
+            ConfigArgs configArgs = PlayerSDK.init().getConfigArgs();
+            if (null == configArgs)
+                throw new Exception("error: configArgs null");
 
-            Cache cache = playerBuilder.getCache();
+            Cache cache = configArgs.getCache();
             if (null == cache)
                 throw new Exception("error: cache null");
 

@@ -80,7 +80,7 @@ public final class PlayerSDK {
 
     public PlayerSDK setScaleType(@PlayerType.ScaleType.Value int v) {
         mConfigBuilder.setScaleType(v);
-        updatePlayerBuilder(false);
+        updateConfigBuilder(false);
         return this;
     }
 
@@ -98,12 +98,12 @@ public final class PlayerSDK {
         mConfig = mConfigBuilder.build();
     }
 
-    public ConfigArgs getPlayerBuilder() {
-        updatePlayerBuilder(true);
+    public ConfigArgs getConfigArgs() {
+        updateConfigBuilder(true);
         return mConfig;
     }
 
-    private void updatePlayerBuilder(boolean check) {
+    private void updateConfigBuilder(boolean check) {
         if (check) {
             if (null == mConfig) {
                 mConfig = mConfigBuilder.build();

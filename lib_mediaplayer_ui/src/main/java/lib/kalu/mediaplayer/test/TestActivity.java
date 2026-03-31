@@ -259,14 +259,6 @@ public final class TestActivity extends Activity {
 
             playerLayout.start(args.newBuilder()
                     .setProxy(new Proxy.Builder()
-                            .setProxyBuried(new PlayBuried() {
-                                @Override
-                                public void onCall(int buriedType, StartArgs startArgs, PlayInfo playInfo) {
-                                    if (LogUtil.DEBUG) {
-                                        LogUtil.log("TestActivity -> onCall -> buriedType = " + buriedType + ", startArgs = " + startArgs + ", playInfo = " + playInfo);
-                                    }
-                                }
-                            })
                             .setProxyUrl(new ProxyUrl() {
 
                                 @Override

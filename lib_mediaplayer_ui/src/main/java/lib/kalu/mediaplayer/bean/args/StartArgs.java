@@ -349,26 +349,26 @@ public class StartArgs implements Serializable {
 
     public static class Builder implements Serializable {
 
-        private final ConfigArgs playerArgs = PlayerSDK.init().getPlayerBuilder();
+        private final ConfigArgs configArgs = PlayerSDK.init().getConfigArgs();
 
         // 解码器类型
-        private int decoderType = playerArgs.getDecoderType();
+        private int decoderType = configArgs.getDecoderType();
         // 播放器类型
         @PlayerType.KernelType.Value
-        private int kernelType = playerArgs.getKernelType();
+        private int kernelType = configArgs.getKernelType();
         // 画面缩放类型
         @PlayerType.ScaleType.Value
-        private int scaleType = playerArgs.getScaleType();
+        private int scaleType = configArgs.getScaleType();
         // 旋转角度
         @PlayerType.RotationType.Value
-        private int rotation = playerArgs.getRotation();
+        private int rotation = configArgs.getRotation();
         // 日志
-        private boolean log = playerArgs.isLog();
+        private boolean log = configArgs.isLog();
         // 开始播放前，是否销毁已存在的播放器相关实例
-        private boolean initRelease = playerArgs.isInitRelease();
+        private boolean initRelease = configArgs.isInitRelease();
 
         @PlayerType.SeekType.Value
-        private int seekType = playerArgs.getSeekType();
+        private int seekType = configArgs.getSeekType();
 
         @PlayerType.SeekType.Value
         public int getSeekType() {
@@ -377,7 +377,7 @@ public class StartArgs implements Serializable {
 
         // 视频渲染类型
         @PlayerType.RenderType.Value
-        private int renderType = playerArgs.getRenderType();
+        private int renderType = configArgs.getRenderType();
 
         public Builder setRenderType(@PlayerType.RenderType.Value int v) {
             this.renderType = v;
@@ -503,7 +503,7 @@ public class StartArgs implements Serializable {
         }
 
         // 禁止抓包
-        private boolean noProxy = playerArgs.isNoProxy();
+        private boolean noProxy = configArgs.isNoProxy();
 
         public Builder setNoProxy(Boolean v) {
             this.noProxy = v;
@@ -576,7 +576,7 @@ public class StartArgs implements Serializable {
 
         // 超时时间
         private TimeoutConfiguration timeoutConfiguration = new TimeoutConfiguration.Builder()
-                .setConnectTimeoutMs(playerArgs.getConnectTimeoutMs())
+                .setConnectTimeoutMs(configArgs.getConnectTimeoutMs())
                 .build();
 
         public Builder setTimeoutConfiguration(TimeoutConfiguration v) {
