@@ -475,16 +475,18 @@ public interface VideoPlayerApiCall extends VideoPlayerApiBase, VideoPlayerApiLi
             if (duration < 0L) {
                 duration = 0L;
             }
+            float speed = ((VideoPlayerApi) this).getSpeed();
             if (LogUtil.DEBUG) {
-                LogUtil.log(TAG, "callBuried -> buriedType = " + value + ", position = " + position + ", duration = " + duration);
+                LogUtil.log(TAG, "callBuried -> buriedType = " + value + ", position = " + position + ", duration = " + duration+", speed = "+speed);
             }
+
 
             //
             Proxy proxy = startArgs.getProxy();
             if (null != proxy) {
                 ProxyBuried proxyBuried = proxy.getProxyBuried();
                 if (null != proxyBuried) {
-                    proxyBuried.onCall(value, startArgs, position, duration);
+                    proxyBuried.onCall(value, startArgs, position, duration, speed);
                 }
             }
 
@@ -493,7 +495,7 @@ public interface VideoPlayerApiCall extends VideoPlayerApiBase, VideoPlayerApiLi
             if (null != playerBuilder) {
                 ProxyBuried proxyBuried = playerBuilder.getProxyBuried();
                 if (null != proxyBuried) {
-                    proxyBuried.onCall(value, startArgs, position, duration);
+                    proxyBuried.onCall(value, startArgs, position, duration, speed);
                 }
             }
 

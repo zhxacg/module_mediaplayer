@@ -11,5 +11,6 @@ public interface ProxyBuried extends Serializable {
     void onCall(@PlayerType.BuriedType.Value int buriedType,
                 StartArgs startArgs,
                 long position,
-                long duration);
+                long duration,
+                float speed);
 }
