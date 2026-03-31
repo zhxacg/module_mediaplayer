@@ -13,6 +13,7 @@ import lib.kalu.mediaplayer.PlayerLayout;
 import lib.kalu.mediaplayer.R;
 import lib.kalu.mediaplayer.bean.args.StartArgs;
 import lib.kalu.mediaplayer.bean.args.UrlArgs;
+import lib.kalu.mediaplayer.bean.info.PlayInfo;
 import lib.kalu.mediaplayer.bean.info.TrackInfo;
 import lib.kalu.mediaplayer.bean.type.PlayerType;
 import lib.kalu.mediaplayer.core.component.ComponentBuffering;
@@ -23,7 +24,6 @@ import lib.kalu.mediaplayer.core.component.ComponentMenu;
 import lib.kalu.mediaplayer.core.component.ComponentPause;
 import lib.kalu.mediaplayer.core.component.ComponentPrepareGradient;
 import lib.kalu.mediaplayer.core.component.ComponentSeek;
-import lib.kalu.mediaplayer.core.component.ComponentSeek2;
 import lib.kalu.mediaplayer.core.component.ComponentSubtitle;
 import lib.kalu.mediaplayer.core.component.ComponentWarningPlayInfo;
 import lib.kalu.mediaplayer.core.component.ComponentWarningTrySee;
@@ -32,7 +32,7 @@ import lib.kalu.mediaplayer.listener.OnPlayerEventListener;
 import lib.kalu.mediaplayer.listener.OnPlayerProgressListener;
 import lib.kalu.mediaplayer.listener.OnPlayerWindowStateChangeListener;
 import lib.kalu.mediaplayer.proxy.Proxy;
-import lib.kalu.mediaplayer.proxy.ProxyBuried;
+import lib.kalu.mediaplayer.buried.PlayBuried;
 import lib.kalu.mediaplayer.proxy.ProxyTrack;
 import lib.kalu.mediaplayer.proxy.ProxyUrl;
 import lib.kalu.mediaplayer.util.LogUtil;
@@ -259,11 +259,11 @@ public final class TestActivity extends Activity {
 
             playerLayout.start(args.newBuilder()
                     .setProxy(new Proxy.Builder()
-                            .setProxyBuried(new ProxyBuried() {
+                            .setProxyBuried(new PlayBuried() {
                                 @Override
-                                public void onCall(int buriedType, StartArgs startArgs, long position, long duration) {
+                                public void onCall(int buriedType, StartArgs startArgs, PlayInfo playInfo) {
                                     if (LogUtil.DEBUG) {
-                                        LogUtil.log("TestActivity -> onCall -> buriedType = " + buriedType + ", position = " + position + ", duration = " + duration + ", url = " + startArgs.getUrl());
+                                        LogUtil.log("TestActivity -> onCall -> buriedType = " + buriedType + ", startArgs = " + startArgs + ", playInfo = " + playInfo);
                                     }
                                 }
                             })

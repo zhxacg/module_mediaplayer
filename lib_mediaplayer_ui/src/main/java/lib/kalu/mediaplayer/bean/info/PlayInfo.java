@@ -9,11 +9,21 @@ public class PlayInfo {
     private float speed;
     private @PlayerType.ScaleType int scale;
 
-    public PlayInfo(long duration, float speed, long position, int scale) {
+    public PlayInfo(long position, long duration, float speed, int scale) {
         this.duration = duration;
         this.speed = speed;
         this.position = position;
         this.scale = scale;
+    }
+
+    @Override
+    public String toString() {
+        return "PlayInfo{" +
+                "position=" + position +
+                ", duration=" + duration +
+                ", speed=" + speed +
+                ", scale=" + scale +
+                '}';
     }
 
     public long getPosition() {

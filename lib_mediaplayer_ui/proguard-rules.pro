@@ -38,7 +38,7 @@
 -keep class lib.kalu.mediaplayer.proxy.ProxyTrack {
     public <methods>;
 }
--keep class lib.kalu.mediaplayer.proxy.ProxyBuried {
+-keep class lib.kalu.mediaplayer.buried.PlayBuried {
     public <methods>;
 }
 

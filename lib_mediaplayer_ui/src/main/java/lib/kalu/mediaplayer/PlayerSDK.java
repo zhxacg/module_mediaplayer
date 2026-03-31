@@ -4,13 +4,13 @@ package lib.kalu.mediaplayer;
 import lib.kalu.mediaplayer.bean.args.ConfigArgs;
 import lib.kalu.mediaplayer.bean.cache.Cache;
 import lib.kalu.mediaplayer.bean.type.PlayerType;
-import lib.kalu.mediaplayer.proxy.ProxyBuried;
+import lib.kalu.mediaplayer.buried.PlayBuried;
 
 
 public final class PlayerSDK {
 
     private ConfigArgs mConfig = null;
-    private ConfigArgs.Builder mPlayerBuilder;
+    private ConfigArgs.Builder mConfigBuilder;
 
     /***************/
 
@@ -25,77 +25,77 @@ public final class PlayerSDK {
     /***************/
 
     private PlayerSDK() {
-        mPlayerBuilder = new ConfigArgs.Builder();
+        mConfigBuilder = new ConfigArgs.Builder();
     }
 
     public PlayerSDK setConnectTimeoutMs(int v) {
-        this.mPlayerBuilder.setConnectTimeoutMs(v);
+        this.mConfigBuilder.setConnectTimeoutMs(v);
         return this;
     }
 
     public PlayerSDK setBufferingTimeoutRetry(boolean v) {
-        this.mPlayerBuilder.setBufferingTimeoutRetry(v);
+        this.mConfigBuilder.setBufferingTimeoutRetry(v);
         return this;
     }
 
     public PlayerSDK setSeekType(@PlayerType.SeekType.Value int v) {
-        mPlayerBuilder.setSeekType(v);
+        mConfigBuilder.setSeekType(v);
         return this;
     }
 
     public PlayerSDK setLog(boolean v) {
-        mPlayerBuilder.setLog(v);
+        mConfigBuilder.setLog(v);
         return this;
     }
 
     public PlayerSDK setInitRelease(boolean v) {
-        mPlayerBuilder.setInitRelease(v);
+        mConfigBuilder.setInitRelease(v);
         return this;
     }
 
     public PlayerSDK setSupportAutoRelease(boolean v) {
-        mPlayerBuilder.setSupportAutoRelease(v);
+        mConfigBuilder.setSupportAutoRelease(v);
         return this;
     }
 
     public PlayerSDK setExternalAudioKernel(@PlayerType.KernelType.Value int v) {
-        mPlayerBuilder.setExternalAudioKernel(v);
+        mConfigBuilder.setExternalAudioKernel(v);
         return this;
     }
 
     public PlayerSDK setKernelType(@PlayerType.KernelType.Value int v) {
-        mPlayerBuilder.setKernelType(v);
+        mConfigBuilder.setKernelType(v);
         return this;
     }
 
     public PlayerSDK setRenderType(@PlayerType.RenderType.Value int v) {
-        mPlayerBuilder.setRenderType(v);
+        mConfigBuilder.setRenderType(v);
         return this;
     }
 
     public PlayerSDK setDecoderType(@PlayerType.DecoderType.Value int v) {
-        mPlayerBuilder.setDecoderType(v);
+        mConfigBuilder.setDecoderType(v);
         return this;
     }
 
     public PlayerSDK setScaleType(@PlayerType.ScaleType.Value int v) {
-        mPlayerBuilder.setScaleType(v);
+        mConfigBuilder.setScaleType(v);
         updatePlayerBuilder(false);
         return this;
     }
 
     public PlayerSDK setCache(Cache v) {
-        mPlayerBuilder.setCache(v);
+        mConfigBuilder.setCache(v);
         return this;
     }
 
-    public PlayerSDK setProxyBuried(ProxyBuried v) {
-        mPlayerBuilder.setProxyBuried(v);
+    public PlayerSDK setPlayBuried(PlayBuried v) {
+        mConfigBuilder.setPlayBuried(v);
         return this;
     }
 
     public void build() {
-        mConfig = mPlayerBuilder.build();
+        mConfig = mConfigBuilder.build();
     }
 
     public ConfigArgs getPlayerBuilder() {
@@ -106,10 +106,10 @@ public final class PlayerSDK {
     private void updatePlayerBuilder(boolean check) {
         if (check) {
             if (null == mConfig) {
-                mConfig = mPlayerBuilder.build();
+                mConfig = mConfigBuilder.build();
             }
         } else {
-            mConfig = mPlayerBuilder.build();
+            mConfig = mConfigBuilder.build();
         }
     }
 

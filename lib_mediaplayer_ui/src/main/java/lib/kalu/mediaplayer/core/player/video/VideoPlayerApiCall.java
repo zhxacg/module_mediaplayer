@@ -20,7 +20,7 @@ import lib.kalu.mediaplayer.listener.OnPlayerWindowAttachChangedListener;
 import lib.kalu.mediaplayer.listener.OnPlayerWindowStateChangeListener;
 import lib.kalu.mediaplayer.listener.OnPlayerWindowVisibilityChangedListener;
 import lib.kalu.mediaplayer.proxy.Proxy;
-import lib.kalu.mediaplayer.proxy.ProxyBuried;
+import lib.kalu.mediaplayer.buried.PlayBuried;
 import lib.kalu.mediaplayer.util.LogUtil;
 
 public interface VideoPlayerApiCall extends VideoPlayerApiBase, VideoPlayerApiListener {
@@ -486,18 +486,18 @@ public interface VideoPlayerApiCall extends VideoPlayerApiBase, VideoPlayerApiLi
             //
             Proxy proxy = startArgs.getProxy();
             if (null != proxy) {
-                ProxyBuried proxyBuried = proxy.getProxyBuried();
+                PlayBuried proxyBuried = proxy.getProxyBuried();
                 if (null != proxyBuried) {
-                    proxyBuried.onCall(value, startArgs, new PlayInfo(duration, speed, position, scale));
+                    proxyBuried.onCall(value, startArgs, new PlayInfo(position, duration, speed, scale));
                 }
             }
 
             //
             ConfigArgs playerBuilder = PlayerSDK.init().getPlayerBuilder();
             if (null != playerBuilder) {
-                ProxyBuried proxyBuried = playerBuilder.getProxyBuried();
+                PlayBuried proxyBuried = playerBuilder.getProxyBuried();
                 if (null != proxyBuried) {
-                    proxyBuried.onCall(value, startArgs, new PlayInfo(duration, speed, position, scale));
+                    proxyBuried.onCall(value, startArgs, new PlayInfo(position, duration, speed, scale));
                 }
             }
 
