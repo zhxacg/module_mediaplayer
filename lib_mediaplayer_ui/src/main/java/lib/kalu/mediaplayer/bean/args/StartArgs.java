@@ -349,7 +349,7 @@ public class StartArgs implements Serializable {
 
     public static class Builder implements Serializable {
 
-        private final ConfigArgs configArgs = PlayerSDK.init().getConfigArgs();
+        private final ConfigArgs configArgs = PlayerSDK.getInstance().getConfigArgs();
 
         // 解码器类型
         private int decoderType = configArgs.getDecoderType();

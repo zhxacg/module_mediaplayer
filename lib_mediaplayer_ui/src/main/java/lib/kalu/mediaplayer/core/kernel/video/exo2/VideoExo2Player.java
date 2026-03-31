@@ -941,7 +941,7 @@ public final class VideoExo2Player extends VideoBasePlayer {
             if (url.startsWith(PlayerType.SchemeType.FILE))
                 throw new Exception("error: url is file");
 
-            ConfigArgs configArgs = PlayerSDK.init().getConfigArgs();
+            ConfigArgs configArgs = PlayerSDK.getInstance().getConfigArgs();
             if (null == configArgs)
                 throw new Exception("error: configArgs null");
 

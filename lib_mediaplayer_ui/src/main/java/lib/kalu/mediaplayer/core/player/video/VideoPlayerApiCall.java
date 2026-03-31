@@ -469,7 +469,7 @@ public interface VideoPlayerApiCall extends VideoPlayerApiBase, VideoPlayerApiLi
                 throw new Exception("error: startArgs null");
 
             //
-            ConfigArgs configArgs = PlayerSDK.init().getConfigArgs();
+            ConfigArgs configArgs = PlayerSDK.getInstance().getConfigArgs();
             if (null == configArgs)
                 throw new Exception("error: configArgs null");
 

@@ -942,7 +942,7 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
             if (url.startsWith(PlayerType.SchemeType.FILE))
                 throw new Exception("error: url is file");
 
-            ConfigArgs configArgs = PlayerSDK.init().getConfigArgs();
+            ConfigArgs configArgs = PlayerSDK.getInstance().getConfigArgs();
             if (null == configArgs) throw new Exception("error: configArgs null");
 
             Cache cache = configArgs.getCache();
