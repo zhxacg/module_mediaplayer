@@ -29,6 +29,10 @@ public class PlayInfo {
                 '}';
     }
 
+    public boolean isLive() {
+        return isLive;
+    }
+
     public long getPosition() {
         return position;
     }
