@@ -4,6 +4,8 @@ package lib.kalu.mediaplayer.core.player.video;
 import android.view.View;
 import android.view.ViewGroup;
 
+import lib.kalu.mediaplayer.PlayerSDK;
+import lib.kalu.mediaplayer.bean.args.PlayerArgs;
 import lib.kalu.mediaplayer.bean.args.StartArgs;
 import lib.kalu.mediaplayer.bean.type.PlayerType;
 import lib.kalu.mediaplayer.core.component.ComponentApi;
@@ -406,77 +408,98 @@ public interface VideoPlayerApiCall extends VideoPlayerApiBase, VideoPlayerApiLi
     /***************/
 
     default void onBuriedVideoRenderingStart() {
-        callBuried("onVideoRenderingStart");
+        callBuried(PlayerType.BuriedType.VIDEO_RENDERING_START);
     }
 
     default void onBuriedStart() {
-        callBuried("onStart");
+        callBuried(PlayerType.BuriedType.START);
     }
 
     default void onBuriedError(@PlayerType.EventType.Value int code) {
-        callBuried("onError");
+        callBuried(PlayerType.BuriedType.ERROR);
     }
 
     default void onBuriedPause() {
-        callBuried("onPause");
+        callBuried(PlayerType.BuriedType.PAUSE);
     }
 
     default void onBuriedResume() {
-        callBuried("onResume");
+        callBuried(PlayerType.BuriedType.RESUME);
     }
 
     default void onBuriedComplete() {
-        callBuried("onComplete");
+        callBuried(PlayerType.BuriedType.COMPLETED);
     }
 
     default void onBuriedStop() {
-        callBuried("onStop");
+        callBuried(PlayerType.BuriedType.STOP);
     }
 
     default void onBuriedBufferingStart() {
-        callBuried("onBufferingStart");
+        callBuried(PlayerType.BuriedType.BUFFERING_START);
     }
 
     default void onBuriedBufferingStop() {
-        callBuried("onBufferingStop");
+        callBuried(PlayerType.BuriedType.BUFFERING_STOP);
     }
 
     default void onBuriedSeekStartForward() {
-        callBuried("onSeekStartForward");
+        callBuried(PlayerType.BuriedType.SEEK_START_FORWARD);
     }
 
     default void onBuriedSeekStartRewind() {
-        callBuried("onSeekStartRewind");
+        callBuried(PlayerType.BuriedType.SEEK_START_REWIND);
     }
 
     default void onBuriedSeekFinish() {
-        callBuried("onSeekFinish");
+        callBuried(PlayerType.BuriedType.SEEK_FINISH);
     }
 
     default void onBuriedWindow(@PlayerType.WindowType.Value int type) {
-        callBuried("onWindow");
+        callBuried(PlayerType.BuriedType.UPDATE_WINDOW);
     }
 
-    default void callBuried(String name) {
+    default void callBuried(@PlayerType.BuriedType int value) {
+
         try {
+
             StartArgs startArgs = getStartArgs();
             if (null == startArgs)
                 throw new Exception("error: startArgs null");
-            Proxy proxy = startArgs.getProxy();
-            if (null == proxy)
-                throw new Exception("error: proxy null");
-            ProxyBuried proxyBuried = proxy.getProxyBuried();
-            if (null == proxyBuried)
-                throw new Exception("error: proxyBuried null");
+
             long position = ((VideoPlayerApi) this).getPosition();
             if (position < 0L) {
-                position = -1L;
+                position = 0L;
             }
             long duration = ((VideoPlayerApi) this).getDuration();
             if (duration < 0L) {
-                duration = -1L;
+                duration = 0L;
             }
-            proxyBuried.onCall(name, startArgs, position, duration);
+            if (LogUtil.DEBUG) {
+                LogUtil.log(TAG, "callBuried -> buriedType = " + value + ", position = " + position + ", duration = " + duration);
+            }
+
+            //
+            Proxy proxy = startArgs.getProxy();
+            if (null != proxy) {
+                ProxyBuried proxyBuried = proxy.getProxyBuried();
+                if (null != proxyBuried) {
+                    proxyBuried.onCall(value, startArgs, position, duration);
+                }
+            }
+
+            //
+            PlayerArgs playerBuilder = PlayerSDK.init().getPlayerBuilder();
+            if (null != playerBuilder) {
+                Proxy proxy2 = playerBuilder.getProxy();
+                if (null != proxy2) {
+                    ProxyBuried proxyBuried = proxy2.getProxyBuried();
+                    if (null != proxyBuried) {
+                        proxyBuried.onCall(value, startArgs, position, duration);
+                    }
+                }
+            }
+
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
                 LogUtil.log(TAG, "callBuried -> Exception " + e.getMessage());

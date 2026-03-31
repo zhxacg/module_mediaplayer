@@ -3,6 +3,7 @@ package lib.kalu.mediaplayer.bean.args;
 
 import lib.kalu.mediaplayer.bean.cache.Cache;
 import lib.kalu.mediaplayer.bean.type.PlayerType;
+import lib.kalu.mediaplayer.proxy.Proxy;
 
 /**
  * @description: 播放器全局配置
@@ -98,6 +99,12 @@ public final class PlayerArgs {
         return seekType;
     }
 
+    private Proxy proxy;
+
+    public Proxy getProxy() {
+        return proxy;
+    }
+
     /****************/
 
     private PlayerArgs(Builder builder) {
@@ -115,6 +122,7 @@ public final class PlayerArgs {
         rotation = builder.rotation;
         cache = builder.cache;
         noProxy = builder.noProxy;
+        proxy = builder.proxy;
     }
 
     public Builder newBuilder() {
@@ -133,6 +141,7 @@ public final class PlayerArgs {
         builder.setRotation(this.rotation);
         builder.setCache(this.cache);
         builder.setNoProxy(this.noProxy);
+        builder.setProxy(this.proxy);
         return builder;
     }
 
@@ -239,6 +248,14 @@ public final class PlayerArgs {
 
         public Builder setNoProxy(boolean v) {
             this.noProxy = v;
+            return this;
+        }
+
+        // 代理
+        private Proxy proxy = null;
+
+        public Builder setProxy(Proxy v) {
+            this.proxy = v;
             return this;
         }
 
