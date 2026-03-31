@@ -9,6 +9,7 @@ import lib.kalu.mediaplayer.bean.args.ConfigArgs;
 import lib.kalu.mediaplayer.bean.args.StartArgs;
 import lib.kalu.mediaplayer.bean.info.PlayInfo;
 import lib.kalu.mediaplayer.bean.type.PlayerType;
+import lib.kalu.mediaplayer.buried.PlayBuried;
 import lib.kalu.mediaplayer.core.component.ComponentApi;
 import lib.kalu.mediaplayer.listener.OnPlayerEpisodeListener;
 import lib.kalu.mediaplayer.listener.OnPlayerEventListener;
@@ -19,8 +20,6 @@ import lib.kalu.mediaplayer.listener.OnPlayerVisibilityChangedListener;
 import lib.kalu.mediaplayer.listener.OnPlayerWindowAttachChangedListener;
 import lib.kalu.mediaplayer.listener.OnPlayerWindowStateChangeListener;
 import lib.kalu.mediaplayer.listener.OnPlayerWindowVisibilityChangedListener;
-import lib.kalu.mediaplayer.proxy.Proxy;
-import lib.kalu.mediaplayer.buried.PlayBuried;
 import lib.kalu.mediaplayer.util.LogUtil;
 
 public interface VideoPlayerApiCall extends VideoPlayerApiBase, VideoPlayerApiListener {
@@ -485,13 +484,14 @@ public interface VideoPlayerApiCall extends VideoPlayerApiBase, VideoPlayerApiLi
             if (duration < 0L) {
                 duration = 0L;
             }
+            boolean trysee = startArgs.getTrySeeDuration() > 0L;
             boolean live = ((VideoPlayerApi) this).isLive();
             float speed = ((VideoPlayerApi) this).getSpeed();
             int scale = ((VideoPlayerApi) this).getVideoScale();
             if (LogUtil.DEBUG) {
-                LogUtil.log(TAG, "callBuried -> buriedType = " + value + ", position = " + position + ", duration = " + duration + ", speed = " + speed + ", scale = " + scale+", live = "+live);
+                LogUtil.log(TAG, "callBuried -> buriedType = " + value + ", position = " + position + ", duration = " + duration + ", speed = " + speed + ", scale = " + scale + ", live = " + live+", trysee = "+trysee);
             }
-            playBuried.onCall(value, startArgs, new PlayInfo(live, position, duration, speed, scale));
+            playBuried.onCall(value, startArgs, new PlayInfo(trysee, live, position, duration, speed, scale));
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
                 LogUtil.log(TAG, "callBuried -> Exception " + e.getMessage());
