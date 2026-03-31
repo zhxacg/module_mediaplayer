@@ -91,7 +91,7 @@ public final class PlayerSDK {
     }
 
     public PlayerSDK setProxyBuried(ProxyBuried v) {
-        mPlayerBuilder.setProxy(v);
+        mPlayerBuilder.setProxyBuried(v);
         return this;
     }
 
