@@ -3,7 +3,7 @@ package lib.kalu.mediaplayer.core.player.video;
 import lib.kalu.mediaplayer.core.kernel.video.VideoKernelApi;
 import lib.kalu.mediaplayer.util.LogUtil;
 
-public interface VideoPlayerApiSubtitle extends VideoPlayerApiBase {
+public interface VideoPlayerApiSubtitle extends VideoPlayerApiBase, VideoPlayerApiCall {
 
     default boolean subtitleOffsetMs(int offset) {
         try {
@@ -14,8 +14,8 @@ public interface VideoPlayerApiSubtitle extends VideoPlayerApiBase {
             if (!playing)
                 throw new Exception("warning: playing false");
             boolean result = kernel.subtitleOffsetMs(offset);
-            if(result){
-
+            if (result) {
+                onBuriedSubtitleOffsetMs(offset);
             }
             return result;
         } catch (Exception e) {
