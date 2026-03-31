@@ -587,6 +587,7 @@ public @interface PlayerType {
         int SEEK_FINISH = 12;
         int UPDATE_WINDOW = 13;
         int UPDATE_EVENT = 14;
+        int SUBTITLE_OFFSET_MS = 15;
 
         @Documented
         @Retention(CLASS)
@@ -606,6 +607,7 @@ public @interface PlayerType {
                 BuriedType.SEEK_FINISH,
                 BuriedType.UPDATE_WINDOW,
                 BuriedType.UPDATE_EVENT,
+                BuriedType.SUBTITLE_OFFSET_MS
         })
         @interface Value {
         }

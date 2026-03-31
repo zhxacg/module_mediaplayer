@@ -13,7 +13,11 @@ public interface VideoPlayerApiSubtitle extends VideoPlayerApiBase {
             boolean playing = kernel.isPlaying();
             if (!playing)
                 throw new Exception("warning: playing false");
-            return kernel.subtitleOffsetMs(offset);
+            boolean result = kernel.subtitleOffsetMs(offset);
+            if(result){
+
+            }
+            return result;
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
                 LogUtil.log("VideoPlayerApiSubtitle -> subtitleOffsetMs -> " + e.getMessage());

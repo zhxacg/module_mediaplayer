@@ -407,6 +407,10 @@ public interface VideoPlayerApiCall extends VideoPlayerApiBase, VideoPlayerApiLi
 
     /***************/
 
+    default void onBuriedSubtitleOffsetMs(int offsetMs) {
+        callBuried(PlayerType.BuriedType.SUBTITLE_OFFSET_MS, offsetMs);
+    }
+
     default void onBuriedVideoRenderingStart() {
         callBuried(PlayerType.BuriedType.VIDEO_RENDERING_START);
     }
@@ -459,7 +463,7 @@ public interface VideoPlayerApiCall extends VideoPlayerApiBase, VideoPlayerApiLi
         callBuried(PlayerType.BuriedType.UPDATE_WINDOW);
     }
 
-    default void callBuried(@PlayerType.BuriedType int value) {
+    default void callBuried(@PlayerType.BuriedType int value, Object... objs) {
 
         try {
 
@@ -489,9 +493,14 @@ public interface VideoPlayerApiCall extends VideoPlayerApiBase, VideoPlayerApiLi
             float speed = ((VideoPlayerApi) this).getSpeed();
             int scale = ((VideoPlayerApi) this).getVideoScale();
             if (LogUtil.DEBUG) {
-                LogUtil.log(TAG, "callBuried -> buriedType = " + value + ", position = " + position + ", duration = " + duration + ", speed = " + speed + ", scale = " + scale + ", live = " + live+", trysee = "+trysee);
+                LogUtil.log(TAG, "callBuried -> buriedType = " + value + ", position = " + position + ", duration = " + duration + ", speed = " + speed + ", scale = " + scale + ", live = " + live + ", trysee = " + trysee);
             }
-            playBuried.onCall(value, startArgs, new PlayInfo(trysee, live, position, duration, speed, scale));
+
+            if (value == PlayerType.BuriedType.SUBTITLE_OFFSET_MS) {
+                playBuried.onCall(value, startArgs, new PlayInfo(((int) objs[0]), trysee, live, position, duration, speed, scale));
+            } else {
+                playBuried.onCall(value, startArgs, new PlayInfo(0, trysee, live, position, duration, speed, scale));
+            }
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
                 LogUtil.log(TAG, "callBuried -> Exception " + e.getMessage());
