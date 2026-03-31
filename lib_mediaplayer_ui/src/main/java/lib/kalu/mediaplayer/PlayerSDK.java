@@ -5,6 +5,7 @@ import lib.kalu.mediaplayer.bean.args.PlayerArgs;
 import lib.kalu.mediaplayer.bean.cache.Cache;
 import lib.kalu.mediaplayer.bean.type.PlayerType;
 import lib.kalu.mediaplayer.proxy.Proxy;
+import lib.kalu.mediaplayer.proxy.ProxyBuried;
 
 
 public final class PlayerSDK {
@@ -89,7 +90,7 @@ public final class PlayerSDK {
         return this;
     }
 
-    public PlayerSDK setCache(Proxy v) {
+    public PlayerSDK setProxyBuried(ProxyBuried v) {
         mPlayerBuilder.setProxy(v);
         return this;
     }

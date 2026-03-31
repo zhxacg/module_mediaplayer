@@ -491,12 +491,9 @@ public interface VideoPlayerApiCall extends VideoPlayerApiBase, VideoPlayerApiLi
             //
             PlayerArgs playerBuilder = PlayerSDK.init().getPlayerBuilder();
             if (null != playerBuilder) {
-                Proxy proxy2 = playerBuilder.getProxy();
-                if (null != proxy2) {
-                    ProxyBuried proxyBuried = proxy2.getProxyBuried();
-                    if (null != proxyBuried) {
-                        proxyBuried.onCall(value, startArgs, position, duration);
-                    }
+                ProxyBuried proxyBuried = playerBuilder.getProxyBuried();
+                if (null != proxyBuried) {
+                    proxyBuried.onCall(value, startArgs, position, duration);
                 }
             }
 
