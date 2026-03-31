@@ -261,9 +261,9 @@ public final class TestActivity extends Activity {
                     .setProxy(new Proxy.Builder()
                             .setProxyBuried(new ProxyBuried() {
                                 @Override
-                                public void onCall(String name, StartArgs startArgs, long position, long duration) {
+                                public void onCall(int buriedType, StartArgs startArgs, long position, long duration) {
                                     if (LogUtil.DEBUG) {
-                                        LogUtil.log("TestActivity -> onCall -> name = " + name + ", position = " + position + ", duration = " + duration + ", url = " + startArgs.getUrl());
+                                        LogUtil.log("TestActivity -> onCall -> buriedType = " + buriedType + ", position = " + position + ", duration = " + duration + ", url = " + startArgs.getUrl());
                                     }
                                 }
                             })
