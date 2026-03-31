@@ -59,4 +59,8 @@ public class PlayInfo {
     public int getScale() {
         return scale;
     }
+
+    public int getSubtitleOffsetMs() {
+        return subtitleOffsetMs;
+    }
 }
