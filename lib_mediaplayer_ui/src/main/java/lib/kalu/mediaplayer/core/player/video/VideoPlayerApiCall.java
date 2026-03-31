@@ -485,12 +485,13 @@ public interface VideoPlayerApiCall extends VideoPlayerApiBase, VideoPlayerApiLi
             if (duration < 0L) {
                 duration = 0L;
             }
+            boolean live = ((VideoPlayerApi) this).isLive();
             float speed = ((VideoPlayerApi) this).getSpeed();
             int scale = ((VideoPlayerApi) this).getVideoScale();
             if (LogUtil.DEBUG) {
-                LogUtil.log(TAG, "callBuried -> buriedType = " + value + ", position = " + position + ", duration = " + duration + ", speed = " + speed + ", scale = " + scale);
+                LogUtil.log(TAG, "callBuried -> buriedType = " + value + ", position = " + position + ", duration = " + duration + ", speed = " + speed + ", scale = " + scale+", live = "+live);
             }
-            playBuried.onCall(value, startArgs, new PlayInfo(position, duration, speed, scale));
+            playBuried.onCall(value, startArgs, new PlayInfo(live, position, duration, speed, scale));
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
                 LogUtil.log(TAG, "callBuried -> Exception " + e.getMessage());
