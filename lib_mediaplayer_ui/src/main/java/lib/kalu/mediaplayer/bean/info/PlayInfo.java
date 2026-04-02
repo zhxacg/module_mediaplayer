@@ -7,12 +7,14 @@ public class PlayInfo {
     private int subtitleOffsetMs = 0;
     private boolean isTrysee = false;
     private boolean isLive = false;
+    private boolean isPrepare = false;
     private long position;
     private long duration;
     private float speed;
     private @PlayerType.ScaleType int scale;
 
-    public PlayInfo(int subtitleOffsetMs, boolean isTrysee, boolean isLive, long position, long duration, float speed, int scale) {
+    public PlayInfo(boolean isPrepare, int subtitleOffsetMs, boolean isTrysee, boolean isLive, long position, long duration, float speed, int scale) {
+        this.isPrepare = isPrepare;
         this.subtitleOffsetMs = subtitleOffsetMs;
         this.isTrysee = isTrysee;
         this.isLive = isLive;
@@ -25,13 +27,19 @@ public class PlayInfo {
     @Override
     public String toString() {
         return "PlayInfo{" +
-                "isTrysee=" + isTrysee +
+                "subtitleOffsetMs=" + subtitleOffsetMs +
+                ", isTrysee=" + isTrysee +
                 ", isLive=" + isLive +
+                ", isPrepare=" + isPrepare +
                 ", position=" + position +
                 ", duration=" + duration +
                 ", speed=" + speed +
                 ", scale=" + scale +
                 '}';
+    }
+
+    public boolean isPrepare() {
+        return isPrepare;
     }
 
     public boolean isTrysee() {
