@@ -84,7 +84,7 @@ public final class VideoFFmpegPlayer extends VideoBasePlayer {
             }
             stop();
             onEvent(PlayerType.KernelType.FFPLAYER, PlayerType.EventType.STOP);
-            onEvent(PlayerType.KernelType.FFPLAYER, PlayerType.EventType.ERROR);
+            onEvent(PlayerType.KernelType.FFPLAYER, PlayerType.EventType.ERROR_PREPARE);
         }
     }
 
@@ -501,7 +501,7 @@ public final class VideoFFmpegPlayer extends VideoBasePlayer {
             else {
                 stop();
                 onEvent(PlayerType.KernelType.FFPLAYER, PlayerType.EventType.STOP);
-                onEvent(PlayerType.KernelType.FFPLAYER, PlayerType.EventType.ERROR);
+                onEvent(PlayerType.KernelType.FFPLAYER, PlayerType.EventType.ERROR_PLAY);
             }
             return true;
         }

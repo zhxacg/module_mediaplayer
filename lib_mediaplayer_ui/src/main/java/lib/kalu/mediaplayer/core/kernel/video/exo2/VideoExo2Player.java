@@ -503,7 +503,7 @@ public final class VideoExo2Player extends VideoBasePlayer {
             if (e instanceof UrlError) {
                 onEvent(PlayerType.KernelType.MEDIA_V3, PlayerType.EventType.ERROR_URL);
             } else {
-                onEvent(PlayerType.KernelType.MEDIA_V3, PlayerType.EventType.ERROR);
+                onEvent(PlayerType.KernelType.MEDIA_V3, PlayerType.EventType.ERROR_PREPARE);
             }
             if (LogUtil.DEBUG) {
                 LogUtil.log(TAG, "startDecoder -> Exception " + e.getMessage());
@@ -1272,7 +1272,7 @@ public final class VideoExo2Player extends VideoBasePlayer {
                     throw new Exception("PlaybackException error: not instanceof ExoPlaybackException");
                 stop();
                 onEvent(PlayerType.KernelType.MEDIA_V3, PlayerType.EventType.STOP);
-                onEvent(PlayerType.KernelType.MEDIA_V3, PlayerType.EventType.ERROR);
+                onEvent(PlayerType.KernelType.MEDIA_V3, PlayerType.EventType.ERROR_PLAY);
             } catch (Exception e) {
                 if (LogUtil.DEBUG) {
                     LogUtil.log(TAG, "onPlayerError -> error = " + error.getMessage());
@@ -1308,7 +1308,7 @@ public final class VideoExo2Player extends VideoBasePlayer {
             }
             stop();
             onEvent(PlayerType.KernelType.MEDIA_V3, PlayerType.EventType.STOP);
-            onEvent(PlayerType.KernelType.MEDIA_V3, PlayerType.EventType.ERROR);
+            onEvent(PlayerType.KernelType.MEDIA_V3, PlayerType.EventType.ERROR_PREPARE);
         }
 
         @Override

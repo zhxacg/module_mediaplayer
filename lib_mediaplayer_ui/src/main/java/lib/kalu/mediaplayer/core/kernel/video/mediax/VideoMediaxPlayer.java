@@ -496,7 +496,7 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
             if (e instanceof UrlError) {
                 onEvent(PlayerType.KernelType.MEDIA_V3, PlayerType.EventType.ERROR_URL);
             } else {
-                onEvent(PlayerType.KernelType.MEDIA_V3, PlayerType.EventType.ERROR);
+                onEvent(PlayerType.KernelType.MEDIA_V3, PlayerType.EventType.ERROR_PREPARE);
             }
             if (LogUtil.DEBUG) {
                 LogUtil.log(TAG, "startDecoder -> Exception " + e.getMessage());
@@ -1394,19 +1394,19 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
                     // seekToDefaultPosition();
                     stop();
                     onEvent(PlayerType.KernelType.MEDIA_V3, PlayerType.EventType.STOP);
-                    onEvent(PlayerType.KernelType.MEDIA_V3, PlayerType.EventType.ERROR);
+                    onEvent(PlayerType.KernelType.MEDIA_V3, PlayerType.EventType.ERROR_PLAY);
                 }
                 // errorCode=-9 的常见原因分析 媒体资源 URL 无效 / 过期：URL 拼写错误、资源被删除、CDN 节点失效；
                 else if (error.errorCode == -9) {
                     stop();
                     onEvent(PlayerType.KernelType.MEDIA_V3, PlayerType.EventType.STOP);
-                    onEvent(PlayerType.KernelType.MEDIA_V3, PlayerType.EventType.ERROR);
+                    onEvent(PlayerType.KernelType.MEDIA_V3, PlayerType.EventType.ERROR_PLAY);
                 } else {
 //                    if (!(error instanceof ExoPlaybackException))
 //                        throw new Exception("PlaybackException error: not instanceof ExoPlaybackException");
                     stop();
                     onEvent(PlayerType.KernelType.MEDIA_V3, PlayerType.EventType.STOP);
-                    onEvent(PlayerType.KernelType.MEDIA_V3, PlayerType.EventType.ERROR);
+                    onEvent(PlayerType.KernelType.MEDIA_V3, PlayerType.EventType.ERROR_PLAY);
                 }
             } catch (Exception e) {
                 if (LogUtil.DEBUG) {

@@ -96,7 +96,7 @@ public final class VideoAndroidPlayer extends VideoBasePlayer {
             }
             stop();
             onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.STOP);
-            onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.ERROR);
+            onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.ERROR_PREPARE);
         }
     }
 
@@ -493,7 +493,7 @@ public final class VideoAndroidPlayer extends VideoBasePlayer {
                 } else {
                     stop();
                     onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.STOP);
-                    onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.ERROR);
+                    onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.ERROR_PLAY);
                 }
             } catch (Exception e) {
                 if (LogUtil.DEBUG) {

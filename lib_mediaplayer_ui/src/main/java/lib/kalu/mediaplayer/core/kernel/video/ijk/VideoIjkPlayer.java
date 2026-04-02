@@ -856,7 +856,7 @@ public final class VideoIjkPlayer extends VideoBasePlayer {
             }
             stop();
             onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.STOP);
-            onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.ERROR);
+            onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.ERROR_PLAY);
             return true;
         }
     };

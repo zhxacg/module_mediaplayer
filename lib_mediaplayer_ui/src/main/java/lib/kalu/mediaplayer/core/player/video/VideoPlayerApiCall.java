@@ -291,7 +291,13 @@ public interface VideoPlayerApiCall extends VideoPlayerApiBase, VideoPlayerApiLi
                 onPlayerEventListener.onPause();
             } else if (state == PlayerType.EventType.RESUME) {
                 onPlayerEventListener.onResume();
-            } else if (state == PlayerType.EventType.ERROR) {
+            } else if (state == PlayerType.EventType.ERROR_URL) {
+                onPlayerEventListener.onError(null);
+            } else if (state == PlayerType.EventType.ERROR_PREPARE) {
+                onPlayerEventListener.onError(null);
+            } else if (state == PlayerType.EventType.ERROR_PLAY) {
+                onPlayerEventListener.onError(null);
+            } else if (state == PlayerType.EventType.ERROR_TIMEOUT_BUFFERING) {
                 onPlayerEventListener.onError(null);
             } else if (state == PlayerType.EventType.BUFFERING_START) {
                 onPlayerEventListener.onBufferingStart();
@@ -416,7 +422,12 @@ public interface VideoPlayerApiCall extends VideoPlayerApiBase, VideoPlayerApiLi
     }
 
     default void onBuriedError(@PlayerType.EventType.Value int code) {
-        callBuried(PlayerType.BuriedType.ERROR);
+        boolean prepared = ((VideoPlayerApi) this).isPrepared();
+        if (prepared) {
+            callBuried(PlayerType.BuriedType.ERROR_PREPARE);
+        } else {
+            callBuried(PlayerType.BuriedType.ERROR_PLAY);
+        }
     }
 
     default void onBuriedPause() {

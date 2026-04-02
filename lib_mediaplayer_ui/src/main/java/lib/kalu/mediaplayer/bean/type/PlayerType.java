@@ -80,16 +80,17 @@ public @interface PlayerType {
         int TRY_SEE_START = 3_026;
         int TRY_SEE_END = 3_027;
 
-        int ERROR = 3_028; // 播放错误
-        int ERROR_URL = 3_029; // 播放错误
-        int ERROR_TIMEOUT_BUFFERING = 3_030;
+        int ERROR_URL = 3_028; // 播放错误
+        int ERROR_PREPARE = 3_029; // 启播错误
+        int ERROR_PLAY = 3_030; // 播放错误
+        int ERROR_TIMEOUT_BUFFERING = 3_031; // 缓冲超时
 
-        int COMPONENT_MENU_SHOW = 3_031;
-        int COMPONENT_MENU_HIDE = 3_032;
-        int COMPONENT_SEEK_SHOW = 3_033;
-        int COMPONENT_SEEK_HIDE = 3_034;
-        int RETRY_BUFFERING_TIMEOUT = 3_035;
-        int RESTART = 3_036;
+        int COMPONENT_MENU_SHOW = 3_032;
+        int COMPONENT_MENU_HIDE = 3_033;
+        int COMPONENT_SEEK_SHOW = 3_034;
+        int COMPONENT_SEEK_HIDE = 3_035;
+        int RETRY_BUFFERING_TIMEOUT = 3_036;
+        int RESTART = 3_037;
 
         @Documented
         @Retention(CLASS)
@@ -127,8 +128,9 @@ public @interface PlayerType {
                 COMPONENT_MENU_HIDE,
                 COMPONENT_SEEK_SHOW,
                 COMPONENT_SEEK_HIDE,
-                ERROR,
                 ERROR_URL,
+                ERROR_PREPARE,
+                ERROR_PLAY,
                 ERROR_TIMEOUT_BUFFERING,
                 RETRY_BUFFERING_TIMEOUT,
                 RESTART})
@@ -575,19 +577,20 @@ public @interface PlayerType {
     @interface BuriedType {
         int VIDEO_RENDERING_START = 1;
         int START = 2;
-        int ERROR = 3;
-        int PAUSE = 4;
-        int RESUME = 5;
-        int STOP = 6;
-        int COMPLETED = 7;
-        int BUFFERING_START = 8;
-        int BUFFERING_STOP = 9;
-        int SEEK_START_FORWARD = 10;
-        int SEEK_START_REWIND = 11;
-        int SEEK_FINISH = 12;
-        int UPDATE_WINDOW = 13;
-        int UPDATE_EVENT = 14;
-        int UPDATE_SUBTITLE_OFFSET_MS = 15;
+        int ERROR_PREPARE = 3; // 启播错误
+        int ERROR_PLAY = 4; // 播放错误
+        int PAUSE = 5;
+        int RESUME = 6;
+        int STOP = 7;
+        int COMPLETED = 8;
+        int BUFFERING_START = 9;
+        int BUFFERING_STOP = 10;
+        int SEEK_START_FORWARD = 11;
+        int SEEK_START_REWIND = 12;
+        int SEEK_FINISH = 13;
+        int UPDATE_WINDOW = 14;
+        int UPDATE_EVENT = 15;
+        int UPDATE_SUBTITLE_OFFSET_MS = 16;
 
         @Documented
         @Retention(CLASS)
@@ -595,7 +598,8 @@ public @interface PlayerType {
         @IntDef(value = {
                 BuriedType.VIDEO_RENDERING_START,
                 BuriedType.START,
-                BuriedType.ERROR,
+                BuriedType.ERROR_PREPARE,
+                BuriedType.ERROR_PLAY,
                 BuriedType.PAUSE,
                 BuriedType.RESUME,
                 BuriedType.STOP,
