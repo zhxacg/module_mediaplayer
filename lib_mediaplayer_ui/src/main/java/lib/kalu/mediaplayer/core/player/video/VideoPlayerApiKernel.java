@@ -75,7 +75,7 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
             // 8
             initDecoder();
         } catch (Exception e) {
-            callEvent(PlayerType.EventType.ERROR);
+            callEvent(PlayerType.EventType.ERROR_PLAY);
             if (LogUtil.DEBUG) {
                 LogUtil.log(TAG, "start -> " + e.getMessage());
             }

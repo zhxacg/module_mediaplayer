@@ -27,7 +27,10 @@ public class ComponentError extends RelativeLayout implements ComponentApi {
     @Override
     public void onUpdateEvent(int playState) {
         switch (playState) {
-            case PlayerType.EventType.ERROR:
+            case PlayerType.EventType.ERROR_URL:
+            case PlayerType.EventType.ERROR_PREPARE:
+            case PlayerType.EventType.ERROR_PLAY:
+            case PlayerType.EventType.ERROR_TIMEOUT_BUFFERING:
                 if (LogUtil.DEBUG) {
                     LogUtil.log("ComponentError[show] -> playState = " + playState);
                 }

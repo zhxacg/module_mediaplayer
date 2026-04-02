@@ -35,7 +35,7 @@ public class ComponentPrepare extends RelativeLayout implements ComponentApi {
                 }
                 hide();
                 break;
-            case PlayerType.EventType.ERROR:
+            case PlayerType.EventType.ERROR_PLAY:
                 if (LogUtil.DEBUG) {
                     LogUtil.log("ComponentLoading -> callEvent -> show -> ERROR");
                 }

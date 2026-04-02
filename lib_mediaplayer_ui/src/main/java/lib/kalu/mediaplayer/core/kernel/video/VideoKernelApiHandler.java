@@ -367,7 +367,7 @@ public interface VideoKernelApiHandler extends VideoKernelApiBase, VideoKernelAp
                 long start = ((long[]) msg.obj)[0];
                 long cast = System.currentTimeMillis() - start;
                 if (cast >= timeout) {
-                    onEvent(msg.arg1, PlayerType.EventType.ERROR);
+                    onEvent(msg.arg1, PlayerType.EventType.ERROR_PLAY);
                     getPlayerApi().stop(true);
                     throw new Exception("warning: connect timeout");
                 } else {

@@ -38,7 +38,10 @@ public class ComponentBuffering extends RelativeLayout implements ComponentApi {
             case PlayerType.EventType.BUFFERING_STOP:
             case PlayerType.EventType.SEEK_FINISH:
             case PlayerType.EventType.INIT:
-            case PlayerType.EventType.ERROR:
+            case PlayerType.EventType.ERROR_URL:
+            case PlayerType.EventType.ERROR_PREPARE:
+            case PlayerType.EventType.ERROR_PLAY:
+            case PlayerType.EventType.ERROR_TIMEOUT_BUFFERING:
             case PlayerType.EventType.RELEASE:
                 if (LogUtil.DEBUG) {
                     LogUtil.log("ComponentBuffering[hide] -> callEvent -> playState = " + playState);
