@@ -499,18 +499,19 @@ public interface VideoPlayerApiCall extends VideoPlayerApiBase, VideoPlayerApiLi
             if (duration < 0L) {
                 duration = 0L;
             }
+            boolean prepared = ((VideoPlayerApi) this).isPrepared();
             boolean trysee = startArgs.getTrySeeDuration() > 0L;
             boolean live = ((VideoPlayerApi) this).isLive();
             float speed = ((VideoPlayerApi) this).getSpeed();
             int scale = ((VideoPlayerApi) this).getVideoScale();
             if (LogUtil.DEBUG) {
-                LogUtil.log(TAG, "callBuried -> buriedType = " + value + ", position = " + position + ", duration = " + duration + ", speed = " + speed + ", scale = " + scale + ", live = " + live + ", trysee = " + trysee);
+                LogUtil.log(TAG, "callBuried -> buriedType = " + value + ", position = " + position + ", duration = " + duration + ", speed = " + speed + ", scale = " + scale + ", live = " + live + ", trysee = " + trysee + ", prepared = " + prepared);
             }
 
             if (value == PlayerType.BuriedType.UPDATE_SUBTITLE_OFFSET_MS) {
-                playBuried.onCall(value, startArgs, new PlayInfo(((int) objs[0]), trysee, live, position, duration, speed, scale));
+                playBuried.onCall(value, startArgs, new PlayInfo(prepared, ((int) objs[0]), trysee, live, position, duration, speed, scale));
             } else {
-                playBuried.onCall(value, startArgs, new PlayInfo(0, trysee, live, position, duration, speed, scale));
+                playBuried.onCall(value, startArgs, new PlayInfo(prepared, 0, trysee, live, position, duration, speed, scale));
             }
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
