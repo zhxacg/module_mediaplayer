@@ -670,6 +670,8 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
                             break;
                         // 播放错误
                         case PlayerType.EventType.ERROR:
+                        case PlayerType.EventType.ERROR_URL:
+                        case PlayerType.EventType.ERROR_TIMEOUT_BUFFERING:
                             // 埋点
                             onBuriedError(event);
                             // 执行

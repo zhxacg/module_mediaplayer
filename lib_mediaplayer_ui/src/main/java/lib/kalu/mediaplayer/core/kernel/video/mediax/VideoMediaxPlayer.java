@@ -1190,6 +1190,69 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
 
     private final AnalyticsListener mAnalyticsListener = new AnalyticsListener() {
 
+        /**
+         * 网速
+         * @param eventTime        事件时间上下文
+         * @param totalLoadTimeMs  累计加载耗时（ms）
+         * @param totalBytesLoaded 累计加载字节数
+         * @param bitrateEstimate  估算带宽（bps）
+         */
+        @Override
+        public void onBandwidthEstimate(EventTime eventTime,
+                                        int totalLoadTimeMs,
+                                        long totalBytesLoaded,
+                                        long bitrateEstimate) {
+
+//            // 1. 当前估算带宽
+//            long kbps = bitrateEstimate / 1000;
+//            Log.d("BW", "估算带宽: " + kbps + " Kbps");
+//
+//            // 2. 自己计算实际平均速度（双重验证）
+//            if (totalLoadTimeMs > 0) {
+//                long actualBps = (totalBytesLoaded * 8 * 1000L) / totalLoadTimeMs;
+//                Log.d("BW", "实际平均带宽: " + actualBps / 1000 + " Kbps");
+//            }
+//
+//            // 3. 判断网络状况
+//            if (bitrateEstimate < 500_000) {        // < 500 Kbps
+//                Log.w("BW", "网络较差，可能卡顿");
+//            } else if (bitrateEstimate < 2_000_000) { // < 2 Mbps
+//                Log.d("BW", "网络一般");
+//            } else {
+//                Log.d("BW", "网络良好");
+//            }
+//
+//            // 4. 流量统计（注意是累计值，需要做差值）
+//            Log.d("BW", "累计加载: " + totalBytesLoaded / 1024 + " KB"
+//                    + "，耗时: " + totalLoadTimeMs + " ms");
+        }
+
+        /**
+         * 丢帧回调，当视频帧因渲染超时被丢弃时触发
+         *
+         * @param eventTime    事件时间上下文
+         * @param droppedFrames 本次回调周期内丢弃的帧数
+         * @param elapsedMs    本次回调周期的时长（ms）
+         */
+        @Override
+        public void onDroppedVideoFrames(EventTime eventTime,
+                                         int droppedFrames,
+                                         long elapsedMs) {
+
+//            // 计算丢帧率：丢帧数 / 周期时长(s) = 每秒丢帧数
+//            float dropRate = droppedFrames / (elapsedMs / 1000f);
+//            Log.w("DROP", "丢帧数: " + droppedFrames
+//                    + "，周期: " + elapsedMs + "ms"
+//                    + "，丢帧率: " + dropRate + " fps");
+//
+//            // 判断卡顿严重程度
+//            if (droppedFrames >= 30) {
+//                Log.e("DROP", "严重卡顿：单次丢帧超过 30 帧");
+//            } else if (droppedFrames >= 10) {
+//                Log.w("DROP", "明显卡顿：单次丢帧超过 10 帧");
+//            }
+        }
+
         @Override
         public void onVideoFrameProcessingOffset(EventTime eventTime, long l, int i) {
 
