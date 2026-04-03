@@ -9,12 +9,15 @@ public class PlayInfo {
     private boolean isPrepare = false;
     private long position;
     private long duration;
+    private long playWhenReadySeekToPosition;
     private long tryseeDuration;
     private float speed;
     private @PlayerType.ScaleType int scale;
 
     private String stopReason = "";
-    public PlayInfo(long tryseeDuration, String stopReason, boolean isPrepare, int subtitleOffsetMs, boolean isLive, long position, long duration, float speed, int scale) {
+
+    public PlayInfo(long playWhenReadySeekToPosition, long tryseeDuration, String stopReason, boolean isPrepare, int subtitleOffsetMs, boolean isLive, long position, long duration, float speed, int scale) {
+        this.playWhenReadySeekToPosition = playWhenReadySeekToPosition;
         this.stopReason = stopReason;
         this.isPrepare = isPrepare;
         this.subtitleOffsetMs = subtitleOffsetMs;
@@ -30,15 +33,20 @@ public class PlayInfo {
     public String toString() {
         return "PlayInfo{" +
                 "subtitleOffsetMs=" + subtitleOffsetMs +
-                ", tryseeDuration=" + tryseeDuration +
                 ", isLive=" + isLive +
                 ", isPrepare=" + isPrepare +
                 ", position=" + position +
                 ", duration=" + duration +
+                ", playWhenReadySeekToPosition=" + playWhenReadySeekToPosition +
+                ", tryseeDuration=" + tryseeDuration +
                 ", speed=" + speed +
                 ", scale=" + scale +
                 ", stopReason='" + stopReason + '\'' +
                 '}';
+    }
+
+    public long getPlayWhenReadySeekToPosition() {
+        return playWhenReadySeekToPosition;
     }
 
     public String getStopReason() {

@@ -507,26 +507,28 @@ public interface VideoPlayerApiCall extends VideoPlayerApiBase, VideoPlayerApiLi
             if (duration < 0L) {
                 duration = 0L;
             }
+
+            long playWhenReadySeekToPosition = startArgs.getPlayWhenReadySeekToPosition();
             long tryseeDuration = startArgs.getTrySeeDuration();
             boolean prepared = ((VideoPlayerApi) this).isPrepared();
             boolean live = ((VideoPlayerApi) this).isLive();
             float speed = ((VideoPlayerApi) this).getSpeed();
             int scale = ((VideoPlayerApi) this).getVideoScale();
             if (LogUtil.DEBUG) {
-                LogUtil.log(TAG, "callBuried -> buriedType = " + value + ", position = " + position + ", duration = " + duration + ", speed = " + speed + ", scale = " + scale + ", live = " + live + ", tryseeDuration = " + tryseeDuration + ", prepared = " + prepared);
+                LogUtil.log(TAG, "callBuried -> buriedType = " + value + ", position = " + position + ", duration = " + duration + ", speed = " + speed + ", scale = " + scale + ", live = " + live + ", tryseeDuration = " + tryseeDuration + ", prepared = " + prepared+", playWhenReadySeekToPosition = "+playWhenReadySeekToPosition);
             }
 
             if (value == PlayerType.BuriedType.UPDATE_SUBTITLE_OFFSET_MS) {
-                playBuried.onCall(value, startArgs, new PlayInfo(tryseeDuration, "", prepared, ((int) objs[0]), live, position, duration, speed, scale));
+                playBuried.onCall(value, startArgs, new PlayInfo(playWhenReadySeekToPosition, tryseeDuration, "", prepared, ((int) objs[0]), live, position, duration, speed, scale));
             } else if (value == PlayerType.BuriedType.STOP) {
                 boolean fromInit = ((boolean) objs[0]);
                 if (LogUtil.DEBUG) {
                     LogUtil.log(TAG, "callBuried -> fromInit = " + fromInit);
                 }
                 String stopReason = fromInit ? "stopFromInit" : "stopFromUser";
-                playBuried.onCall(value, startArgs, new PlayInfo(tryseeDuration, stopReason, prepared, 0, live, position, duration, speed, scale));
+                playBuried.onCall(value, startArgs, new PlayInfo(playWhenReadySeekToPosition, tryseeDuration, stopReason, prepared, 0, live, position, duration, speed, scale));
             } else {
-                playBuried.onCall(value, startArgs, new PlayInfo(tryseeDuration, "", prepared, 0, live, position, duration, speed, scale));
+                playBuried.onCall(value, startArgs, new PlayInfo(playWhenReadySeekToPosition, tryseeDuration, "", prepared, 0, live, position, duration, speed, scale));
             }
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
