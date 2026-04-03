@@ -582,15 +582,17 @@ public @interface PlayerType {
         int PAUSE = 5;
         int RESUME = 6;
         int STOP = 7;
-        int COMPLETED = 8;
-        int BUFFERING_START = 9;
-        int BUFFERING_STOP = 10;
-        int SEEK_START_FORWARD = 11;
-        int SEEK_START_REWIND = 12;
-        int SEEK_FINISH = 13;
-        int UPDATE_WINDOW = 14;
-        int UPDATE_EVENT = 15;
-        int UPDATE_SUBTITLE_OFFSET_MS = 16;
+        int RELEASE = 8;
+        int TRY_SEE_END = 9;
+        int COMPLETED = 10;
+        int BUFFERING_START = 11;
+        int BUFFERING_STOP = 12;
+        int SEEK_START_FORWARD = 13;
+        int SEEK_START_REWIND = 14;
+        int SEEK_FINISH = 15;
+        int UPDATE_WINDOW = 16;
+        int UPDATE_EVENT = 17;
+        int UPDATE_SUBTITLE_OFFSET_MS = 18;
 
         @Documented
         @Retention(CLASS)
@@ -603,6 +605,7 @@ public @interface PlayerType {
                 BuriedType.PAUSE,
                 BuriedType.RESUME,
                 BuriedType.STOP,
+                BuriedType.RELEASE,
                 BuriedType.COMPLETED,
                 BuriedType.BUFFERING_START,
                 BuriedType.BUFFERING_STOP,
@@ -611,7 +614,8 @@ public @interface PlayerType {
                 BuriedType.SEEK_FINISH,
                 BuriedType.UPDATE_WINDOW,
                 BuriedType.UPDATE_EVENT,
-                BuriedType.UPDATE_SUBTITLE_OFFSET_MS
+                BuriedType.UPDATE_SUBTITLE_OFFSET_MS,
+                BuriedType.TRY_SEE_END
         })
         @interface Value {
         }

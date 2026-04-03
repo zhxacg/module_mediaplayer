@@ -444,6 +444,24 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
         }
     }
 
+    default void releaseKernel(boolean isFromUser) {
+        try {
+            VideoKernelApi kernel = getVideoKernel();
+            if (null == kernel)
+                throw new Exception("warning: kernel null");
+            // 埋点
+            onBuriedRelease();
+            //
+            kernel.releaseDecoder(isFromUser);
+            setVideoKernel(null);
+            setScreenKeep(false);
+        } catch (Exception e) {
+            if (LogUtil.DEBUG) {
+                LogUtil.log(TAG, "releaseKernel -> " + e.getMessage());
+            }
+        }
+    }
+
     default void stopKernel(boolean callEvent, boolean fromInit) {
         try {
             VideoKernelApi kernel = getVideoKernel();
@@ -518,21 +536,6 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
 
     /***************************/
 
-    default void releaseKernel(boolean isFromUser) {
-        try {
-            VideoKernelApi kernel = getVideoKernel();
-            if (null == kernel)
-                throw new Exception("warning: kernel null");
-            kernel.releaseDecoder(isFromUser);
-            setVideoKernel(null);
-            setScreenKeep(false);
-        } catch (Exception e) {
-            if (LogUtil.DEBUG) {
-                LogUtil.log(TAG, "releaseKernel -> " + e.getMessage());
-            }
-        }
-    }
-
     default void checkKernelNull(StartArgs args, boolean release) {
         try {
             if (release) {
@@ -560,6 +563,10 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
                             throw new Exception("waning: position<0L");
                         if (position < trySeeDuration)
                             throw new Exception("waning: position<trySeeDuration");
+
+                        // 埋点
+                        onBuriedTrySeeEnd();
+
                         // 试看结束
                         stop();
                         callEvent(PlayerType.EventType.TRY_SEE_END);

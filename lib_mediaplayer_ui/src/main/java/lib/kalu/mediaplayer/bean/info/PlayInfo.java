@@ -5,21 +5,20 @@ import lib.kalu.mediaplayer.bean.type.PlayerType;
 public class PlayInfo {
 
     private int subtitleOffsetMs = 0;
-    private boolean isTrysee = false;
     private boolean isLive = false;
     private boolean isPrepare = false;
     private long position;
     private long duration;
+    private long tryseeDuration;
     private float speed;
     private @PlayerType.ScaleType int scale;
 
     private String stopReason = "";
-
-    public PlayInfo(String stopReason, boolean isPrepare, int subtitleOffsetMs, boolean isTrysee, boolean isLive, long position, long duration, float speed, int scale) {
+    public PlayInfo(long tryseeDuration, String stopReason, boolean isPrepare, int subtitleOffsetMs, boolean isLive, long position, long duration, float speed, int scale) {
         this.stopReason = stopReason;
         this.isPrepare = isPrepare;
         this.subtitleOffsetMs = subtitleOffsetMs;
-        this.isTrysee = isTrysee;
+        this.tryseeDuration = tryseeDuration;
         this.isLive = isLive;
         this.duration = duration;
         this.speed = speed;
@@ -31,7 +30,7 @@ public class PlayInfo {
     public String toString() {
         return "PlayInfo{" +
                 "subtitleOffsetMs=" + subtitleOffsetMs +
-                ", isTrysee=" + isTrysee +
+                ", tryseeDuration=" + tryseeDuration +
                 ", isLive=" + isLive +
                 ", isPrepare=" + isPrepare +
                 ", position=" + position +
@@ -50,8 +49,8 @@ public class PlayInfo {
         return isPrepare;
     }
 
-    public boolean isTrysee() {
-        return isTrysee;
+    public long getTryseeDuration() {
+        return tryseeDuration;
     }
 
     public boolean isLive() {

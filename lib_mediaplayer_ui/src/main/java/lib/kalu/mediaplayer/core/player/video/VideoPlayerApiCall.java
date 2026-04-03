@@ -430,6 +430,10 @@ public interface VideoPlayerApiCall extends VideoPlayerApiBase, VideoPlayerApiLi
         }
     }
 
+    default void onBuriedTrySeeEnd() {
+        callBuried(PlayerType.BuriedType.TRY_SEE_END);
+    }
+
     default void onBuriedPause() {
         callBuried(PlayerType.BuriedType.PAUSE);
     }
@@ -444,6 +448,10 @@ public interface VideoPlayerApiCall extends VideoPlayerApiBase, VideoPlayerApiLi
 
     default void onBuriedStop(boolean fromInit) {
         callBuried(PlayerType.BuriedType.STOP, fromInit);
+    }
+
+    default void onBuriedRelease() {
+        callBuried(PlayerType.BuriedType.RELEASE);
     }
 
     default void onBuriedBufferingStart() {
@@ -499,23 +507,26 @@ public interface VideoPlayerApiCall extends VideoPlayerApiBase, VideoPlayerApiLi
             if (duration < 0L) {
                 duration = 0L;
             }
+            long tryseeDuration = startArgs.getTrySeeDuration();
             boolean prepared = ((VideoPlayerApi) this).isPrepared();
-            boolean trysee = startArgs.getTrySeeDuration() > 0L;
             boolean live = ((VideoPlayerApi) this).isLive();
             float speed = ((VideoPlayerApi) this).getSpeed();
             int scale = ((VideoPlayerApi) this).getVideoScale();
             if (LogUtil.DEBUG) {
-                LogUtil.log(TAG, "callBuried -> buriedType = " + value + ", position = " + position + ", duration = " + duration + ", speed = " + speed + ", scale = " + scale + ", live = " + live + ", trysee = " + trysee + ", prepared = " + prepared);
+                LogUtil.log(TAG, "callBuried -> buriedType = " + value + ", position = " + position + ", duration = " + duration + ", speed = " + speed + ", scale = " + scale + ", live = " + live + ", tryseeDuration = " + tryseeDuration + ", prepared = " + prepared);
             }
 
             if (value == PlayerType.BuriedType.UPDATE_SUBTITLE_OFFSET_MS) {
-                playBuried.onCall(value, startArgs, new PlayInfo("", prepared, ((int) objs[0]), trysee, live, position, duration, speed, scale));
+                playBuried.onCall(value, startArgs, new PlayInfo(tryseeDuration, "", prepared, ((int) objs[0]), live, position, duration, speed, scale));
             } else if (value == PlayerType.BuriedType.STOP) {
                 boolean fromInit = ((boolean) objs[0]);
+                if (LogUtil.DEBUG) {
+                    LogUtil.log(TAG, "callBuried -> fromInit = " + fromInit);
+                }
                 String stopReason = fromInit ? "stopFromInit" : "stopFromUser";
-                playBuried.onCall(value, startArgs, new PlayInfo(stopReason, prepared, 0, trysee, live, position, duration, speed, scale));
+                playBuried.onCall(value, startArgs, new PlayInfo(tryseeDuration, stopReason, prepared, 0, live, position, duration, speed, scale));
             } else {
-                playBuried.onCall(value, startArgs, new PlayInfo("", prepared, 0, trysee, live, position, duration, speed, scale));
+                playBuried.onCall(value, startArgs, new PlayInfo(tryseeDuration, "", prepared, 0, live, position, duration, speed, scale));
             }
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
