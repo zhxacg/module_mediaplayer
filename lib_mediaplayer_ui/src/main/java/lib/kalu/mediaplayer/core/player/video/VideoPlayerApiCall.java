@@ -442,8 +442,12 @@ public interface VideoPlayerApiCall extends VideoPlayerApiBase, VideoPlayerApiLi
         callBuried(PlayerType.BuriedType.COMPLETED);
     }
 
-    default void onBuriedStop() {
-        callBuried(PlayerType.BuriedType.STOP);
+    default void onBuriedStop(boolean fromInit) {
+        if (fromInit) {
+            callBuried(PlayerType.BuriedType.STOP_FROM_SWITCH);
+        } else {
+            callBuried(PlayerType.BuriedType.STOP_FROM_BACK);
+        }
     }
 
     default void onBuriedBufferingStart() {

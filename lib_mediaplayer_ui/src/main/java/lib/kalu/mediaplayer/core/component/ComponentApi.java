@@ -546,7 +546,7 @@ public interface ComponentApi {
             PlayerView playerView = getPlayerView();
             if (null == playerView)
                 throw new Exception("playerView error: null");
-            playerView.stop(callEvent);
+            playerView.stop(callEvent, false);
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
                 LogUtil.log("ComponentApi -> toggle -> " + e.getMessage());

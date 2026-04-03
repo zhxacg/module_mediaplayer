@@ -60,7 +60,7 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
             if (initRelease) {
                 release(false, false, false);
             } else {
-                stop(false);
+                stop(false, true);
             }
             // 3
             setScreenKeep(true);
@@ -191,12 +191,12 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
     }
 
     default void stop() {
-        stop(true);
+        stop(true, false);
     }
 
-    default void stop(boolean callEvent) {
+    default void stop(boolean callEvent, boolean fromInit) {
         setScreenKeep(false);
-        stopKernel(callEvent);
+        stopKernel(callEvent, fromInit);
     }
 
     default void release() {
@@ -444,7 +444,7 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
         }
     }
 
-    default void stopKernel(boolean callEvent) {
+    default void stopKernel(boolean callEvent, boolean fromInit) {
         try {
             VideoKernelApi kernel = getVideoKernel();
             if (null == kernel)
@@ -452,7 +452,7 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
             // 埋点
             boolean prepared = isPrepared();
             if (prepared) {
-                onBuriedStop();
+                onBuriedStop(fromInit);
             }
             kernel.stop();
             if (!callEvent)
