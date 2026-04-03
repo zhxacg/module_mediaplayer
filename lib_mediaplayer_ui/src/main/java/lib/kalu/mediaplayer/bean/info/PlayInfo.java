@@ -13,7 +13,10 @@ public class PlayInfo {
     private float speed;
     private @PlayerType.ScaleType int scale;
 
-    public PlayInfo(boolean isPrepare, int subtitleOffsetMs, boolean isTrysee, boolean isLive, long position, long duration, float speed, int scale) {
+    private String stopReason = "";
+
+    public PlayInfo(String stopReason, boolean isPrepare, int subtitleOffsetMs, boolean isTrysee, boolean isLive, long position, long duration, float speed, int scale) {
+        this.stopReason = stopReason;
         this.isPrepare = isPrepare;
         this.subtitleOffsetMs = subtitleOffsetMs;
         this.isTrysee = isTrysee;
@@ -35,7 +38,12 @@ public class PlayInfo {
                 ", duration=" + duration +
                 ", speed=" + speed +
                 ", scale=" + scale +
+                ", stopReason='" + stopReason + '\'' +
                 '}';
+    }
+
+    public String getStopReason() {
+        return stopReason;
     }
 
     public boolean isPrepare() {

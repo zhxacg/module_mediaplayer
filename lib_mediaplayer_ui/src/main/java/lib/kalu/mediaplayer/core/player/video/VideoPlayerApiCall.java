@@ -443,11 +443,7 @@ public interface VideoPlayerApiCall extends VideoPlayerApiBase, VideoPlayerApiLi
     }
 
     default void onBuriedStop(boolean fromInit) {
-        if (fromInit) {
-            callBuried(PlayerType.BuriedType.STOP_FROM_SWITCH);
-        } else {
-            callBuried(PlayerType.BuriedType.STOP_FROM_BACK);
-        }
+        callBuried(PlayerType.BuriedType.STOP, fromInit);
     }
 
     default void onBuriedBufferingStart() {
@@ -513,9 +509,13 @@ public interface VideoPlayerApiCall extends VideoPlayerApiBase, VideoPlayerApiLi
             }
 
             if (value == PlayerType.BuriedType.UPDATE_SUBTITLE_OFFSET_MS) {
-                playBuried.onCall(value, startArgs, new PlayInfo(prepared, ((int) objs[0]), trysee, live, position, duration, speed, scale));
+                playBuried.onCall(value, startArgs, new PlayInfo("", prepared, ((int) objs[0]), trysee, live, position, duration, speed, scale));
+            } else if (value == PlayerType.BuriedType.STOP) {
+                boolean fromInit = ((boolean) objs[0]);
+                String stopReason = fromInit ? "stopFromInit" : "stopFromUser";
+                playBuried.onCall(value, startArgs, new PlayInfo(stopReason, prepared, 0, trysee, live, position, duration, speed, scale));
             } else {
-                playBuried.onCall(value, startArgs, new PlayInfo(prepared, 0, trysee, live, position, duration, speed, scale));
+                playBuried.onCall(value, startArgs, new PlayInfo("", prepared, 0, trysee, live, position, duration, speed, scale));
             }
         } catch (Exception e) {
             if (LogUtil.DEBUG) {

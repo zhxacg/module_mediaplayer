@@ -581,17 +581,16 @@ public @interface PlayerType {
         int ERROR_PLAY = 4; // 播放错误
         int PAUSE = 5;
         int RESUME = 6;
-        int STOP_FROM_BACK = 7;
-        int STOP_FROM_SWITCH = 8;
-        int COMPLETED = 9;
-        int BUFFERING_START = 10;
-        int BUFFERING_STOP = 11;
-        int SEEK_START_FORWARD = 12;
-        int SEEK_START_REWIND = 13;
-        int SEEK_FINISH = 14;
-        int UPDATE_WINDOW = 15;
-        int UPDATE_EVENT = 16;
-        int UPDATE_SUBTITLE_OFFSET_MS = 17;
+        int STOP = 7;
+        int COMPLETED = 8;
+        int BUFFERING_START = 9;
+        int BUFFERING_STOP = 10;
+        int SEEK_START_FORWARD = 11;
+        int SEEK_START_REWIND = 12;
+        int SEEK_FINISH = 13;
+        int UPDATE_WINDOW = 14;
+        int UPDATE_EVENT = 15;
+        int UPDATE_SUBTITLE_OFFSET_MS = 16;
 
         @Documented
         @Retention(CLASS)
@@ -603,8 +602,7 @@ public @interface PlayerType {
                 BuriedType.ERROR_PLAY,
                 BuriedType.PAUSE,
                 BuriedType.RESUME,
-                BuriedType.STOP_FROM_BACK,
-                BuriedType.STOP_FROM_SWITCH,
+                BuriedType.STOP,
                 BuriedType.COMPLETED,
                 BuriedType.BUFFERING_START,
                 BuriedType.BUFFERING_STOP,
