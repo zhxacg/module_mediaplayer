@@ -229,7 +229,15 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
             if (!containsMainUrl)
                 throw new Exception("error: containsMainUrl false");
             callEvent(PlayerType.EventType.RESTART);
-            start(startArgs);
+            long playWhenReadySeekToPosition = startArgs.getPlayWhenReadySeekToPosition();
+            if (playWhenReadySeekToPosition > 0) {
+                StartArgs newArgs = startArgs.newBuilder()
+                        .setPlayWhenReadySeekToPosition(0L)
+                        .build();
+                start(newArgs);
+            } else {
+                start(startArgs);
+            }
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
                 LogUtil.log(TAG, "restart -> " + e.getMessage());
