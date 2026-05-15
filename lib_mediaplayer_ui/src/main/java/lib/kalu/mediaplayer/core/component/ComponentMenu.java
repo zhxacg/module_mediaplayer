@@ -594,7 +594,6 @@ public class ComponentMenu extends RelativeLayout implements ComponentApi {
                         PlayerType.ScaleType._5_4,
                         PlayerType.ScaleType._16_10,
                         PlayerType.ScaleType._16_9,
-                        PlayerType.ScaleType.REAL,
                         PlayerType.ScaleType.FULL,
                         PlayerType.ScaleType.AUTO);
 
@@ -652,9 +651,7 @@ public class ComponentMenu extends RelativeLayout implements ComponentApi {
                         TextView textView = childAt.findViewById(R.id.module_mediaplayer_component_menu_item_content_txt);
                         textView.setTag(new int[]{TYPE_SCALE, value});
                         textView.setSelected(scaleType == value);
-                        if (value == PlayerType.ScaleType.REAL) {
-                            textView.setText("原始");
-                        } else if (value == PlayerType.ScaleType.FULL) {
+                        if (value == PlayerType.ScaleType.FULL) {
                             textView.setText("全屏");
                         } else if (value == PlayerType.ScaleType._1_1) {
                             textView.setText("1:1");
