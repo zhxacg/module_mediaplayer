@@ -147,7 +147,6 @@ public @interface PlayerType {
     @interface ScaleType {
         int AUTO = 4_001;  // 自适应屏幕，可能存在黑边
         int FULL = 4_002;  // 画面拉甚至全屏, 可能变形
-        int REAL = 4_003;  // 视频原始尺寸, 可能存在黑边
         int _16_9 = 4_004;  // 画面拉伸16：9, 可能变形
         int _16_10 = 4_005; // 画面拉伸16：10, 可能变形
         int _5_4 = 4_006;   // 画面拉伸5：4, 可能变形
@@ -160,7 +159,6 @@ public @interface PlayerType {
         @Target({METHOD, PARAMETER, FIELD, LOCAL_VARIABLE, ANNOTATION_TYPE, PACKAGE})
         @IntDef({AUTO,
                 FULL,
-                REAL,
                 _16_9,
                 _16_10,
                 _5_4,

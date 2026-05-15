@@ -183,12 +183,8 @@ public interface VideoRenderApi extends VideoRenderApiBase {
             // 1. 定义目标比例
             float targetRate;
 
-            // 视频原始尺寸, 可能存在黑边
-            if (videoScaleType == PlayerType.ScaleType.REAL) {
-                targetRate = videoWidth * 1f / videoHeight;
-            }
             // 画面拉甚至全屏, 可能变形
-            else if (videoScaleType == PlayerType.ScaleType.FULL) {
+            if (videoScaleType == PlayerType.ScaleType.FULL) {
                 targetRate = screenWidth * 1f / screenHeight;
             }
             // 画面拉伸16：9, 可能变形
@@ -213,7 +209,7 @@ public interface VideoRenderApi extends VideoRenderApiBase {
             }
             // 自动
             else {
-                throw new Exception("warning: videoScaleType == PlayerType.ScaleType.REAL");
+                targetRate = videoWidth * 1f / videoHeight;
             }
 
             // 2. 获取屏幕实际比例
