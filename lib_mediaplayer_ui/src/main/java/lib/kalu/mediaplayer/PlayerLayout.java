@@ -997,6 +997,19 @@ public class PlayerLayout extends RelativeLayout {
         }
     }
 
+    public final void clearAllComponent(){
+        try {
+            PlayerView playerView = getPlayerView();
+            if (null == playerView)
+                throw new Exception("playerView error: null");
+            playerView.clearAllComponent();
+        } catch (Exception e) {
+            if (LogUtil.DEBUG) {
+                LogUtil.log("PlayerLayout -> clearAllComponent -> " + e.getMessage());
+            }
+        }
+    }
+
     public final StartArgs.Builder newBuilderStartArgs() {
         try {
             PlayerView playerView = getPlayerView();
