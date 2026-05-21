@@ -13,6 +13,19 @@ import lib.kalu.mediaplayer.util.LogUtil;
 
 public interface VideoPlayerApiComponent extends VideoPlayerApiBase {
 
+    default Boolean isEmptyComponent() {
+        try {
+            ViewGroup viewGroup = getBaseComponentViewGroup();
+            int childCount = viewGroup.getChildCount();
+            return childCount <= 0;
+        } catch (Exception e) {
+            if (LogUtil.DEBUG) {
+                LogUtil.log("VideoPlayerApiComponent -> isEmptyComponent -> " + e.getMessage());
+            }
+            return false;
+        }
+    }
+
     default void clearAllComponent() {
         try {
             ViewGroup viewGroup = getBaseComponentViewGroup();
