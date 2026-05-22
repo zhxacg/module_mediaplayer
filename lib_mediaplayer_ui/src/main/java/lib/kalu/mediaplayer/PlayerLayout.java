@@ -997,7 +997,21 @@ public class PlayerLayout extends RelativeLayout {
         }
     }
 
-    public final boolean isEmptyComponent(){
+    public final boolean showOnlyComponent(Class<ComponentApi> clazz) {
+        try {
+            PlayerView playerView = getPlayerView();
+            if (null == playerView)
+                throw new Exception("playerView error: null");
+            return playerView.showOnlyComponent(clazz);
+        } catch (Exception e) {
+            if (LogUtil.DEBUG) {
+                LogUtil.log("PlayerLayout -> showOnlyComponent -> " + e.getMessage());
+            }
+            return false;
+        }
+    }
+
+    public final boolean isEmptyComponent() {
         try {
             PlayerView playerView = getPlayerView();
             if (null == playerView)
@@ -1011,7 +1025,7 @@ public class PlayerLayout extends RelativeLayout {
         }
     }
 
-    public final void clearAllComponent(){
+    public final void clearAllComponent() {
         try {
             PlayerView playerView = getPlayerView();
             if (null == playerView)

@@ -13,6 +13,31 @@ import lib.kalu.mediaplayer.util.LogUtil;
 
 public interface VideoPlayerApiComponent extends VideoPlayerApiBase {
 
+    default boolean showOnlyComponent(Class<ComponentApi> cls) {
+        try {
+            ViewGroup viewGroup = getBaseComponentViewGroup();
+            int childCount = viewGroup.getChildCount();
+            if (childCount <= 0)
+                throw new Exception("not find component");
+            for (int i = 0; i < childCount; i++) {
+                View childAt = viewGroup.getChildAt(i);
+                if (null == childAt)
+                    continue;
+                if (!(childAt instanceof ComponentApi))
+                    continue;
+                if (childAt.getClass() != cls) {
+                    ((ComponentApi) childAt).hide();
+                }
+            }
+            return true;
+        } catch (Exception e) {
+            if (LogUtil.DEBUG) {
+                LogUtil.log("PlayerLayout -> showOnlyComponent -> " + e.getMessage());
+            }
+            return false;
+        }
+    }
+
     default Boolean isEmptyComponent() {
         try {
             ViewGroup viewGroup = getBaseComponentViewGroup();
