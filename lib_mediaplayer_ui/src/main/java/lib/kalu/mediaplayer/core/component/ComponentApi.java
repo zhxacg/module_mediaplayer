@@ -975,4 +975,18 @@ public interface ComponentApi {
             return false;
         }
     }
+
+    default boolean isLive() {
+        try {
+            PlayerView playerView = getPlayerView();
+            if (null == playerView)
+                throw new Exception("playerView error: null");
+            return playerView.isLive();
+        } catch (Exception e) {
+            if (LogUtil.DEBUG) {
+                LogUtil.log("ComponentApi -> isLive -> " + e.getMessage());
+            }
+            return false;
+        }
+    }
 }
