@@ -997,6 +997,20 @@ public class PlayerLayout extends RelativeLayout {
         }
     }
 
+    public final int getComponentCount() {
+        try {
+            PlayerView playerView = getPlayerView();
+            if (null == playerView)
+                throw new Exception("playerView error: null");
+            return playerView.getComponentCount();
+        } catch (Exception e) {
+            if (LogUtil.DEBUG) {
+                LogUtil.log("PlayerLayout -> getComponentCount -> " + e.getMessage());
+            }
+            return 0;
+        }
+    }
+
     public final boolean showOnlyComponent(java.lang.Class<?> cls) {
         try {
             PlayerView playerView = getPlayerView();

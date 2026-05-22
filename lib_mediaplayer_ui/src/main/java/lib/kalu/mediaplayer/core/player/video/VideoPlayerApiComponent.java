@@ -38,6 +38,18 @@ public interface VideoPlayerApiComponent extends VideoPlayerApiBase {
         }
     }
 
+    default int getComponentCount() {
+        try {
+            ViewGroup viewGroup = getBaseComponentViewGroup();
+            return viewGroup.getChildCount();
+        } catch (Exception e) {
+            if (LogUtil.DEBUG) {
+                LogUtil.log("VideoPlayerApiComponent -> getComponentCount -> " + e.getMessage());
+            }
+            return 0;
+        }
+    }
+
     default Boolean isEmptyComponent() {
         try {
             ViewGroup viewGroup = getBaseComponentViewGroup();
