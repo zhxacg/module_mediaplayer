@@ -1025,15 +1025,29 @@ public class PlayerLayout extends RelativeLayout {
         }
     }
 
-    public final boolean isEmptyComponent() {
+    public final boolean isComponentEmpty() {
         try {
             PlayerView playerView = getPlayerView();
             if (null == playerView)
                 throw new Exception("playerView error: null");
-            return playerView.isEmptyComponent();
+            return playerView.isComponentEmpty();
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
-                LogUtil.log("PlayerLayout -> isEmptyComponent -> " + e.getMessage());
+                LogUtil.log("PlayerLayout -> isComponentEmpty -> " + e.getMessage());
+            }
+            return false;
+        }
+    }
+
+    public final boolean isComponentNotEmpty() {
+        try {
+            PlayerView playerView = getPlayerView();
+            if (null == playerView)
+                throw new Exception("playerView error: null");
+            return playerView.isComponentNotEmpty();
+        } catch (Exception e) {
+            if (LogUtil.DEBUG) {
+                LogUtil.log("PlayerLayout -> isComponentNotEmpty -> " + e.getMessage());
             }
             return false;
         }

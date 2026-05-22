@@ -50,7 +50,7 @@ public interface VideoPlayerApiComponent extends VideoPlayerApiBase {
         }
     }
 
-    default Boolean isEmptyComponent() {
+    default Boolean isComponentEmpty() {
         try {
             ViewGroup viewGroup = getBaseComponentViewGroup();
             int childCount = viewGroup.getChildCount();
@@ -58,6 +58,19 @@ public interface VideoPlayerApiComponent extends VideoPlayerApiBase {
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
                 LogUtil.log("VideoPlayerApiComponent -> isEmptyComponent -> " + e.getMessage());
+            }
+            return false;
+        }
+    }
+
+    default Boolean isComponentNotEmpty() {
+        try {
+            ViewGroup viewGroup = getBaseComponentViewGroup();
+            int childCount = viewGroup.getChildCount();
+            return childCount > 0;
+        } catch (Exception e) {
+            if (LogUtil.DEBUG) {
+                LogUtil.log("VideoPlayerApiComponent -> isComponentNotEmpty -> " + e.getMessage());
             }
             return false;
         }
