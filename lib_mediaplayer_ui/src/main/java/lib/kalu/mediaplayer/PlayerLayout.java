@@ -997,12 +997,12 @@ public class PlayerLayout extends RelativeLayout {
         }
     }
 
-    public final boolean showOnlyComponent(Class<ComponentApi> clazz) {
+    public final boolean showOnlyComponent(java.lang.Class<?> cls) {
         try {
             PlayerView playerView = getPlayerView();
             if (null == playerView)
                 throw new Exception("playerView error: null");
-            return playerView.showOnlyComponent(clazz);
+            return playerView.showOnlyComponent(cls);
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
                 LogUtil.log("PlayerLayout -> showOnlyComponent -> " + e.getMessage());

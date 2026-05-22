@@ -13,7 +13,7 @@ import lib.kalu.mediaplayer.util.LogUtil;
 
 public interface VideoPlayerApiComponent extends VideoPlayerApiBase {
 
-    default boolean showOnlyComponent(Class<ComponentApi> cls) {
+    default boolean showOnlyComponent(java.lang.Class<?> cls) {
         try {
             ViewGroup viewGroup = getBaseComponentViewGroup();
             int childCount = viewGroup.getChildCount();
