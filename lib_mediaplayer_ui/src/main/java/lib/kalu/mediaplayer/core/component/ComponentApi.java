@@ -961,4 +961,18 @@ public interface ComponentApi {
             }
         }
     }
+
+    default boolean showOnlyComponent(java.lang.Class<?> cls) {
+        try {
+            PlayerView playerView = getPlayerView();
+            if (null == playerView)
+                throw new Exception("playerView error: null");
+            return playerView.showOnlyComponent(cls);
+        } catch (Exception e) {
+            if (LogUtil.DEBUG) {
+                LogUtil.log("ComponentApi -> showOnlyComponent -> " + e.getMessage());
+            }
+            return false;
+        }
+    }
 }
