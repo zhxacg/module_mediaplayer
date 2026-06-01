@@ -123,10 +123,10 @@ public class StartArgs implements Serializable {
     }
 
     // 是否直播源
-    private boolean live;
+    private boolean liveStream;
 
-    public boolean isLive() {
-        return live;
+    public boolean isLiveStream() {
+        return liveStream;
     }
 
     // 循环播放
@@ -274,7 +274,7 @@ public class StartArgs implements Serializable {
 
     @Override
     public String toString() {
-        return "StartArgs{" + "seekType=" + seekType + ", renderType=" + renderType + ", scaleType=" + scaleType + ", decoderType=" + decoderType + ", kernelType=" + kernelType + ", log=" + log + ", initRelease=" + initRelease + ", urlArgs='" + urlArgs + '\'' + ", title='" + title + '\'' + ", trySeeDuration=" + trySeeDuration + ", live=" + live + ", looping=" + looping + ", mute=" + mute + ", playWhenReady=" + playWhenReady + ", playWhenReadyDelayedTime=" + playWhenReadyDelayedTime + ", playWhenReadySeekToPosition=" + playWhenReadySeekToPosition + ", prepareAsync=" + prepareAsync + ", rotation=" + rotation + ", extraData=" + extraData + ", showSpeed=" + showSpeed + ", menu=" + menu + ", noProxy=" + noProxy + ", proxy=" + proxy + ", bufferDurationsMs=" + bufferDurationsMs + ", liveConfiguration=" + liveConfiguration + ", livePlaybackSpeedControl=" + livePlaybackSpeedControl + ", adaptiveTrackSelection=" + adaptiveTrackSelection + ", stuckDetectorMs=" + stuckDetectorMs + ", retryCount=" + retryCount + ", bufferingConfiguration=" + bufferingConfiguration + ", timeoutConfiguration=" + timeoutConfiguration + '}';
+        return "StartArgs{" + "seekType=" + seekType + ", renderType=" + renderType + ", scaleType=" + scaleType + ", decoderType=" + decoderType + ", kernelType=" + kernelType + ", log=" + log + ", initRelease=" + initRelease + ", urlArgs='" + urlArgs + '\'' + ", title='" + title + '\'' + ", trySeeDuration=" + trySeeDuration + ", liveStream=" + liveStream + ", looping=" + looping + ", mute=" + mute + ", playWhenReady=" + playWhenReady + ", playWhenReadyDelayedTime=" + playWhenReadyDelayedTime + ", playWhenReadySeekToPosition=" + playWhenReadySeekToPosition + ", prepareAsync=" + prepareAsync + ", rotation=" + rotation + ", extraData=" + extraData + ", showSpeed=" + showSpeed + ", menu=" + menu + ", noProxy=" + noProxy + ", proxy=" + proxy + ", bufferDurationsMs=" + bufferDurationsMs + ", liveConfiguration=" + liveConfiguration + ", livePlaybackSpeedControl=" + livePlaybackSpeedControl + ", adaptiveTrackSelection=" + adaptiveTrackSelection + ", stuckDetectorMs=" + stuckDetectorMs + ", retryCount=" + retryCount + ", bufferingConfiguration=" + bufferingConfiguration + ", timeoutConfiguration=" + timeoutConfiguration + '}';
     }
 
     public StartArgs(Builder builder) {
@@ -288,7 +288,7 @@ public class StartArgs implements Serializable {
         this.urlArgs = builder.urlArgs;
         this.title = builder.title;
         this.trySeeDuration = builder.trySeeDuration;
-        this.live = builder.live;
+        this.liveStream = builder.liveStream;
         this.looping = builder.looping;
         this.mute = builder.mute;
         this.playWhenReady = builder.playWhenReady;
@@ -323,7 +323,7 @@ public class StartArgs implements Serializable {
         builder.urlArgs = urlArgs;
         builder.title = title;
         builder.trySeeDuration = trySeeDuration;
-        builder.live = live;
+        builder.liveStream = liveStream;
         builder.looping = looping;
         builder.mute = mute;
         builder.playWhenReady = playWhenReady;
@@ -430,10 +430,10 @@ public class StartArgs implements Serializable {
         }
 
         // 是否直播源
-        private boolean live = false;
+        private boolean liveStream = false;
 
-        public Builder setLive(boolean live) {
-            this.live = live;
+        public Builder setLiveStream(boolean liveStream) {
+            this.liveStream = liveStream;
             return this;
         }
 

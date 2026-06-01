@@ -46,7 +46,7 @@ interface VideoKernelApiStartArgs extends VideoKernelApiBase {
             StartArgs args = getStartArgs();
             if (null == args)
                 throw new Exception("error: args null");
-            return args.isLive();
+            return args.isLiveStream();
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
                 LogUtil.log("VideoKernelApiBase -> isLiveStream -> Exception " + e.getMessage());
