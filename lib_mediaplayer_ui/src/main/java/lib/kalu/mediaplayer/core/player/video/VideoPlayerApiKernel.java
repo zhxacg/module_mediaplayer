@@ -300,6 +300,9 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
             VideoKernelApi kernel = getVideoKernel();
             if (null == kernel)
                 throw new Exception("warning: kernel null");
+            boolean prepared = isPrepared();
+            if (!prepared)
+                throw new Exception("warning: prepared false");
             kernel.seekTo(position);
             setScreenKeep(true);
         } catch (Exception e) {
