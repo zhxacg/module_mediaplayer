@@ -661,11 +661,11 @@ public final class VideoExo2Player extends VideoBasePlayer {
 
 
     @Override
-    public boolean isLive() {
+    public boolean isLiveStream() {
         try {
             if (null == mExoPlayer)
                 throw new Exception("mExoPlayer error: null");
-            boolean live = super.isLive();
+            boolean live = super.isLiveStream();
             if (live) {
                 return true;
             } else {
@@ -695,7 +695,7 @@ public final class VideoExo2Player extends VideoBasePlayer {
             if (null == mExoPlayer)
                 throw new Exception("mExoPlayer error: null");
 
-            boolean live = isLive();
+            boolean live = isLiveStream();
             // Media3 中判断是否为直播
             if (live) {
 
@@ -748,7 +748,7 @@ public final class VideoExo2Player extends VideoBasePlayer {
                 throw new Exception("mExoPlayer error: null");
 
             // Media3 中判断是否为直播
-            boolean live = isLive();
+            boolean live = isLiveStream();
             if (live) {
 
                 // Media3 中 Timeline 和 Window 的使用方式

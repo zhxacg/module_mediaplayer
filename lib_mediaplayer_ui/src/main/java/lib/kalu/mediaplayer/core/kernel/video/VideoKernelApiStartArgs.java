@@ -41,7 +41,7 @@ interface VideoKernelApiStartArgs extends VideoKernelApiBase {
         }
     }
 
-    default boolean isLive() {
+    default boolean isLiveStream() {
         try {
             StartArgs args = getStartArgs();
             if (null == args)
@@ -49,7 +49,7 @@ interface VideoKernelApiStartArgs extends VideoKernelApiBase {
             return args.isLive();
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
-                LogUtil.log("VideoKernelApiBase -> isLive -> Exception " + e.getMessage());
+                LogUtil.log("VideoKernelApiBase -> isLiveStream -> Exception " + e.getMessage());
             }
             return false;
         }

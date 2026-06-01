@@ -605,7 +605,7 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
 
             if (null == mExoPlayer) throw new Exception("error: mMediaPlayer null");
 
-            boolean live = isLive();
+            boolean live = isLiveStream();
             if (!live)
                 throw new Exception("warning: live false");
 
@@ -654,10 +654,10 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
     }
 
     @Override
-    public boolean isLive() {
+    public boolean isLiveStream() {
         try {
             if (null == mExoPlayer) throw new Exception("mExoPlayer error: null");
-            boolean live = super.isLive();
+            boolean live = super.isLiveStream();
             if (live) {
                 return true;
             } else {
@@ -684,7 +684,7 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
             if (!isPrepared) throw new Exception("mPrepared warning: false");
             if (null == mExoPlayer) throw new Exception("mExoPlayer error: null");
 
-            boolean live = isLive();
+            boolean live = isLiveStream();
             // Media3 中判断是否为直播
             if (live) {
 
@@ -734,7 +734,7 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
             if (null == mExoPlayer) throw new Exception("mExoPlayer error: null");
 
             // Media3 中判断是否为直播
-            boolean live = isLive();
+            boolean live = isLiveStream();
             if (live) {
 
                 // Media3 中 Timeline 和 Window 的使用方式
@@ -1028,7 +1028,7 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
 
             start();
 
-            boolean live = isLive();
+            boolean live = isLiveStream();
             if (live) {
                 seekToDefaultPosition();
             }
@@ -1275,7 +1275,7 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
 
             // 追播
             try {
-                boolean live = isLive();
+                boolean live = isLiveStream();
                 if (!live)
                     throw new Exception("warning: current not live");
 
@@ -1305,7 +1305,7 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
                 if (null == mSimpleCache)
                     throw new Exception("warning: mSimpleCache null");
 
-                boolean live = isLive();
+                boolean live = isLiveStream();
                 if (live) throw new Exception("warning: current is live");
 
                 Object currentManifest = mExoPlayer.getCurrentManifest();
@@ -1468,7 +1468,7 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
 
 
             try {
-                boolean live = isLive();
+                boolean live = isLiveStream();
                 if (live) throw new Exception("warning: current is live");
                 loadHlsSpanInfo(loadEventInfo, mediaLoadData);
             } catch (Exception e) {

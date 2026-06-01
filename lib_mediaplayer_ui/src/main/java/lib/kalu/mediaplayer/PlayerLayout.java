@@ -712,6 +712,19 @@ public class PlayerLayout extends RelativeLayout {
         }
     }
 
+    public final void isLiveStream() {
+        try {
+            PlayerView playerView = getPlayerView();
+            if (null == playerView)
+                throw new Exception("playerView error: null");
+            playerView.isLiveStream();
+        } catch (Exception e) {
+            if (LogUtil.DEBUG) {
+                LogUtil.log("PlayerLayout -> isLiveStream -> " + e.getMessage());
+            }
+        }
+    }
+
     public final void setPlayerBackgroundColor(@ColorInt int color) {
         try {
             PlayerView playerView = getPlayerView();

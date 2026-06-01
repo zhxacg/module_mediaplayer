@@ -511,7 +511,7 @@ public interface VideoPlayerApiCall extends VideoPlayerApiBase, VideoPlayerApiLi
             long playWhenReadySeekToPosition = startArgs.getPlayWhenReadySeekToPosition();
             long tryseeDuration = startArgs.getTrySeeDuration();
             boolean prepared = ((VideoPlayerApi) this).isPrepared();
-            boolean live = ((VideoPlayerApi) this).isLive();
+            boolean live = ((VideoPlayerApi) this).isLiveStream();
             float speed = ((VideoPlayerApi) this).getSpeed();
             int scale = ((VideoPlayerApi) this).getVideoScale();
             if (LogUtil.DEBUG) {

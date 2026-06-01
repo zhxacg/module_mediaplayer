@@ -256,7 +256,7 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
             callEvent(PlayerType.EventType.RESTART);
 
             long position = 0L;
-            boolean live = isLive();
+            boolean live = isLiveStream();
             if (!live) {
                 position = getPosition();
             }
@@ -372,10 +372,10 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
         }
     }
 
-    default boolean isLive() {
+    default boolean isLiveStream() {
         try {
             VideoKernelApi kernel = getVideoKernel();
-            return kernel.isLive();
+            return kernel.isLiveStream();
         } catch (Exception e) {
             return false;
         }

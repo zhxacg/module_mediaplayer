@@ -446,7 +446,7 @@ public interface VideoKernelApiHandler extends VideoKernelApiBase, VideoKernelAp
                 if (castTimeMs >= maxTimeoutMs) {
 
                     //
-                    boolean live = isLive();
+                    boolean live = isLiveStream();
                     if (LogUtil.DEBUG) {
                         LogUtil.log(TAG, "formatMessage -> WHAT_BufferingTimeout, live = " + live);
                     }

@@ -976,15 +976,15 @@ public interface ComponentApi {
         }
     }
 
-    default boolean isLive() {
+    default boolean isLiveStream() {
         try {
             PlayerView playerView = getPlayerView();
             if (null == playerView)
                 throw new Exception("playerView error: null");
-            return playerView.isLive();
+            return playerView.isLiveStream();
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
-                LogUtil.log("ComponentApi -> isLive -> " + e.getMessage());
+                LogUtil.log("ComponentApi -> isLiveStream -> " + e.getMessage());
             }
             return false;
         }
