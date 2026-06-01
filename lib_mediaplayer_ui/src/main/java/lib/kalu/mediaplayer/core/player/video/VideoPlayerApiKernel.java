@@ -292,19 +292,6 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
         }
     }
 
-    default void seekToDefaultPosition() {
-        try {
-            VideoKernelApi kernel = getVideoKernel();
-            if (null == kernel)
-                throw new Exception("warning: kernel null");
-            kernel.seekToDefaultPosition();
-        } catch (Exception e) {
-            if (LogUtil.DEBUG) {
-                LogUtil.log(TAG, "seekToDefaultPosition -> " + e.getMessage());
-            }
-        }
-    }
-
     default void seekTo(long position) {
         try {
             if (position < 0) {
@@ -318,6 +305,23 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
                 LogUtil.log(TAG, "seekToVideoKernel -> " + e.getMessage());
+            }
+        }
+    }
+
+    default void seekToDefaultPosition() {
+        try {
+            VideoKernelApi kernel = getVideoKernel();
+            if (null == kernel)
+                throw new Exception("warning: kernel null");
+            boolean prepared = isPrepared();
+            if (!prepared)
+                throw new Exception("warning: prepared false");
+            kernel.seekToDefaultPosition();
+            setScreenKeep(true);
+        } catch (Exception e) {
+            if (LogUtil.DEBUG) {
+                LogUtil.log(TAG, "seekToDefaultPosition -> " + e.getMessage());
             }
         }
     }
