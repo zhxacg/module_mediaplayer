@@ -712,16 +712,17 @@ public class PlayerLayout extends RelativeLayout {
         }
     }
 
-    public final void isLiveStream() {
+    public final boolean isLiveStream() {
         try {
             PlayerView playerView = getPlayerView();
             if (null == playerView)
                 throw new Exception("playerView error: null");
-            playerView.isLiveStream();
+            return playerView.isLiveStream();
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
                 LogUtil.log("PlayerLayout -> isLiveStream -> " + e.getMessage());
             }
+            return false;
         }
     }
 
