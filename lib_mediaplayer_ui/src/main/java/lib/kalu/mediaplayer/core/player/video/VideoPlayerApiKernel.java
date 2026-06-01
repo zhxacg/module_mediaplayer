@@ -307,7 +307,7 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
             setScreenKeep(true);
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
-                LogUtil.log(TAG, "seekToVideoKernel -> " + e.getMessage());
+                LogUtil.log(TAG, "seekTo -> " + e.getMessage());
             }
         }
     }

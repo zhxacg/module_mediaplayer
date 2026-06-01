@@ -699,6 +699,19 @@ public class PlayerLayout extends RelativeLayout {
         }
     }
 
+    public final void seekToDefaultPosition() {
+        try {
+            PlayerView playerView = getPlayerView();
+            if (null == playerView)
+                throw new Exception("playerView error: null");
+            playerView.seekToDefaultPosition();
+        } catch (Exception e) {
+            if (LogUtil.DEBUG) {
+                LogUtil.log("PlayerLayout -> seekToDefaultPosition -> " + e.getMessage());
+            }
+        }
+    }
+
     public final void setPlayerBackgroundColor(@ColorInt int color) {
         try {
             PlayerView playerView = getPlayerView();
