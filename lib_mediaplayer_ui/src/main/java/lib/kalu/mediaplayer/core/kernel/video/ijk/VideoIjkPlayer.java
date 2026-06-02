@@ -202,7 +202,7 @@ public final class VideoIjkPlayer extends VideoBasePlayer {
             // 4: bufferingTimeoutRetry
             // 5: kernelAlwaysRelease
             // 6: live
-            boolean isLive = args.isLive();
+            boolean isLive = isLiveStream();
             mIjkPlayer.setOption(player, "infbuf", isLive ? 1 : 0);
             // 预读数据的缓冲区大小 -> [0, 15 * 1024 * 1024]
             mIjkPlayer.setOption(player, "max-buffer-size", 400 * 1024); // 400KB
