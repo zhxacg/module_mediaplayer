@@ -486,7 +486,6 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
                 LogUtil.log(TAG, "startDecoder -> completed");
             }
         } catch (Exception e) {
-            stop();
             onEvent(PlayerType.KernelType.MEDIA_V3, PlayerType.EventType.ERROR_DECODE);
             if (LogUtil.DEBUG) {
                 LogUtil.log(TAG, "startDecoder -> Exception " + e.getMessage());
