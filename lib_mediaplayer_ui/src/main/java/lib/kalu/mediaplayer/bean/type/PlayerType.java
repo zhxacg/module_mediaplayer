@@ -83,8 +83,6 @@ public @interface PlayerType {
         int ERROR_TIMEOUT_BUFFER = 3_306; // 缓冲超时
         int ERROR_INIT = 3_307; // 初始化错误
         int ERROR_DECODE = 3_308; // 解码
-        int ERROR_LOAD = 3_309; // 加载超时
-
 
         int WINDOW_FULL_START = 3_401;
         int WINDOW_FULL_SUCC = 3_402;
@@ -143,7 +141,6 @@ public @interface PlayerType {
                 ERROR_TIMEOUT_BUFFER, // 缓冲超时
                 ERROR_INIT, // 初始化错误
                 ERROR_DECODE, // 解码
-                ERROR_LOAD,
                 RESTART})
         @interface Value {
         }

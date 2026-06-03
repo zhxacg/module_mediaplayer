@@ -1296,9 +1296,9 @@ public final class VideoExo2Player extends VideoBasePlayer {
                 LogUtil.log(TAG, "onLoadError -> loadEventInfo = " + loadEventInfo.dataSpec.uri);
                 LogUtil.log(TAG, "onLoadError -> message = " + e.getMessage());
             }
-            stop();
-            onEvent(PlayerType.KernelType.MEDIA_V3, PlayerType.EventType.STOP);
-            onEvent(PlayerType.KernelType.MEDIA_V3, PlayerType.EventType.ERROR_LOAD);
+//            stop();
+//            onEvent(PlayerType.KernelType.MEDIA_V3, PlayerType.EventType.STOP);
+//            onEvent(PlayerType.KernelType.MEDIA_V3, PlayerType.EventType.ERROR_LOAD);
         }
 
         @Override

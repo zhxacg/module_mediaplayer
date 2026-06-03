@@ -34,8 +34,6 @@ public class PlayStateUtil {
             return true;
         } else if (playState == PlayerType.EventType.ERROR_DECODE) {
             return true;
-        } else if (playState == PlayerType.EventType.ERROR_LOAD) {
-            return true;
         } else {
             return false;
         }
