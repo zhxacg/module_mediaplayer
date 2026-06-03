@@ -26,6 +26,7 @@ import lib.kalu.mediaplayer.bean.args.StartArgs;
 import lib.kalu.mediaplayer.bean.menu.Menu;
 import lib.kalu.mediaplayer.bean.type.PlayerType;
 import lib.kalu.mediaplayer.util.LogUtil;
+import lib.kalu.mediaplayer.util.PlayStateUtil;
 
 public interface ComponentApi {
 
@@ -988,5 +989,9 @@ public interface ComponentApi {
             }
             return false;
         }
+    }
+
+    default boolean isStateError(int playState) {
+        return PlayStateUtil.isError(playState);
     }
 }
