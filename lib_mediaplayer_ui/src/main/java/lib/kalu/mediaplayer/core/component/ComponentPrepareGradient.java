@@ -7,6 +7,7 @@ import android.widget.TextView;
 import lib.kalu.mediaplayer.R;
 import lib.kalu.mediaplayer.bean.type.PlayerType;
 import lib.kalu.mediaplayer.util.LogUtil;
+import lib.kalu.mediaplayer.util.PlayStateUtil;
 
 public class ComponentPrepareGradient extends RelativeLayout implements ComponentApi {
 
@@ -22,6 +23,17 @@ public class ComponentPrepareGradient extends RelativeLayout implements Componen
 
     @Override
     public void onUpdateEvent(int playState) {
+
+        boolean error = PlayStateUtil.isError(playState);
+        if (error) {
+            if (LogUtil.DEBUG) {
+                LogUtil.log("ComponentBuffering -> callEvent -> show -> ERROR");
+            }
+            hide();
+            return;
+        }
+
+
         switch (playState) {
             case PlayerType.EventType.INIT:
                 if (LogUtil.DEBUG) {
@@ -32,15 +44,6 @@ public class ComponentPrepareGradient extends RelativeLayout implements Componen
             case PlayerType.EventType.VIDEO_RENDERING_START:
                 if (LogUtil.DEBUG) {
                     LogUtil.log("ComponentLoadingGradient -> callEvent -> VIDEO_RENDERING_START");
-                }
-                hide();
-                break;
-            case PlayerType.EventType.ERROR_URL:
-            case PlayerType.EventType.ERROR_PREPARE:
-            case PlayerType.EventType.ERROR_PLAY:
-            case PlayerType.EventType.ERROR_TIMEOUT_BUFFERING:
-                if (LogUtil.DEBUG) {
-                    LogUtil.log("ComponentLoadingGradient -> callEvent -> ERROR");
                 }
                 hide();
                 break;

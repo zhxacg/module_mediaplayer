@@ -367,7 +367,7 @@ public interface VideoKernelApiHandler extends VideoKernelApiBase, VideoKernelAp
                 long start = ((long[]) msg.obj)[0];
                 long cast = System.currentTimeMillis() - start;
                 if (cast >= timeout) {
-                    onEvent(msg.arg1, PlayerType.EventType.ERROR_PLAY);
+                    onEvent(msg.arg1, PlayerType.EventType.ERROR_TIMEOUT_LOAD);
                     getPlayerApi().stop(true, false);
                     throw new Exception("warning: connect timeout");
                 } else {
@@ -456,7 +456,7 @@ public interface VideoKernelApiHandler extends VideoKernelApiBase, VideoKernelAp
                     }
 
                     removeAllMessages();
-                    onEvent(msg.arg1, PlayerType.EventType.RETRY_BUFFERING_TIMEOUT);
+                    onEvent(msg.arg1, PlayerType.EventType.ERROR_TIMEOUT_BUFFER);
 
                     if (LogUtil.DEBUG) {
                         LogUtil.log(TAG, "formatMessage -> WHAT_BufferingTimeout, retry stop");

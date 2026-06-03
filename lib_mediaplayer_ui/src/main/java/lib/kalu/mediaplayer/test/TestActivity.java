@@ -222,8 +222,7 @@ public final class TestActivity extends Activity {
             }
 
             @Override
-            public void onError(String info) {
-
+            public void onError(int errCode) {
             }
         });
     }
@@ -246,8 +245,7 @@ public final class TestActivity extends Activity {
                 }
 
                 @Override
-                public void onError(String info) {
-
+                public void onError(int errCode) {
                 }
             });
             playerLayout.setOnPlayerEpisodeListener(new OnPlayerEpisodeListener() {

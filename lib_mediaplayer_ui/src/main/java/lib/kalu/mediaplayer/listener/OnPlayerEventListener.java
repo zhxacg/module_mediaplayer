@@ -9,7 +9,7 @@ public interface OnPlayerEventListener {
 
     void onStart();
 
-    void onError(String info);
+    void onError(@PlayerType.EventType.Value int errCode);
 
     default void onPause() {
     }

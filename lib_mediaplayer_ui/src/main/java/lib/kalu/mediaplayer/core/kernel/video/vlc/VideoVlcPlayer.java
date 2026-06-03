@@ -67,7 +67,7 @@ public final class VideoVlcPlayer extends VideoBasePlayer {
         } catch (Exception e) {
             stop();
             onEvent(PlayerType.KernelType.VLC, PlayerType.EventType.STOP);
-            onEvent(PlayerType.KernelType.VLC, PlayerType.EventType.ERROR_PREPARE);
+            onEvent(PlayerType.KernelType.VLC, PlayerType.EventType.ERROR_DECODE);
         }
     }
 

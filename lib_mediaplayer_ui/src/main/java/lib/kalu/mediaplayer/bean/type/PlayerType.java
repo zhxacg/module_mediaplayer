@@ -60,37 +60,44 @@ public @interface PlayerType {
         int START = 3_006;          // 播放开始
         int START_PLAY_WHEN_READY_TRUE = 3_007; // 立即播放
         int START_PLAY_WHEN_READY_FALSE = 3_008;  // 不立即播放
-        int PAUSE = 3_009; // 播放暂停
-        int PAUSE_PlAY_WHEN_READY = 3_010; // 播放暂停
-        int RESUME = 3_011; // 播放恢复
-        int END = 3_0012; // 播放完成
-        int STOP = 3_013; // 播放停止
-        int RELEASE = 3_014; // 播放销毁
-        int SEEK_START_FORWARD = 3_015; // 快进
-        int SEEK_START_REWIND = 3_016; // 快退
-        int SEEK_FINISH = 3_017; // 快退
-        int BUFFERING_START = 3_018; // 缓冲
-        int BUFFERING_STOP = 3_019; // 缓冲
-        int WINDOW_FULL_START = 3_020;
-        int WINDOW_FULL_SUCC = 3_021;
-        int WINDOW_FULL_FAIL = 3_022;
-        int WINDOW_FLOAT_START = 3_023;
-        int WINDOW_FLOAT_SUCC = 3_024;
-        int WINDOW_FLOAT_FAIL = 3_025;
+        int RESTART = 3_009;
+        int PAUSE = 3_010; // 播放暂停
+        int PAUSE_PlAY_WHEN_READY = 3_011; // 播放暂停
+        int RESUME = 3_012; // 播放恢复
+        int END = 3_0013; // 播放完成
+        int STOP = 3_014; // 播放停止
+        int RELEASE = 3_015; // 播放销毁
+        int SEEK_START_FORWARD = 3_016; // 快进
+        int SEEK_START_REWIND = 3_017; // 快退
+        int SEEK_FINISH = 3_018; // 快退
+        int BUFFERING_START = 3_019; // 缓冲
+        int BUFFERING_STOP = 3_020; // 缓冲
         int TRY_SEE_START = 3_026;
         int TRY_SEE_END = 3_027;
 
-        int ERROR_URL = 3_028; // 播放错误
-        int ERROR_PREPARE = 3_029; // 启播错误
-        int ERROR_PLAY = 3_030; // 播放错误
-        int ERROR_TIMEOUT_BUFFERING = 3_031; // 缓冲超时
+        int ERROR_NETWORK = 3_301; // 网络未连接
+        int ERROR_URL_EMPTY = 3_302; // 缓冲超时
+        int ERROR_STREAM_SOURCE = 3_303; // 资源错误
+        int ERROR_PLAY = 3_304; // 播放错误
+        int ERROR_TIMEOUT_LOAD = 3_305; // 加载超时
+        int ERROR_TIMEOUT_BUFFER = 3_306; // 缓冲超时
+        int ERROR_INIT = 3_307; // 初始化错误
+        int ERROR_DECODE = 3_308; // 解码
+        int ERROR_LOAD = 3_309; // 加载超时
 
-        int COMPONENT_MENU_SHOW = 3_032;
-        int COMPONENT_MENU_HIDE = 3_033;
-        int COMPONENT_SEEK_SHOW = 3_034;
-        int COMPONENT_SEEK_HIDE = 3_035;
-        int RETRY_BUFFERING_TIMEOUT = 3_036;
-        int RESTART = 3_037;
+
+        int WINDOW_FULL_START = 3_401;
+        int WINDOW_FULL_SUCC = 3_402;
+        int WINDOW_FULL_FAIL = 3_403;
+        int WINDOW_FLOAT_START = 3_404;
+        int WINDOW_FLOAT_SUCC = 3_405;
+        int WINDOW_FLOAT_FAIL = 3_406;
+
+
+        int COMPONENT_MENU_SHOW = 3_501;
+        int COMPONENT_MENU_HIDE = 3_502;
+        int COMPONENT_SEEK_SHOW = 3_503;
+        int COMPONENT_SEEK_HIDE = 3_504;
 
         @Documented
         @Retention(CLASS)
@@ -128,11 +135,15 @@ public @interface PlayerType {
                 COMPONENT_MENU_HIDE,
                 COMPONENT_SEEK_SHOW,
                 COMPONENT_SEEK_HIDE,
-                ERROR_URL,
-                ERROR_PREPARE,
-                ERROR_PLAY,
-                ERROR_TIMEOUT_BUFFERING,
-                RETRY_BUFFERING_TIMEOUT,
+                ERROR_NETWORK, // 网络未连接
+                ERROR_URL_EMPTY, // URL错误
+                ERROR_STREAM_SOURCE, // 资源错误
+                ERROR_PLAY, // 播放错误
+                ERROR_TIMEOUT_LOAD, // 启播超时
+                ERROR_TIMEOUT_BUFFER, // 缓冲超时
+                ERROR_INIT, // 初始化错误
+                ERROR_DECODE, // 解码
+                ERROR_LOAD,
                 RESTART})
         @interface Value {
         }

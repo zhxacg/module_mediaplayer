@@ -39,8 +39,6 @@ public interface VideoKernelApi extends VideoKernelApiHandler,
 
         try {
             int kernelType = startArgs.getKernelType();
-            onEvent(kernelType, PlayerType.EventType.INIT);
-
             long trySeeDuration = startArgs.getTrySeeDuration();
             if (trySeeDuration > 0L) {
                 onEvent(kernelType, PlayerType.EventType.TRY_SEE_START);

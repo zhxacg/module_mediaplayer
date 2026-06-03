@@ -94,7 +94,6 @@ import lib.kalu.mediaplayer.core.kernel.video.mediax.hls.CustomDefaultHlsExtract
 import lib.kalu.mediaplayer.core.kernel.video.mediax.hls.CustomDefaultHttpDataSource;
 import lib.kalu.mediaplayer.core.kernel.video.mediax.hls.CustomHlsLoadErrorHandlingPolicy;
 import lib.kalu.mediaplayer.core.kernel.video.mediax.hls.CustomHlsPlaylistParserFactory;
-import lib.kalu.mediaplayer.error.UrlError;
 import lib.kalu.mediaplayer.proxy.ProxyUrl;
 import lib.kalu.mediaplayer.util.DisplayRefreshRateUtils;
 import lib.kalu.mediaplayer.util.LogUtil;
@@ -383,12 +382,7 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
         try {
             if (null == mExoPlayer)
                 throw new Exception("mExoPlayer error: null");
-            if (null == startArgs)
-                throw new Exception("error: startArgs null");
             onEvent(PlayerType.KernelType.MEDIA_V3, PlayerType.EventType.INIT_READY);
-            boolean containsMainUrl = startArgs.containsMainUrl();
-            if (!containsMainUrl)
-                throw new UrlError("error: containsMainUrl false");
             // 缓存
             boolean initSimpleCache = initSimpleCache(context, startArgs);
             if (LogUtil.DEBUG) {
@@ -493,11 +487,7 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
             }
         } catch (Exception e) {
             stop();
-            if (e instanceof UrlError) {
-                onEvent(PlayerType.KernelType.MEDIA_V3, PlayerType.EventType.ERROR_URL);
-            } else {
-                onEvent(PlayerType.KernelType.MEDIA_V3, PlayerType.EventType.ERROR_PREPARE);
-            }
+            onEvent(PlayerType.KernelType.MEDIA_V3, PlayerType.EventType.ERROR_DECODE);
             if (LogUtil.DEBUG) {
                 LogUtil.log(TAG, "startDecoder -> Exception " + e.getMessage());
             }
@@ -1291,7 +1281,7 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
                     if (LogUtil.DEBUG) {
                         LogUtil.log(TAG, "onTimelineChanged1 -> seekToDefaultPosition");
                     }
-                    onEvent(PlayerType.KernelType.MEDIA_V3, PlayerType.EventType.RETRY_BUFFERING_TIMEOUT);
+//                    onEvent(PlayerType.KernelType.MEDIA_V3, PlayerType.EventType.RETRY_BUFFERING_TIMEOUT);
                 }
 
             } catch (Exception e) {

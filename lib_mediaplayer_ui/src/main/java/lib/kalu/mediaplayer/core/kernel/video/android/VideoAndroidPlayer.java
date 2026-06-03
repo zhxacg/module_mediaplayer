@@ -96,7 +96,7 @@ public final class VideoAndroidPlayer extends VideoBasePlayer {
             }
             stop();
             onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.STOP);
-            onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.ERROR_PREPARE);
+            onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.ERROR_DECODE);
         }
     }
 

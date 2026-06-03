@@ -55,7 +55,7 @@ public class MainActivity extends Activity {
         StartArgs args = new StartArgs.Builder()
                 .setUrl(getUrl())
                 .setTitle("测试视频")
-                .setLive(isLive())
+                .setLiveStream(isLive())
                 .setLooping(isLooping())
                 .setPlayWhenReadySeekToPosition(getSeek())
                 .setPlayWhenReadyDelayedTime(getPlayWhenReadyDelayedTime())
@@ -195,7 +195,6 @@ public class MainActivity extends Activity {
                 item.setData(new int[]{
                         PlayerType.ScaleType.AUTO,
                         PlayerType.ScaleType.FULL,
-                        PlayerType.ScaleType.REAL,
                         PlayerType.ScaleType._16_9,
                         PlayerType.ScaleType._16_10,
                         PlayerType.ScaleType._5_4,
@@ -613,9 +612,6 @@ public class MainActivity extends Activity {
         int scaleType;
         int scaleTypeId = ((RadioGroup) findViewById(R.id.main_scale)).getCheckedRadioButtonId();
         switch (scaleTypeId) {
-            case R.id.main_scale2:
-                scaleType = PlayerType.ScaleType.REAL;
-                break;
             case R.id.main_scale3:
                 scaleType = PlayerType.ScaleType.FULL;
                 break;
@@ -639,7 +635,7 @@ public class MainActivity extends Activity {
                 break;
         }
 
-        PlayerSDK.init()
+        PlayerSDK.getInstance()
                 // 日志开关
                 .setLog(isLogEnable())
                 // 播放器类型（MediaPlayer Media3Player ExoPlayer IjkPLayer）
@@ -666,6 +662,6 @@ public class MainActivity extends Activity {
                         .setExternal(false)
                         .setSizeMB(1000)
                         .build())
-                .build();
+                .init();
     }
 }

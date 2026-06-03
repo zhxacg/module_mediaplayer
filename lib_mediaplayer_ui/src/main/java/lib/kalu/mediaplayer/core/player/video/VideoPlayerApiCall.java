@@ -21,6 +21,7 @@ import lib.kalu.mediaplayer.listener.OnPlayerWindowAttachChangedListener;
 import lib.kalu.mediaplayer.listener.OnPlayerWindowStateChangeListener;
 import lib.kalu.mediaplayer.listener.OnPlayerWindowVisibilityChangedListener;
 import lib.kalu.mediaplayer.util.LogUtil;
+import lib.kalu.mediaplayer.util.PlayStateUtil;
 
 public interface VideoPlayerApiCall extends VideoPlayerApiBase, VideoPlayerApiListener {
 
@@ -277,33 +278,29 @@ public interface VideoPlayerApiCall extends VideoPlayerApiBase, VideoPlayerApiLi
         }
     }
 
-    default void callPlayerEvent(@PlayerType.EventType.Value int state) {
+    default void callPlayerEvent(@PlayerType.EventType.Value int playState) {
         try {
             OnPlayerEventListener onPlayerEventListener = getPlayerEventListener();
             if (null == onPlayerEventListener)
                 throw new Exception("warning: eventListener null");
-            onPlayerEventListener.onEvent(state);
-            if (state == PlayerType.EventType.START) {
+            onPlayerEventListener.onEvent(playState);
+
+            boolean error = PlayStateUtil.isError(playState);
+            if (error) {
+                onPlayerEventListener.onError(playState);
+            } else if (playState == PlayerType.EventType.START) {
                 onPlayerEventListener.onStart();
-            } else if (state == PlayerType.EventType.END) {
+            } else if (playState == PlayerType.EventType.END) {
                 onPlayerEventListener.onComplete();
-            } else if (state == PlayerType.EventType.PAUSE) {
+            } else if (playState == PlayerType.EventType.PAUSE) {
                 onPlayerEventListener.onPause();
-            } else if (state == PlayerType.EventType.RESUME) {
+            } else if (playState == PlayerType.EventType.RESUME) {
                 onPlayerEventListener.onResume();
-            } else if (state == PlayerType.EventType.ERROR_URL) {
-                onPlayerEventListener.onError(null);
-            } else if (state == PlayerType.EventType.ERROR_PREPARE) {
-                onPlayerEventListener.onError(null);
-            } else if (state == PlayerType.EventType.ERROR_PLAY) {
-                onPlayerEventListener.onError(null);
-            } else if (state == PlayerType.EventType.ERROR_TIMEOUT_BUFFERING) {
-                onPlayerEventListener.onError(null);
-            } else if (state == PlayerType.EventType.BUFFERING_START) {
+            } else if (playState == PlayerType.EventType.BUFFERING_START) {
                 onPlayerEventListener.onBufferingStart();
-            } else if (state == PlayerType.EventType.BUFFERING_STOP) {
+            } else if (playState == PlayerType.EventType.BUFFERING_STOP) {
                 onPlayerEventListener.onBufferingStop();
-            } else if (state == PlayerType.EventType.PREPARE) {
+            } else if (playState == PlayerType.EventType.PREPARE) {
                 onPlayerEventListener.onPrepare();
             }
         } catch (Exception e) {
@@ -515,7 +512,7 @@ public interface VideoPlayerApiCall extends VideoPlayerApiBase, VideoPlayerApiLi
             float speed = ((VideoPlayerApi) this).getSpeed();
             int scale = ((VideoPlayerApi) this).getVideoScale();
             if (LogUtil.DEBUG) {
-                LogUtil.log(TAG, "callBuried -> buriedType = " + value + ", position = " + position + ", duration = " + duration + ", speed = " + speed + ", scale = " + scale + ", live = " + live + ", tryseeDuration = " + tryseeDuration + ", prepared = " + prepared+", playWhenReadySeekToPosition = "+playWhenReadySeekToPosition);
+                LogUtil.log(TAG, "callBuried -> buriedType = " + value + ", position = " + position + ", duration = " + duration + ", speed = " + speed + ", scale = " + scale + ", live = " + live + ", tryseeDuration = " + tryseeDuration + ", prepared = " + prepared + ", playWhenReadySeekToPosition = " + playWhenReadySeekToPosition);
             }
 
             if (value == PlayerType.BuriedType.UPDATE_SUBTITLE_OFFSET_MS) {

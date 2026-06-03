@@ -13,9 +13,13 @@ import lib.kalu.mediaplayer.collect.HlsSpanList;
 import lib.kalu.mediaplayer.core.kernel.video.VideoKernelApi;
 import lib.kalu.mediaplayer.core.kernel.video.VideoKernelApiEvent;
 import lib.kalu.mediaplayer.core.kernel.video.VideoKernelFactoryManager;
+import lib.kalu.mediaplayer.error.NetworkError;
+import lib.kalu.mediaplayer.error.UrlEmptyError;
 import lib.kalu.mediaplayer.proxy.Proxy;
 import lib.kalu.mediaplayer.proxy.ProxyTrack;
 import lib.kalu.mediaplayer.util.LogUtil;
+import lib.kalu.mediaplayer.util.NetworkUtil;
+import lib.kalu.mediaplayer.util.PlayStateUtil;
 import lib.kalu.mediaplayer.util.SpeedUtil;
 
 public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
@@ -48,15 +52,21 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
     }
 
     @Override
-    default void start(StartArgs args) {
+    default void start(StartArgs startArgs) {
         try {
-            if (null == args)
-                throw new Exception("error: args null");
+            callEvent(PlayerType.EventType.INIT);
+            Context context = getBaseContext();
+            boolean connected = NetworkUtil.isConnected(context);
+            if (connected)
+                throw new NetworkError();
+            boolean containsMainUrl = startArgs.containsMainUrl();
+            if (!containsMainUrl)
+                throw new UrlEmptyError("error: containsMainUrl false");
             // 1
-            boolean log = args.isLog();
+            boolean log = startArgs.isLog();
             LogUtil.setLogger(log);
             // 2
-            boolean initRelease = args.isInitRelease();
+            boolean initRelease = startArgs.isInitRelease();
             if (initRelease) {
                 release(false, false, false);
             } else {
@@ -65,17 +75,27 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
             // 3
             setScreenKeep(true);
             // 4
-            checkKernelNull(args, false);
+            checkKernelNull(startArgs, false);
             // 5
-            checkRenderNull(args, false);
+            checkRenderNull(startArgs, false);
             // 6
             attachRenderKernel();
             // 7
-            initStartArgs(args);
+            initStartArgs(startArgs);
             // 8
             initDecoder();
+        } catch (NetworkError e) {
+            callEvent(PlayerType.EventType.ERROR_NETWORK);
+            if (LogUtil.DEBUG) {
+                LogUtil.log(TAG, "start -> " + e.getMessage());
+            }
+        } catch (UrlEmptyError e) {
+            callEvent(PlayerType.EventType.ERROR_URL_EMPTY);
+            if (LogUtil.DEBUG) {
+                LogUtil.log(TAG, "start -> " + e.getMessage());
+            }
         } catch (Exception e) {
-            callEvent(PlayerType.EventType.ERROR_PLAY);
+            callEvent(PlayerType.EventType.ERROR_INIT);
             if (LogUtil.DEBUG) {
                 LogUtil.log(TAG, "start -> " + e.getMessage());
             }
@@ -559,7 +579,6 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
             if (null != getVideoKernel())
                 throw new Exception("warning: getVideoKernel not null");
             //
-            Context context = getBaseContext();
             int kernelType = args.getKernelType();
             //
             VideoKernelApi kernelApi = VideoKernelFactoryManager.getKernel(kernelType);
@@ -610,16 +629,26 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
                 }
 
                 @Override
-                public void onEvent(@PlayerType.KernelType.Value int kernel, @PlayerType.EventType.Value int event) {
+                public void onEvent(@PlayerType.KernelType.Value int kernel, @PlayerType.EventType.Value int playState) {
 
                     if (LogUtil.DEBUG) {
-                        LogUtil.log(TAG, "onEvent = " + kernel + ", event = " + event);
+                        LogUtil.log(TAG, "onEvent = " + kernel + ", playState = " + playState);
                     }
 
                     // 透传
-                    callEvent(event);
+                    callEvent(playState);
 
-                    switch (event) {
+                    // 播放错误
+                    boolean error = PlayStateUtil.isError(playState);
+                    if (error) {
+                        // 埋点
+                        onBuriedError(playState);
+                        // 执行
+                        setScreenKeep(false);
+                        return;
+                    }
+
+                    switch (playState) {
                         //
                         case PlayerType.EventType.INIT:
                             //
@@ -690,16 +719,6 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
                             // 埋点
                             onBuriedSeekFinish();
                             break;
-                        // 播放错误
-                        case PlayerType.EventType.ERROR_PLAY:
-                        case PlayerType.EventType.ERROR_PREPARE:
-                        case PlayerType.EventType.ERROR_URL:
-                        case PlayerType.EventType.ERROR_TIMEOUT_BUFFERING:
-                            // 埋点
-                            onBuriedError(event);
-                            // 执行
-                            setScreenKeep(false);
-                            break;
                         //
                         case PlayerType.EventType.PAUSE:
                             // 停止轮训
@@ -709,14 +728,6 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
                         case PlayerType.EventType.RESUME:
                             // 停止轮训
                             kernelApi.sendMessageProgressUpdate(kernel, false);
-                            break;
-                        // 播放结束
-                        case PlayerType.EventType.RETRY_BUFFERING_TIMEOUT:
-                            // 停止轮训
-                            kernelApi.removeAllMessages();
-                            stop();
-                            callEvent(PlayerType.EventType.STOP);
-                            restartSeekToPosition();
                             break;
                         // 播放结束
                         case PlayerType.EventType.END:

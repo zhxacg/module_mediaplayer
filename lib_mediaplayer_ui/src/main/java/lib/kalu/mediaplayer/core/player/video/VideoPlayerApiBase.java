@@ -5,11 +5,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewParent;
 
+import lib.kalu.mediaplayer.PlayerLayout;
 import lib.kalu.mediaplayer.R;
 import lib.kalu.mediaplayer.bean.args.StartArgs;
 import lib.kalu.mediaplayer.core.kernel.video.VideoKernelApi;
 import lib.kalu.mediaplayer.util.LogUtil;
-import lib.kalu.mediaplayer.PlayerLayout;
 
 public interface VideoPlayerApiBase {
 

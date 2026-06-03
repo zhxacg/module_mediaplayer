@@ -96,7 +96,6 @@ import lib.kalu.mediaplayer.core.kernel.video.VideoBasePlayer;
 import lib.kalu.mediaplayer.core.kernel.video.exo2.proxy.CustomDefaultHlsExtractorFactory;
 import lib.kalu.mediaplayer.core.kernel.video.exo2.proxy.CustomDefaultHttpDataSource;
 import lib.kalu.mediaplayer.core.kernel.video.exo2.proxy.CustomHlsPlaylistParserFactory;
-import lib.kalu.mediaplayer.error.UrlError;
 import lib.kalu.mediaplayer.proxy.ProxyUrl;
 import lib.kalu.mediaplayer.util.LogUtil;
 
@@ -382,11 +381,6 @@ public final class VideoExo2Player extends VideoBasePlayer {
         try {
             if (null == mExoPlayer)
                 throw new Exception("mExoPlayer error: null");
-            if (null == startArgs)
-                throw new Exception("error: startArgs null");
-            boolean containsMainUrl = startArgs.containsMainUrl();
-            if (!containsMainUrl)
-                throw new UrlError("error: containsMainUrl false");
             onEvent(PlayerType.KernelType.MEDIA_V3, PlayerType.EventType.INIT_READY);
             // 缓存
             boolean initSimpleCache = initSimpleCache(context, startArgs);
@@ -500,11 +494,7 @@ public final class VideoExo2Player extends VideoBasePlayer {
             }
         } catch (Exception e) {
             stop();
-            if (e instanceof UrlError) {
-                onEvent(PlayerType.KernelType.MEDIA_V3, PlayerType.EventType.ERROR_URL);
-            } else {
-                onEvent(PlayerType.KernelType.MEDIA_V3, PlayerType.EventType.ERROR_PREPARE);
-            }
+            onEvent(PlayerType.KernelType.MEDIA_V3, PlayerType.EventType.ERROR_DECODE);
             if (LogUtil.DEBUG) {
                 LogUtil.log(TAG, "startDecoder -> Exception " + e.getMessage());
             }
@@ -1308,7 +1298,7 @@ public final class VideoExo2Player extends VideoBasePlayer {
             }
             stop();
             onEvent(PlayerType.KernelType.MEDIA_V3, PlayerType.EventType.STOP);
-            onEvent(PlayerType.KernelType.MEDIA_V3, PlayerType.EventType.ERROR_PREPARE);
+            onEvent(PlayerType.KernelType.MEDIA_V3, PlayerType.EventType.ERROR_LOAD);
         }
 
         @Override

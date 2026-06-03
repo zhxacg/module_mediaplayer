@@ -84,7 +84,7 @@ public final class VideoFFmpegPlayer extends VideoBasePlayer {
             }
             stop();
             onEvent(PlayerType.KernelType.FFPLAYER, PlayerType.EventType.STOP);
-            onEvent(PlayerType.KernelType.FFPLAYER, PlayerType.EventType.ERROR_PREPARE);
+            onEvent(PlayerType.KernelType.FFPLAYER, PlayerType.EventType.ERROR_DECODE);
         }
     }
 
