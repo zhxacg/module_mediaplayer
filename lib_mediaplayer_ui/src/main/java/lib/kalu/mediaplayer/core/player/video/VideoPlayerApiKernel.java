@@ -57,7 +57,7 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
             callEvent(PlayerType.EventType.INIT);
             Context context = getBaseContext();
             boolean connected = NetworkUtil.isConnected(context);
-            if (connected)
+            if (!connected)
                 throw new NetworkError();
             boolean containsMainUrl = startArgs.containsMainUrl();
             if (!containsMainUrl)
