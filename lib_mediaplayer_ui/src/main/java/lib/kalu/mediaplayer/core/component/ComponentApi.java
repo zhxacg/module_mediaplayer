@@ -524,19 +524,6 @@ public interface ComponentApi {
     default void click() {
     }
 
-    default void clickAllComponentCount() {
-        try {
-            PlayerView playerView = getPlayerView();
-            if (null == playerView)
-                throw new Exception("playerView error: null");
-            playerView.clickAllComponentCount();
-        } catch (Exception e) {
-            if (LogUtil.DEBUG) {
-                LogUtil.log("ComponentApi -> clickAllComponentCount -> " + e.getMessage());
-            }
-        }
-    }
-
     default void toggle() {
         toggle(true);
     }
@@ -1020,6 +1007,19 @@ public interface ComponentApi {
                 LogUtil.log("ComponentApi -> showOnlyComponent -> " + e.getMessage());
             }
             return false;
+        }
+    }
+
+    default void clickAllComponentCount() {
+        try {
+            PlayerView playerView = getPlayerView();
+            if (null == playerView)
+                throw new Exception("playerView error: null");
+            playerView.clickAllComponentCount();
+        } catch (Exception e) {
+            if (LogUtil.DEBUG) {
+                LogUtil.log("ComponentApi -> clickAllComponentCount -> " + e.getMessage());
+            }
         }
     }
 
