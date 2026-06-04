@@ -66,7 +66,7 @@ public @interface PlayerType {
         int PAUSE = 3_012; // 播放暂停
         int PAUSE_PlAY_WHEN_READY = 3_013; // 播放暂停
         int RESUME = 3_014; // 播放恢复
-        int END = 3_0015; // 播放完成
+        int END = 3_015; // 播放完成
         int STOP = 3_016; // 播放停止
         int RELEASE = 3_017; // 播放销毁
         int SEEK_START_FORWARD = 3_018; // 快进
