@@ -337,7 +337,11 @@ public final class VideoAndroidPlayer extends VideoBasePlayer {
             }
 
             long position = getPosition();
-            onEvent(PlayerType.KernelType.ANDROID, seek < position ? PlayerType.EventType.SEEK_START_REWIND : PlayerType.EventType.SEEK_START_FORWARD);
+            if (seek < position) {
+                onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.MEDIA_INFO_UPDATE_SEEK_START_REWIND);
+            } else {
+                onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.MEDIA_INFO_UPDATE_SEEK_START_FORWARD);
+            }
 
             if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
                 mAndroidPlayer.seekTo((int) seek);
@@ -451,6 +455,7 @@ public final class VideoAndroidPlayer extends VideoBasePlayer {
             if (null != playbackParams) {
                 playbackParams = new PlaybackParams();
             }
+            onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.MEDIA_INFO_UPDATE_PLAYBACLK_SPEED);
             playbackParams.setSpeed(speed);
             mAndroidPlayer.setPlaybackParams(playbackParams);
         } catch (Exception e) {
@@ -518,21 +523,21 @@ public final class VideoAndroidPlayer extends VideoBasePlayer {
                     if (!isPrepared)
                         throw new Exception("warning: isPrepared false");
                     isBuffering = true;
-                    onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.BUFFERING_START);
+                    onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.MEDIA_INFO_BUFFERING_START);
                 }
                 // 缓冲结束
                 else if (what == MediaPlayer.MEDIA_INFO_BUFFERING_END) {
                     if (!isPrepared)
                         throw new Exception("warning: isPrepared false");
                     isBuffering = false;
-                    onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.BUFFERING_STOP);
+                    onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.MEDIA_INFO_BUFFERING_STOP);
                 }
                 // 开始播放
                 else if (what == MediaPlayer.MEDIA_INFO_VIDEO_RENDERING_START || what == 903) {
                     if (isPrepared)
                         throw new Exception("warning: mPrepared true");
                     isPrepared = true;
-                    onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.START_VIDEO_RENDERING);
+                    onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.MEDIA_INFO_UPDATE_PLAYBACLK_SPEED);
                     long seek = getPlayWhenReadySeekToPosition();
 
                     if (LogUtil.DEBUG) {
@@ -545,21 +550,20 @@ public final class VideoAndroidPlayer extends VideoBasePlayer {
                         if (LogUtil.DEBUG) {
                             LogUtil.log("VideoAndroidPlayer -> onInfo -> playWhenReady = " + playWhenReady);
                         }
-                        onEvent(PlayerType.KernelType.ANDROID, playWhenReady ? PlayerType.EventType.START_PLAY_WHEN_READY_TRUE : PlayerType.EventType.START_PLAY_WHEN_READY_FALSE);
+                        onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.START);
                         if (playWhenReady) {
-                            onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.START);
                             boolean playing = isPlaying();
                             if (playing)
                                 throw new Exception("warning: isPlaying true");
                             start();
                         } else {
-                            onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.PAUSE_PlAY_WHEN_READY);
+                            onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.MEDIA_INFO_PLAY_WHEN_READY_PAUSE);
                             pause();
                         }
                     }
                     // 起播快进
                     else {
-                        onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.SEEK_START_REWIND);
+                        onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.MEDIA_INFO_PLAY_WHEN_READY_SEEK);
                         mPlayWhenReadySeeking = true;
                         seekTo(seek);
                     }
@@ -591,20 +595,19 @@ public final class VideoAndroidPlayer extends VideoBasePlayer {
                     mPlayWhenReadySeeking = false;
                     onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.START);
                     boolean playWhenReady = isPlayWhenReady();
-                    onEvent(PlayerType.KernelType.ANDROID, playWhenReady ? PlayerType.EventType.START_PLAY_WHEN_READY_TRUE : PlayerType.EventType.START_PLAY_WHEN_READY_FALSE);
                     if (playWhenReady) {
                         boolean playing = isPlaying();
                         if (playing)
                             throw new Exception("warning: isPlaying true");
                         start();
                     } else {
+                        onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.MEDIA_INFO_PLAY_WHEN_READY_PAUSE);
                         pause();
-                        onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.PAUSE);
                     }
                 }
                 // 正常快进&快退
                 else {
-                    onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.SEEK_FINISH);
+                    onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.MEDIA_INFO_UPDATE_SEEK_FINISH);
                 }
             } catch (Exception e) {
                 if (LogUtil.DEBUG) {
@@ -625,7 +628,7 @@ public final class VideoAndroidPlayer extends VideoBasePlayer {
             // 解决部分盒子不回调 info code=3
             // sendMessageCheckPreparedPlaying(PlayerType.KernelType.ANDROID);
 
-            onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.PREPARE);
+            onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.MEDIA_INFO_PREPARE);
             start();
         }
     };

@@ -671,7 +671,7 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
                             kernelApi.sendMessageConnectTimeout(kernelType, timeMillis, connectTimeout, false);
                             break;
                         // 缓冲开始
-                        case PlayerType.EventType.BUFFERING_START:
+                        case PlayerType.EventType.MEDIA_INFO_BUFFERING_START:
                             // 埋点
                             onBuriedBufferingStart();
                             // 检测：缓冲超时
@@ -684,14 +684,14 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
                             }
                             break;
                         // 缓冲结束
-                        case PlayerType.EventType.BUFFERING_STOP:
+                        case PlayerType.EventType.MEDIA_INFO_BUFFERING_STOP:
                             // 埋点
                             onBuriedBufferingStop();
                             //
                             kernelApi.closeMessagesBufferingTimeout();
                             break;
                         // 视频首帧
-                        case PlayerType.EventType.START_VIDEO_RENDERING:
+                        case PlayerType.EventType.MEDIA_INFO_UPDATE_PLAYBACLK_SPEED:
                             // 埋点
                             onBuriedVideoRenderingStart();
                             //
@@ -711,17 +711,17 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
                             checkVideoVisibility();
                             break;
                         // 快进
-                        case PlayerType.EventType.SEEK_START_FORWARD:
+                        case PlayerType.EventType.MEDIA_INFO_UPDATE_SEEK_START_FORWARD:
                             // 埋点
                             onBuriedSeekStartForward();
                             break;
                         // 快退
-                        case PlayerType.EventType.SEEK_START_REWIND:
+                        case PlayerType.EventType.MEDIA_INFO_UPDATE_SEEK_START_REWIND:
                             // 埋点
                             onBuriedSeekStartRewind();
                             break;
                         // 快进
-                        case PlayerType.EventType.SEEK_FINISH:
+                        case PlayerType.EventType.MEDIA_INFO_UPDATE_SEEK_FINISH:
                             // 埋点
                             onBuriedSeekFinish();
                             break;

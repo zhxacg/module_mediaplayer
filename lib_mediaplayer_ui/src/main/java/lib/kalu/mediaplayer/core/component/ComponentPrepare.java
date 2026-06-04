@@ -40,9 +40,9 @@ public class ComponentPrepare extends RelativeLayout implements ComponentApi {
                 }
                 show();
                 break;
-            case PlayerType.EventType.START_VIDEO_RENDERING:
+            case PlayerType.EventType.MEDIA_INFO_UPDATE_PLAYBACLK_SPEED:
                 if (LogUtil.DEBUG) {
-                    LogUtil.log("ComponentLoading -> callEvent -> show -> VIDEO_RENDERING_START");
+                    LogUtil.log("ComponentLoading -> callEvent -> show -> MEDIA_INFO_UPDATE_PLAYBACLK_SPEED");
                 }
                 hide();
                 break;

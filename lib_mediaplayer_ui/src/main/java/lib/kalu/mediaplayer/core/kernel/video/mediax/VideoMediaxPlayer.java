@@ -616,7 +616,11 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
 
             mSeeking = true;
             long position = getPosition();
-            onEvent(PlayerType.KernelType.MEDIA_V3, seek < position ? PlayerType.EventType.SEEK_START_REWIND : PlayerType.EventType.SEEK_START_FORWARD);
+            if (seek < position) {
+                onEvent(PlayerType.KernelType.MEDIA_V3, PlayerType.EventType.MEDIA_INFO_UPDATE_SEEK_START_REWIND);
+            } else {
+                onEvent(PlayerType.KernelType.MEDIA_V3, PlayerType.EventType.MEDIA_INFO_UPDATE_SEEK_START_FORWARD);
+            }
             mExoPlayer.seekTo(seek);
             if (LogUtil.DEBUG) {
                 LogUtil.log(TAG, "seekTo -> completed");
@@ -763,7 +767,7 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
             } else {
                 playbackParameters = new PlaybackParameters(speed);
             }
-            onEvent(PlayerType.KernelType.MEDIA_V3, PlayerType.EventType.UPDATE_PLAYBACLK_SPEED);
+            onEvent(PlayerType.KernelType.MEDIA_V3, PlayerType.EventType.MEDIA_INFO_UPDATE_PLAYBACLK_SPEED);
             mExoPlayer.setPlaybackParameters(playbackParameters);
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
@@ -1486,7 +1490,7 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
                             LogUtil.log(TAG, "onPlaybackStateChanged -> state[Player.STATE_READY] -> buffering");
                         }
                         isBuffering = false;
-                        onEvent(PlayerType.KernelType.MEDIA_V3, PlayerType.EventType.BUFFERING_STOP);
+                        onEvent(PlayerType.KernelType.MEDIA_V3, PlayerType.EventType.MEDIA_INFO_BUFFERING_STOP);
                     }
                     // seeking
                     else if (mSeeking) {
@@ -1494,21 +1498,19 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
                             LogUtil.log(TAG, "onPlaybackStateChanged -> state[Player.STATE_READY] -> seeking");
                         }
                         mSeeking = false;
-                        onEvent(PlayerType.KernelType.MEDIA_V3, PlayerType.EventType.SEEK_FINISH);
+                        onEvent(PlayerType.KernelType.MEDIA_V3, PlayerType.EventType.MEDIA_INFO_UPDATE_SEEK_FINISH);
 
                         // 起播快进
                         if (mPlayWhenReadySeeking) {
                             mPlayWhenReadySeeking = false;
                             // 立即播放
                             boolean playWhenReady = isPlayWhenReady();
-                            onEvent(PlayerType.KernelType.MEDIA_V3, playWhenReady ? PlayerType.EventType.START_PLAY_WHEN_READY_TRUE : PlayerType.EventType.START_PLAY_WHEN_READY_FALSE);
                             if (playWhenReady) {
                                 onEvent(PlayerType.KernelType.MEDIA_V3, PlayerType.EventType.START);
-                                onEvent(PlayerType.KernelType.MEDIA_V3, PlayerType.EventType.START_VIDEO_RENDERING);
                                 start();
                             } else {
+                                onEvent(PlayerType.KernelType.MEDIA_V3, PlayerType.EventType.MEDIA_INFO_PLAY_WHEN_READY_PAUSE);
                                 pause();
-                                onEvent(PlayerType.KernelType.MEDIA_V3, PlayerType.EventType.PAUSE_PlAY_WHEN_READY);
                             }
                         }
                         // 正常快进&快退
@@ -1522,14 +1524,13 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
                             LogUtil.log(TAG, "onPlaybackStateChanged -> state[Player.STATE_READY] -> start ready");
                         }
                         boolean playWhenReady = isPlayWhenReady();
-                        onEvent(PlayerType.KernelType.MEDIA_V3, playWhenReady ? PlayerType.EventType.START_PLAY_WHEN_READY_TRUE : PlayerType.EventType.START_PLAY_WHEN_READY_FALSE);
                         if (playWhenReady) {
                             boolean playing = isPlaying();
                             if (playing) throw new Exception("warning: isPlaying true");
                             start();
                         } else {
+                            onEvent(PlayerType.KernelType.MEDIA_V3, PlayerType.EventType.MEDIA_INFO_PLAY_WHEN_READY_PAUSE);
                             pause();
-                            onEvent(PlayerType.KernelType.MEDIA_V3, PlayerType.EventType.PAUSE);
                         }
                     }
 
@@ -1547,7 +1548,7 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
                 try {
                     if (!isPrepared) throw new Exception("mPrepared warning: false");
                     isBuffering = true;
-                    onEvent(PlayerType.KernelType.MEDIA_V3, PlayerType.EventType.BUFFERING_START);
+                    onEvent(PlayerType.KernelType.MEDIA_V3, PlayerType.EventType.MEDIA_INFO_BUFFERING_START);
                 } catch (Exception e) {
                     if (LogUtil.DEBUG) {
                         LogUtil.log(TAG, "onPlaybackStateChanged -> state[Player.STATE_BUFFERING] -> Exception " + state);
@@ -1585,8 +1586,7 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
             try {
                 if (isPrepared) throw new Exception("warning: isPrepared true");
                 isPrepared = true;
-                onEvent(PlayerType.KernelType.MEDIA_V3, PlayerType.EventType.PREPARE);
-                onEvent(PlayerType.KernelType.MEDIA_V3, PlayerType.EventType.START_VIDEO_RENDERING);
+                onEvent(PlayerType.KernelType.MEDIA_V3, PlayerType.EventType.MEDIA_INFO_PREPARE);
                 long playWhenReadySeekToPosition = getPlayWhenReadySeekToPosition();
                 if (LogUtil.DEBUG) {
                     LogUtil.log(TAG, "onVideoInputFormatChanged -> playWhenReadySeekToPosition = " + playWhenReadySeekToPosition);
@@ -1597,7 +1597,7 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
                 }
                 // 起播快进
                 else {
-                    onEvent(PlayerType.KernelType.MEDIA_V3, PlayerType.EventType.SEEK_START_FORWARD);
+                    onEvent(PlayerType.KernelType.MEDIA_V3, PlayerType.EventType.MEDIA_INFO_PLAY_WHEN_READY_SEEK);
                     mPlayWhenReadySeeking = true;
                     seekTo(playWhenReadySeekToPosition);
                 }

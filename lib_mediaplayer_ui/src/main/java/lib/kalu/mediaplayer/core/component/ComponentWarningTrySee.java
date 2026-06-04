@@ -77,7 +77,7 @@ public class ComponentWarningTrySee extends RelativeLayout implements ComponentA
                     }
                 }
                 break;
-            case PlayerType.EventType.START_VIDEO_RENDERING:
+            case PlayerType.EventType.MEDIA_INFO_UPDATE_PLAYBACLK_SPEED:
                 try {
                     long trySeeDuration = getTrySeeDuration();
                     if (trySeeDuration <= 0L)

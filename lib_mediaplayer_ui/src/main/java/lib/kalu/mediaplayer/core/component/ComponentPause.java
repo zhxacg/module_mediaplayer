@@ -91,7 +91,7 @@ public class ComponentPause extends RelativeLayout implements ComponentApi {
                     LogUtil.log("ComponentPause[show] -> COMPONENT_SEEK_HIDE");
                 }
                 break;
-            case PlayerType.EventType.SEEK_FINISH:
+            case PlayerType.EventType.MEDIA_INFO_UPDATE_SEEK_FINISH:
                 if (LogUtil.DEBUG) {
                     LogUtil.log("ComponentPause[show] -> SEEK_FINISH");
                 }

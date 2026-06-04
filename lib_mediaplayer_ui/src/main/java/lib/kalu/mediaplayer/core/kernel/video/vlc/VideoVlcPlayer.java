@@ -289,6 +289,7 @@ public final class VideoVlcPlayer extends VideoBasePlayer {
         try {
             if (null == mVlcPlayer)
                 throw new Exception("mIjkPlayer error: null");
+            onEvent(PlayerType.KernelType.VLC, PlayerType.EventType.MEDIA_INFO_UPDATE_PLAYBACLK_SPEED);
             mVlcPlayer.setSpeed(speed);
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
@@ -337,7 +338,7 @@ public final class VideoVlcPlayer extends VideoBasePlayer {
     private final OnVlcInfoChangeListener mVlcPlayerListener = new OnVlcInfoChangeListener() {
         @Override
         public void onStart() {
-            onEvent(PlayerType.KernelType.VLC, PlayerType.EventType.PREPARE);
+            onEvent(PlayerType.KernelType.VLC, PlayerType.EventType.MEDIA_INFO_PREPARE);
         }
 
         @Override

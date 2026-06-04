@@ -272,7 +272,11 @@ public final class VideoFFmpegPlayer extends VideoBasePlayer {
             }
 
             long position = getPosition();
-            onEvent(PlayerType.KernelType.FFPLAYER, seek < position ? PlayerType.EventType.SEEK_START_REWIND : PlayerType.EventType.SEEK_START_FORWARD);
+            if (seek < position) {
+                onEvent(PlayerType.KernelType.FFPLAYER, PlayerType.EventType.MEDIA_INFO_UPDATE_SEEK_START_REWIND);
+            } else {
+                onEvent(PlayerType.KernelType.FFPLAYER, PlayerType.EventType.MEDIA_INFO_UPDATE_SEEK_START_FORWARD);
+            }
             mFFmpegPlayer.seekTo((int) seek);
             if (LogUtil.DEBUG) {
                 LogUtil.log("VideoFFmpegPlayer -> seekTo ->");
@@ -353,6 +357,7 @@ public final class VideoFFmpegPlayer extends VideoBasePlayer {
         try {
             if (null == mFFmpegPlayer)
                 throw new Exception("mFFmpegPlayer error: null");
+            onEvent(PlayerType.KernelType.FFPLAYER, PlayerType.EventType.MEDIA_INFO_UPDATE_PLAYBACLK_SPEED);
 //            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M)
 //                throw new Exception("only support above Android M");
         } catch (Exception e) {
@@ -377,7 +382,7 @@ public final class VideoFFmpegPlayer extends VideoBasePlayer {
             if (what == MediaPlayer.MEDIA_INFO_BUFFERING_START) {
                 if (isPrepared) {
                     isBuffering = true;
-                    onEvent(PlayerType.KernelType.FFPLAYER, PlayerType.EventType.BUFFERING_START);
+                    onEvent(PlayerType.KernelType.FFPLAYER, PlayerType.EventType.MEDIA_INFO_BUFFERING_START);
                 } else {
                     if (LogUtil.DEBUG) {
                         LogUtil.log("VideoFFmpegPlayer -> onInfo -> what = " + what + ", mPrepared = false");
@@ -388,7 +393,7 @@ public final class VideoFFmpegPlayer extends VideoBasePlayer {
             else if (what == MediaPlayer.MEDIA_INFO_BUFFERING_END) {
                 if (isPrepared) {
                     isBuffering = false;
-                    onEvent(PlayerType.KernelType.FFPLAYER, PlayerType.EventType.BUFFERING_STOP);
+                    onEvent(PlayerType.KernelType.FFPLAYER, PlayerType.EventType.MEDIA_INFO_BUFFERING_STOP);
                 } else {
                     if (LogUtil.DEBUG) {
                         LogUtil.log("VideoFFmpegPlayer -> onInfo -> what = " + what + ", mPrepared = false");
@@ -401,19 +406,18 @@ public final class VideoFFmpegPlayer extends VideoBasePlayer {
                     if (isPrepared)
                         throw new Exception("warning: mPrepared true");
                     isPrepared = true;
-                    onEvent(PlayerType.KernelType.FFPLAYER, PlayerType.EventType.START_VIDEO_RENDERING);
+                    onEvent(PlayerType.KernelType.FFPLAYER, PlayerType.EventType.MEDIA_INFO_UPDATE_PLAYBACLK_SPEED);
                     long seek = getPlayWhenReadySeekToPosition();
                     if (seek <= 0) {
                         onEvent(PlayerType.KernelType.FFPLAYER, PlayerType.EventType.START);
                         // 立即播放
                         boolean playWhenReady = isPlayWhenReady();
-                        onEvent(PlayerType.KernelType.FFPLAYER, playWhenReady ? PlayerType.EventType.START_PLAY_WHEN_READY_TRUE : PlayerType.EventType.START_PLAY_WHEN_READY_FALSE);
                         if (!playWhenReady) {
+                            onEvent(PlayerType.KernelType.FFPLAYER, PlayerType.EventType.MEDIA_INFO_PLAY_WHEN_READY_PAUSE);
                             pause();
-                            onEvent(PlayerType.KernelType.FFPLAYER, PlayerType.EventType.PAUSE_PlAY_WHEN_READY);
                         }
                     } else {
-                        onEvent(PlayerType.KernelType.FFPLAYER, PlayerType.EventType.SEEK_START_FORWARD);
+                        onEvent(PlayerType.KernelType.FFPLAYER, PlayerType.EventType.MEDIA_INFO_PLAY_WHEN_READY_SEEK);
                         // 起播快进
                         mPlayWhenReadySeeking = true;
                         seekTo(seek);
@@ -434,7 +438,7 @@ public final class VideoFFmpegPlayer extends VideoBasePlayer {
             if (LogUtil.DEBUG) {
                 LogUtil.log("VideoFFmpegPlayer -> onSeekComplete ->");
             }
-            onEvent(PlayerType.KernelType.FFPLAYER, PlayerType.EventType.SEEK_FINISH);
+            onEvent(PlayerType.KernelType.FFPLAYER, PlayerType.EventType.MEDIA_INFO_UPDATE_SEEK_FINISH);
 
             try {
                 // 起播快进
@@ -442,15 +446,14 @@ public final class VideoFFmpegPlayer extends VideoBasePlayer {
                     mPlayWhenReadySeeking = false;
                     onEvent(PlayerType.KernelType.FFPLAYER, PlayerType.EventType.START);
                     boolean playWhenReady = isPlayWhenReady();
-                    onEvent(PlayerType.KernelType.FFPLAYER, playWhenReady ? PlayerType.EventType.START_PLAY_WHEN_READY_TRUE : PlayerType.EventType.START_PLAY_WHEN_READY_FALSE);
                     if (playWhenReady) {
                         boolean playing = isPlaying();
                         if (playing)
                             throw new Exception("warning: isPlaying true");
                         start();
                     } else {
+                        onEvent(PlayerType.KernelType.FFPLAYER, PlayerType.EventType.MEDIA_INFO_PLAY_WHEN_READY_PAUSE);
                         pause();
-                        onEvent(PlayerType.KernelType.FFPLAYER, PlayerType.EventType.PAUSE);
                     }
                 }
                 // 正常快进&快退
@@ -471,7 +474,7 @@ public final class VideoFFmpegPlayer extends VideoBasePlayer {
             if (LogUtil.DEBUG) {
                 LogUtil.log("VideoFFmpegPlayer -> onPrepared ->");
             }
-            onEvent(PlayerType.KernelType.FFPLAYER, PlayerType.EventType.PREPARE);
+            onEvent(PlayerType.KernelType.FFPLAYER, PlayerType.EventType.MEDIA_INFO_PREPARE);
             start();
         }
     };

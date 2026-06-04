@@ -38,16 +38,16 @@ public class ComponentBuffering extends RelativeLayout implements ComponentApi {
         }
 
         switch (playState) {
-            case PlayerType.EventType.BUFFERING_START:
-            case PlayerType.EventType.SEEK_START_FORWARD:
-            case PlayerType.EventType.SEEK_START_REWIND:
+            case PlayerType.EventType.MEDIA_INFO_BUFFERING_START:
+            case PlayerType.EventType.MEDIA_INFO_UPDATE_SEEK_START_FORWARD:
+            case PlayerType.EventType.MEDIA_INFO_UPDATE_SEEK_START_REWIND:
                 if (LogUtil.DEBUG) {
                     LogUtil.log("ComponentBuffering[show] -> callEvent -> playState = " + playState);
                 }
                 show();
                 break;
-            case PlayerType.EventType.BUFFERING_STOP:
-            case PlayerType.EventType.SEEK_FINISH:
+            case PlayerType.EventType.MEDIA_INFO_BUFFERING_STOP:
+            case PlayerType.EventType.MEDIA_INFO_UPDATE_SEEK_FINISH:
             case PlayerType.EventType.INIT:
             case PlayerType.EventType.RELEASE:
                 if (LogUtil.DEBUG) {

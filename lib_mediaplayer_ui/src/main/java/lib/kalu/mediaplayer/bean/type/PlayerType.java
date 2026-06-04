@@ -58,27 +58,26 @@ public @interface PlayerType {
         int INIT_PLAY_DELAYED_START = 3_004; // 延迟播放
         int INIT_PLAY_DELAYED_END = 3_005; // 延迟播放
         int INIT_READY = 3_006;            // 准备就绪
-        int PREPARE = 3_007; // 起播加载
         int START = 3_008;          // 播放开始
-        int START_VIDEO_RENDERING = 3_009;    // 出画面
-        int START_PLAY_WHEN_READY_TRUE = 3_010; // 立即播放
-        int START_PLAY_WHEN_READY_FALSE = 3_011;  // 不立即播放
-        int PAUSE = 3_012; // 播放暂停
-        int PAUSE_PlAY_WHEN_READY = 3_013; // 播放暂停
-        int RESUME = 3_014; // 播放恢复
-        int END = 3_015; // 播放完成
-        int STOP = 3_016; // 播放停止
-        int RELEASE = 3_017; // 播放销毁
-        int SEEK_START_FORWARD = 3_018; // 快进
-        int SEEK_START_REWIND = 3_019; // 快退
-        int SEEK_FINISH = 3_020; // 快退
-        int BUFFERING_START = 3_021; // 缓冲
-        int BUFFERING_STOP = 3_022; // 缓冲
+        int END = 3_009;    // 播放完成
+        int PAUSE = 3_010; // 播放暂停
+        int RESUME = 3_011; // 播放恢复
+        int STOP = 3_012; // 播放停止
+        int RELEASE = 3_013; // 播放销毁
 
 
-        // 试看
-        int TRY_SEE_START = 3_201;
-        int TRY_SEE_END = 3_202;
+        // 视频信息
+        int MEDIA_INFO_PREPARE = 3_202;    // 起播加载
+        int MEDIA_INFO_VIDEO_RENDERING_START = 3_203;    // 视频出画面
+        int MEDIA_INFO_BUFFERING_START = 3_204;    // 缓冲
+        int MEDIA_INFO_BUFFERING_STOP = 3_205;    // 视频出画面
+        int MEDIA_INFO_UPDATE_PLAYBACLK_SPEED = 3_206; // 切换倍速
+        int MEDIA_INFO_UPDATE_SEEK_START_FORWARD = 3_207;    // 快进
+        int MEDIA_INFO_UPDATE_SEEK_START_REWIND = 3_208;    // 快退
+        int MEDIA_INFO_UPDATE_SEEK_FINISH = 3_209;
+        int MEDIA_INFO_PLAY_WHEN_READY_SEEK = 3_210; // 启播快进
+        int MEDIA_INFO_PLAY_WHEN_READY_PAUSE = 3_211; // 启播暂停
+
 
         // 错误
         int ERROR_NETWORK = 3_301; // 网络未连接
@@ -104,8 +103,9 @@ public @interface PlayerType {
         int COMPONENT_SEEK_SHOW = 3_503;
         int COMPONENT_SEEK_HIDE = 3_504;
 
-        //
-        int UPDATE_PLAYBACLK_SPEED = 3_604;
+        // 试看
+        int TRY_SEE_START = 3_601;
+        int TRY_SEE_END = 3_602;
 
         @Documented
         @Retention(CLASS)
@@ -118,22 +118,22 @@ public @interface PlayerType {
                 INIT_PLAY_DELAYED_START,
                 INIT_PLAY_DELAYED_END,
                 INIT_READY,
-                PREPARE,
-                START_VIDEO_RENDERING,
                 START,
-                START_PLAY_WHEN_READY_TRUE,
-                START_PLAY_WHEN_READY_FALSE,
+                END, // 播放完成
                 PAUSE,
-                PAUSE_PlAY_WHEN_READY,
                 RESUME,
-                END,
                 STOP,
                 RELEASE,
-                SEEK_START_FORWARD,
-                SEEK_START_REWIND,
-                SEEK_FINISH,
-                BUFFERING_START,
-                BUFFERING_STOP,
+                MEDIA_INFO_PREPARE, // 起播加载
+                MEDIA_INFO_UPDATE_PLAYBACLK_SPEED, // 切换倍速
+                MEDIA_INFO_VIDEO_RENDERING_START,    // 视频出画面
+                MEDIA_INFO_BUFFERING_START,    // 缓冲
+                MEDIA_INFO_BUFFERING_STOP,    // 视频出画面
+                MEDIA_INFO_UPDATE_SEEK_START_FORWARD,    // 快进
+                MEDIA_INFO_UPDATE_SEEK_START_REWIND,   // 快退
+                MEDIA_INFO_UPDATE_SEEK_FINISH,
+                MEDIA_INFO_PLAY_WHEN_READY_PAUSE, // 启播暂停
+                MEDIA_INFO_PLAY_WHEN_READY_SEEK, // 启播快进
                 WINDOW_FULL_START,
                 WINDOW_FULL_SUCC,
                 WINDOW_FULL_FAIL,
@@ -154,7 +154,7 @@ public @interface PlayerType {
                 ERROR_TIMEOUT_BUFFER, // 缓冲超时
                 ERROR_INIT, // 初始化错误
                 ERROR_DECODE, // 解码
-                UPDATE_PLAYBACLK_SPEED})
+        })
         @interface Value {
         }
     }

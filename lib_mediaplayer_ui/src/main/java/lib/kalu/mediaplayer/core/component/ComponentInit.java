@@ -51,9 +51,9 @@ public class ComponentInit extends RelativeLayout implements ComponentApi {
                 }
                 hide();
                 break;
-            case PlayerType.EventType.START_VIDEO_RENDERING:
+            case PlayerType.EventType.MEDIA_INFO_UPDATE_PLAYBACLK_SPEED:
                 if (LogUtil.DEBUG) {
-                    LogUtil.log("ComponentInit -> callEvent -> START_VIDEO_RENDERING");
+                    LogUtil.log("ComponentInit -> callEvent -> MEDIA_INFO_UPDATE_PLAYBACLK_SPEED");
                 }
                 hide();
                 break;
@@ -77,14 +77,9 @@ public class ComponentInit extends RelativeLayout implements ComponentApi {
                     LogUtil.log("ComponentInit -> callEvent -> PAUSE");
                 }
                 break;
-            case PlayerType.EventType.START_PLAY_WHEN_READY_TRUE:
+            case PlayerType.EventType.MEDIA_INFO_PLAY_WHEN_READY_PAUSE:
                 if (LogUtil.DEBUG) {
-                    LogUtil.log("ComponentInit -> callEvent -> START_PLAY_WHEN_READY_TRUE");
-                }
-                break;
-            case PlayerType.EventType.START_PLAY_WHEN_READY_FALSE:
-                if (LogUtil.DEBUG) {
-                    LogUtil.log("ComponentInit -> callEvent -> START_PLAY_WHEN_READY_FALSE");
+                    LogUtil.log("ComponentInit -> callEvent -> MEDIA_INFO_PLAY_WHEN_READY_PAUSE");
                 }
                 break;
         }

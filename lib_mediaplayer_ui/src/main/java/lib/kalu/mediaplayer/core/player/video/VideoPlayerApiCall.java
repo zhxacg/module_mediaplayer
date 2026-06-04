@@ -296,11 +296,11 @@ public interface VideoPlayerApiCall extends VideoPlayerApiBase, VideoPlayerApiLi
                 onPlayerEventListener.onPause();
             } else if (playState == PlayerType.EventType.RESUME) {
                 onPlayerEventListener.onResume();
-            } else if (playState == PlayerType.EventType.BUFFERING_START) {
+            } else if (playState == PlayerType.EventType.MEDIA_INFO_BUFFERING_START) {
                 onPlayerEventListener.onBufferingStart();
-            } else if (playState == PlayerType.EventType.BUFFERING_STOP) {
+            } else if (playState == PlayerType.EventType.MEDIA_INFO_BUFFERING_STOP) {
                 onPlayerEventListener.onBufferingStop();
-            } else if (playState == PlayerType.EventType.PREPARE) {
+            } else if (playState == PlayerType.EventType.MEDIA_INFO_PREPARE) {
                 onPlayerEventListener.onPrepare();
             }
         } catch (Exception e) {

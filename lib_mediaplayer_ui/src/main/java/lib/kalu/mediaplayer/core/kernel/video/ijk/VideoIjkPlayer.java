@@ -540,7 +540,11 @@ public final class VideoIjkPlayer extends VideoBasePlayer {
                 seek = duration;
             }
             long position = getPosition();
-            onEvent(PlayerType.KernelType.IJK, seek < position ? PlayerType.EventType.SEEK_START_REWIND : PlayerType.EventType.SEEK_START_FORWARD);
+            if (seek < position) {
+                onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.MEDIA_INFO_UPDATE_SEEK_START_REWIND);
+            } else {
+                onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.MEDIA_INFO_UPDATE_SEEK_START_FORWARD);
+            }
             mIjkPlayer.seekTo(seek);
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
@@ -597,6 +601,7 @@ public final class VideoIjkPlayer extends VideoBasePlayer {
         try {
             if (null == mIjkPlayer)
                 throw new Exception("mIjkPlayer error: null");
+            onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.MEDIA_INFO_UPDATE_PLAYBACLK_SPEED);
             mIjkPlayer.setSpeed(speed);
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
@@ -673,14 +678,14 @@ public final class VideoIjkPlayer extends VideoBasePlayer {
                     if (!isPrepared)
                         throw new Exception("warning: prepared false");
                     isBuffering = true;
-                    onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.BUFFERING_START);
+                    onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.MEDIA_INFO_BUFFERING_START);
                 }
                 // 缓冲结束
                 else if (what == IMediaPlayer.MEDIA_INFO_BUFFERING_END) {
                     if (!isPrepared)
                         throw new Exception("warning: prepared false");
                     isBuffering = false;
-                    onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.BUFFERING_STOP);
+                    onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.MEDIA_INFO_BUFFERING_STOP);
                 }
                 // 开始播放
                 else if (what == IMediaPlayer.MEDIA_INFO_VIDEO_RENDERING_START) {
@@ -699,7 +704,7 @@ public final class VideoIjkPlayer extends VideoBasePlayer {
                     if (isPrepared)
                         throw new Exception("warning: isPrepared true");
                     isPrepared = true;
-                    onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.START_VIDEO_RENDERING);
+                    onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.MEDIA_INFO_UPDATE_PLAYBACLK_SPEED);
                     long seek = getPlayWhenReadySeekToPosition();
                     if (LogUtil.DEBUG) {
                         LogUtil.log("VideoIjkPlayer -> onInfo -> seek = " + seek);
@@ -711,14 +716,13 @@ public final class VideoIjkPlayer extends VideoBasePlayer {
                         if (LogUtil.DEBUG) {
                             LogUtil.log("VideoIjkPlayer -> onInfo -> playWhenReady = " + playWhenReady);
                         }
-                        onEvent(PlayerType.KernelType.IJK, playWhenReady ? PlayerType.EventType.START_PLAY_WHEN_READY_TRUE : PlayerType.EventType.START_PLAY_WHEN_READY_FALSE);
                         if (!playWhenReady) {
+                            onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.MEDIA_INFO_PLAY_WHEN_READY_PAUSE);
                             pause();
-                            onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.PAUSE_PlAY_WHEN_READY);
                         }
                     } else {
                         // 起播快进
-                        onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.SEEK_START_FORWARD);
+                        onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.MEDIA_INFO_PLAY_WHEN_READY_SEEK);
                         mPlayWhenReadySeeking = true;
                         seekTo(seek);
                     }
@@ -744,7 +748,7 @@ public final class VideoIjkPlayer extends VideoBasePlayer {
                 LogUtil.log("VideoIjkPlayer -> onSeekComplete ->");
             }
 
-            onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.SEEK_FINISH);
+            onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.MEDIA_INFO_UPDATE_SEEK_FINISH);
 
             try {
                 // 起播快进
@@ -752,15 +756,14 @@ public final class VideoIjkPlayer extends VideoBasePlayer {
                     mPlayWhenReadySeeking = false;
                     onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.START);
                     boolean playWhenReady = isPlayWhenReady();
-                    onEvent(PlayerType.KernelType.IJK, playWhenReady ? PlayerType.EventType.START_PLAY_WHEN_READY_TRUE : PlayerType.EventType.START_PLAY_WHEN_READY_FALSE);
                     if (playWhenReady) {
                         boolean playing = isPlaying();
                         if (playing)
                             throw new Exception("warning: isPlaying true");
                         start();
                     } else {
+                        onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.MEDIA_INFO_PLAY_WHEN_READY_PAUSE);
                         pause();
-                        onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.PAUSE);
                     }
                 }
                 // 正常快进&快退
@@ -781,7 +784,7 @@ public final class VideoIjkPlayer extends VideoBasePlayer {
             if (LogUtil.DEBUG) {
                 LogUtil.log("VideoIjkPlayer -> onPrepared ->");
             }
-            onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.PREPARE);
+            onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.MEDIA_INFO_PREPARE);
             start();
         }
     };

@@ -35,15 +35,15 @@ public class ComponentWarningPlayInfo extends RelativeLayout implements Componen
     public void onUpdateEvent(int playState) {
         switch (playState) {
             case PlayerType.EventType.COMPONENT_SEEK_SHOW:
-            case PlayerType.EventType.START_PLAY_WHEN_READY_FALSE:
+            case PlayerType.EventType.MEDIA_INFO_PLAY_WHEN_READY_PAUSE:
                 if (LogUtil.DEBUG) {
                     LogUtil.log("ComponentWarningPlayInfo -> callEvent -> START_PLAY_WHEN_READY_FALSE");
                 }
                 hide();
                 break;
-            case PlayerType.EventType.START_VIDEO_RENDERING:
+            case PlayerType.EventType.MEDIA_INFO_UPDATE_PLAYBACLK_SPEED:
                 if (LogUtil.DEBUG) {
-                    LogUtil.log("ComponentWarningPlayInfo -> callEvent -> VIDEO_RENDERING_START");
+                    LogUtil.log("ComponentWarningPlayInfo -> callEvent -> MEDIA_INFO_UPDATE_PLAYBACLK_SPEED");
                 }
                 show();
                 break;
