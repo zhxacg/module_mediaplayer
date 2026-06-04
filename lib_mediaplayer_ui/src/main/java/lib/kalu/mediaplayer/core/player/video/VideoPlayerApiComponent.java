@@ -76,9 +76,29 @@ public interface VideoPlayerApiComponent extends VideoPlayerApiBase {
         }
     }
 
+    default void clickAllComponentCount() {
+        try {
+            ViewGroup viewGroup = getBaseComponentViewGroup();
+            int childCount = viewGroup.getChildCount();
+            if (childCount <= 0)
+                throw new Exception("not find component");
+            for (int i = 0; i < childCount; i++) {
+                View childAt = viewGroup.getChildAt(i);
+                if (null == childAt)
+                    continue;
+                if (!(childAt instanceof ComponentApi))
+                    continue;
+                ((ComponentApi) childAt).click();
+            }
+        } catch (Exception e) {
+            if (LogUtil.DEBUG) {
+                LogUtil.log("VideoPlayerApiComponent -> hideAllComponent -> " + e.getMessage());
+            }
+        }
+    }
+
     default void hideAllComponent() {
         try {
-            LinkedList<View> views = new LinkedList<>();
             ViewGroup viewGroup = getBaseComponentViewGroup();
             int childCount = viewGroup.getChildCount();
             if (childCount <= 0)
