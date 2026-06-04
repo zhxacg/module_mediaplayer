@@ -521,6 +521,9 @@ public interface ComponentApi {
         }
     }
 
+    default void click(){
+    }
+
     default void toggle() {
         toggle(true);
     }
