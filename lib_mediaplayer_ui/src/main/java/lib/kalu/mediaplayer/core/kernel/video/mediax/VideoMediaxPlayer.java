@@ -1367,21 +1367,21 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
                 // timeout
                 else if (error.errorCode == PlaybackException.ERROR_CODE_TIMEOUT) {
                     // seekToDefaultPosition();
-                    stop();
                     onEvent(PlayerType.KernelType.MEDIA_V3, PlayerType.EventType.STOP);
                     onEvent(PlayerType.KernelType.MEDIA_V3, PlayerType.EventType.ERROR_PLAY);
+                    stop();
                 }
                 // errorCode=-9 的常见原因分析 媒体资源 URL 无效 / 过期：URL 拼写错误、资源被删除、CDN 节点失效；
                 else if (error.errorCode == -9) {
-                    stop();
                     onEvent(PlayerType.KernelType.MEDIA_V3, PlayerType.EventType.STOP);
                     onEvent(PlayerType.KernelType.MEDIA_V3, PlayerType.EventType.ERROR_PLAY);
+                    stop();
                 } else {
 //                    if (!(error instanceof ExoPlaybackException))
 //                        throw new Exception("PlaybackException error: not instanceof ExoPlaybackException");
-                    stop();
                     onEvent(PlayerType.KernelType.MEDIA_V3, PlayerType.EventType.STOP);
                     onEvent(PlayerType.KernelType.MEDIA_V3, PlayerType.EventType.ERROR_PLAY);
+                    stop();
                 }
             } catch (Exception e) {
                 if (LogUtil.DEBUG) {
