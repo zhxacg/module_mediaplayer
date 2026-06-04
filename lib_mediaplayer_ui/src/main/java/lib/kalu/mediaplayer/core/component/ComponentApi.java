@@ -1010,7 +1010,7 @@ public interface ComponentApi {
         }
     }
 
-    default void clickAllComponentCount() {
+    default void clickAllComponent() {
         try {
             PlayerView playerView = getPlayerView();
             if (null == playerView)
@@ -1018,7 +1018,7 @@ public interface ComponentApi {
             playerView.clickAllComponentCount();
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
-                LogUtil.log("ComponentApi -> clickAllComponentCount -> " + e.getMessage());
+                LogUtil.log("ComponentApi -> clickAllComponent -> " + e.getMessage());
             }
         }
     }
