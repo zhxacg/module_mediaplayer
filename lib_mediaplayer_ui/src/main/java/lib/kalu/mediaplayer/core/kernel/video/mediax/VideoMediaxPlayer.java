@@ -1587,6 +1587,7 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
                 if (isPrepared) throw new Exception("warning: isPrepared true");
                 isPrepared = true;
                 onEvent(PlayerType.KernelType.MEDIA_V3, PlayerType.EventType.MEDIA_INFO_PREPARE);
+                onEvent(PlayerType.KernelType.MEDIA_V3, PlayerType.EventType.MEDIA_INFO_VIDEO_RENDERING_START);
                 long playWhenReadySeekToPosition = getPlayWhenReadySeekToPosition();
                 if (LogUtil.DEBUG) {
                     LogUtil.log(TAG, "onVideoInputFormatChanged -> playWhenReadySeekToPosition = " + playWhenReadySeekToPosition);
