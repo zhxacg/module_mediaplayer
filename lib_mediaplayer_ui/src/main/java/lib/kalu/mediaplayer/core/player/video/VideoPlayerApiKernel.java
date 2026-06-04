@@ -55,13 +55,9 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
     @Override
     default void start(StartArgs startArgs) {
         try {
-
             boolean log = PlayerSDK.getInstance().getConfigArgs().isLog();
             LogUtil.setLogger(log);
 
-            if (LogUtil.DEBUG) {
-                LogUtil.log("TEST22", "start -> PlayerType.EventType.INIT");
-            }
             callEvent(PlayerType.EventType.INIT);
             Context context = getBaseContext();
             boolean connected = NetworkUtil.isConnected(context);
