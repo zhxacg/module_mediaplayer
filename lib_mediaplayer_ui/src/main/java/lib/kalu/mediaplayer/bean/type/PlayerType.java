@@ -52,29 +52,35 @@ public @interface PlayerType {
     @Target({METHOD, PARAMETER, FIELD, LOCAL_VARIABLE, ANNOTATION_TYPE, PACKAGE})
     @interface EventType {
         int INIT = 3_000;            // 准备初始换
-        int INIT_PLAY_WHEN_READY_DELAYED_TIME_START = 3_001; // 延迟播放
-        int INIT_PLAY_WHEN_READY_DELAYED_TIME_COMPLETE = 3_002; // 延迟播放
-        int INIT_READY = 3_003;            // 准备就绪
-        int PREPARE = 3_004; // 起播加载
-        int VIDEO_RENDERING_START = 3_005;    // 出画面
-        int START = 3_006;          // 播放开始
-        int START_PLAY_WHEN_READY_TRUE = 3_007; // 立即播放
-        int START_PLAY_WHEN_READY_FALSE = 3_008;  // 不立即播放
-        int RESTART = 3_009;
-        int PAUSE = 3_010; // 播放暂停
-        int PAUSE_PlAY_WHEN_READY = 3_011; // 播放暂停
-        int RESUME = 3_012; // 播放恢复
-        int END = 3_0013; // 播放完成
-        int STOP = 3_014; // 播放停止
-        int RELEASE = 3_015; // 播放销毁
-        int SEEK_START_FORWARD = 3_016; // 快进
-        int SEEK_START_REWIND = 3_017; // 快退
-        int SEEK_FINISH = 3_018; // 快退
-        int BUFFERING_START = 3_019; // 缓冲
-        int BUFFERING_STOP = 3_020; // 缓冲
-        int TRY_SEE_START = 3_026;
-        int TRY_SEE_END = 3_027;
+        int INIT_STOP = 3_001;            //
+        int INIT_RELEASE = 3_002;            //
+        int INIT_PLAY_DELAYED_START = 3_003; // 延迟播放
+        int INIT_PLAY_DELAYED_END = 3_004; // 延迟播放
+        int INIT_READY = 3_005;            // 准备就绪
+        int PREPARE = 3_006; // 起播加载
+        int VIDEO_RENDERING_START = 3_007;    // 出画面
+        int START = 3_008;          // 播放开始
+        int START_PLAY_WHEN_READY_TRUE = 3_009; // 立即播放
+        int START_PLAY_WHEN_READY_FALSE = 3_010;  // 不立即播放
+        int RESTART = 3_011;
+        int PAUSE = 3_012; // 播放暂停
+        int PAUSE_PlAY_WHEN_READY = 3_013; // 播放暂停
+        int RESUME = 3_014; // 播放恢复
+        int END = 3_0015; // 播放完成
+        int STOP = 3_016; // 播放停止
+        int RELEASE = 3_017; // 播放销毁
+        int SEEK_START_FORWARD = 3_018; // 快进
+        int SEEK_START_REWIND = 3_019; // 快退
+        int SEEK_FINISH = 3_020; // 快退
+        int BUFFERING_START = 3_021; // 缓冲
+        int BUFFERING_STOP = 3_022; // 缓冲
 
+
+        // 试看
+        int TRY_SEE_START = 3_201;
+        int TRY_SEE_END = 3_202;
+
+        // 错误
         int ERROR_NETWORK = 3_301; // 网络未连接
         int ERROR_URL_EMPTY = 3_302; // 缓冲超时
         int ERROR_STREAM_SOURCE = 3_303; // 资源错误
@@ -84,6 +90,7 @@ public @interface PlayerType {
         int ERROR_INIT = 3_307; // 初始化错误
         int ERROR_DECODE = 3_308; // 解码
 
+        // 窗口模式
         int WINDOW_FULL_START = 3_401;
         int WINDOW_FULL_SUCC = 3_402;
         int WINDOW_FULL_FAIL = 3_403;
@@ -91,7 +98,7 @@ public @interface PlayerType {
         int WINDOW_FLOAT_SUCC = 3_405;
         int WINDOW_FLOAT_FAIL = 3_406;
 
-
+        // 组件
         int COMPONENT_MENU_SHOW = 3_501;
         int COMPONENT_MENU_HIDE = 3_502;
         int COMPONENT_SEEK_SHOW = 3_503;
@@ -102,8 +109,10 @@ public @interface PlayerType {
         @Target({METHOD, PARAMETER, FIELD, LOCAL_VARIABLE, ANNOTATION_TYPE, PACKAGE})
         @IntDef({
                 INIT,
-                INIT_PLAY_WHEN_READY_DELAYED_TIME_START,
-                INIT_PLAY_WHEN_READY_DELAYED_TIME_COMPLETE,
+                INIT_STOP,
+                INIT_RELEASE,
+                INIT_PLAY_DELAYED_START,
+                INIT_PLAY_DELAYED_END,
                 INIT_READY,
                 PREPARE,
                 VIDEO_RENDERING_START,

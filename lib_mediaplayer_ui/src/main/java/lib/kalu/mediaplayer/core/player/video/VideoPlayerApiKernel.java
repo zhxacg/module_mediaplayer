@@ -6,6 +6,7 @@ import androidx.annotation.FloatRange;
 
 import java.util.List;
 
+import lib.kalu.mediaplayer.PlayerSDK;
 import lib.kalu.mediaplayer.bean.args.StartArgs;
 import lib.kalu.mediaplayer.bean.info.TrackInfo;
 import lib.kalu.mediaplayer.bean.type.PlayerType;
@@ -54,6 +55,13 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
     @Override
     default void start(StartArgs startArgs) {
         try {
+
+            boolean log = PlayerSDK.getInstance().getConfigArgs().isLog();
+            LogUtil.setLogger(log);
+
+            if (LogUtil.DEBUG) {
+                LogUtil.log("TEST22", "start -> PlayerType.EventType.INIT");
+            }
             callEvent(PlayerType.EventType.INIT);
             Context context = getBaseContext();
             boolean connected = NetworkUtil.isConnected(context);
@@ -63,21 +71,17 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
             if (!containsMainUrl)
                 throw new UrlEmptyError("error: containsMainUrl false");
             // 1
-            boolean log = startArgs.isLog();
-            LogUtil.setLogger(log);
-            // 2
-            boolean initRelease = startArgs.isInitRelease();
-            if (initRelease) {
-                release(false, false, false);
-            } else {
-                stop(false, true);
+            boolean prepared = isPrepared();
+            if (prepared) {
+                stop(true, true);
+                release(true, true, false);
             }
             // 3
             setScreenKeep(true);
             // 4
-            checkKernelNull(startArgs, false);
+            checkKernelNull(startArgs);
             // 5
-            checkRenderNull(startArgs, false);
+            checkRenderNull(startArgs);
             // 6
             attachRenderKernel();
             // 7
@@ -220,19 +224,23 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
     }
 
     default void release() {
-        release(true, true, true);
+        release(true, false, true);
     }
 
-    default void release(boolean callEvent, boolean isFromUser, boolean clearListener) {
+    default void release(boolean callEvent, boolean fromInit, boolean clearListener) {
         try {
             if (clearListener) {
                 clearPlayerListener();
             }
+            releaseKernel();
             releaseRender();
-            releaseKernel(isFromUser);
             if (!callEvent)
                 throw new Exception("warning: callEvent false");
-            callEvent(PlayerType.EventType.RELEASE);
+            if (fromInit) {
+                callEvent(PlayerType.EventType.INIT_RELEASE);
+            } else {
+                callEvent(PlayerType.EventType.RELEASE);
+            }
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
                 LogUtil.log(TAG, "release -> " + e.getMessage());
@@ -479,7 +487,7 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
         }
     }
 
-    default void releaseKernel(boolean isFromUser) {
+    default void releaseKernel() {
         try {
             VideoKernelApi kernel = getVideoKernel();
             if (null == kernel)
@@ -487,7 +495,7 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
             // 埋点
             onBuriedRelease();
             //
-            kernel.releaseDecoder(isFromUser);
+            kernel.releaseDecoder();
             setVideoKernel(null);
             setScreenKeep(false);
         } catch (Exception e) {
@@ -510,7 +518,11 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
             kernel.stop();
             if (!callEvent)
                 throw new Exception("warning: callEvent false");
-            callEvent(PlayerType.EventType.STOP);
+            if (fromInit) {
+                callEvent(PlayerType.EventType.INIT_STOP);
+            } else {
+                callEvent(PlayerType.EventType.STOP);
+            }
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
                 LogUtil.log(TAG, "stopKernel -> " + e.getMessage());
@@ -571,11 +583,8 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
 
     /***************************/
 
-    default void checkKernelNull(StartArgs args, boolean release) {
+    default void checkKernelNull(StartArgs args) {
         try {
-            if (release) {
-                releaseKernel(false);
-            }
             if (null != getVideoKernel())
                 throw new Exception("warning: getVideoKernel not null");
             //

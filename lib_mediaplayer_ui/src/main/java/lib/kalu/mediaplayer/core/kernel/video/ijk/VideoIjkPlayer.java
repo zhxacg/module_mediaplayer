@@ -21,6 +21,7 @@ import lib.kalu.ijkplayer.inter.OnTimedTextListener;
 import lib.kalu.ijkplayer.inter.OnVideoSizeChangedListener;
 import lib.kalu.ijkplayer.misc.IMediaFormat;
 import lib.kalu.ijkplayer.misc.IjkTrackInfo;
+import lib.kalu.mediaplayer.PlayerSDK;
 import lib.kalu.mediaplayer.bean.args.StartArgs;
 import lib.kalu.mediaplayer.bean.info.TrackInfo;
 import lib.kalu.mediaplayer.bean.type.PlayerType;
@@ -44,16 +45,14 @@ public final class VideoIjkPlayer extends VideoBasePlayer {
     }
 
     @Override
-    public void releaseDecoder(boolean isFromUser) {
+    public void releaseDecoder() {
         try {
             if (null == mIjkPlayer)
                 throw new Exception("mIjkPlayer warning: null");
             if (LogUtil.DEBUG) {
                 LogUtil.log("VideoIjkPlayer -> releaseDecoder ->");
             }
-            if (isFromUser) {
-                setEvent(null);
-            }
+            setEvent(null);
             unRegistListener();
             release();
         } catch (Exception e) {
@@ -126,26 +125,6 @@ public final class VideoIjkPlayer extends VideoBasePlayer {
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
                 LogUtil.log("VideoIjkPlayer -> initOptions -> step1 Exception " + e.getMessage());
-            }
-        }
-
-        // log
-        try {
-            if (null == mIjkPlayer)
-                throw new Exception("mIjkPlayer error: null");
-            if (null == args)
-                throw new Exception("error: args null");
-            Class<?> clazz = Class.forName("lib.kalu.ijkplayer.util.IjkLogUtil");
-            if (null == clazz)
-                throw new Exception("warning: lib.kalu.ijkplayer.util.IjkLogUtil not find");
-            if (LogUtil.DEBUG) {
-                LogUtil.log("VideoIjkPlayer -> initOptions -> step2");
-            }
-            boolean log = args.isLog();
-            lib.kalu.ijkplayer.util.IjkLogUtil.setLogger(log);
-        } catch (Exception e) {
-            if (LogUtil.DEBUG) {
-                LogUtil.log("VideoIjkPlayer -> initOptions -> step2 Exception " + e.getMessage());
             }
         }
 
@@ -660,7 +639,7 @@ public final class VideoIjkPlayer extends VideoBasePlayer {
         try {
             if (null == mIjkPlayer)
                 throw new Exception("mIjkPlayer error: null");
-           return 0f;
+            return 0f;
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
                 LogUtil.log("VideoIjkPlayer -> getVolume -> " + e.getMessage());

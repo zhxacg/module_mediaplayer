@@ -36,7 +36,7 @@ public interface VideoKernelApiHandler extends VideoKernelApiBase, VideoKernelAp
             if (null == handler)
                 throw new Exception("warning: handler null");
             //
-            onEvent(kernelType, PlayerType.EventType.INIT_PLAY_WHEN_READY_DELAYED_TIME_START);
+            onEvent(kernelType, PlayerType.EventType.INIT_PLAY_DELAYED_START);
             //
             Message message = Message.obtain();
             message.what = WHAT_PlayWhenReadyDelayedTime;
@@ -352,7 +352,7 @@ public interface VideoKernelApiHandler extends VideoKernelApiBase, VideoKernelAp
                     LogUtil.log(TAG, "formatMessage -> WHAT_PlayWhenReadyDelayedTime");
                 }
 
-                onEvent(msg.arg1, PlayerType.EventType.INIT_PLAY_WHEN_READY_DELAYED_TIME_COMPLETE);
+                onEvent(msg.arg1, PlayerType.EventType.INIT_PLAY_DELAYED_END);
                 initDecoderPlayWhenReadyDelayed((Context) msg.obj);
             }
             // 网络超时

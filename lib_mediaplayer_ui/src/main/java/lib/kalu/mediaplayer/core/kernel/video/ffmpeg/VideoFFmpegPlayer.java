@@ -34,13 +34,11 @@ public final class VideoFFmpegPlayer extends VideoBasePlayer {
     }
 
     @Override
-    public void releaseDecoder(boolean isFromUser) {
+    public void releaseDecoder() {
         try {
             if (null == mFFmpegPlayer)
                 throw new Exception("mFFmpegPlayerCollects error: null");
-            if (isFromUser) {
-                setEvent(null);
-            }
+            setEvent(null);
             unRegistListener();
             release();
         } catch (Exception e) {

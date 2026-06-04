@@ -56,19 +56,6 @@ public class StartArgs implements Serializable {
         return kernelType;
     }
 
-    // 日志
-    private boolean log;
-
-    public boolean isLog() {
-        return log;
-    }
-
-    // 开始播放前，是否销毁已存在的播放器相关实例
-    private boolean initRelease;
-
-    public boolean isInitRelease() {
-        return initRelease;
-    }
 
     // 视频url
     private UrlArgs urlArgs;
@@ -274,7 +261,7 @@ public class StartArgs implements Serializable {
 
     @Override
     public String toString() {
-        return "StartArgs{" + "seekType=" + seekType + ", renderType=" + renderType + ", scaleType=" + scaleType + ", decoderType=" + decoderType + ", kernelType=" + kernelType + ", log=" + log + ", initRelease=" + initRelease + ", urlArgs='" + urlArgs + '\'' + ", title='" + title + '\'' + ", trySeeDuration=" + trySeeDuration + ", liveStream=" + liveStream + ", looping=" + looping + ", mute=" + mute + ", playWhenReady=" + playWhenReady + ", playWhenReadyDelayedTime=" + playWhenReadyDelayedTime + ", playWhenReadySeekToPosition=" + playWhenReadySeekToPosition + ", prepareAsync=" + prepareAsync + ", rotation=" + rotation + ", extraData=" + extraData + ", showSpeed=" + showSpeed + ", menu=" + menu + ", noProxy=" + noProxy + ", proxy=" + proxy + ", bufferDurationsMs=" + bufferDurationsMs + ", liveConfiguration=" + liveConfiguration + ", livePlaybackSpeedControl=" + livePlaybackSpeedControl + ", adaptiveTrackSelection=" + adaptiveTrackSelection + ", stuckDetectorMs=" + stuckDetectorMs + ", retryCount=" + retryCount + ", bufferingConfiguration=" + bufferingConfiguration + ", timeoutConfiguration=" + timeoutConfiguration + '}';
+        return "StartArgs{" + "seekType=" + seekType + ", renderType=" + renderType + ", scaleType=" + scaleType + ", decoderType=" + decoderType + ", kernelType=" + kernelType + ", urlArgs='" + urlArgs + '\'' + ", title='" + title + '\'' + ", trySeeDuration=" + trySeeDuration + ", liveStream=" + liveStream + ", looping=" + looping + ", mute=" + mute + ", playWhenReady=" + playWhenReady + ", playWhenReadyDelayedTime=" + playWhenReadyDelayedTime + ", playWhenReadySeekToPosition=" + playWhenReadySeekToPosition + ", prepareAsync=" + prepareAsync + ", rotation=" + rotation + ", extraData=" + extraData + ", showSpeed=" + showSpeed + ", menu=" + menu + ", noProxy=" + noProxy + ", proxy=" + proxy + ", bufferDurationsMs=" + bufferDurationsMs + ", liveConfiguration=" + liveConfiguration + ", livePlaybackSpeedControl=" + livePlaybackSpeedControl + ", adaptiveTrackSelection=" + adaptiveTrackSelection + ", stuckDetectorMs=" + stuckDetectorMs + ", retryCount=" + retryCount + ", bufferingConfiguration=" + bufferingConfiguration + ", timeoutConfiguration=" + timeoutConfiguration + '}';
     }
 
     public StartArgs(Builder builder) {
@@ -283,8 +270,6 @@ public class StartArgs implements Serializable {
         this.renderType = builder.renderType;
         this.scaleType = builder.scaleType;
         this.kernelType = builder.kernelType;
-        this.log = builder.log;
-        this.initRelease = builder.initRelease;
         this.urlArgs = builder.urlArgs;
         this.title = builder.title;
         this.trySeeDuration = builder.trySeeDuration;
@@ -318,8 +303,6 @@ public class StartArgs implements Serializable {
         builder.renderType = renderType;
         builder.scaleType = scaleType;
         builder.kernelType = kernelType;
-        builder.log = log;
-        builder.initRelease = initRelease;
         builder.urlArgs = urlArgs;
         builder.title = title;
         builder.trySeeDuration = trySeeDuration;
@@ -362,10 +345,6 @@ public class StartArgs implements Serializable {
         // 旋转角度
         @PlayerType.RotationType.Value
         private int rotation = configArgs.getRotation();
-        // 日志
-        private boolean log = configArgs.isLog();
-        // 开始播放前，是否销毁已存在的播放器相关实例
-        private boolean initRelease = configArgs.isInitRelease();
 
         @PlayerType.SeekType.Value
         private int seekType = configArgs.getSeekType();

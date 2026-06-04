@@ -134,13 +134,11 @@ public final class VideoExo2Player extends VideoBasePlayer {
     }
 
     @Override
-    public void releaseDecoder(boolean isFromUser) {
+    public void releaseDecoder() {
         try {
             if (null == mExoPlayer)
                 throw new Exception("mExoPlayer error: null");
-            if (isFromUser) {
-                setEvent(null);
-            }
+            setEvent(null);
             unRegistListener();
             release();
             if (LogUtil.DEBUG) {
@@ -541,20 +539,6 @@ public final class VideoExo2Player extends VideoBasePlayer {
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
                 LogUtil.log(TAG, "initOptions -> Exception step2 " + e.getMessage());
-            }
-        }
-
-        // log
-        try {
-            if (null == mExoPlayer)
-                throw new Exception("error: mExoPlayer null");
-            if (null == args)
-                throw new Exception("error: args null");
-            boolean log = args.isLog();
-            lib.kalu.mediax.util.MediaLogUtil.setDebug(log);
-        } catch (Exception e) {
-            if (LogUtil.DEBUG) {
-                LogUtil.log(TAG, "initOptions -> Exception step3 " + e.getMessage());
             }
         }
     }

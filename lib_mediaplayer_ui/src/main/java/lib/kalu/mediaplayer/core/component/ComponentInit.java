@@ -57,14 +57,14 @@ public class ComponentInit extends RelativeLayout implements ComponentApi {
                 }
                 hide();
                 break;
-            case PlayerType.EventType.INIT_PLAY_WHEN_READY_DELAYED_TIME_START:
+            case PlayerType.EventType.INIT_PLAY_DELAYED_START:
                 if (LogUtil.DEBUG) {
-                    LogUtil.log("ComponentInit -> callEvent -> INIT_PLAY_WHEN_READY_DELAYED_TIME_START");
+                    LogUtil.log("ComponentInit -> callEvent -> INIT_PLAY_DELAYED_START");
                 }
                 break;
-            case PlayerType.EventType.INIT_PLAY_WHEN_READY_DELAYED_TIME_COMPLETE:
+            case PlayerType.EventType.INIT_PLAY_DELAYED_END:
                 if (LogUtil.DEBUG) {
-                    LogUtil.log("ComponentInit -> callEvent -> INIT_PLAY_WHEN_READY_DELAYED_TIME_COMPLETE");
+                    LogUtil.log("ComponentInit -> callEvent -> INIT_PLAY_DELAYED_END");
                 }
                 break;
             case PlayerType.EventType.START:

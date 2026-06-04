@@ -32,16 +32,14 @@ public final class VideoAndroidPlayer extends VideoBasePlayer {
     }
 
     @Override
-    public void releaseDecoder(boolean isFromUser) {
+    public void releaseDecoder() {
         try {
             if (null == mAndroidPlayer)
                 throw new Exception("error: mAndroidPlayer null");
             if (LogUtil.DEBUG) {
                 LogUtil.log("VideoAndroidPlayer -> releaseDecoder ->");
             }
-            if (isFromUser) {
-                setEvent(null);
-            }
+            setEvent(null);
             unRegistListener();
             release();
         } catch (Exception e) {
