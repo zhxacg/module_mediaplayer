@@ -218,9 +218,8 @@ public final class PlayerView extends RelativeLayout implements VideoPlayerApi {
         setKeepScreenOn(enable);
     }
 
-    @Override
     public void start(StartArgs args) {
-        VideoPlayerApi.super.start(args);
+        VideoPlayerApi.super.start(args, false);
     }
 
     /**************/

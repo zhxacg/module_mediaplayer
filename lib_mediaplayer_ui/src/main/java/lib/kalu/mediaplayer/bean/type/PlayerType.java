@@ -52,17 +52,17 @@ public @interface PlayerType {
     @Target({METHOD, PARAMETER, FIELD, LOCAL_VARIABLE, ANNOTATION_TYPE, PACKAGE})
     @interface EventType {
         int INIT = 3_000;            // 准备初始换
-        int INIT_STOP = 3_001;            //
-        int INIT_RELEASE = 3_002;            //
-        int INIT_PLAY_DELAYED_START = 3_003; // 延迟播放
-        int INIT_PLAY_DELAYED_END = 3_004; // 延迟播放
-        int INIT_READY = 3_005;            // 准备就绪
-        int PREPARE = 3_006; // 起播加载
-        int VIDEO_RENDERING_START = 3_007;    // 出画面
+        int INIT_RESTART = 3_001;
+        int INIT_STOP = 3_002;            //
+        int INIT_RELEASE = 3_003;            //
+        int INIT_PLAY_DELAYED_START = 3_004; // 延迟播放
+        int INIT_PLAY_DELAYED_END = 3_005; // 延迟播放
+        int INIT_READY = 3_006;            // 准备就绪
+        int PREPARE = 3_007; // 起播加载
         int START = 3_008;          // 播放开始
-        int START_PLAY_WHEN_READY_TRUE = 3_009; // 立即播放
-        int START_PLAY_WHEN_READY_FALSE = 3_010;  // 不立即播放
-        int RESTART = 3_011;
+        int START_VIDEO_RENDERING = 3_009;    // 出画面
+        int START_PLAY_WHEN_READY_TRUE = 3_010; // 立即播放
+        int START_PLAY_WHEN_READY_FALSE = 3_011;  // 不立即播放
         int PAUSE = 3_012; // 播放暂停
         int PAUSE_PlAY_WHEN_READY = 3_013; // 播放暂停
         int RESUME = 3_014; // 播放恢复
@@ -104,18 +104,22 @@ public @interface PlayerType {
         int COMPONENT_SEEK_SHOW = 3_503;
         int COMPONENT_SEEK_HIDE = 3_504;
 
+        //
+        int UPDATE_PLAYBACLK_SPEED = 3_604;
+
         @Documented
         @Retention(CLASS)
         @Target({METHOD, PARAMETER, FIELD, LOCAL_VARIABLE, ANNOTATION_TYPE, PACKAGE})
         @IntDef({
                 INIT,
+                INIT_RESTART,
                 INIT_STOP,
                 INIT_RELEASE,
                 INIT_PLAY_DELAYED_START,
                 INIT_PLAY_DELAYED_END,
                 INIT_READY,
                 PREPARE,
-                VIDEO_RENDERING_START,
+                START_VIDEO_RENDERING,
                 START,
                 START_PLAY_WHEN_READY_TRUE,
                 START_PLAY_WHEN_READY_FALSE,
@@ -150,7 +154,7 @@ public @interface PlayerType {
                 ERROR_TIMEOUT_BUFFER, // 缓冲超时
                 ERROR_INIT, // 初始化错误
                 ERROR_DECODE, // 解码
-                RESTART})
+                UPDATE_PLAYBACLK_SPEED})
         @interface Value {
         }
     }

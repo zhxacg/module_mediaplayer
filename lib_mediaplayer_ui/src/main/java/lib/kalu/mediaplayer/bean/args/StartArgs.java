@@ -259,6 +259,14 @@ public class StartArgs implements Serializable {
         return timeoutConfiguration;
     }
 
+
+    // 重试
+    private boolean fromRestart;
+
+    public boolean isFromRestart() {
+        return fromRestart;
+    }
+
     @Override
     public String toString() {
         return "StartArgs{" + "seekType=" + seekType + ", renderType=" + renderType + ", scaleType=" + scaleType + ", decoderType=" + decoderType + ", kernelType=" + kernelType + ", urlArgs='" + urlArgs + '\'' + ", title='" + title + '\'' + ", trySeeDuration=" + trySeeDuration + ", liveStream=" + liveStream + ", looping=" + looping + ", mute=" + mute + ", playWhenReady=" + playWhenReady + ", playWhenReadyDelayedTime=" + playWhenReadyDelayedTime + ", playWhenReadySeekToPosition=" + playWhenReadySeekToPosition + ", prepareAsync=" + prepareAsync + ", rotation=" + rotation + ", extraData=" + extraData + ", showSpeed=" + showSpeed + ", menu=" + menu + ", noProxy=" + noProxy + ", proxy=" + proxy + ", bufferDurationsMs=" + bufferDurationsMs + ", liveConfiguration=" + liveConfiguration + ", livePlaybackSpeedControl=" + livePlaybackSpeedControl + ", adaptiveTrackSelection=" + adaptiveTrackSelection + ", stuckDetectorMs=" + stuckDetectorMs + ", retryCount=" + retryCount + ", bufferingConfiguration=" + bufferingConfiguration + ", timeoutConfiguration=" + timeoutConfiguration + '}';
@@ -294,6 +302,7 @@ public class StartArgs implements Serializable {
         this.retryCount = builder.retryCount;
         this.bufferingConfiguration = builder.bufferingConfiguration;
         this.timeoutConfiguration = builder.timeoutConfiguration;
+        this.fromRestart = builder.fromRestart;
     }
 
     public Builder newBuilder() {
@@ -327,6 +336,7 @@ public class StartArgs implements Serializable {
         builder.retryCount = retryCount;
         builder.bufferingConfiguration = bufferingConfiguration;
         builder.timeoutConfiguration = timeoutConfiguration;
+        builder.fromRestart = fromRestart;
         return builder;
     }
 
@@ -560,6 +570,12 @@ public class StartArgs implements Serializable {
 
         public Builder setTimeoutConfiguration(TimeoutConfiguration v) {
             this.timeoutConfiguration = v;
+            return this;
+        }
+
+        private boolean fromRestart = false;
+        public Builder setFromRestart(boolean v) {
+            this.fromRestart = v;
             return this;
         }
 

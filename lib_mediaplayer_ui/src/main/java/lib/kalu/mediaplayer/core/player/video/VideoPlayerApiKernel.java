@@ -59,6 +59,12 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
             LogUtil.setLogger(log);
 
             callEvent(PlayerType.EventType.INIT);
+
+            boolean fromRestart = startArgs.isFromRestart();
+            if (fromRestart) {
+                callEvent(PlayerType.EventType.INIT_RESTART);
+            }
+
             Context context = getBaseContext();
             boolean connected = NetworkUtil.isConnected(context);
             if (!connected)
@@ -252,16 +258,11 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
             boolean containsMainUrl = startArgs.containsMainUrl();
             if (!containsMainUrl)
                 throw new Exception("error: containsMainUrl false");
-            callEvent(PlayerType.EventType.RESTART);
-            long playWhenReadySeekToPosition = startArgs.getPlayWhenReadySeekToPosition();
-            if (playWhenReadySeekToPosition > 0) {
-                StartArgs newArgs = startArgs.newBuilder()
-                        .setPlayWhenReadySeekToPosition(0L)
-                        .build();
-                start(newArgs);
-            } else {
-                start(startArgs);
-            }
+            StartArgs newArgs = startArgs.newBuilder()
+                    .setPlayWhenReadySeekToPosition(0L)
+                    .setFromRestart(true)
+                    .build();
+            start(newArgs);
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
                 LogUtil.log(TAG, "restart -> " + e.getMessage());
@@ -277,7 +278,6 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
             boolean containsMainUrl = startArgs.containsMainUrl();
             if (!containsMainUrl)
                 throw new Exception("error: containsMainUrl false");
-            callEvent(PlayerType.EventType.RESTART);
 
             long position = 0L;
             boolean live = isLiveStream();
@@ -285,6 +285,7 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
                 position = getPosition();
             }
             StartArgs newArgs = startArgs.newBuilder()
+                    .setFromRestart(true)
                     .setPlayWhenReadySeekToPosition(position)
                     .build();
             start(newArgs);
@@ -690,7 +691,7 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
                             kernelApi.closeMessagesBufferingTimeout();
                             break;
                         // 视频首帧
-                        case PlayerType.EventType.VIDEO_RENDERING_START:
+                        case PlayerType.EventType.START_VIDEO_RENDERING:
                             // 埋点
                             onBuriedVideoRenderingStart();
                             //
