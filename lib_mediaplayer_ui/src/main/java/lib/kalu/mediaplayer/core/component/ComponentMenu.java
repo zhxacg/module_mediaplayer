@@ -148,13 +148,13 @@ public class ComponentMenu extends RelativeLayout implements ComponentApi {
                                 }
                             }
                             //
-                            StartArgs args = startArgs.newBuilder()
+                            StartArgs newArgs = startArgs.newBuilder()
                                     .setUrl(url)
                                     .setMenu(new Menu.Builder()
                                             .setData(list).build()).build();
-                            getPlayerView().stop();
-                            getPlayerView().release();
-                            getPlayerView().start(args);
+                            stop();
+                            release();
+                            start(newArgs);
                             //
                             hide();
                         }

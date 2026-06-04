@@ -36,7 +36,7 @@ public interface VideoKernelApiHandler extends VideoKernelApiBase, VideoKernelAp
             if (null == handler)
                 throw new Exception("warning: handler null");
             //
-            onEvent(kernelType, PlayerType.EventType.INIT_PLAY_DELAYED_START);
+            onEvent(kernelType, PlayerType.EventType.MEDIA_INFO_PLAY_WHEN_READY_DELAYED_TIME_START);
             //
             Message message = Message.obtain();
             message.what = WHAT_PlayWhenReadyDelayedTime;
@@ -352,7 +352,7 @@ public interface VideoKernelApiHandler extends VideoKernelApiBase, VideoKernelAp
                     LogUtil.log(TAG, "formatMessage -> WHAT_PlayWhenReadyDelayedTime");
                 }
 
-                onEvent(msg.arg1, PlayerType.EventType.INIT_PLAY_DELAYED_END);
+                onEvent(msg.arg1, PlayerType.EventType.MEDIA_INFO_PLAY_WHEN_READY_DELAYED_TIME_END);
                 initDecoderPlayWhenReadyDelayed((Context) msg.obj);
             }
             // 网络超时
@@ -368,7 +368,7 @@ public interface VideoKernelApiHandler extends VideoKernelApiBase, VideoKernelAp
                 long cast = System.currentTimeMillis() - start;
                 if (cast >= timeout) {
                     onEvent(msg.arg1, PlayerType.EventType.ERROR_TIMEOUT_LOAD);
-                    getPlayerApi().stop(true, false);
+                    getPlayerApi().stop(true);
                     throw new Exception("warning: connect timeout");
                 } else {
                     sendMessageConnectTimeout(msg.arg1, start, timeout, true);

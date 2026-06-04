@@ -4,12 +4,10 @@ import android.content.Context;
 import android.net.Uri;
 import android.view.Surface;
 
-import lib.kalu.mediaplayer.PlayerSDK;
 import lib.kalu.mediaplayer.bean.args.StartArgs;
 import lib.kalu.mediaplayer.bean.type.PlayerType;
 import lib.kalu.mediaplayer.core.kernel.video.VideoBasePlayer;
 import lib.kalu.mediaplayer.util.LogUtil;
-import lib.kalu.vlc.util.VlcLogUtil;
 import lib.kalu.vlc.widget.OnVlcInfoChangeListener;
 import lib.kalu.vlc.widget.VlcPlayer;
 
@@ -60,7 +58,7 @@ public final class VideoVlcPlayer extends VideoBasePlayer {
             boolean containsMainUrl = args.containsMainUrl();
             if (!containsMainUrl)
                 throw new Exception("error: containsMainUrl false");
-            onEvent(PlayerType.KernelType.VLC, PlayerType.EventType.INIT_READY);
+            onEvent(PlayerType.KernelType.VLC, PlayerType.EventType.READY);
             mVlcPlayer.setDataSource(Uri.parse(args.getUrl()), isPlayWhenReady());
             mVlcPlayer.play();
         } catch (Exception e) {

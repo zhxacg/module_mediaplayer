@@ -62,7 +62,7 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
 
             boolean fromRestart = startArgs.isFromRestart();
             if (fromRestart) {
-                callEvent(PlayerType.EventType.INIT_RESTART);
+                callEvent(PlayerType.EventType.MEDIA_INFO_PLAY_RESTART);
             }
 
             Context context = getBaseContext();
@@ -75,8 +75,8 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
             // 1
             boolean prepared = isPrepared();
             if (prepared) {
-                stop(true, true);
-                release(true, true, false);
+                stop(false);
+                release(false, false);
             }
             // 3
             setScreenKeep(true);
@@ -198,51 +198,33 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
         }
     }
 
-    default void resume() {
-        resume(true);
-    }
-
     default void resume(boolean callEvent) {
         setScreenKeep(true);
         resumeKernel(callEvent);
     }
 
-    default void pause() {
-        pause(true);
-    }
 
     default void pause(boolean callEvent) {
         setScreenKeep(false);
         pauseKernel(callEvent);
     }
 
-    default void stop() {
-        stop(true, false);
-    }
-
-    default void stop(boolean callEvent, boolean fromInit) {
+    default void stop(boolean callEvent) {
         setScreenKeep(false);
-        stopKernel(callEvent, fromInit);
+        stopKernel(callEvent);
     }
 
-    default void release() {
-        release(true, false, true);
-    }
 
-    default void release(boolean callEvent, boolean fromInit, boolean clearListener) {
+    default void release(boolean callEvent, boolean clearListener) {
         try {
             if (clearListener) {
                 clearPlayerListener();
             }
-            releaseKernel();
-            releaseRender();
-            if (!callEvent)
-                throw new Exception("warning: callEvent false");
-            if (fromInit) {
-                callEvent(PlayerType.EventType.INIT_RELEASE);
-            } else {
+            if (callEvent) {
                 callEvent(PlayerType.EventType.RELEASE);
             }
+            releaseKernel();
+            releaseRender();
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
                 LogUtil.log(TAG, "release -> " + e.getMessage());
@@ -502,7 +484,7 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
         }
     }
 
-    default void stopKernel(boolean callEvent, boolean fromInit) {
+    default void stopKernel(boolean callEvent) {
         try {
             VideoKernelApi kernel = getVideoKernel();
             if (null == kernel)
@@ -510,16 +492,14 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
             // 埋点
             boolean prepared = isPrepared();
             if (prepared) {
-                onBuriedStop(fromInit);
+                onBuriedStop();
+            }
+            if (callEvent) {
+                callEvent(PlayerType.EventType.STOP);
             }
             kernel.stop();
             if (!callEvent)
                 throw new Exception("warning: callEvent false");
-            if (fromInit) {
-                callEvent(PlayerType.EventType.INIT_STOP);
-            } else {
-                callEvent(PlayerType.EventType.STOP);
-            }
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
                 LogUtil.log(TAG, "stopKernel -> " + e.getMessage());
@@ -608,7 +588,7 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
                         onBuriedTrySeeEnd();
 
                         // 试看结束
-                        stop();
+                        stop(true);
                         callEvent(PlayerType.EventType.TRY_SEE_END);
                     } catch (Exception e) {
                     }

@@ -51,22 +51,18 @@ public @interface PlayerType {
     @Retention(CLASS)
     @Target({METHOD, PARAMETER, FIELD, LOCAL_VARIABLE, ANNOTATION_TYPE, PACKAGE})
     @interface EventType {
-        int INIT = 3_000;            // 准备初始换
-        int INIT_RESTART = 3_001;
-        int INIT_STOP = 3_002;            //
-        int INIT_RELEASE = 3_003;            //
-        int INIT_PLAY_DELAYED_START = 3_004; // 延迟播放
-        int INIT_PLAY_DELAYED_END = 3_005; // 延迟播放
-        int INIT_READY = 3_006;            // 准备就绪
-        int START = 3_008;          // 播放开始
-        int END = 3_009;    // 播放完成
-        int PAUSE = 3_010; // 播放暂停
-        int RESUME = 3_011; // 播放恢复
-        int STOP = 3_012; // 播放停止
-        int RELEASE = 3_013; // 播放销毁
+        int INIT = 3_001;            // 初始化
+        int READY = 3_002;            // 准备就绪
+        int START = 3_003;          // 播放开始
+        int END = 3_004;    // 播放完成
+        int PAUSE = 3_015; // 播放暂停
+        int RESUME = 3_016; // 播放恢复
+        int STOP = 3_017; // 播放停止
+        int RELEASE = 3_018; // 播放销毁
 
 
         // 视频信息
+        int MEDIA_INFO_PLAY_RESTART = 3_201; // 重新播放
         int MEDIA_INFO_PREPARE = 3_202;    // 起播加载
         int MEDIA_INFO_VIDEO_RENDERING_START = 3_203;    // 视频出画面
         int MEDIA_INFO_BUFFERING_START = 3_204;    // 缓冲
@@ -77,6 +73,8 @@ public @interface PlayerType {
         int MEDIA_INFO_UPDATE_SEEK_FINISH = 3_209;
         int MEDIA_INFO_PLAY_WHEN_READY_SEEK = 3_210; // 启播快进
         int MEDIA_INFO_PLAY_WHEN_READY_PAUSE = 3_211; // 启播暂停
+        int MEDIA_INFO_PLAY_WHEN_READY_DELAYED_TIME_START = 3_212; // 延迟播放 倒计时开始
+        int MEDIA_INFO_PLAY_WHEN_READY_DELAYED_TIME_END = 3_213; // 延迟播放 倒计时结束
 
 
         // 错误
@@ -112,18 +110,14 @@ public @interface PlayerType {
         @Target({METHOD, PARAMETER, FIELD, LOCAL_VARIABLE, ANNOTATION_TYPE, PACKAGE})
         @IntDef({
                 INIT,
-                INIT_RESTART,
-                INIT_STOP,
-                INIT_RELEASE,
-                INIT_PLAY_DELAYED_START,
-                INIT_PLAY_DELAYED_END,
-                INIT_READY,
+                READY,
                 START,
                 END, // 播放完成
                 PAUSE,
                 RESUME,
                 STOP,
                 RELEASE,
+                MEDIA_INFO_PLAY_RESTART, // 重播
                 MEDIA_INFO_PREPARE, // 起播加载
                 MEDIA_INFO_UPDATE_PLAYBACLK_SPEED, // 切换倍速
                 MEDIA_INFO_VIDEO_RENDERING_START,    // 视频出画面
@@ -134,6 +128,8 @@ public @interface PlayerType {
                 MEDIA_INFO_UPDATE_SEEK_FINISH,
                 MEDIA_INFO_PLAY_WHEN_READY_PAUSE, // 启播暂停
                 MEDIA_INFO_PLAY_WHEN_READY_SEEK, // 启播快进
+                MEDIA_INFO_PLAY_WHEN_READY_DELAYED_TIME_START, // 延迟播放 倒计时开始
+                MEDIA_INFO_PLAY_WHEN_READY_DELAYED_TIME_END, // 延迟播放 倒计时结束
                 WINDOW_FULL_START,
                 WINDOW_FULL_SUCC,
                 WINDOW_FULL_FAIL,

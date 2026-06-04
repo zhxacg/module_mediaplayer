@@ -21,7 +21,6 @@ import lib.kalu.ijkplayer.inter.OnTimedTextListener;
 import lib.kalu.ijkplayer.inter.OnVideoSizeChangedListener;
 import lib.kalu.ijkplayer.misc.IMediaFormat;
 import lib.kalu.ijkplayer.misc.IjkTrackInfo;
-import lib.kalu.mediaplayer.PlayerSDK;
 import lib.kalu.mediaplayer.bean.args.StartArgs;
 import lib.kalu.mediaplayer.bean.info.TrackInfo;
 import lib.kalu.mediaplayer.bean.type.PlayerType;
@@ -92,7 +91,7 @@ public final class VideoIjkPlayer extends VideoBasePlayer {
             boolean containsMainUrl = args.containsMainUrl();
             if (!containsMainUrl)
                 throw new Exception("error: containsMainUrl false");
-            onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.INIT_READY);
+            onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.READY);
             mIjkPlayer.setDataSource(context, Uri.parse(args.getUrl()), null);
             boolean prepareAsync = args.isPrepareAsync();
             if (prepareAsync) {

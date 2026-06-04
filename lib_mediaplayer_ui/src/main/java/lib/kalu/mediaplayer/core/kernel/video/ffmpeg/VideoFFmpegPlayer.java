@@ -73,7 +73,7 @@ public final class VideoFFmpegPlayer extends VideoBasePlayer {
             boolean containsMainUrl = args.containsMainUrl();
             if (!containsMainUrl)
                 throw new Exception("error: containsMainUrl false");
-            onEvent(PlayerType.KernelType.FFPLAYER, PlayerType.EventType.INIT_READY);
+            onEvent(PlayerType.KernelType.FFPLAYER, PlayerType.EventType.READY);
             mFFmpegPlayer.setDataSource(context, Uri.parse(args.getUrl()), null);
             mFFmpegPlayer.prepare();
         } catch (Exception e) {

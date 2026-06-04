@@ -415,16 +415,7 @@ public class PlayerLayout extends RelativeLayout {
     }
 
     public final void resume() {
-        try {
-            PlayerView playerView = getPlayerView();
-            if (null == playerView)
-                throw new Exception("playerView error: null");
-            playerView.resume();
-        } catch (Exception e) {
-            if (LogUtil.DEBUG) {
-                LogUtil.log("PlayerLayout -> resume -> " + e.getMessage());
-            }
-        }
+        resume(true);
     }
 
     public final void resume(boolean callEvent) {
@@ -441,16 +432,7 @@ public class PlayerLayout extends RelativeLayout {
     }
 
     public final void pause() {
-        try {
-            PlayerView playerView = getPlayerView();
-            if (null == playerView)
-                throw new Exception("playerView error: null");
-            playerView.pause();
-        } catch (Exception e) {
-            if (LogUtil.DEBUG) {
-                LogUtil.log("PlayerLayout -> pause -> " + e.getMessage());
-            }
-        }
+        pause(true);
     }
 
     public final void pause(boolean callEvent) {
@@ -467,16 +449,7 @@ public class PlayerLayout extends RelativeLayout {
     }
 
     public final void release() {
-        try {
-            PlayerView playerView = getPlayerView();
-            if (null == playerView)
-                throw new Exception("playerView error: null");
-            playerView.release(false, true, true);
-        } catch (Exception e) {
-            if (LogUtil.DEBUG) {
-                LogUtil.log("PlayerLayout -> release -> " + e.getMessage());
-            }
-        }
+        release(true);
     }
 
     /**
@@ -487,7 +460,7 @@ public class PlayerLayout extends RelativeLayout {
             PlayerView playerView = getPlayerView();
             if (null == playerView)
                 throw new Exception("playerView error: null");
-            playerView.release(callEvent, false, true);
+            playerView.release(callEvent, false);
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
                 LogUtil.log("PlayerLayout -> release -> " + e.getMessage());
@@ -496,27 +469,18 @@ public class PlayerLayout extends RelativeLayout {
     }
 
     public final void stop() {
-        stop(true, false);
+        stop(true);
     }
 
     /**
      * @param callEvent 透传event
      */
-    public final void stop(boolean callEvent, boolean updateUrl) {
+    public final void stop(boolean callEvent) {
         try {
             PlayerView playerView = getPlayerView();
             if (null == playerView)
                 throw new Exception("playerView error: null");
-            if (updateUrl) {
-                StartArgs startArgs = getStartArgs();
-                if (null == startArgs) {
-                    playerView.stop(callEvent, false);
-                } else {
-                    playerView.stop(callEvent, true);
-                }
-            } else {
-                playerView.stop(callEvent, false);
-            }
+            playerView.stop(callEvent);
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
                 LogUtil.log("PlayerLayout -> stop -> " + e.getMessage());

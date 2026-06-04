@@ -205,7 +205,7 @@ public final class PlayerView extends RelativeLayout implements VideoPlayerApi {
             int visibility = getVisibility();
             if (visibility == View.VISIBLE)
                 throw new Exception("warning: visibility == View.VISIBLE");
-            pause();
+            pause(true);
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
                 LogUtil.log("PlayerView -> checkVideoVisibility -> Exception " + e.getMessage());

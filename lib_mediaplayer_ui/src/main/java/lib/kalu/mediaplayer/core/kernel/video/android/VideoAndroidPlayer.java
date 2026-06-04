@@ -79,7 +79,7 @@ public final class VideoAndroidPlayer extends VideoBasePlayer {
             if (LogUtil.DEBUG) {
                 LogUtil.log("VideoAndroidPlayer -> startDecoder ->");
             }
-            onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.INIT_READY);
+            onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.READY);
 
             mAndroidPlayer.setDataSource(context, Uri.parse(args.getUrl()), null);
             boolean prepareAsync = args.isPrepareAsync();

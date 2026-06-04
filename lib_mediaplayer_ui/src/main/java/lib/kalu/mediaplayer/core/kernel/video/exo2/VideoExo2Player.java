@@ -379,7 +379,7 @@ public final class VideoExo2Player extends VideoBasePlayer {
         try {
             if (null == mExoPlayer)
                 throw new Exception("mExoPlayer error: null");
-            onEvent(PlayerType.KernelType.EXO_V2, PlayerType.EventType.INIT_READY);
+            onEvent(PlayerType.KernelType.EXO_V2, PlayerType.EventType.READY);
             // 缓存
             boolean initSimpleCache = initSimpleCache(context, startArgs);
             if (LogUtil.DEBUG) {

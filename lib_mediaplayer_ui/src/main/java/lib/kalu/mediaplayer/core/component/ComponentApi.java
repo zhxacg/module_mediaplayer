@@ -547,10 +547,40 @@ public interface ComponentApi {
             PlayerView playerView = getPlayerView();
             if (null == playerView)
                 throw new Exception("playerView error: null");
-            playerView.stop(callEvent, false);
+            playerView.stop(callEvent);
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
                 LogUtil.log("ComponentApi -> toggle -> " + e.getMessage());
+            }
+        }
+    }
+
+    default void release() {
+        release(true);
+    }
+
+    default void release(boolean callEvent) {
+        try {
+            PlayerView playerView = getPlayerView();
+            if (null == playerView)
+                throw new Exception("playerView error: null");
+            playerView.release(callEvent, false);
+        } catch (Exception e) {
+            if (LogUtil.DEBUG) {
+                LogUtil.log("ComponentApi -> release -> " + e.getMessage());
+            }
+        }
+    }
+
+    default void start(StartArgs startArgs) {
+        try {
+            PlayerView playerView = getPlayerView();
+            if (null == playerView)
+                throw new Exception("playerView error: null");
+            playerView.start(startArgs);
+        } catch (Exception e) {
+            if (LogUtil.DEBUG) {
+                LogUtil.log("ComponentApi -> start -> " + e.getMessage());
             }
         }
     }
