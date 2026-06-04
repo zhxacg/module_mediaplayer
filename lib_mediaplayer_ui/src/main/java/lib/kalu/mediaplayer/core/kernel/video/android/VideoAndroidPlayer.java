@@ -532,7 +532,7 @@ public final class VideoAndroidPlayer extends VideoBasePlayer {
                     if (isPrepared)
                         throw new Exception("warning: mPrepared true");
                     isPrepared = true;
-                    onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.VIDEO_RENDERING_START);
+                    onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.START_VIDEO_RENDERING);
                     long seek = getPlayWhenReadySeekToPosition();
 
                     if (LogUtil.DEBUG) {

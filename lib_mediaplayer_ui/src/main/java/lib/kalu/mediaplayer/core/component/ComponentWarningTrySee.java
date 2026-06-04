@@ -77,7 +77,7 @@ public class ComponentWarningTrySee extends RelativeLayout implements ComponentA
                     }
                 }
                 break;
-            case PlayerType.EventType.VIDEO_RENDERING_START:
+            case PlayerType.EventType.START_VIDEO_RENDERING:
                 try {
                     long trySeeDuration = getTrySeeDuration();
                     if (trySeeDuration <= 0L)

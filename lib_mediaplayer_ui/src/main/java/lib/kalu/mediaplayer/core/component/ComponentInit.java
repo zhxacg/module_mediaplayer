@@ -51,9 +51,9 @@ public class ComponentInit extends RelativeLayout implements ComponentApi {
                 }
                 hide();
                 break;
-            case PlayerType.EventType.VIDEO_RENDERING_START:
+            case PlayerType.EventType.START_VIDEO_RENDERING:
                 if (LogUtil.DEBUG) {
-                    LogUtil.log("ComponentInit -> callEvent -> VIDEO_RENDERING_START");
+                    LogUtil.log("ComponentInit -> callEvent -> START_VIDEO_RENDERING");
                 }
                 hide();
                 break;

@@ -1345,7 +1345,7 @@ public final class VideoExo2Player extends VideoBasePlayer {
                             onEvent(PlayerType.KernelType.MEDIA_V3, playWhenReady ? PlayerType.EventType.START_PLAY_WHEN_READY_TRUE : PlayerType.EventType.START_PLAY_WHEN_READY_FALSE);
                             if (playWhenReady) {
                                 onEvent(PlayerType.KernelType.MEDIA_V3, PlayerType.EventType.START);
-                                onEvent(PlayerType.KernelType.MEDIA_V3, PlayerType.EventType.VIDEO_RENDERING_START);
+                                onEvent(PlayerType.KernelType.MEDIA_V3, PlayerType.EventType.START_VIDEO_RENDERING);
                                 start();
                             } else {
                                 pause();
@@ -1432,7 +1432,7 @@ public final class VideoExo2Player extends VideoBasePlayer {
                     throw new Exception("warning: isPrepared true");
                 isPrepared = true;
                 onEvent(PlayerType.KernelType.MEDIA_V3, PlayerType.EventType.PREPARE);
-                onEvent(PlayerType.KernelType.MEDIA_V3, PlayerType.EventType.VIDEO_RENDERING_START);
+                onEvent(PlayerType.KernelType.MEDIA_V3, PlayerType.EventType.START_VIDEO_RENDERING);
                 long playWhenReadySeekToPosition = getPlayWhenReadySeekToPosition();
                 if (LogUtil.DEBUG) {
                     LogUtil.log(TAG, "onVideoInputFormatChanged -> playWhenReadySeekToPosition = " + playWhenReadySeekToPosition);

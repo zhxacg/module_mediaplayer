@@ -401,7 +401,7 @@ public final class VideoFFmpegPlayer extends VideoBasePlayer {
                     if (isPrepared)
                         throw new Exception("warning: mPrepared true");
                     isPrepared = true;
-                    onEvent(PlayerType.KernelType.FFPLAYER, PlayerType.EventType.VIDEO_RENDERING_START);
+                    onEvent(PlayerType.KernelType.FFPLAYER, PlayerType.EventType.START_VIDEO_RENDERING);
                     long seek = getPlayWhenReadySeekToPosition();
                     if (seek <= 0) {
                         onEvent(PlayerType.KernelType.FFPLAYER, PlayerType.EventType.START);

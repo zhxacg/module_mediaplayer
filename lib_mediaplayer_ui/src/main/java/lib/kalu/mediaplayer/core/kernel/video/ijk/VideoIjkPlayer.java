@@ -699,7 +699,7 @@ public final class VideoIjkPlayer extends VideoBasePlayer {
                     if (isPrepared)
                         throw new Exception("warning: isPrepared true");
                     isPrepared = true;
-                    onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.VIDEO_RENDERING_START);
+                    onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.START_VIDEO_RENDERING);
                     long seek = getPlayWhenReadySeekToPosition();
                     if (LogUtil.DEBUG) {
                         LogUtil.log("VideoIjkPlayer -> onInfo -> seek = " + seek);

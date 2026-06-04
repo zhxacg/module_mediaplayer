@@ -41,7 +41,7 @@ public class ComponentWarningPlayInfo extends RelativeLayout implements Componen
                 }
                 hide();
                 break;
-            case PlayerType.EventType.VIDEO_RENDERING_START:
+            case PlayerType.EventType.START_VIDEO_RENDERING:
                 if (LogUtil.DEBUG) {
                     LogUtil.log("ComponentWarningPlayInfo -> callEvent -> VIDEO_RENDERING_START");
                 }
