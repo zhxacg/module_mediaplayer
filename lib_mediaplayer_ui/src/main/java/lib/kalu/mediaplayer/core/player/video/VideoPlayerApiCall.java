@@ -133,6 +133,10 @@ public interface VideoPlayerApiCall extends VideoPlayerApiBase, VideoPlayerApiLi
 
     default void callEvent(boolean callPlayer, boolean callComponent, @PlayerType.EventType.Value int playState) {
 
+        if (LogUtil.DEBUG) {
+            LogUtil.log(TAG, "callEvent -> callPlayer = " + callPlayer + ", callComponent = " + callComponent + ", playState = " + playState);
+        }
+
         // component
         if (callComponent) {
             callComponentEvent(playState);

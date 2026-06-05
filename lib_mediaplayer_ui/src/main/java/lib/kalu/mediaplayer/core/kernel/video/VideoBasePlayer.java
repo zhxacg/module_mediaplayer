@@ -1,13 +1,13 @@
 package lib.kalu.mediaplayer.core.kernel.video;
 
 import lib.kalu.mediaplayer.core.player.video.VideoPlayerApi;
-import lib.kalu.mediaplayer.bean.type.PlayerType;
 import lib.kalu.mediaplayer.util.LogUtil;
 
 public abstract class VideoBasePlayer implements VideoKernelApi {
 
     private VideoKernelApiEvent eventApi;
     private VideoPlayerApi playerApi;
+
     @Override
     public void setPlayerApi(VideoPlayerApi playerApi) {
         this.playerApi = playerApi;
@@ -35,7 +35,7 @@ public abstract class VideoBasePlayer implements VideoKernelApi {
                 throw new Exception("eventApi warning: null");
             eventApi.onUpdateProgress(trySeeDuration, position, duration);
         } catch (Exception e) {
-            if(LogUtil.DEBUG) {
+            if (LogUtil.DEBUG) {
                 LogUtil.log("VideoBasePlayer -> onUpdateProgress -> " + e.getMessage());
             }
         }
@@ -48,7 +48,7 @@ public abstract class VideoBasePlayer implements VideoKernelApi {
                 throw new Exception("eventApi error: null");
             eventApi.onUpdateSubtitle(kernel, result);
         } catch (Exception e) {
-            if(LogUtil.DEBUG) {
+            if (LogUtil.DEBUG) {
                 LogUtil.log("VideoBasePlayer -> onUpdateSubtitle -> " + e.getMessage());
             }
         }
@@ -61,7 +61,7 @@ public abstract class VideoBasePlayer implements VideoKernelApi {
                 throw new Exception("eventApi error: null");
             eventApi.onUpdateNetSpeed(kernel);
         } catch (Exception e) {
-            if(LogUtil.DEBUG) {
+            if (LogUtil.DEBUG) {
                 LogUtil.log("VideoBasePlayer -> onUpdateNetSpeed -> " + e.getMessage());
             }
         }
@@ -70,11 +70,11 @@ public abstract class VideoBasePlayer implements VideoKernelApi {
     @Override
     public void onEvent(int kernel, int event) {
         try {
-            if (null == eventApi || null == eventApi)
+            if (null == eventApi)
                 throw new Exception("eventApi error: null");
             eventApi.onEvent(kernel, event);
         } catch (Exception e) {
-            if(LogUtil.DEBUG) {
+            if (LogUtil.DEBUG) {
                 LogUtil.log("VideoBasePlayer -> onEvent -> " + e.getMessage());
             }
         }
@@ -87,7 +87,7 @@ public abstract class VideoBasePlayer implements VideoKernelApi {
                 throw new Exception("eventApi error: null");
             eventApi.onVideoFormatChanged(kernel, rotation, scaleType, width, height, bitrate);
         } catch (Exception e) {
-            if(LogUtil.DEBUG) {
+            if (LogUtil.DEBUG) {
                 LogUtil.log("VideoBasePlayer -> onVideoFormatChanged -> " + e.getMessage());
             }
         }

@@ -760,7 +760,8 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
     @Override
     public void setSpeed(float speed) {
         try {
-            if (null == mExoPlayer) throw new Exception("mMediaPlayer error: null");
+            if (null == mExoPlayer)
+                throw new Exception("mMediaPlayer error: null");
             PlaybackParameters playbackParameters = mExoPlayer.getPlaybackParameters();
             if (null != playbackParameters) {
                 playbackParameters = playbackParameters.withSpeed(speed);
