@@ -58,7 +58,26 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
             boolean log = PlayerSDK.getInstance().getConfigArgs().isLog();
             LogUtil.setLogger(log);
 
+            setScreenKeep(true);
             callEvent(PlayerType.EventType.INIT);
+
+            // fixbug
+            boolean prepared = isPrepared();
+            if (prepared) {
+                stop(false);
+                release(false, false);
+            }
+
+            // 初始化kernel
+            checkKernelNull(startArgs);
+            // 初始化Render
+            checkRenderNull(startArgs);
+            // 关联 kernel & Render
+            attachRenderKernel();
+            // 初始化参数
+            initStartArgs(startArgs);
+
+            //
             Context context = getBaseContext();
             boolean connected = NetworkUtil.isConnected(context);
             if (!connected)
@@ -72,22 +91,6 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
                 callEvent(PlayerType.EventType.MEDIA_INFO_PLAY_RESTART);
             }
 
-            // 1
-            boolean prepared = isPrepared();
-            if (prepared) {
-                stop(false);
-                release(false, false);
-            }
-            // 3
-            setScreenKeep(true);
-            // 4
-            checkKernelNull(startArgs);
-            // 5
-            checkRenderNull(startArgs);
-            // 6
-            attachRenderKernel();
-            // 7
-            initStartArgs(startArgs);
             // 8
             initDecoder();
         } catch (NetworkError e) {

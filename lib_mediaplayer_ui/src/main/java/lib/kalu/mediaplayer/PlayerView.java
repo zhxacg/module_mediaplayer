@@ -238,7 +238,7 @@ public final class PlayerView extends RelativeLayout implements VideoPlayerApi {
             if (LogUtil.DEBUG) {
                 LogUtil.log(TAG, "getStartArgs -> Exception: " + e.getMessage());
             }
-            return new StartArgs.Builder().build();
+            return null;
         }
     }
 
