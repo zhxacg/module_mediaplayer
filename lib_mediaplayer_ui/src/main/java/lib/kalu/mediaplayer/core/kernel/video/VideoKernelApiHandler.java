@@ -402,11 +402,13 @@ public interface VideoKernelApiHandler extends VideoKernelApiBase, VideoKernelAp
             }
             // 更新进度条
             else if (msg.what == WHAT_ProgressUpdate) {
+
+                boolean prepared = isPrepared();
                 if (LogUtil.DEBUG) {
-                    LogUtil.log(TAG, "formatMessage -> WHAT_ProgressUpdate");
+                    LogUtil.log(TAG, "formatMessage -> WHAT_ProgressUpdate, prepared = " + prepared);
                 }
 
-                if (isPrepared()) {
+                if (prepared) {
                     long position = getPosition();
                     long duration = getDuration();
                     long trySeeDuration = getTrySeeDuration();

@@ -575,8 +575,10 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
 
                 @Override
                 public void onUpdateProgress(long trySeeDuration, long position, long duration) {
+
+                    callProgress(trySeeDuration, position, duration);
+
                     try {
-                        callProgress(trySeeDuration, position, duration);
                         if (trySeeDuration <= 0L)
                             throw new Exception("waning: trySeeDuration<=0L");
                         if (position < 0L)
