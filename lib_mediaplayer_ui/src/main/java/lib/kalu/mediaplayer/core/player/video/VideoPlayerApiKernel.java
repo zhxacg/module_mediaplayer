@@ -59,12 +59,6 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
             LogUtil.setLogger(log);
 
             callEvent(PlayerType.EventType.INIT);
-
-            boolean fromRestart = startArgs.isFromRestart();
-            if (fromRestart) {
-                callEvent(PlayerType.EventType.MEDIA_INFO_PLAY_RESTART);
-            }
-
             Context context = getBaseContext();
             boolean connected = NetworkUtil.isConnected(context);
             if (!connected)
@@ -72,6 +66,12 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
             boolean containsMainUrl = startArgs.containsMainUrl();
             if (!containsMainUrl)
                 throw new UrlEmptyError("error: containsMainUrl false");
+
+            boolean fromRestart = startArgs.isFromRestart();
+            if (fromRestart) {
+                callEvent(PlayerType.EventType.MEDIA_INFO_PLAY_RESTART);
+            }
+
             // 1
             boolean prepared = isPrepared();
             if (prepared) {
