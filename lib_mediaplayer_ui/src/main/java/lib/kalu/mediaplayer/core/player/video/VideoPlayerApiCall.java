@@ -150,6 +150,10 @@ public interface VideoPlayerApiCall extends VideoPlayerApiBase, VideoPlayerApiLi
 
     default void callProgress(long trySeeDuration, long position, long duration) {
 
+        if (LogUtil.DEBUG) {
+            LogUtil.log(TAG, "callProgress -> trySeeDuration = " + trySeeDuration + ", position = " + position + ", duration = " + duration);
+        }
+
         // component
         callComponentProgress(trySeeDuration, position, duration);
 
@@ -220,6 +224,11 @@ public interface VideoPlayerApiCall extends VideoPlayerApiBase, VideoPlayerApiLi
     }
 
     default void callComponentProgress(long trySeeDuration, long position, long duration) {
+
+        if (LogUtil.DEBUG) {
+            LogUtil.log(TAG, "callComponentProgress -> trySeeDuration = " + trySeeDuration + ", position = " + position + ", duration = " + duration);
+        }
+
         try {
             ViewGroup viewGroup = getBaseComponentViewGroup();
             int childCount = viewGroup.getChildCount();
