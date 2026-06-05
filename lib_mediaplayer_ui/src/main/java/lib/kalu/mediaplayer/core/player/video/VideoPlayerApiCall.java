@@ -133,9 +133,9 @@ public interface VideoPlayerApiCall extends VideoPlayerApiBase, VideoPlayerApiLi
 
     default void callEvent(boolean callPlayer, boolean callComponent, @PlayerType.EventType.Value int playState) {
 
-        if (LogUtil.DEBUG) {
-            LogUtil.log(TAG, "callEvent -> callPlayer = " + callPlayer + ", callComponent = " + callComponent + ", playState = " + playState);
-        }
+//        if (LogUtil.DEBUG) {
+//            LogUtil.log(TAG, "callEvent -> callPlayer = " + callPlayer + ", callComponent = " + callComponent + ", playState = " + playState);
+//        }
 
         // component
         if (callComponent) {
@@ -150,9 +150,9 @@ public interface VideoPlayerApiCall extends VideoPlayerApiBase, VideoPlayerApiLi
 
     default void callProgress(long trySeeDuration, long position, long duration) {
 
-        if (LogUtil.DEBUG) {
-            LogUtil.log(TAG, "callProgress -> trySeeDuration = " + trySeeDuration + ", position = " + position + ", duration = " + duration);
-        }
+//        if (LogUtil.DEBUG) {
+//            LogUtil.log(TAG, "callProgress -> trySeeDuration = " + trySeeDuration + ", position = " + position + ", duration = " + duration);
+//        }
 
         // component
         callComponentProgress(trySeeDuration, position, duration);
@@ -225,9 +225,9 @@ public interface VideoPlayerApiCall extends VideoPlayerApiBase, VideoPlayerApiLi
 
     default void callComponentProgress(long trySeeDuration, long position, long duration) {
 
-        if (LogUtil.DEBUG) {
-            LogUtil.log(TAG, "callComponentProgress -> trySeeDuration = " + trySeeDuration + ", position = " + position + ", duration = " + duration);
-        }
+//        if (LogUtil.DEBUG) {
+//            LogUtil.log(TAG, "callComponentProgress -> trySeeDuration = " + trySeeDuration + ", position = " + position + ", duration = " + duration);
+//        }
 
         try {
             ViewGroup viewGroup = getBaseComponentViewGroup();
