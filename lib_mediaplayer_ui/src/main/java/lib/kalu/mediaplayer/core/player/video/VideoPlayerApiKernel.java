@@ -637,20 +637,31 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
                     }
 
                     switch (playState) {
-                        //
-                        case PlayerType.EventType.INIT:
-                            //
-                            boolean showSpeed = args.isShowSpeed();
-                            if (showSpeed) {
-                                kernelApi.sendMessageSpeedUpdate(kernel, false);
-                            }
+                        // 检测：启播超时
+//                        case PlayerType.EventType.INIT:
+                        case PlayerType.EventType.READY:
                             //
                             StartArgs.TimeoutConfiguration timeoutConfiguration = args.getTimeoutConfiguration();
                             int connectTimeout = timeoutConfiguration.getConnectTimeoutMs();
                             @PlayerType.KernelType.Value
                             int kernelType = args.getKernelType();
                             long timeMillis = System.currentTimeMillis();
+                            kernelApi.removeAllMessages();
+                            boolean showSpeed = args.isShowSpeed();
+                            if (showSpeed) {
+                                kernelApi.sendMessageSpeedUpdate(kernel, false);
+                            }
                             kernelApi.sendMessageConnectTimeout(kernelType, timeMillis, connectTimeout, false);
+                            break;
+                        // 轮训：视频进度条
+                        case PlayerType.EventType.MEDIA_INFO_PREPARE:
+                            kernelApi.removeAllMessages();
+                            kernelApi.sendMessageProgressUpdate(kernel, false);
+                            break;
+                        // 视频：首帧画面
+                        case PlayerType.EventType.MEDIA_INFO_VIDEO_RENDERING_START:
+                            // 埋点
+                            onBuriedVideoRenderingStart();
                             break;
                         // 缓冲开始
                         case PlayerType.EventType.MEDIA_INFO_BUFFERING_START:
@@ -671,17 +682,6 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
                             onBuriedBufferingStop();
                             //
                             kernelApi.closeMessagesBufferingTimeout();
-                            break;
-                        // 视频首帧
-                        case PlayerType.EventType.MEDIA_INFO_UPDATE_PLAYBACLK_SPEED:
-                            // 埋点
-                            onBuriedVideoRenderingStart();
-                            //
-                            kernelApi.removeMessagesSpeedUpdate();
-                            //
-                            kernelApi.removeMessagesConnectTimeout();
-                            //
-                            kernelApi.sendMessageProgressUpdate(kernel, false);
                             break;
                         // 播放开始-默认
                         case PlayerType.EventType.START:

@@ -92,26 +92,26 @@ public interface VideoKernelApiHandler extends VideoKernelApiBase, VideoKernelAp
 
     /***********/
 
-    default void sendMessageCheckPreparedPlaying(@PlayerType.KernelType.Value int kernelType) {
-
-        if (LogUtil.DEBUG) {
-            LogUtil.log(TAG, "sendMessageCheckPreparedPlaying ->");
-        }
-
-        try {
-            Handler handler = getHandler();
-            if (null == handler)
-                throw new Exception("warning: handler null");
-            Message message = Message.obtain();
-            message.what = WHAT_CheckPreparedPlaying;
-            message.arg1 = kernelType;
-            handler.sendMessageDelayed(message, 1000);
-        } catch (Exception e) {
-            if (LogUtil.DEBUG) {
-                LogUtil.log(TAG, "sendMessageCheckPreparedPlaying -> Exception " + e.getMessage());
-            }
-        }
-    }
+//    default void sendMessageCheckPreparedPlaying(@PlayerType.KernelType.Value int kernelType) {
+//
+//        if (LogUtil.DEBUG) {
+//            LogUtil.log(TAG, "sendMessageCheckPreparedPlaying ->");
+//        }
+//
+//        try {
+//            Handler handler = getHandler();
+//            if (null == handler)
+//                throw new Exception("warning: handler null");
+//            Message message = Message.obtain();
+//            message.what = WHAT_CheckPreparedPlaying;
+//            message.arg1 = kernelType;
+//            handler.sendMessageDelayed(message, 1000);
+//        } catch (Exception e) {
+//            if (LogUtil.DEBUG) {
+//                LogUtil.log(TAG, "sendMessageCheckPreparedPlaying -> Exception " + e.getMessage());
+//            }
+//        }
+//    }
 
     default void sendMessageProgressUpdate(@PlayerType.KernelType.Value int kernelType, boolean delay) {
 
