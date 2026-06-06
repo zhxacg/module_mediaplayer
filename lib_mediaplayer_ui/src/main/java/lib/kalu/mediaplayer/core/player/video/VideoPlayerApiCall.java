@@ -251,25 +251,25 @@ public interface VideoPlayerApiCall extends VideoPlayerApiBase, VideoPlayerApiLi
 
     default void callComponentEvent(@PlayerType.EventType.Value int playState) {
 
-        if (LogUtil.DEBUG) {
-            LogUtil.log(TAG, "callComponentEvent -> playState = " + playState);
-        }
+//        if (LogUtil.DEBUG) {
+//            LogUtil.log(TAG, "callComponentEvent -> playState = " + playState);
+//        }
 
         try {
             ViewGroup viewGroup = getBaseComponentViewGroup();
             int childCount = viewGroup.getChildCount();
-            if (LogUtil.DEBUG) {
-                LogUtil.log(TAG, "callComponentEvent -> playState = " + playState + ", childCount = " + childCount);
-            }
+//            if (LogUtil.DEBUG) {
+//                LogUtil.log(TAG, "callComponentEvent -> playState = " + playState + ", childCount = " + childCount);
+//            }
             if (childCount <= 0)
                 throw new Exception("not find component");
             for (int i = 0; i < childCount; i++) {
                 View childAt = viewGroup.getChildAt(i);
                 if (null == childAt)
                     continue;
-                if (LogUtil.DEBUG) {
-                    LogUtil.log(TAG, "callComponentEvent -> playState = " + playState + ", childCount = " + childCount + ", index = " + i + ", childAt = " + childAt);
-                }
+//                if (LogUtil.DEBUG) {
+//                    LogUtil.log(TAG, "callComponentEvent -> playState = " + playState + ", childCount = " + childCount + ", index = " + i + ", childAt = " + childAt);
+//                }
                 if (!(childAt instanceof ComponentApi))
                     continue;
                 ((ComponentApi) childAt).onUpdateEvent(playState);
