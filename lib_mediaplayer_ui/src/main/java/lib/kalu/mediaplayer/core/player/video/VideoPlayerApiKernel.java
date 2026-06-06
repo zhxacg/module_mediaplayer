@@ -80,13 +80,25 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
             //
             Context context = getBaseContext();
             boolean connected = NetworkUtil.isConnected(context);
+            if (LogUtil.DEBUG) {
+                LogUtil.log(TAG, "start -> connected = " + connected);
+            }
+
             if (!connected)
                 throw new NetworkError();
             boolean containsMainUrl = startArgs.containsMainUrl();
+            if (LogUtil.DEBUG) {
+                LogUtil.log(TAG, "start -> containsMainUrl = " + containsMainUrl);
+            }
+
             if (!containsMainUrl)
                 throw new UrlEmptyError("error: containsMainUrl false");
 
             boolean fromRestart = startArgs.isFromRestart();
+            if (LogUtil.DEBUG) {
+                LogUtil.log(TAG, "start -> fromRestart = " + fromRestart);
+            }
+
             if (fromRestart) {
                 callEvent(PlayerType.EventType.MEDIA_INFO_PLAY_RESTART);
             }
