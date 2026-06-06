@@ -489,6 +489,7 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
             // 埋点
             onBuriedRelease();
             //
+            kernel.removeAllMessages();
             kernel.releaseDecoder();
             setVideoKernel(null);
             setScreenKeep(false);
@@ -512,6 +513,7 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
             if (callEvent) {
                 callEvent(PlayerType.EventType.STOP);
             }
+            kernel.removeAllMessages();
             kernel.stop();
             if (!callEvent)
                 throw new Exception("warning: callEvent false");
