@@ -95,6 +95,17 @@ public interface ComponentApi {
         }
     }
 
+    default boolean isComponentEnable() {
+        try {
+            return ((View) this).isEnabled();
+        } catch (Exception e) {
+            if (LogUtil.DEBUG) {
+                LogUtil.log("ComponentApi -> isComponentEnable -> " + e.getMessage());
+            }
+            return false;
+        }
+    }
+
     default void setComponentVisibility(@IdRes int id, int visibility) {
         try {
             View viewById = ((View) this).findViewById(id);
