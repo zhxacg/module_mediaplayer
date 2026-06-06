@@ -1367,9 +1367,7 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
             }
 
             try {
-                if (error.errorCode == PlaybackException.ERROR_CODE_IO_UNSPECIFIED) {
-
-                } else if (error.errorCode == PlaybackException.ERROR_CODE_BEHIND_LIVE_WINDOW) {
+                if (error.errorCode == PlaybackException.ERROR_CODE_BEHIND_LIVE_WINDOW) {
                     seekToDefaultPosition();
                 }
                 // timeout
