@@ -63,6 +63,9 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
 
             // fixbug
             boolean prepared = isPrepared();
+            if (LogUtil.DEBUG) {
+                LogUtil.log(TAG, "start -> prepared = " + prepared);
+            }
             if (prepared) {
                 stop(false);
                 release(false, false);
