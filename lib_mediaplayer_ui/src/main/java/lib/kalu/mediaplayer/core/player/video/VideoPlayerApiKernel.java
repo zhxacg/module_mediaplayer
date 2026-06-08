@@ -65,7 +65,7 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
             boolean prepared = isPrepared();
             if (prepared) {
                 stop(false);
-                release(false, false);
+               // release(false, false);
             }
 
             // 初始化kernel
