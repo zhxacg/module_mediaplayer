@@ -58,9 +58,6 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
             boolean log = PlayerSDK.getInstance().getConfigArgs().isLog();
             LogUtil.setLogger(log);
 
-            setScreenKeep(true);
-            callEvent(PlayerType.EventType.INIT);
-
             // fixbug
             boolean prepared = isPrepared();
             if (LogUtil.DEBUG) {
@@ -94,6 +91,10 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
             if (LogUtil.DEBUG) {
                 LogUtil.log(TAG, "start -> initStartArgs, startArgs = " + getStartArgs());
             }
+
+            //
+            setScreenKeep(true);
+            callEvent(PlayerType.EventType.INIT);
 
             //
             Context context = getBaseContext();
