@@ -72,13 +72,28 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
             }
 
             // 初始化kernel
-            checkKernelNull(startArgs);
+            initKernel(startArgs);
+            if (LogUtil.DEBUG) {
+                LogUtil.log(TAG, "start -> initKernel, videoKernel = " + getVideoKernel());
+            }
+
             // 初始化Render
-            checkRenderNull(startArgs);
+            initRender(startArgs);
+            if (LogUtil.DEBUG) {
+                LogUtil.log(TAG, "start -> initRender, videoRender = " + getVideoRender());
+            }
+
             // 关联 kernel & Render
             attachRenderKernel();
+            if (LogUtil.DEBUG) {
+                LogUtil.log(TAG, "start -> attachRenderKernel");
+            }
+
             // 初始化参数
             initStartArgs(startArgs);
+            if (LogUtil.DEBUG) {
+                LogUtil.log(TAG, "start -> initStartArgs, startArgs = " + getStartArgs());
+            }
 
             //
             Context context = getBaseContext();
@@ -580,7 +595,7 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
 
     /***************************/
 
-    default void checkKernelNull(StartArgs args) {
+    default void initKernel(StartArgs args) {
         try {
             if (null != getVideoKernel())
                 throw new Exception("warning: getVideoKernel not null");
@@ -640,7 +655,7 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
                 public void onEvent(@PlayerType.KernelType.Value int kernel, @PlayerType.EventType.Value int playState) {
 
                     if (LogUtil.DEBUG) {
-                        LogUtil.log(TAG, "onEvent = " + kernel + ", playState = " + playState);
+                        LogUtil.log(TAG, "initKernel, onEvent = " + kernel + ", playState = " + playState);
                     }
 
                     // 透传
@@ -776,7 +791,7 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
                 public void onVideoFormatChanged(int kernel, int rotation, int scaleType, int width, int height, int bitrate) {
 
                     if (LogUtil.DEBUG) {
-                        LogUtil.log(TAG, "setKernelEvent -> onVideoFormatChanged -> kernel = " + kernel + ", width = " + width + ", height = " + height + ", rotation = " + ", scaleType = " + scaleType);
+                        LogUtil.log(TAG, "initKernel -> onVideoFormatChanged -> kernel = " + kernel + ", width = " + width + ", height = " + height + ", rotation = " + ", scaleType = " + scaleType);
                     }
 
                     setVideoFormat(kernel, rotation, scaleType, width, height, bitrate);
@@ -784,7 +799,7 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
             });
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
-                LogUtil.log(TAG, "checkKernelNull -> " + e.getMessage());
+                LogUtil.log(TAG, "initKernel -> " + e.getMessage());
             }
         }
     }

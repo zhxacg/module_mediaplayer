@@ -151,7 +151,7 @@ public interface VideoPlayerApiRender extends VideoPlayerApiBase, VideoPlayerApi
         }
     }
 
-    default void checkRenderNull(StartArgs args) {
+    default void initRender(StartArgs args) {
         try {
             ViewGroup renderGroup = getBaseVideoViewGroup();
             if (null == renderGroup)
@@ -168,7 +168,7 @@ public interface VideoPlayerApiRender extends VideoPlayerApiBase, VideoPlayerApi
             setVideoRender(videoRender);
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
-                LogUtil.log("VideoPlayerApiRender -> checkRenderNull -> " + e.getMessage());
+                LogUtil.log("VideoPlayerApiRender -> initRender -> " + e.getMessage());
             }
         }
     }
@@ -205,7 +205,7 @@ public interface VideoPlayerApiRender extends VideoPlayerApiBase, VideoPlayerApi
             if (decoderType == PlayerType.DecoderType.ONLY_CODEC && kernelType == PlayerType.KernelType.IJK && renderType == PlayerType.RenderType.SURFACE_VIEW) {
                 releaseRender();
                 StartArgs startArgs = new StartArgs.Builder().setRenderType(PlayerType.RenderType.SURFACE_VIEW).build();
-                checkRenderNull(startArgs);
+                initRender(startArgs);
                 attachRenderKernel();
             } else if (decoderType == PlayerType.DecoderType.ONLY_CODEC && kernelType == PlayerType.KernelType.IJK) {
                 VideoRenderApi videoRender = getVideoRender();
