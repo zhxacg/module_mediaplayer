@@ -38,4 +38,25 @@ public class PlayStateUtil {
             return false;
         }
     }
+
+    public static final boolean isErrorNeedRetry(@PlayerType.EventType.Value int playState) {
+
+        if (playState == PlayerType.EventType.ERROR_URL_EMPTY) {
+            return true;
+        } else if (playState == PlayerType.EventType.ERROR_STREAM_SOURCE) {
+            return true;
+        } else if (playState == PlayerType.EventType.ERROR_PLAY) {
+            return true;
+        } else if (playState == PlayerType.EventType.ERROR_TIMEOUT_LOAD) {
+            return true;
+        } else if (playState == PlayerType.EventType.ERROR_TIMEOUT_BUFFER) {
+            return true;
+        } else if (playState == PlayerType.EventType.ERROR_INIT) {
+            return true;
+        } else if (playState == PlayerType.EventType.ERROR_DECODE) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 }
