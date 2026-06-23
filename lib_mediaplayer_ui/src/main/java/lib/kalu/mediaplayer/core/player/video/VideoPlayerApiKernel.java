@@ -672,13 +672,14 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
                             String[] retryUrls = oldRetryConfiguration.getRetryUrls();
                             int retryIndex = oldRetryConfiguration.getRetryIndex();
                             int retryCount = oldRetryConfiguration.getRetryCount();
+                            int nextRetryIndex = retryIndex + 1;
 
                             if (LogUtil.DEBUG) {
                                 LogUtil.log(TAG, "initKernel, RetryConfiguration, retryUrls = " + retryUrls);
                             }
 
                             if (LogUtil.DEBUG) {
-                                LogUtil.log(TAG, "initKernel, RetryConfiguration, retryIndex = " + retryIndex + ", retryCount = " + retryCount);
+                                LogUtil.log(TAG, "initKernel, RetryConfiguration, nextRetryIndex = " + nextRetryIndex + ", retryCount = " + retryCount);
                             }
 
                             if (null != retryUrls && retryUrls.length > 0) {
@@ -687,7 +688,7 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
                                     throw new Exception("warning: retryIndex = " + retryIndex + ", retryUrls.length = " + retryUrls.length);
 
                                 StartArgs.RetryConfiguration newRetryConfiguration = oldRetryConfiguration.newBuilder()
-                                        .setRetryIndex(oldRetryConfiguration.getRetryIndex() + 1)
+                                        .setRetryIndex(nextRetryIndex)
                                         .build();
 
                                 String retryUrl = retryUrls[retryIndex];
@@ -712,7 +713,7 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
                                     throw new Exception("warning: retryIndex = " + retryIndex + ", retryCount = " + retryCount);
 
                                 StartArgs.RetryConfiguration newRetryConfiguration = oldRetryConfiguration.newBuilder()
-                                        .setRetryIndex(oldRetryConfiguration.getRetryIndex() + 1)
+                                        .setRetryIndex(nextRetryIndex)
                                         .build();
 
                                 StartArgs newStartArgs = args.newBuilder()
