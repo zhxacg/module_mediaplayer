@@ -6,6 +6,7 @@ import androidx.media3.common.util.Util;
 import org.json.JSONObject;
 
 import java.io.Serializable;
+import java.util.Arrays;
 
 import lib.kalu.mediaplayer.PlayerSDK;
 import lib.kalu.mediaplayer.bean.menu.Menu;
@@ -267,9 +268,16 @@ public class StartArgs implements Serializable {
         return fromRestart;
     }
 
+    // 重试策略
+    private RetryConfiguration retryConfiguration;
+
+    public RetryConfiguration getRetryConfiguration() {
+        return retryConfiguration;
+    }
+
     @Override
     public String toString() {
-        return "StartArgs{" + "seekType=" + seekType + ", renderType=" + renderType + ", scaleType=" + scaleType + ", decoderType=" + decoderType + ", kernelType=" + kernelType + ", urlArgs='" + urlArgs + '\'' + ", title='" + title + '\'' + ", trySeeDuration=" + trySeeDuration + ", liveStream=" + liveStream + ", looping=" + looping + ", mute=" + mute + ", playWhenReady=" + playWhenReady + ", playWhenReadyDelayedTime=" + playWhenReadyDelayedTime + ", playWhenReadySeekToPosition=" + playWhenReadySeekToPosition + ", prepareAsync=" + prepareAsync + ", rotation=" + rotation + ", extraData=" + extraData + ", showSpeed=" + showSpeed + ", menu=" + menu + ", noProxy=" + noProxy + ", proxy=" + proxy + ", bufferDurationsMs=" + bufferDurationsMs + ", liveConfiguration=" + liveConfiguration + ", livePlaybackSpeedControl=" + livePlaybackSpeedControl + ", adaptiveTrackSelection=" + adaptiveTrackSelection + ", stuckDetectorMs=" + stuckDetectorMs + ", retryCount=" + retryCount + ", bufferingConfiguration=" + bufferingConfiguration + ", timeoutConfiguration=" + timeoutConfiguration + '}';
+        return "StartArgs{" + "seekType=" + seekType + ", renderType=" + renderType + ", scaleType=" + scaleType + ", decoderType=" + decoderType + ", kernelType=" + kernelType + ", urlArgs='" + urlArgs + '\'' + ", title='" + title + '\'' + ", trySeeDuration=" + trySeeDuration + ", liveStream=" + liveStream + ", looping=" + looping + ", mute=" + mute + ", playWhenReady=" + playWhenReady + ", playWhenReadyDelayedTime=" + playWhenReadyDelayedTime + ", playWhenReadySeekToPosition=" + playWhenReadySeekToPosition + ", prepareAsync=" + prepareAsync + ", rotation=" + rotation + ", extraData=" + extraData + ", showSpeed=" + showSpeed + ", menu=" + menu + ", noProxy=" + noProxy + ", proxy=" + proxy + ", bufferDurationsMs=" + bufferDurationsMs + ", liveConfiguration=" + liveConfiguration + ", livePlaybackSpeedControl=" + livePlaybackSpeedControl + ", adaptiveTrackSelection=" + adaptiveTrackSelection + ", stuckDetectorMs=" + stuckDetectorMs + ", retryCount=" + retryCount + ", bufferingConfiguration=" + bufferingConfiguration + ", timeoutConfiguration=" + timeoutConfiguration + ", retryConfiguration=" + retryConfiguration + '}';
     }
 
     public StartArgs(Builder builder) {
@@ -303,6 +311,7 @@ public class StartArgs implements Serializable {
         this.bufferingConfiguration = builder.bufferingConfiguration;
         this.timeoutConfiguration = builder.timeoutConfiguration;
         this.fromRestart = builder.fromRestart;
+        this.retryConfiguration = builder.retryConfiguration;
     }
 
     public Builder newBuilder() {
@@ -337,6 +346,7 @@ public class StartArgs implements Serializable {
         builder.bufferingConfiguration = bufferingConfiguration;
         builder.timeoutConfiguration = timeoutConfiguration;
         builder.fromRestart = fromRestart;
+        builder.retryConfiguration = retryConfiguration;
         return builder;
     }
 
@@ -574,8 +584,17 @@ public class StartArgs implements Serializable {
         }
 
         private boolean fromRestart = false;
+
         public Builder setFromRestart(boolean v) {
             this.fromRestart = v;
+            return this;
+        }
+
+        // 重试策略
+        private RetryConfiguration retryConfiguration;
+
+        public Builder setRetryConfiguration(RetryConfiguration v) {
+            this.retryConfiguration = v;
             return this;
         }
 
@@ -1136,6 +1155,84 @@ public class StartArgs implements Serializable {
 
             public TimeoutConfiguration build() {
                 return new TimeoutConfiguration(this);
+            }
+        }
+    }
+
+    /**
+     * 重试策略
+     */
+    public static final class RetryConfiguration implements Serializable {
+        // 重试url
+        private String[] retryUrls;
+        // 重试次数
+        private int retryCount;
+        private int retryIndex;
+
+        public int getRetryIndex() {
+            return retryIndex;
+        }
+
+        public int getRetryCount() {
+            return retryCount;
+        }
+
+        public String[] getRetryUrls() {
+            return retryUrls;
+        }
+
+        public RetryConfiguration(RetryConfiguration.Builder builder) {
+            this.retryCount = builder.retryCount;
+            this.retryUrls = builder.retryUrls;
+            this.retryIndex = builder.retryIndex;
+        }
+
+        public RetryConfiguration.Builder newBuilder() {
+            RetryConfiguration.Builder builder = new RetryConfiguration.Builder();
+            builder.retryCount = retryCount;
+            builder.retryUrls = retryUrls;
+            builder.retryIndex = retryIndex;
+            return builder;
+        }
+
+        @Override
+        public String toString() {
+            return "RetryConfiguration{" +
+                    "retryUrls=" + Arrays.toString(retryUrls) +
+                    ", retryCount=" + retryCount +
+                    ", retryIndex=" + retryIndex +
+                    '}';
+        }
+
+        public static class Builder implements Serializable {
+
+            // 重试url
+            private String[] retryUrls = null;
+            // 重试次数
+            private int retryCount = 0;
+
+            private int retryIndex = 0;
+
+            public RetryConfiguration.Builder setRetryIndex(int v) {
+                this.retryIndex = v;
+                return this;
+            }
+
+            public RetryConfiguration.Builder setRetryCount(int v) {
+                this.retryCount = v;
+                return this;
+            }
+
+            public RetryConfiguration.Builder setRetryUrls(String[] v) {
+                this.retryUrls = v;
+                return this;
+            }
+
+            public Builder() {
+            }
+
+            public RetryConfiguration build() {
+                return new RetryConfiguration(this);
             }
         }
     }

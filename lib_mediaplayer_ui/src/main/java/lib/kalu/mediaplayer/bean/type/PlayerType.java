@@ -59,6 +59,7 @@ public @interface PlayerType {
         int RESUME = 3_016; // 播放恢复
         int STOP = 3_017; // 播放停止
         int RELEASE = 3_018; // 播放销毁
+        int RETRY = 3_019; // 重试
 
 
         // 视频信息
@@ -117,6 +118,7 @@ public @interface PlayerType {
                 RESUME,
                 STOP,
                 RELEASE,
+                RETRY, // 重试
                 MEDIA_INFO_PLAY_RESTART, // 重播
                 MEDIA_INFO_PREPARE, // 起播加载
                 MEDIA_INFO_UPDATE_PLAYBACLK_SPEED, // 切换倍速

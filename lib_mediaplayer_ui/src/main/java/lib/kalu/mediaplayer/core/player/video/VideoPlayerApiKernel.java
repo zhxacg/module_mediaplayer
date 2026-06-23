@@ -665,10 +665,57 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
                     // 播放错误
                     boolean error = PlayStateUtil.isError(playState);
                     if (error) {
-                        // 埋点
-                        onBuriedError(playState);
-                        // 执行
-                        setScreenKeep(false);
+
+                        // 检查重试策略
+                        try {
+
+                            StartArgs.RetryConfiguration oldRetryConfiguration = args.getRetryConfiguration();
+
+                            String[] retryUrls = oldRetryConfiguration.getRetryUrls();
+                            int retryIndex = oldRetryConfiguration.getRetryIndex();
+
+                            if (null != retryUrls && retryUrls.length > 0) {
+
+                                if (retryIndex + 1 > retryUrls.length)
+                                    throw new Exception("warning: retryIndex = " + retryIndex + ", retryUrls.length = " + retryUrls.length);
+
+                                StartArgs.RetryConfiguration newRetryConfiguration = oldRetryConfiguration.newBuilder()
+                                        .setRetryIndex(oldRetryConfiguration.getRetryIndex() + 1)
+                                        .build();
+
+                                StartArgs newStartArgs = args.newBuilder()
+                                        .setUrl(retryUrls[retryIndex])
+                                        .setRetryConfiguration(newRetryConfiguration)
+                                        .build();
+
+                                callEvent(PlayerType.EventType.RETRY);
+                                start(newStartArgs);
+
+                            } else {
+
+                                int retryCount = oldRetryConfiguration.getRetryCount();
+
+                                if (retryIndex + 1 > retryCount)
+                                    throw new Exception("warning: retryIndex = " + retryIndex + ", retryCount = " + retryCount);
+
+                                StartArgs.RetryConfiguration newRetryConfiguration = oldRetryConfiguration.newBuilder()
+                                        .setRetryIndex(oldRetryConfiguration.getRetryIndex() + 1)
+                                        .build();
+
+                                StartArgs newStartArgs = args.newBuilder()
+                                        .setRetryConfiguration(newRetryConfiguration)
+                                        .build();
+
+                                callEvent(PlayerType.EventType.RETRY);
+                                start(newStartArgs);
+                            }
+
+                        } catch (Exception e) {
+                            // 埋点
+                            onBuriedError(playState);
+                            // 执行
+                            setScreenKeep(false);
+                        }
                         return;
                     }
 
