@@ -2476,7 +2476,7 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
                 .setAllowChunklessPreparation(true);
 
         //
-        hlsMediaSource.setLoadErrorHandlingPolicy(new CustomHlsLoadErrorHandlingPolicy(args.getRetryCount()));
+        hlsMediaSource.setLoadErrorHandlingPolicy(new CustomHlsLoadErrorHandlingPolicy(0));
         // setPlaylistParserFactory
         hlsMediaSource.setPlaylistParserFactory(new CustomHlsPlaylistParserFactory(args.getProxyUrl()));
 

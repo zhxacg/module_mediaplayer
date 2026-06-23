@@ -239,12 +239,6 @@ public class StartArgs implements Serializable {
         return stuckDetectorMs;
     }
 
-    // Hls重试次数
-    private int retryCount;
-
-    public int getRetryCount() {
-        return retryCount;
-    }
 
     // 缓冲超时 默认不检测
     private BufferingConfiguration bufferingConfiguration;
@@ -277,7 +271,7 @@ public class StartArgs implements Serializable {
 
     @Override
     public String toString() {
-        return "StartArgs{" + "seekType=" + seekType + ", renderType=" + renderType + ", scaleType=" + scaleType + ", decoderType=" + decoderType + ", kernelType=" + kernelType + ", urlArgs='" + urlArgs + '\'' + ", title='" + title + '\'' + ", trySeeDuration=" + trySeeDuration + ", liveStream=" + liveStream + ", looping=" + looping + ", mute=" + mute + ", playWhenReady=" + playWhenReady + ", playWhenReadyDelayedTime=" + playWhenReadyDelayedTime + ", playWhenReadySeekToPosition=" + playWhenReadySeekToPosition + ", prepareAsync=" + prepareAsync + ", rotation=" + rotation + ", extraData=" + extraData + ", showSpeed=" + showSpeed + ", menu=" + menu + ", noProxy=" + noProxy + ", proxy=" + proxy + ", bufferDurationsMs=" + bufferDurationsMs + ", liveConfiguration=" + liveConfiguration + ", livePlaybackSpeedControl=" + livePlaybackSpeedControl + ", adaptiveTrackSelection=" + adaptiveTrackSelection + ", stuckDetectorMs=" + stuckDetectorMs + ", retryCount=" + retryCount + ", bufferingConfiguration=" + bufferingConfiguration + ", timeoutConfiguration=" + timeoutConfiguration + ", retryConfiguration=" + retryConfiguration + '}';
+        return "StartArgs{" + "seekType=" + seekType + ", renderType=" + renderType + ", scaleType=" + scaleType + ", decoderType=" + decoderType + ", kernelType=" + kernelType + ", urlArgs='" + urlArgs + '\'' + ", title='" + title + '\'' + ", trySeeDuration=" + trySeeDuration + ", liveStream=" + liveStream + ", looping=" + looping + ", mute=" + mute + ", playWhenReady=" + playWhenReady + ", playWhenReadyDelayedTime=" + playWhenReadyDelayedTime + ", playWhenReadySeekToPosition=" + playWhenReadySeekToPosition + ", prepareAsync=" + prepareAsync + ", rotation=" + rotation + ", extraData=" + extraData + ", showSpeed=" + showSpeed + ", menu=" + menu + ", noProxy=" + noProxy + ", proxy=" + proxy + ", bufferDurationsMs=" + bufferDurationsMs + ", liveConfiguration=" + liveConfiguration + ", livePlaybackSpeedControl=" + livePlaybackSpeedControl + ", adaptiveTrackSelection=" + adaptiveTrackSelection + ", stuckDetectorMs=" + stuckDetectorMs + ", bufferingConfiguration=" + bufferingConfiguration + ", timeoutConfiguration=" + timeoutConfiguration + ", retryConfiguration=" + retryConfiguration + '}';
     }
 
     public StartArgs(Builder builder) {
@@ -307,7 +301,6 @@ public class StartArgs implements Serializable {
         this.livePlaybackSpeedControl = builder.livePlaybackSpeedControl;
         this.adaptiveTrackSelection = builder.adaptiveTrackSelection;
         this.stuckDetectorMs = builder.stuckDetectorMs;
-        this.retryCount = builder.retryCount;
         this.bufferingConfiguration = builder.bufferingConfiguration;
         this.timeoutConfiguration = builder.timeoutConfiguration;
         this.fromRestart = builder.fromRestart;
@@ -342,7 +335,6 @@ public class StartArgs implements Serializable {
         builder.livePlaybackSpeedControl = livePlaybackSpeedControl;
         builder.adaptiveTrackSelection = adaptiveTrackSelection;
         builder.stuckDetectorMs = stuckDetectorMs;
-        builder.retryCount = retryCount;
         builder.bufferingConfiguration = bufferingConfiguration;
         builder.timeoutConfiguration = timeoutConfiguration;
         builder.fromRestart = fromRestart;
@@ -554,14 +546,6 @@ public class StartArgs implements Serializable {
 
         public Builder setStuckDetectorMs(StuckDetectorMs v) {
             this.stuckDetectorMs = v;
-            return this;
-        }
-
-        // Hls重试次数
-        private int retryCount = 5;
-
-        public Builder setRetryCount(int v) {
-            this.retryCount = v;
             return this;
         }
 
