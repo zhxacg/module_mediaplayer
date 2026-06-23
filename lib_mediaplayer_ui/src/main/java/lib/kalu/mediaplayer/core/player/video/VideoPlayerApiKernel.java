@@ -732,104 +732,103 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
                             // 执行
                             setScreenKeep(false);
                         }
-                        return;
-                    }
+                    } else {
 
-                    // 透传
-                    callEvent(playState);
+                        // 透传
+                        callEvent(playState);
 
-                    switch (playState) {
-                        // 检测：启播超时
+                        switch (playState) {
+                            // 检测：启播超时
 //                        case PlayerType.EventType.INIT:
-                        case PlayerType.EventType.READY:
-                            //
-                            StartArgs.TimeoutConfiguration timeoutConfiguration = args.getTimeoutConfiguration();
-                            int connectTimeout = timeoutConfiguration.getConnectTimeoutMs();
-                            @PlayerType.KernelType.Value
-                            int kernelType = args.getKernelType();
-                            long timeMillis = System.currentTimeMillis();
-                            kernelApi.removeAllMessages();
-                            boolean showSpeed = args.isShowSpeed();
-                            if (showSpeed) {
-                                kernelApi.sendMessageSpeedUpdate(kernel, false);
-                            }
-                            kernelApi.sendMessageConnectTimeout(kernelType, timeMillis, connectTimeout, false);
-                            break;
-                        // 轮训：视频进度条
-                        case PlayerType.EventType.MEDIA_INFO_PREPARE:
-                            kernelApi.removeAllMessages();
-                            kernelApi.sendMessageProgressUpdate(kernel, false);
-                            break;
-                        // 视频：首帧画面
-                        case PlayerType.EventType.MEDIA_INFO_VIDEO_RENDERING_START:
-                            // 埋点
-                            onBuriedVideoRenderingStart();
-                            break;
-                        // 缓冲开始
-                        case PlayerType.EventType.MEDIA_INFO_BUFFERING_START:
-                            // 埋点
-                            onBuriedBufferingStart();
-                            // 检测：缓冲超时
-                            StartArgs.BufferingConfiguration bufferingConfiguration = args.getBufferingConfiguration();
-                            if (null != bufferingConfiguration) {
-                                long maxBufferingTimeoutMs = bufferingConfiguration.getMaxBufferingTimeoutMs();
-                                if (maxBufferingTimeoutMs > 0L) {
-                                    kernelApi.startMessageBufferingTimeout(kernel, maxBufferingTimeoutMs);
+                            case PlayerType.EventType.READY:
+                                //
+                                StartArgs.TimeoutConfiguration timeoutConfiguration = args.getTimeoutConfiguration();
+                                int connectTimeout = timeoutConfiguration.getConnectTimeoutMs();
+                                @PlayerType.KernelType.Value
+                                int kernelType = args.getKernelType();
+                                long timeMillis = System.currentTimeMillis();
+                                kernelApi.removeAllMessages();
+                                boolean showSpeed = args.isShowSpeed();
+                                if (showSpeed) {
+                                    kernelApi.sendMessageSpeedUpdate(kernel, false);
                                 }
-                            }
-                            break;
-                        // 缓冲结束
-                        case PlayerType.EventType.MEDIA_INFO_BUFFERING_STOP:
-                            // 埋点
-                            onBuriedBufferingStop();
-                            //
-                            kernelApi.closeMessagesBufferingTimeout();
-                            break;
-                        // 播放开始-默认
-                        case PlayerType.EventType.START:
-                            // 埋点
-                            onBuriedStart();
-                            // ijk需要刷新RenderView
-                            initRenderView();
+                                kernelApi.sendMessageConnectTimeout(kernelType, timeMillis, connectTimeout, false);
+                                break;
+                            // 轮训：视频进度条
+                            case PlayerType.EventType.MEDIA_INFO_PREPARE:
+                                kernelApi.removeAllMessages();
+                                kernelApi.sendMessageProgressUpdate(kernel, false);
+                                break;
+                            // 视频：首帧画面
+                            case PlayerType.EventType.MEDIA_INFO_VIDEO_RENDERING_START:
+                                // 埋点
+                                onBuriedVideoRenderingStart();
+                                break;
+                            // 缓冲开始
+                            case PlayerType.EventType.MEDIA_INFO_BUFFERING_START:
+                                // 埋点
+                                onBuriedBufferingStart();
+                                // 检测：缓冲超时
+                                StartArgs.BufferingConfiguration bufferingConfiguration = args.getBufferingConfiguration();
+                                if (null != bufferingConfiguration) {
+                                    long maxBufferingTimeoutMs = bufferingConfiguration.getMaxBufferingTimeoutMs();
+                                    if (maxBufferingTimeoutMs > 0L) {
+                                        kernelApi.startMessageBufferingTimeout(kernel, maxBufferingTimeoutMs);
+                                    }
+                                }
+                                break;
+                            // 缓冲结束
+                            case PlayerType.EventType.MEDIA_INFO_BUFFERING_STOP:
+                                // 埋点
+                                onBuriedBufferingStop();
+                                //
+                                kernelApi.closeMessagesBufferingTimeout();
+                                break;
+                            // 播放开始-默认
+                            case PlayerType.EventType.START:
+                                // 埋点
+                                onBuriedStart();
+                                // ijk需要刷新RenderView
+                                initRenderView();
 //                          // 检查View是否可见
-                            checkVideoVisibility();
-                            break;
-                        // 快进
-                        case PlayerType.EventType.MEDIA_INFO_UPDATE_SEEK_START_FORWARD:
-                            // 埋点
-                            onBuriedSeekStartForward();
-                            break;
-                        // 快退
-                        case PlayerType.EventType.MEDIA_INFO_UPDATE_SEEK_START_REWIND:
-                            // 埋点
-                            onBuriedSeekStartRewind();
-                            break;
-                        // 快进
-                        case PlayerType.EventType.MEDIA_INFO_UPDATE_SEEK_FINISH:
-                            // 埋点
-                            onBuriedSeekFinish();
-                            break;
-                        //
-                        case PlayerType.EventType.PAUSE:
-                            // 停止轮训
-                            kernelApi.removeMessagesProgressUpdate();
-                            break;
-                        //
-                        case PlayerType.EventType.RESUME:
-                            // 停止轮训
-                            kernelApi.sendMessageProgressUpdate(kernel, false);
-                            break;
-                        // 播放结束
-                        case PlayerType.EventType.END:
-                            // 埋点
-                            onBuriedComplete();
-                            // 关闭屏幕常亮
-                            setScreenKeep(false);
+                                checkVideoVisibility();
+                                break;
+                            // 快进
+                            case PlayerType.EventType.MEDIA_INFO_UPDATE_SEEK_START_FORWARD:
+                                // 埋点
+                                onBuriedSeekStartForward();
+                                break;
+                            // 快退
+                            case PlayerType.EventType.MEDIA_INFO_UPDATE_SEEK_START_REWIND:
+                                // 埋点
+                                onBuriedSeekStartRewind();
+                                break;
+                            // 快进
+                            case PlayerType.EventType.MEDIA_INFO_UPDATE_SEEK_FINISH:
+                                // 埋点
+                                onBuriedSeekFinish();
+                                break;
                             //
-                            boolean looping = args.isLooping();
-                            if (looping) {
-                                restart();
-                            }
+                            case PlayerType.EventType.PAUSE:
+                                // 停止轮训
+                                kernelApi.removeMessagesProgressUpdate();
+                                break;
+                            //
+                            case PlayerType.EventType.RESUME:
+                                // 停止轮训
+                                kernelApi.sendMessageProgressUpdate(kernel, false);
+                                break;
+                            // 播放结束
+                            case PlayerType.EventType.END:
+                                // 埋点
+                                onBuriedComplete();
+                                // 关闭屏幕常亮
+                                setScreenKeep(false);
+                                //
+                                boolean looping = args.isLooping();
+                                if (looping) {
+                                    restart();
+                                }
 //                            // 多剧集
 //                            int episodeItemCount = args.getEpisodeItemCount();
 //                            OnPlayerEpisodeListener onPlayerEpisodeListener = getOnPlayerEpisodeListener();
@@ -850,7 +849,8 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
 //                                }
 //                            }
 
-                            break;
+                                break;
+                        }
                     }
                 }
 
