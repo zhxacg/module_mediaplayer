@@ -673,6 +673,15 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
 
                             String[] retryUrls = oldRetryConfiguration.getRetryUrls();
                             int retryIndex = oldRetryConfiguration.getRetryIndex();
+                            int retryCount = oldRetryConfiguration.getRetryCount();
+
+                            if (LogUtil.DEBUG) {
+                                LogUtil.log(TAG, "initKernel, RetryConfiguration, retryUrls = " + retryUrls);
+                            }
+
+                            if (LogUtil.DEBUG) {
+                                LogUtil.log(TAG, "initKernel, RetryConfiguration, retryIndex = " + retryIndex + ", retryCount = " + retryCount);
+                            }
 
                             if (null != retryUrls && retryUrls.length > 0) {
 
@@ -683,17 +692,23 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
                                         .setRetryIndex(oldRetryConfiguration.getRetryIndex() + 1)
                                         .build();
 
+                                String retryUrl = retryUrls[retryIndex];
+
                                 StartArgs newStartArgs = args.newBuilder()
-                                        .setUrl(retryUrls[retryIndex])
+                                        .setUrl(retryUrl)
                                         .setRetryConfiguration(newRetryConfiguration)
                                         .build();
 
+                                if (LogUtil.DEBUG) {
+                                    LogUtil.log(TAG, "initKernel, RetryConfiguration1, retryUrl = " + retryUrl);
+                                }
+
                                 callEvent(PlayerType.EventType.RETRY);
+
+                                stop(false);
                                 start(newStartArgs);
 
                             } else {
-
-                                int retryCount = oldRetryConfiguration.getRetryCount();
 
                                 if (retryIndex + 1 > retryCount)
                                     throw new Exception("warning: retryIndex = " + retryIndex + ", retryCount = " + retryCount);
@@ -706,7 +721,13 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
                                         .setRetryConfiguration(newRetryConfiguration)
                                         .build();
 
+                                if (LogUtil.DEBUG) {
+                                    LogUtil.log(TAG, "initKernel, RetryConfiguration2, retryUrl = " + newStartArgs.getUrl());
+                                }
+
                                 callEvent(PlayerType.EventType.RETRY);
+
+                                stop(false);
                                 start(newStartArgs);
                             }
 
