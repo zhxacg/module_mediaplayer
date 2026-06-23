@@ -704,6 +704,11 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
 
                                 callEvent(PlayerType.EventType.RETRY);
 
+                                //
+                                if(null != kernelApi){
+                                    kernelApi.removeAllMessages();
+                                }
+
                                 stop(false);
                                 release(false, false);
                                 start(newStartArgs);
@@ -726,6 +731,11 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
                                 }
 
                                 callEvent(PlayerType.EventType.RETRY);
+
+                                //
+                                if(null != kernelApi){
+                                    kernelApi.removeAllMessages();
+                                }
 
                                 stop(false);
                                 release(false, false);
