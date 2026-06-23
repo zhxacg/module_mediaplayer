@@ -679,7 +679,7 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
                             }
 
                             if (LogUtil.DEBUG) {
-                                LogUtil.log(TAG, "initKernel, RetryConfiguration, nextRetryIndex = " + nextRetryIndex + ", retryCount = " + retryCount);
+                                LogUtil.log(TAG, "initKernel, RetryConfiguration, retryIndex = " + nextRetryIndex + ", retryCount = " + retryCount);
                             }
 
                             if (null != retryUrls && retryUrls.length > 0) {
@@ -705,6 +705,7 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
                                 callEvent(PlayerType.EventType.RETRY);
 
                                 stop(false);
+                                release(false, false);
                                 start(newStartArgs);
 
                             } else {
@@ -727,6 +728,7 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
                                 callEvent(PlayerType.EventType.RETRY);
 
                                 stop(false);
+                                release(false, false);
                                 start(newStartArgs);
                             }
 
