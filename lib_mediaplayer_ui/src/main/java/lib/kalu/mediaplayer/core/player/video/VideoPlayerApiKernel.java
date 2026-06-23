@@ -660,7 +660,7 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
                     }
 
                     // 播放器 内部播放错误, 需要重试
-                    if (playState == PlayerType.EventType.ERROR_PLAY) {
+                    if (playState == PlayerType.EventType.ERROR_PLAY || playState == PlayerType.EventType.ERROR_TIMEOUT_LOAD) {
 
                         // 检查重试策略
                         try {
