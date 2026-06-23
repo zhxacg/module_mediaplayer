@@ -704,8 +704,6 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
                                 }
 
                                 callEvent(PlayerType.EventType.RETRY);
-
-                                stop(false);
                                 start(newStartArgs);
 
                             } else {
@@ -726,8 +724,6 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
                                 }
 
                                 callEvent(PlayerType.EventType.RETRY);
-
-                                stop(false);
                                 start(newStartArgs);
                             }
 
