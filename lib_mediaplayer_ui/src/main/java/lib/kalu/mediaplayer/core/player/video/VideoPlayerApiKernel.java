@@ -659,9 +659,6 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
                         LogUtil.log(TAG, "initKernel, onEvent = " + kernel + ", playState = " + playState);
                     }
 
-                    // 透传
-                    callEvent(playState);
-
                     // 播放错误
                     boolean error = PlayStateUtil.isError(playState);
                     if (error) {
@@ -728,6 +725,8 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
                             }
 
                         } catch (Exception e) {
+                            // 透传
+                            callEvent(playState);
                             // 埋点
                             onBuriedError(playState);
                             // 执行
@@ -735,6 +734,9 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
                         }
                         return;
                     }
+
+                    // 透传
+                    callEvent(playState);
 
                     switch (playState) {
                         // 检测：启播超时
