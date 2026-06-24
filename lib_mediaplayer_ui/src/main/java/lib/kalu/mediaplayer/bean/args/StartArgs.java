@@ -114,6 +114,9 @@ public class StartArgs implements Serializable {
     private boolean liveStream;
 
     public boolean isLiveStream() {
+        if (LogUtil.DEBUG) {
+            LogUtil.log(TAG, "isLiveStream -> liveStream = " + liveStream + ", this = " + this);
+        }
         return liveStream;
     }
 
@@ -271,7 +274,39 @@ public class StartArgs implements Serializable {
 
     @Override
     public String toString() {
-        return "StartArgs{" + "seekType=" + seekType + ", renderType=" + renderType + ", scaleType=" + scaleType + ", decoderType=" + decoderType + ", kernelType=" + kernelType + ", urlArgs='" + urlArgs + '\'' + ", title='" + title + '\'' + ", trySeeDuration=" + trySeeDuration + ", liveStream=" + liveStream + ", looping=" + looping + ", mute=" + mute + ", playWhenReady=" + playWhenReady + ", playWhenReadyDelayedTime=" + playWhenReadyDelayedTime + ", playWhenReadySeekToPosition=" + playWhenReadySeekToPosition + ", prepareAsync=" + prepareAsync + ", rotation=" + rotation + ", extraData=" + extraData + ", showSpeed=" + showSpeed + ", menu=" + menu + ", noProxy=" + noProxy + ", proxy=" + proxy + ", bufferDurationsMs=" + bufferDurationsMs + ", liveConfiguration=" + liveConfiguration + ", livePlaybackSpeedControl=" + livePlaybackSpeedControl + ", adaptiveTrackSelection=" + adaptiveTrackSelection + ", stuckDetectorMs=" + stuckDetectorMs + ", bufferingConfiguration=" + bufferingConfiguration + ", timeoutConfiguration=" + timeoutConfiguration + ", retryConfiguration=" + retryConfiguration + '}';
+        return "StartArgs{" +
+                "TAG='" + TAG + '\'' +
+                ", decoderType=" + decoderType +
+                ", seekType=" + seekType +
+                ", renderType=" + renderType +
+                ", scaleType=" + scaleType +
+                ", kernelType=" + kernelType +
+                ", urlArgs=" + urlArgs +
+                ", title='" + title + '\'' +
+                ", trySeeDuration=" + trySeeDuration +
+                ", playWhenReadySeekToPosition=" + playWhenReadySeekToPosition +
+                ", liveStream=" + liveStream +
+                ", looping=" + looping +
+                ", mute=" + mute +
+                ", playWhenReady=" + playWhenReady +
+                ", playWhenReadyDelayedTime=" + playWhenReadyDelayedTime +
+                ", prepareAsync=" + prepareAsync +
+                ", rotation=" + rotation +
+                ", extraData=" + extraData +
+                ", showSpeed=" + showSpeed +
+                ", menu=" + menu +
+                ", noProxy=" + noProxy +
+                ", proxy=" + proxy +
+                ", bufferDurationsMs=" + bufferDurationsMs +
+                ", liveConfiguration=" + liveConfiguration +
+                ", livePlaybackSpeedControl=" + livePlaybackSpeedControl +
+                ", adaptiveTrackSelection=" + adaptiveTrackSelection +
+                ", stuckDetectorMs=" + stuckDetectorMs +
+                ", bufferingConfiguration=" + bufferingConfiguration +
+                ", timeoutConfiguration=" + timeoutConfiguration +
+                ", fromRestart=" + fromRestart +
+                ", retryConfiguration=" + retryConfiguration +
+                '}';
     }
 
     public StartArgs(Builder builder) {

@@ -415,9 +415,14 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
 
     default boolean isLiveStream() {
         try {
-            VideoKernelApi kernel = getVideoKernel();
-            return kernel.isLiveStream();
+            VideoKernelApi videoKernel = getVideoKernel();
+            if(null == videoKernel)
+                throw new Exception("error: videoKernel null");
+            return videoKernel.isLiveStream();
         } catch (Exception e) {
+            if (LogUtil.DEBUG) {
+                LogUtil.log(TAG, "isLiveStream -> Exception: " + e.getMessage());
+            }
             return false;
         }
     }
@@ -703,6 +708,9 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
                                 }
 
                                 callEvent(PlayerType.EventType.RETRY);
+
+                                stop(false);
+                                release(false, false);
                                 start(newStartArgs);
 
                             } else {
@@ -723,6 +731,9 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
                                 }
 
                                 callEvent(PlayerType.EventType.RETRY);
+
+                                stop(false);
+                                release(false, false);
                                 start(newStartArgs);
                             }
 

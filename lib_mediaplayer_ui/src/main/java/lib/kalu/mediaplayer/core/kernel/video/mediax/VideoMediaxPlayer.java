@@ -646,14 +646,15 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
             if (live) {
                 return true;
             } else {
-                // Media3 中 Timeline 和 Window 的使用方式
-                Timeline timeline = mExoPlayer.getCurrentTimeline();
-                if (timeline.isEmpty()) throw new Exception("error: timeline is empty");
-                int windowIndex = mExoPlayer.getCurrentWindowIndex();
-                Timeline.Window window = new Timeline.Window();
-                timeline.getWindow(windowIndex, window, Player.REPEAT_MODE_OFF);
-                // Media3 中判断是否为直播
-                return window.isLive();
+                return mExoPlayer.isCurrentMediaItemLive();
+//                // Media3 中 Timeline 和 Window 的使用方式
+//                Timeline timeline = mExoPlayer.getCurrentTimeline();
+//                if (timeline.isEmpty()) throw new Exception("error: timeline is empty");
+//                int windowIndex = mExoPlayer.getCurrentWindowIndex();
+//                Timeline.Window window = new Timeline.Window();
+//                timeline.getWindow(windowIndex, window, C.TIME_UNSET);
+//                // Media3 中判断是否为直播
+//                return window.isLive();
             }
         } catch (Exception e) {
             return false;
@@ -679,7 +680,7 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
 
                 int windowIndex = mExoPlayer.getCurrentWindowIndex();
                 Timeline.Window window = new Timeline.Window();
-                timeline.getWindow(windowIndex, window, Player.REPEAT_MODE_OFF);
+                timeline.getWindow(windowIndex, window, C.TIME_UNSET);
 
                 // ========== Media3 通用适配方案 ==========
                 // 1. 直播可回溯的最早位置（替代 getEarliestAvailablePositionMs()）
@@ -728,7 +729,7 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
 
                 int windowIndex = mExoPlayer.getCurrentWindowIndex();
                 Timeline.Window window = new Timeline.Window();
-                timeline.getWindow(windowIndex, window, Player.REPEAT_MODE_OFF);
+                timeline.getWindow(windowIndex, window, C.TIME_UNSET);
 
                 // ========== Media3 通用适配方案 ==========
                 // 1. 直播可回溯的最早位置（替代 getEarliestAvailablePositionMs()）
