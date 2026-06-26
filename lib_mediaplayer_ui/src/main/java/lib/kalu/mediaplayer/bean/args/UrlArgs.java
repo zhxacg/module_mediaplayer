@@ -1,15 +1,26 @@
 package lib.kalu.mediaplayer.bean.args;
 
 import java.io.Serializable;
+import java.util.Arrays;
 
 import lib.kalu.mediaplayer.bean.type.PlayerType;
-import lib.kalu.mediaplayer.util.LogUtil;
 
 public final class UrlArgs implements Serializable {
     private Item mainVideoArgs;
     private Item[] extVideoArgs;
     private Item[] extAudioArgs;
     private Item[] extSubtitleArgs;
+
+
+    @Override
+    public String toString() {
+        return "UrlArgs{" +
+                "mainVideoArgs=" + mainVideoArgs +
+                ", extVideoArgs=" + Arrays.toString(extVideoArgs) +
+                ", extAudioArgs=" + Arrays.toString(extAudioArgs) +
+                ", extSubtitleArgs=" + Arrays.toString(extSubtitleArgs) +
+                '}';
+    }
 
     public UrlArgs(Builder builder) {
         this.mainVideoArgs = builder.mainVideoArgs;
@@ -146,6 +157,17 @@ public final class UrlArgs implements Serializable {
         @PlayerType.ParserType.Value
         private int parser;
 
+        @Override
+        public String toString() {
+            return "Item{" +
+                    "main=" + main +
+                    ", url='" + url + '\'' +
+                    ", language='" + language + '\'' +
+                    ", label='" + label + '\'' +
+                    ", parser=" + parser +
+                    '}';
+        }
+
         public boolean containsUrl() {
             return null != url && !url.isEmpty();
         }
@@ -277,15 +299,5 @@ public final class UrlArgs implements Serializable {
             }
         }
 
-        @Override
-        public String toString() {
-            return "Item{" +
-                    "label='" + label + '\'' +
-                    ", main='" + main + '\'' +
-                    ", url='" + url + '\'' +
-                    ", language='" + language + '\'' +
-                    ", parser=" + parser +
-                    '}';
-        }
     }
 }
