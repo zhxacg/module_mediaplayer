@@ -684,11 +684,13 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
                             int nextRetryIndex = retryIndex + 1;
 
                             if (LogUtil.DEBUG) {
-                                LogUtil.log(TAG, "initKernel, RetryConfiguration, retryUrls = " + retryUrls);
-                            }
-
-                            if (LogUtil.DEBUG) {
-                                LogUtil.log(TAG, "initKernel, RetryConfiguration, retryIndex = " + nextRetryIndex + ", retryCount = " + retryCount);
+                                int retryUrlsCount;
+                                if (null == retryUrls) {
+                                    retryUrlsCount = 0;
+                                } else {
+                                    retryUrlsCount = retryUrls.length;
+                                }
+                                LogUtil.log(TAG, "initKernel, RetryConfiguration, retryIndex = " + nextRetryIndex + ", retryCount = " + retryCount + ", retryUrlsCount = " + retryUrlsCount);
                             }
 
                             if (null != retryUrls && retryUrls.length > 0) {
