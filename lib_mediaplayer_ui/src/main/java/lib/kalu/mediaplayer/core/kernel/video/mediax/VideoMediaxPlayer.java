@@ -259,19 +259,19 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
                     // 直播场景
                     .setLivePlaybackSpeedControl(new DefaultLivePlaybackSpeedControl.Builder()
                             // 兜底最小播放速度：当无法计算动态速度时，使用的保底最小速度（最终 minPlaybackSpeed 会等于该值）
-                            .setFallbackMinPlaybackSpeed(startArgs.getLivePlaybackSpeedControl().getFallbackMinPlaybackSpeed())
+                            .setFallbackMinPlaybackSpeed(startArgs.getLiveConfiguration().getFallbackMinPlaybackSpeed())
                             // 兜底最大播放速度：同上，保底最大速度（最终 maxPlaybackSpeed 会等于该值）
-                            .setFallbackMaxPlaybackSpeed(startArgs.getLivePlaybackSpeedControl().getFallbackMaxPlaybackSpeed())
+                            .setFallbackMaxPlaybackSpeed(startArgs.getLiveConfiguration().getFallbackMaxPlaybackSpeed())
                             // 速度更新最小间隔：两次速度调整的最小时间差（避免频繁变速）
-                            .setMinUpdateIntervalMs(startArgs.getLivePlaybackSpeedControl().getMinUpdateIntervalMs())
+                            .setMinUpdateIntervalMs(startArgs.getLiveConfiguration().getMinUpdateIntervalMs())
                             // 比例控制因子：速度调整的 “灵敏度”—— 延迟差值越大，速度调整幅度越大（核心算法参数）
-                            .setProportionalControlFactor(startArgs.getLivePlaybackSpeedControl().getProportionalControlFactorUs())
+                            .setProportionalControlFactor(startArgs.getLiveConfiguration().getProportionalControlFactorUs())
                             // 匀速阈值：直播延迟误差小于该值时，使用 1.0f 匀速播放（不调整速度）
-                            .setMaxLiveOffsetErrorMsForUnitSpeed(startArgs.getLivePlaybackSpeedControl().getMaxLiveOffsetErrorUsForUnitSpeed())
+                            .setMaxLiveOffsetErrorMsForUnitSpeed(startArgs.getLiveConfiguration().getMaxLiveOffsetErrorUsForUnitSpeed())
                             // 缓冲保护阈值：当直播延迟低于「目标延迟 - 该值」时，触发减速，避免缓冲不足导致卡顿
-                            .setTargetLiveOffsetIncrementOnRebufferMs(startArgs.getLivePlaybackSpeedControl().getTargetLiveOffsetIncrementOnRebufferUs())
+                            .setTargetLiveOffsetIncrementOnRebufferMs(startArgs.getLiveConfiguration().getTargetLiveOffsetIncrementOnRebufferUs())
                             // 最小延迟平滑因子：对 “最小可播放延迟” 进行平滑处理的系数（避免延迟波动导致速度频繁变化）
-                            .setMinPossibleLiveOffsetSmoothingFactor(startArgs.getLivePlaybackSpeedControl().getMinPossibleLiveOffsetSmoothingFactor()).build());
+                            .setMinPossibleLiveOffsetSmoothingFactor(startArgs.getLiveConfiguration().getMinPossibleLiveOffsetSmoothingFactor()).build());
 
 
             int decoderType = startArgs.getDecoderType();

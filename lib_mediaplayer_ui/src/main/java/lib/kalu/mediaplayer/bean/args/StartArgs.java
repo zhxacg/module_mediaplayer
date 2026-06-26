@@ -13,7 +13,6 @@ import lib.kalu.mediaplayer.bean.menu.Menu;
 import lib.kalu.mediaplayer.bean.type.PlayerType;
 import lib.kalu.mediaplayer.proxy.Proxy;
 import lib.kalu.mediaplayer.proxy.ProxyUrl;
-import lib.kalu.mediaplayer.util.LogUtil;
 
 public class StartArgs implements Serializable {
 
@@ -93,9 +92,9 @@ public class StartArgs implements Serializable {
     private long trySeeDuration;
 
     public long getTrySeeDuration() {
-        if (LogUtil.DEBUG) {
-            LogUtil.log(TAG, "getTrySeeDuration -> trySeeDuration = " + trySeeDuration);
-        }
+//        if (LogUtil.DEBUG) {
+//            LogUtil.log(TAG, "getTrySeeDuration -> trySeeDuration = " + trySeeDuration);
+//        }
         return trySeeDuration;
     }
 
@@ -104,9 +103,9 @@ public class StartArgs implements Serializable {
     private long playWhenReadySeekToPosition;
 
     public long getPlayWhenReadySeekToPosition() {
-        if (LogUtil.DEBUG) {
-            LogUtil.log(TAG, "getPlayWhenReadySeekToPosition -> playWhenReadySeekToPosition = " + playWhenReadySeekToPosition);
-        }
+//        if (LogUtil.DEBUG) {
+//            LogUtil.log(TAG, "getPlayWhenReadySeekToPosition -> playWhenReadySeekToPosition = " + playWhenReadySeekToPosition);
+//        }
         return playWhenReadySeekToPosition;
     }
 
@@ -114,9 +113,9 @@ public class StartArgs implements Serializable {
     private boolean liveStream;
 
     public boolean isLiveStream() {
-        if (LogUtil.DEBUG) {
-            LogUtil.log(TAG, "isLiveStream -> liveStream = " + liveStream + ", this = " + this);
-        }
+//        if (LogUtil.DEBUG) {
+//            LogUtil.log(TAG, "isLiveStream -> liveStream = " + liveStream + ", this = " + this);
+//        }
         return liveStream;
     }
 
@@ -221,13 +220,6 @@ public class StartArgs implements Serializable {
         return liveConfiguration;
     }
 
-    // 追播参数2
-    private LivePlaybackSpeedControl livePlaybackSpeedControl;
-
-    public LivePlaybackSpeedControl getLivePlaybackSpeedControl() {
-        return livePlaybackSpeedControl;
-    }
-
     // 多路流
     private AdaptiveTrackSelection adaptiveTrackSelection;
 
@@ -299,12 +291,11 @@ public class StartArgs implements Serializable {
                 ", proxy=" + proxy +
                 ", bufferDurationsMs=" + bufferDurationsMs +
                 ", liveConfiguration=" + liveConfiguration +
-                ", livePlaybackSpeedControl=" + livePlaybackSpeedControl +
                 ", adaptiveTrackSelection=" + adaptiveTrackSelection +
                 ", stuckDetectorMs=" + stuckDetectorMs +
                 ", bufferingConfiguration=" + bufferingConfiguration +
                 ", timeoutConfiguration=" + timeoutConfiguration +
-                ", fromRestart=" + fromRestart +
+                ", retryType=" + retryType +
                 ", retryConfiguration=" + retryConfiguration +
                 '}';
     }
@@ -333,12 +324,11 @@ public class StartArgs implements Serializable {
         this.proxy = builder.proxy;
         this.bufferDurationsMs = builder.bufferDurationsMs;
         this.liveConfiguration = builder.liveConfiguration;
-        this.livePlaybackSpeedControl = builder.livePlaybackSpeedControl;
         this.adaptiveTrackSelection = builder.adaptiveTrackSelection;
         this.stuckDetectorMs = builder.stuckDetectorMs;
         this.bufferingConfiguration = builder.bufferingConfiguration;
         this.timeoutConfiguration = builder.timeoutConfiguration;
-        this.fromRestart = builder.fromRestart;
+        this.retryType = builder.retryType;
         this.retryConfiguration = builder.retryConfiguration;
     }
 
@@ -367,12 +357,11 @@ public class StartArgs implements Serializable {
         builder.proxy = proxy;
         builder.bufferDurationsMs = bufferDurationsMs;
         builder.liveConfiguration = liveConfiguration;
-        builder.livePlaybackSpeedControl = livePlaybackSpeedControl;
         builder.adaptiveTrackSelection = adaptiveTrackSelection;
         builder.stuckDetectorMs = stuckDetectorMs;
         builder.bufferingConfiguration = bufferingConfiguration;
         builder.timeoutConfiguration = timeoutConfiguration;
-        builder.fromRestart = fromRestart;
+        builder.retryType = 0;
         builder.retryConfiguration = retryConfiguration;
         return builder;
     }
@@ -552,19 +541,11 @@ public class StartArgs implements Serializable {
             return this;
         }
 
-        // 追播参数
+        // 直播配置
         private LiveConfiguration liveConfiguration = new LiveConfiguration.Builder().build();
 
         public Builder setLiveConfiguration(LiveConfiguration v) {
             this.liveConfiguration = v;
-            return this;
-        }
-
-        // 追播参数2
-        private LivePlaybackSpeedControl livePlaybackSpeedControl = new LivePlaybackSpeedControl.Builder().build();
-
-        public Builder setLivePlaybackSpeedControl(LivePlaybackSpeedControl v) {
-            this.livePlaybackSpeedControl = v;
             return this;
         }
 
@@ -626,6 +607,9 @@ public class StartArgs implements Serializable {
     }
 
 
+    /**
+     * 卡顿检测
+     */
     public static final class StuckDetectorMs implements Serializable {
         private int bufferingDetectionTimeoutMs;
         private int playingDetectionTimeoutMs;
@@ -700,6 +684,66 @@ public class StartArgs implements Serializable {
 
             public StuckDetectorMs build() {
                 return new StuckDetectorMs(this);
+            }
+        }
+    }
+
+    /**
+     * 缓冲超时 默认10s
+     */
+    public static final class BufferingConfiguration implements Serializable {
+
+        private long maxBufferingTimeoutMs;
+        private long minLivePlaybackTimelineOffsetMs;
+
+        public long getMaxBufferingTimeoutMs() {
+            return maxBufferingTimeoutMs;
+        }
+
+        public long getMinLivePlaybackTimelineOffsetMs() {
+            return minLivePlaybackTimelineOffsetMs;
+        }
+
+        public BufferingConfiguration(BufferingConfiguration.Builder builder) {
+            this.maxBufferingTimeoutMs = builder.maxBufferingTimeoutMs;
+            this.minLivePlaybackTimelineOffsetMs = builder.minLivePlaybackTimelineOffsetMs;
+        }
+
+        public BufferingConfiguration.Builder newBuilder() {
+            BufferingConfiguration.Builder builder = new BufferingConfiguration.Builder();
+            builder.maxBufferingTimeoutMs = maxBufferingTimeoutMs;
+            builder.minLivePlaybackTimelineOffsetMs = minLivePlaybackTimelineOffsetMs;
+            return builder;
+        }
+
+        @Override
+        public String toString() {
+            return "BufferingConfiguration{" +
+                    "maxBufferingTimeoutMs=" + maxBufferingTimeoutMs +
+                    ", minLivePlaybackTimelineOffsetMs=" + minLivePlaybackTimelineOffsetMs +
+                    '}';
+        }
+
+        public static class Builder implements Serializable {
+
+            private long maxBufferingTimeoutMs = 10_000L;
+            private long minLivePlaybackTimelineOffsetMs = -10_000L;
+
+            public BufferingConfiguration.Builder setMaxBufferingTimeoutMs(long v) {
+                this.maxBufferingTimeoutMs = v;
+                return this;
+            }
+
+            public BufferingConfiguration.Builder setMinLivePlaybackTimelineOffsetMs(long v) {
+                this.minLivePlaybackTimelineOffsetMs = v;
+                return this;
+            }
+
+            public Builder() {
+            }
+
+            public BufferingConfiguration build() {
+                return new BufferingConfiguration(this);
             }
         }
     }
@@ -796,6 +840,14 @@ public class StartArgs implements Serializable {
         private float minPlaybackSpeed;
         private float maxPlaybackSpeed;
 
+        private float fallbackMinPlaybackSpeed;
+        private float fallbackMaxPlaybackSpeed;
+        private long minUpdateIntervalMs;
+        private float proportionalControlFactorUs;
+        private long maxLiveOffsetErrorUsForUnitSpeed;
+        private long targetLiveOffsetIncrementOnRebufferUs;
+        private float minPossibleLiveOffsetSmoothingFactor;
+
         public long getTargetOffsetMs() {
             return targetOffsetMs;
         }
@@ -815,87 +867,6 @@ public class StartArgs implements Serializable {
         public float getMaxPlaybackSpeed() {
             return maxPlaybackSpeed;
         }
-
-        public LiveConfiguration(LiveConfiguration.Builder builder) {
-            this.targetOffsetMs = builder.targetOffsetMs;
-            this.minOffsetMs = builder.minOffsetMs;
-            this.maxOffsetMs = builder.maxOffsetMs;
-            this.minPlaybackSpeed = builder.minPlaybackSpeed;
-            this.maxPlaybackSpeed = builder.maxPlaybackSpeed;
-        }
-
-        public LiveConfiguration.Builder newBuilder() {
-            LiveConfiguration.Builder builder = new LiveConfiguration.Builder();
-            builder.targetOffsetMs = targetOffsetMs;
-            builder.minOffsetMs = minOffsetMs;
-            builder.maxOffsetMs = maxOffsetMs;
-            builder.minPlaybackSpeed = minPlaybackSpeed;
-            builder.maxPlaybackSpeed = maxPlaybackSpeed;
-            return builder;
-        }
-
-        @Override
-        public String toString() {
-            return "LiveConfiguration{" + "targetOffsetMs=" + targetOffsetMs + ", minOffsetMs=" + minOffsetMs + ", maxOffsetMs=" + maxOffsetMs + ", minPlaybackSpeed=" + minPlaybackSpeed + ", maxPlaybackSpeed=" + maxPlaybackSpeed + '}';
-        }
-
-        public static class Builder implements Serializable {
-
-            // 目标直播延迟（离直播边缘的距离）	3000 - 5000ms	值越大越稳定（不易触发 BehindLiveWindow），值越小越实时 eg:-9223372036854775807L
-            private long targetOffsetMs = -9223372036854775807L;
-            // 最小允许的直播延迟	2000ms	防止播放器离直播边缘太近导致频繁卡顿 eg:-9223372036854775807L
-            private long minOffsetMs = -9223372036854775807L;
-            // 最大允许的直播延迟	10000ms	超过这个值就会自动加速追赶 eg:-9223372036854775807L
-            private long maxOffsetMs = -9223372036854775807L;
-            // 播放器为了等待缓冲的最小倍速	0.8f - 1.0f	网络差时，降速播放避免卡顿 eg:-Float.MAX_VALUE
-            private float minPlaybackSpeed = -Float.MAX_VALUE;
-            // 播放器追赶直播时允许的最大倍速	1.2f - 1.5f	当播放器落后于直播点时，自动加速播放追赶 eg:-Float.MAX_VALUE
-            private float maxPlaybackSpeed = -Float.MAX_VALUE;
-
-            public LiveConfiguration.Builder setTargetOffsetMs(long v) {
-                this.targetOffsetMs = v;
-                return this;
-            }
-
-            public LiveConfiguration.Builder setMinOffsetMs(long v) {
-                this.minOffsetMs = v;
-                return this;
-            }
-
-            public LiveConfiguration.Builder setMaxOffsetMs(long v) {
-                this.maxOffsetMs = v;
-                return this;
-            }
-
-            public LiveConfiguration.Builder setMinPlaybackSpeed(float v) {
-                this.minPlaybackSpeed = v;
-                return this;
-            }
-
-            public LiveConfiguration.Builder setMaxPlaybackSpeed(float v) {
-                this.maxPlaybackSpeed = v;
-                return this;
-            }
-
-            public Builder() {
-            }
-
-            public LiveConfiguration build() {
-                return new LiveConfiguration(this);
-            }
-        }
-    }
-
-
-    public static final class LivePlaybackSpeedControl implements Serializable {
-
-        private float fallbackMinPlaybackSpeed;
-        private float fallbackMaxPlaybackSpeed;
-        private long minUpdateIntervalMs;
-        private float proportionalControlFactorUs;
-        private long maxLiveOffsetErrorUsForUnitSpeed;
-        private long targetLiveOffsetIncrementOnRebufferUs;
-        private float minPossibleLiveOffsetSmoothingFactor;
 
         public float getFallbackMinPlaybackSpeed() {
             return fallbackMinPlaybackSpeed;
@@ -925,7 +896,7 @@ public class StartArgs implements Serializable {
             return minPossibleLiveOffsetSmoothingFactor;
         }
 
-        public LivePlaybackSpeedControl(LivePlaybackSpeedControl.Builder builder) {
+        public LiveConfiguration(LiveConfiguration.Builder builder) {
             this.fallbackMinPlaybackSpeed = builder.fallbackMinPlaybackSpeed;
             this.fallbackMaxPlaybackSpeed = builder.fallbackMaxPlaybackSpeed;
             this.minUpdateIntervalMs = builder.minUpdateIntervalMs;
@@ -933,6 +904,28 @@ public class StartArgs implements Serializable {
             this.maxLiveOffsetErrorUsForUnitSpeed = builder.maxLiveOffsetErrorUsForUnitSpeed;
             this.targetLiveOffsetIncrementOnRebufferUs = builder.targetLiveOffsetIncrementOnRebufferUs;
             this.minPossibleLiveOffsetSmoothingFactor = builder.minPossibleLiveOffsetSmoothingFactor;
+            this.targetOffsetMs = builder.targetOffsetMs;
+            this.minOffsetMs = builder.minOffsetMs;
+            this.maxOffsetMs = builder.maxOffsetMs;
+            this.minPlaybackSpeed = builder.minPlaybackSpeed;
+            this.maxPlaybackSpeed = builder.maxPlaybackSpeed;
+        }
+
+        public LiveConfiguration.Builder newBuilder() {
+            LiveConfiguration.Builder builder = new LiveConfiguration.Builder();
+            builder.targetOffsetMs = targetOffsetMs;
+            builder.minOffsetMs = minOffsetMs;
+            builder.maxOffsetMs = maxOffsetMs;
+            builder.minPlaybackSpeed = minPlaybackSpeed;
+            builder.maxPlaybackSpeed = maxPlaybackSpeed;
+            builder.fallbackMinPlaybackSpeed = fallbackMinPlaybackSpeed;
+            builder.fallbackMaxPlaybackSpeed = fallbackMaxPlaybackSpeed;
+            builder.minUpdateIntervalMs = minUpdateIntervalMs;
+            builder.proportionalControlFactorUs = proportionalControlFactorUs;
+            builder.maxLiveOffsetErrorUsForUnitSpeed = maxLiveOffsetErrorUsForUnitSpeed;
+            builder.targetLiveOffsetIncrementOnRebufferUs = targetLiveOffsetIncrementOnRebufferUs;
+            builder.minPossibleLiveOffsetSmoothingFactor = minPossibleLiveOffsetSmoothingFactor;
+            return builder;
         }
 
         public static class Builder implements Serializable {
@@ -951,6 +944,43 @@ public class StartArgs implements Serializable {
             private long targetLiveOffsetIncrementOnRebufferUs = Util.msToUs(500L);
             // 最小直播偏移的平滑因子（用于稳定计算「实时直播位置」）
             private float minPossibleLiveOffsetSmoothingFactor = 0.999F;
+
+
+            // 目标直播延迟（离直播边缘的距离）	3000 - 5000ms	值越大越稳定（不易触发 BehindLiveWindow），值越小越实时 eg:-9223372036854775807L
+            private long targetOffsetMs = -9223372036854775807L;
+            // 最小允许的直播延迟	2000ms	防止播放器离直播边缘太近导致频繁卡顿 eg:-9223372036854775807L
+            private long minOffsetMs = -9223372036854775807L;
+            // 最大允许的直播延迟	10000ms	超过这个值就会自动加速追赶 eg:-9223372036854775807L
+            private long maxOffsetMs = -9223372036854775807L;
+            // 播放器为了等待缓冲的最小倍速	0.8f - 1.0f	网络差时，降速播放避免卡顿 eg:-Float.MAX_VALUE
+            private float minPlaybackSpeed = -Float.MAX_VALUE;
+            // 播放器追赶直播时允许的最大倍速	1.2f - 1.5f	当播放器落后于直播点时，自动加速播放追赶 eg:-Float.MAX_VALUE
+            private float maxPlaybackSpeed = -Float.MAX_VALUE;
+
+            public Builder setTargetOffsetMs(long v) {
+                this.targetOffsetMs = v;
+                return this;
+            }
+
+            public Builder setMinOffsetMs(long v) {
+                this.minOffsetMs = v;
+                return this;
+            }
+
+            public Builder setMaxOffsetMs(long v) {
+                this.maxOffsetMs = v;
+                return this;
+            }
+
+            public Builder setMinPlaybackSpeed(float v) {
+                this.minPlaybackSpeed = v;
+                return this;
+            }
+
+            public Builder setMaxPlaybackSpeed(float v) {
+                this.maxPlaybackSpeed = v;
+                return this;
+            }
 
             public Builder setFallbackMinPlaybackSpeed(float v) {
                 this.fallbackMinPlaybackSpeed = v;
@@ -990,8 +1020,8 @@ public class StartArgs implements Serializable {
             public Builder() {
             }
 
-            public LivePlaybackSpeedControl build() {
-                return new LivePlaybackSpeedControl(this);
+            public LiveConfiguration build() {
+                return new LiveConfiguration(this);
             }
         }
     }
@@ -1070,67 +1100,6 @@ public class StartArgs implements Serializable {
             }
         }
     }
-
-    /**
-     * 缓冲超时 默认10s
-     */
-    public static final class BufferingConfiguration implements Serializable {
-
-        private long maxBufferingTimeoutMs = 10_000L;
-        private long minLivePlaybackTimelineOffsetMs = -10_000L;
-
-        public long getMaxBufferingTimeoutMs() {
-            return maxBufferingTimeoutMs;
-        }
-
-        public long getMinLivePlaybackTimelineOffsetMs() {
-            return minLivePlaybackTimelineOffsetMs;
-        }
-
-        public BufferingConfiguration(BufferingConfiguration.Builder builder) {
-            this.maxBufferingTimeoutMs = builder.maxBufferingTimeoutMs;
-            this.minLivePlaybackTimelineOffsetMs = builder.minLivePlaybackTimelineOffsetMs;
-        }
-
-        public BufferingConfiguration.Builder newBuilder() {
-            BufferingConfiguration.Builder builder = new BufferingConfiguration.Builder();
-            builder.maxBufferingTimeoutMs = maxBufferingTimeoutMs;
-            builder.minLivePlaybackTimelineOffsetMs = minLivePlaybackTimelineOffsetMs;
-            return builder;
-        }
-
-        @Override
-        public String toString() {
-            return "BufferingConfiguration{" +
-                    "maxBufferingTimeoutMs=" + maxBufferingTimeoutMs +
-                    ", minLivePlaybackTimelineOffsetMs=" + minLivePlaybackTimelineOffsetMs +
-                    '}';
-        }
-
-        public static class Builder implements Serializable {
-
-            private long maxBufferingTimeoutMs = 10_000L;
-            private long minLivePlaybackTimelineOffsetMs = -10_000L;
-
-            public BufferingConfiguration.Builder setMaxBufferingTimeoutMs(long v) {
-                this.maxBufferingTimeoutMs = v;
-                return this;
-            }
-
-            public BufferingConfiguration.Builder setMinLivePlaybackTimelineOffsetMs(long v) {
-                this.minLivePlaybackTimelineOffsetMs = v;
-                return this;
-            }
-
-            public Builder() {
-            }
-
-            public BufferingConfiguration build() {
-                return new BufferingConfiguration(this);
-            }
-        }
-    }
-
 
     /**
      * 超时 默认10s
