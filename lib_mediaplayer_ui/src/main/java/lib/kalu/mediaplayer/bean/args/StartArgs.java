@@ -573,7 +573,7 @@ public class StartArgs implements Serializable {
         }
 
         // 重试策略
-        private RetryConfiguration retryConfiguration;
+        private RetryConfiguration retryConfiguration = new RetryConfiguration.Builder().build();
 
         public Builder setRetryConfiguration(RetryConfiguration v) {
             this.retryConfiguration = v;
