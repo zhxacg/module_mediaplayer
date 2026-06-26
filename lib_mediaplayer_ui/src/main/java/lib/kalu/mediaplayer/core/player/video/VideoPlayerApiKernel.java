@@ -696,7 +696,7 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
 
                             if (retryUrlsCount > 0) {
 
-                                if (retryIndex + 1 > retryUrls.length)
+                                if (retryIndex + 1 >= retryUrls.length)
                                     throw new Exception("warning: retryIndex = " + retryIndex + ", retryUrls.length = " + retryUrls.length);
 
 
@@ -724,7 +724,7 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
                                 }, 100);
                             } else {
 
-                                if (retryIndex + 1 > retryCount)
+                                if (retryIndex + 1 >= retryCount)
                                     throw new Exception("warning: retryIndex = " + retryIndex + ", retryCount = " + retryCount);
 
                                 stop(false);
