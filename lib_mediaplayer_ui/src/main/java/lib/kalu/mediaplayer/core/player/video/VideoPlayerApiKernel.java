@@ -696,7 +696,7 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
                                     LogUtil.log(TAG, "initKernel, RetryConfiguration, retryIndex = " + retryIndex + ", retryUrlsCount = " + retryUrlsCount);
                                 }
 
-                                if (retryIndex + 1 >= retryUrls.length)
+                                if (retryIndex + 1 > retryUrls.length)
                                     throw new Exception("warning: retryIndex = " + retryIndex + ", retryUrls.length = " + retryUrls.length);
 
 
@@ -728,7 +728,7 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
                                     LogUtil.log(TAG, "initKernel, RetryConfiguration, retryIndex = " + retryIndex + ", retryCount = " + retryCount);
                                 }
 
-                                if (retryIndex + 1 >= retryCount)
+                                if (retryIndex + 1 > retryCount)
                                     throw new Exception("warning: retryIndex = " + retryIndex + ", retryCount = " + retryCount);
 
                                 stop(false);
