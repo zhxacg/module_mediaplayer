@@ -800,7 +800,7 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
                                     // 埋点
                                     onBuriedBufferingStart();
                                     // 检测：缓冲超时
-                                    StartArgs.BufferingConfiguration bufferingConfiguration = args.getBufferingConfiguration();
+                                    StartArgs.BufferConfiguration bufferingConfiguration = args.getBufferConfiguration();
                                     if (null != bufferingConfiguration) {
                                         long maxBufferingTimeoutMs = bufferingConfiguration.getMaxBufferingTimeoutMs();
                                         if (maxBufferingTimeoutMs > 0L) {
