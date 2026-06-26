@@ -708,20 +708,22 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
                                     LogUtil.log(TAG, "initKernel, RetryConfiguration1, retryUrl = " + retryUrl);
                                 }
 
-                                new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        StartArgs.RetryConfiguration newRetryConfiguration = oldRetryConfiguration.newBuilder()
-                                                .setRetryIndex(retryIndex + 1)
-                                                .build();
-                                        StartArgs newStartArgs = args.newBuilder()
-                                                .setUrl(retryUrl)
-                                                .setRetryType(PlayerType.EventType.RETRY_OTHER_URL)
-                                                .setRetryConfiguration(newRetryConfiguration)
-                                                .build();
-                                        start(newStartArgs);
-                                    }
-                                }, 100);
+                                StartArgs.RetryConfiguration newRetryConfiguration = oldRetryConfiguration.newBuilder()
+                                        .setRetryIndex(retryIndex + 1)
+                                        .build();
+                                StartArgs newStartArgs = args.newBuilder()
+                                        .setUrl(retryUrl)
+                                        .setRetryType(PlayerType.EventType.RETRY_OTHER_URL)
+                                        .setRetryConfiguration(newRetryConfiguration)
+                                        .build();
+                                start(newStartArgs);
+
+//                                new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
+//                                    @Override
+//                                    public void run() {
+//
+//                                    }
+//                                }, 100);
                             } else {
 
                                 if (LogUtil.DEBUG) {
@@ -738,19 +740,21 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
                                     LogUtil.log(TAG, "initKernel, RetryConfiguration2, retryUrl = " + args.getUrl());
                                 }
 
-                                new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        StartArgs.RetryConfiguration newRetryConfiguration = oldRetryConfiguration.newBuilder()
-                                                .setRetryIndex(retryIndex + 1)
-                                                .build();
-                                        StartArgs newStartArgs = args.newBuilder()
-                                                .setRetryType(PlayerType.EventType.RETRY_CUR_URL)
-                                                .setRetryConfiguration(newRetryConfiguration)
-                                                .build();
-                                        start(newStartArgs);
-                                    }
-                                }, 100);
+                                StartArgs.RetryConfiguration newRetryConfiguration = oldRetryConfiguration.newBuilder()
+                                        .setRetryIndex(retryIndex + 1)
+                                        .build();
+                                StartArgs newStartArgs = args.newBuilder()
+                                        .setRetryType(PlayerType.EventType.RETRY_CUR_URL)
+                                        .setRetryConfiguration(newRetryConfiguration)
+                                        .build();
+                                start(newStartArgs);
+
+//                                new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
+//                                    @Override
+//                                    public void run() {
+//
+//                                    }
+//                                }, 100);
                             }
 
                         } catch (Exception e) {
