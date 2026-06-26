@@ -1,6 +1,8 @@
 package lib.kalu.mediaplayer.core.player.video;
 
 import android.content.Context;
+import android.os.Handler;
+import android.os.Looper;
 
 import androidx.annotation.FloatRange;
 
@@ -706,16 +708,20 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
                                     LogUtil.log(TAG, "initKernel, RetryConfiguration1, retryUrl = " + retryUrl);
                                 }
 
-                                StartArgs.RetryConfiguration newRetryConfiguration = oldRetryConfiguration.newBuilder()
-                                        .setRetryIndex(retryIndex + 1)
-                                        .build();
-                                StartArgs newStartArgs = args.newBuilder()
-                                        .setUrl(retryUrl)
-                                        .setRetryType(PlayerType.EventType.RETRY_OTHER_URL)
-                                        .setRetryConfiguration(newRetryConfiguration)
-                                        .build();
-                                start(newStartArgs);
-
+                                new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        StartArgs.RetryConfiguration newRetryConfiguration = oldRetryConfiguration.newBuilder()
+                                                .setRetryIndex(retryIndex + 1)
+                                                .build();
+                                        StartArgs newStartArgs = args.newBuilder()
+                                                .setUrl(retryUrl)
+                                                .setRetryType(PlayerType.EventType.RETRY_OTHER_URL)
+                                                .setRetryConfiguration(newRetryConfiguration)
+                                                .build();
+                                        start(newStartArgs);
+                                    }
+                                }, 100);
                             } else {
 
                                 if (retryIndex + 1 > retryCount)
@@ -728,14 +734,19 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
                                     LogUtil.log(TAG, "initKernel, RetryConfiguration2, retryUrl = " + args.getUrl());
                                 }
 
-                                StartArgs.RetryConfiguration newRetryConfiguration = oldRetryConfiguration.newBuilder()
-                                        .setRetryIndex(retryIndex + 1)
-                                        .build();
-                                StartArgs newStartArgs = args.newBuilder()
-                                        .setRetryType(PlayerType.EventType.RETRY_CUR_URL)
-                                        .setRetryConfiguration(newRetryConfiguration)
-                                        .build();
-                                start(newStartArgs);
+                                new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        StartArgs.RetryConfiguration newRetryConfiguration = oldRetryConfiguration.newBuilder()
+                                                .setRetryIndex(retryIndex + 1)
+                                                .build();
+                                        StartArgs newStartArgs = args.newBuilder()
+                                                .setRetryType(PlayerType.EventType.RETRY_CUR_URL)
+                                                .setRetryConfiguration(newRetryConfiguration)
+                                                .build();
+                                        start(newStartArgs);
+                                    }
+                                }, 100);
                             }
 
                         } catch (Exception e) {
