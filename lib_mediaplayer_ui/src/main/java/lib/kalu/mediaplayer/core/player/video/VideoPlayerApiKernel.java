@@ -696,24 +696,23 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
                                 if (retryIndex + 1 > retryUrls.length)
                                     throw new Exception("warning: retryIndex = " + retryIndex + ", retryUrls.length = " + retryUrls.length);
 
+
+                                stop(false);
+                                release(false, false);
+
+                                String retryUrl = retryUrls[retryIndex];
+                                if (LogUtil.DEBUG) {
+                                    LogUtil.log(TAG, "initKernel, RetryConfiguration1, retryUrl = " + retryUrl);
+                                }
+
                                 StartArgs.RetryConfiguration newRetryConfiguration = oldRetryConfiguration.newBuilder()
                                         .setRetryIndex(nextRetryIndex)
                                         .build();
-
-                                String retryUrl = retryUrls[retryIndex];
-
                                 StartArgs newStartArgs = args.newBuilder()
                                         .setUrl(retryUrl)
                                         .setRetryType(PlayerType.EventType.RETRY_OTHER_URL)
                                         .setRetryConfiguration(newRetryConfiguration)
                                         .build();
-
-                                if (LogUtil.DEBUG) {
-                                    LogUtil.log(TAG, "initKernel, RetryConfiguration1, retryUrl = " + retryUrl);
-                                }
-
-                                stop(false);
-                                release(false, false);
                                 start(newStartArgs);
 
                             } else {
@@ -721,21 +720,20 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
                                 if (retryIndex + 1 > retryCount)
                                     throw new Exception("warning: retryIndex = " + retryIndex + ", retryCount = " + retryCount);
 
+                                stop(false);
+                                release(false, false);
+
+                                if (LogUtil.DEBUG) {
+                                    LogUtil.log(TAG, "initKernel, RetryConfiguration2, retryUrl = " + args.getUrl());
+                                }
+
                                 StartArgs.RetryConfiguration newRetryConfiguration = oldRetryConfiguration.newBuilder()
                                         .setRetryIndex(nextRetryIndex)
                                         .build();
-
                                 StartArgs newStartArgs = args.newBuilder()
                                         .setRetryType(PlayerType.EventType.RETRY_CUR_URL)
                                         .setRetryConfiguration(newRetryConfiguration)
                                         .build();
-
-                                if (LogUtil.DEBUG) {
-                                    LogUtil.log(TAG, "initKernel, RetryConfiguration2, retryUrl = " + newStartArgs.getUrl());
-                                }
-
-                                stop(false);
-                                release(false, false);
                                 start(newStartArgs);
                             }
 
