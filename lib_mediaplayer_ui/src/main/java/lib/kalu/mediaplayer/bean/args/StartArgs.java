@@ -1227,8 +1227,8 @@ public class StartArgs implements Serializable {
 
             // 重试url
             private String[] retryUrls = null;
-            // 重试次数
-            private int retryCount = 0;
+            // 重试次数 默认3次
+            private int retryCount = 3;
 
             private int retryIndex = 0;
 
