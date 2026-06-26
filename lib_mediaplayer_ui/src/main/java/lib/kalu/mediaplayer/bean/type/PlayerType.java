@@ -59,12 +59,12 @@ public @interface PlayerType {
         int RESUME = 3_016; // 播放恢复
         int STOP = 3_017; // 播放停止
         int RELEASE = 3_018; // 播放销毁
-        int RETRY_CUR_URL = 3_019; // 重试
-        int RETRY_OTHER_URL = 3_020; // 重试
+        int RETRY_RELOAD = 3_019; // 重试1
+        int RETRY_CUR_URL = 3_020; // 重试2
+        int RETRY_OTHER_URL = 3_021; // 重试3
 
 
         // 视频信息
-        int MEDIA_INFO_PLAY_RESTART = 3_201; // 重新播放
         int MEDIA_INFO_PREPARE = 3_202;    // 起播加载
         int MEDIA_INFO_VIDEO_RENDERING_START = 3_203;    // 视频出画面
         int MEDIA_INFO_BUFFERING_START = 3_204;    // 缓冲
@@ -119,9 +119,9 @@ public @interface PlayerType {
                 RESUME,
                 STOP,
                 RELEASE,
+                RETRY_RELOAD,
                 RETRY_CUR_URL, // 重试
                 RETRY_OTHER_URL, // 重试
-                MEDIA_INFO_PLAY_RESTART, // 重播
                 MEDIA_INFO_PREPARE, // 起播加载
                 MEDIA_INFO_UPDATE_PLAYBACLK_SPEED, // 切换倍速
                 MEDIA_INFO_VIDEO_RENDERING_START,    // 视频出画面

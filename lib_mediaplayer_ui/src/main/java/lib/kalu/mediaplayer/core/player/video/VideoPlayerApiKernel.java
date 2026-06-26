@@ -113,13 +113,17 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
             if (!containsMainUrl)
                 throw new UrlEmptyError("error: containsMainUrl false");
 
-            boolean fromRestart = startArgs.isFromRestart();
+            int retryType = startArgs.getRetryType();
             if (LogUtil.DEBUG) {
-                LogUtil.log(TAG, "start -> fromRestart = " + fromRestart);
+                LogUtil.log(TAG, "start -> retryType = " + retryType);
             }
 
-            if (fromRestart) {
-                callEvent(PlayerType.EventType.MEDIA_INFO_PLAY_RESTART);
+            if (retryType == PlayerType.EventType.RETRY_CUR_URL) {
+                callEvent(PlayerType.EventType.RETRY_CUR_URL);
+            } else if (retryType == PlayerType.EventType.RETRY_OTHER_URL) {
+                callEvent(PlayerType.EventType.RETRY_OTHER_URL);
+            } else if (retryType == PlayerType.EventType.RETRY_RELOAD) {
+                callEvent(PlayerType.EventType.RETRY_RELOAD);
             }
 
             // 8
@@ -276,7 +280,7 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
                 throw new Exception("error: containsMainUrl false");
             StartArgs newArgs = startArgs.newBuilder()
                     .setPlayWhenReadySeekToPosition(0L)
-                    .setFromRestart(true)
+                    .setRetryType(PlayerType.EventType.RETRY_RELOAD)
                     .build();
             start(newArgs);
         } catch (Exception e) {
@@ -301,7 +305,7 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
                 position = getPosition();
             }
             StartArgs newArgs = startArgs.newBuilder()
-                    .setFromRestart(true)
+                    .setRetryType(PlayerType.EventType.RETRY_RELOAD)
                     .setPlayWhenReadySeekToPosition(position)
                     .build();
             start(newArgs);
@@ -416,7 +420,7 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
     default boolean isLiveStream() {
         try {
             VideoKernelApi videoKernel = getVideoKernel();
-            if(null == videoKernel)
+            if (null == videoKernel)
                 throw new Exception("error: videoKernel null");
             return videoKernel.isLiveStream();
         } catch (Exception e) {
@@ -700,14 +704,13 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
 
                                 StartArgs newStartArgs = args.newBuilder()
                                         .setUrl(retryUrl)
+                                        .setRetryType(PlayerType.EventType.RETRY_OTHER_URL)
                                         .setRetryConfiguration(newRetryConfiguration)
                                         .build();
 
                                 if (LogUtil.DEBUG) {
                                     LogUtil.log(TAG, "initKernel, RetryConfiguration1, retryUrl = " + retryUrl);
                                 }
-
-                                callEvent(PlayerType.EventType.RETRY_OTHER_URL);
 
                                 stop(false);
                                 release(false, false);
@@ -723,14 +726,13 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
                                         .build();
 
                                 StartArgs newStartArgs = args.newBuilder()
+                                        .setRetryType(PlayerType.EventType.RETRY_CUR_URL)
                                         .setRetryConfiguration(newRetryConfiguration)
                                         .build();
 
                                 if (LogUtil.DEBUG) {
                                     LogUtil.log(TAG, "initKernel, RetryConfiguration2, retryUrl = " + newStartArgs.getUrl());
                                 }
-
-                                callEvent(PlayerType.EventType.RETRY_CUR_URL);
 
                                 stop(false);
                                 release(false, false);

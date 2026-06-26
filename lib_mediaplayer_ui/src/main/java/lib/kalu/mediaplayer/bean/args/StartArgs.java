@@ -258,11 +258,11 @@ public class StartArgs implements Serializable {
     }
 
 
-    // 重试
-    private boolean fromRestart;
+    // 重试类型
+    private int retryType;
 
-    public boolean isFromRestart() {
-        return fromRestart;
+    public int getRetryType() {
+        return retryType;
     }
 
     // 重试策略
@@ -602,10 +602,10 @@ public class StartArgs implements Serializable {
             return this;
         }
 
-        private boolean fromRestart = false;
+        private int retryType;
 
-        public Builder setFromRestart(boolean v) {
-            this.fromRestart = v;
+        public Builder setRetryType(int v) {
+            this.retryType = v;
             return this;
         }
 
