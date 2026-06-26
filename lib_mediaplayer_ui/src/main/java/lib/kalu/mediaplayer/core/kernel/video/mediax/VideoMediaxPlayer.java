@@ -247,13 +247,13 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
                              *         private int bufferForPlaybackAfterRebufferMs = 2000;
                              */.setBufferDurationsMs(
                                     // minBufferMs：播放器至少要缓冲 1 秒的数据后，才会停止主动加载更多数据；如果缓冲低于这个值，会重新开始加载。
-                                    startArgs.getBufferDurationsMs().getMinBufferMs(),
+                                    startArgs.getBufferConfiguration().getMinBufferMs(),
                                     // maxBufferMs：播放器最多缓冲 5 秒的数据，达到这个值后会停止加载，避免占用过多内存。
-                                    startArgs.getBufferDurationsMs().getMaxBufferMs(),
+                                    startArgs.getBufferConfiguration().getMaxBufferMs(),
                                     // bufferForPlaybackMs：播放器需要至少缓冲 1 秒的数据，才会开始播放（或从暂停恢复播放）。
-                                    startArgs.getBufferDurationsMs().getBufferForPlaybackMs(),
+                                    startArgs.getBufferConfiguration().getBufferForPlaybackMs(),
                                     // bufferForPlaybackAfterRebufferMs：播放器在缓冲不足导致暂停后，需要重新缓冲 1 秒的数据，才会恢复播放。
-                                    startArgs.getBufferDurationsMs().getBufferForPlaybackAfterRebufferMs())
+                                    startArgs.getBufferConfiguration().getBufferForPlaybackAfterRebufferMs())
                             // 内存分配器 默认 64 * 1024 = 65536
                             .setAllocator(new DefaultAllocator(true, 64 * 1024)).build())
                     // 直播场景
@@ -1268,7 +1268,7 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
                     throw new Exception("warning: current not live");
 
                 StartArgs startArgs = getStartArgs();
-                StartArgs.BufferingConfiguration bufferingConfiguration = startArgs.getBufferingConfiguration();
+                StartArgs.BufferConfiguration bufferingConfiguration = startArgs.getBufferConfiguration();
                 long minLivePlaybackTimelineOffsetMs = bufferingConfiguration.getMinLivePlaybackTimelineOffsetMs();
                 long currentPlaybackPositionMs = eventTime.currentPlaybackPositionMs;
                 if (LogUtil.DEBUG) {

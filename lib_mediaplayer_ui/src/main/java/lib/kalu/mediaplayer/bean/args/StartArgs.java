@@ -206,13 +206,6 @@ public class StartArgs implements Serializable {
         }
     }
 
-    // 缓冲区参数
-    private BufferDurationsMs bufferDurationsMs;
-
-    public BufferDurationsMs getBufferDurationsMs() {
-        return bufferDurationsMs;
-    }
-
     // 追播参数1
     private LiveConfiguration liveConfiguration;
 
@@ -236,10 +229,10 @@ public class StartArgs implements Serializable {
 
 
     // 缓冲超时 默认不检测
-    private BufferingConfiguration bufferingConfiguration;
+    private BufferConfiguration bufferConfiguration;
 
-    public BufferingConfiguration getBufferingConfiguration() {
-        return bufferingConfiguration;
+    public BufferConfiguration getBufferConfiguration() {
+        return bufferConfiguration;
     }
 
     // 超时
@@ -289,11 +282,10 @@ public class StartArgs implements Serializable {
                 ", menu=" + menu +
                 ", noProxy=" + noProxy +
                 ", proxy=" + proxy +
-                ", bufferDurationsMs=" + bufferDurationsMs +
                 ", liveConfiguration=" + liveConfiguration +
                 ", adaptiveTrackSelection=" + adaptiveTrackSelection +
                 ", stuckDetectorMs=" + stuckDetectorMs +
-                ", bufferingConfiguration=" + bufferingConfiguration +
+                ", bufferConfiguration=" + bufferConfiguration +
                 ", timeoutConfiguration=" + timeoutConfiguration +
                 ", retryType=" + retryType +
                 ", retryConfiguration=" + retryConfiguration +
@@ -322,11 +314,10 @@ public class StartArgs implements Serializable {
         this.menu = builder.menu;
         this.noProxy = builder.noProxy;
         this.proxy = builder.proxy;
-        this.bufferDurationsMs = builder.bufferDurationsMs;
         this.liveConfiguration = builder.liveConfiguration;
         this.adaptiveTrackSelection = builder.adaptiveTrackSelection;
         this.stuckDetectorMs = builder.stuckDetectorMs;
-        this.bufferingConfiguration = builder.bufferingConfiguration;
+        this.bufferConfiguration = builder.bufferConfiguration;
         this.timeoutConfiguration = builder.timeoutConfiguration;
         this.retryType = builder.retryType;
         this.retryConfiguration = builder.retryConfiguration;
@@ -355,11 +346,10 @@ public class StartArgs implements Serializable {
         builder.menu = menu;
         builder.noProxy = noProxy;
         builder.proxy = proxy;
-        builder.bufferDurationsMs = bufferDurationsMs;
         builder.liveConfiguration = liveConfiguration;
         builder.adaptiveTrackSelection = adaptiveTrackSelection;
         builder.stuckDetectorMs = stuckDetectorMs;
-        builder.bufferingConfiguration = bufferingConfiguration;
+        builder.bufferConfiguration = bufferConfiguration;
         builder.timeoutConfiguration = timeoutConfiguration;
         builder.retryType = 0;
         builder.retryConfiguration = retryConfiguration;
@@ -533,14 +523,6 @@ public class StartArgs implements Serializable {
             return this;
         }
 
-        // 缓冲区参数
-        private BufferDurationsMs bufferDurationsMs = new BufferDurationsMs.Builder().build();
-
-        public Builder setBufferDurationsMs(BufferDurationsMs v) {
-            this.bufferDurationsMs = v;
-            return this;
-        }
-
         // 直播配置
         private LiveConfiguration liveConfiguration = new LiveConfiguration.Builder().build();
 
@@ -566,10 +548,10 @@ public class StartArgs implements Serializable {
         }
 
         // 缓冲超时
-        private BufferingConfiguration bufferingConfiguration = new BufferingConfiguration.Builder().build();
+        private BufferConfiguration bufferConfiguration = new BufferConfiguration.Builder().build();
 
-        public Builder setBufferingConfiguration(BufferingConfiguration v) {
-            this.bufferingConfiguration = v;
+        public Builder setBufferingConfiguration(BufferConfiguration v) {
+            this.bufferConfiguration = v;
             return this;
         }
 
@@ -691,64 +673,10 @@ public class StartArgs implements Serializable {
     /**
      * 缓冲超时 默认10s
      */
-    public static final class BufferingConfiguration implements Serializable {
+    public static final class BufferConfiguration implements Serializable {
 
         private long maxBufferingTimeoutMs;
         private long minLivePlaybackTimelineOffsetMs;
-
-        public long getMaxBufferingTimeoutMs() {
-            return maxBufferingTimeoutMs;
-        }
-
-        public long getMinLivePlaybackTimelineOffsetMs() {
-            return minLivePlaybackTimelineOffsetMs;
-        }
-
-        public BufferingConfiguration(BufferingConfiguration.Builder builder) {
-            this.maxBufferingTimeoutMs = builder.maxBufferingTimeoutMs;
-            this.minLivePlaybackTimelineOffsetMs = builder.minLivePlaybackTimelineOffsetMs;
-        }
-
-        public BufferingConfiguration.Builder newBuilder() {
-            BufferingConfiguration.Builder builder = new BufferingConfiguration.Builder();
-            builder.maxBufferingTimeoutMs = maxBufferingTimeoutMs;
-            builder.minLivePlaybackTimelineOffsetMs = minLivePlaybackTimelineOffsetMs;
-            return builder;
-        }
-
-        @Override
-        public String toString() {
-            return "BufferingConfiguration{" +
-                    "maxBufferingTimeoutMs=" + maxBufferingTimeoutMs +
-                    ", minLivePlaybackTimelineOffsetMs=" + minLivePlaybackTimelineOffsetMs +
-                    '}';
-        }
-
-        public static class Builder implements Serializable {
-
-            private long maxBufferingTimeoutMs = 10_000L;
-            private long minLivePlaybackTimelineOffsetMs = -10_000L;
-
-            public BufferingConfiguration.Builder setMaxBufferingTimeoutMs(long v) {
-                this.maxBufferingTimeoutMs = v;
-                return this;
-            }
-
-            public BufferingConfiguration.Builder setMinLivePlaybackTimelineOffsetMs(long v) {
-                this.minLivePlaybackTimelineOffsetMs = v;
-                return this;
-            }
-
-            public Builder() {
-            }
-
-            public BufferingConfiguration build() {
-                return new BufferingConfiguration(this);
-            }
-        }
-    }
-
-    public static final class BufferDurationsMs implements Serializable {
 
         private int minBufferMs;
         private int maxBufferMs;
@@ -771,15 +699,39 @@ public class StartArgs implements Serializable {
             return bufferForPlaybackAfterRebufferMs;
         }
 
-        public BufferDurationsMs(BufferDurationsMs.Builder builder) {
+        public long getMaxBufferingTimeoutMs() {
+            return maxBufferingTimeoutMs;
+        }
+
+        public long getMinLivePlaybackTimelineOffsetMs() {
+            return minLivePlaybackTimelineOffsetMs;
+        }
+
+        @Override
+        public String toString() {
+            return "BufferConfiguration{" +
+                    "maxBufferingTimeoutMs=" + maxBufferingTimeoutMs +
+                    ", minLivePlaybackTimelineOffsetMs=" + minLivePlaybackTimelineOffsetMs +
+                    ", minBufferMs=" + minBufferMs +
+                    ", maxBufferMs=" + maxBufferMs +
+                    ", bufferForPlaybackMs=" + bufferForPlaybackMs +
+                    ", bufferForPlaybackAfterRebufferMs=" + bufferForPlaybackAfterRebufferMs +
+                    '}';
+        }
+
+        public BufferConfiguration(BufferConfiguration.Builder builder) {
+            this.maxBufferingTimeoutMs = builder.maxBufferingTimeoutMs;
+            this.minLivePlaybackTimelineOffsetMs = builder.minLivePlaybackTimelineOffsetMs;
             this.minBufferMs = builder.minBufferMs;
             this.maxBufferMs = builder.maxBufferMs;
             this.bufferForPlaybackMs = builder.bufferForPlaybackMs;
             this.bufferForPlaybackAfterRebufferMs = builder.bufferForPlaybackAfterRebufferMs;
         }
 
-        public BufferDurationsMs.Builder newBuilder() {
-            BufferDurationsMs.Builder builder = new BufferDurationsMs.Builder();
+        public BufferConfiguration.Builder newBuilder() {
+            BufferConfiguration.Builder builder = new BufferConfiguration.Builder();
+            builder.maxBufferingTimeoutMs = maxBufferingTimeoutMs;
+            builder.minLivePlaybackTimelineOffsetMs = minLivePlaybackTimelineOffsetMs;
             builder.minBufferMs = minBufferMs;
             builder.maxBufferMs = maxBufferMs;
             builder.bufferForPlaybackMs = bufferForPlaybackMs;
@@ -787,12 +739,10 @@ public class StartArgs implements Serializable {
             return builder;
         }
 
-        @Override
-        public String toString() {
-            return "BufferDurationsMs{" + "minBufferMs=" + minBufferMs + ", maxBufferMs=" + maxBufferMs + ", bufferForPlaybackMs=" + bufferForPlaybackMs + ", bufferForPlaybackAfterRebufferMs=" + bufferForPlaybackAfterRebufferMs + '}';
-        }
-
         public static class Builder implements Serializable {
+
+            private long maxBufferingTimeoutMs = 10_000L;
+            private long minLivePlaybackTimelineOffsetMs = -10_000L;
 
             // 播放器至少要缓冲 50 秒的数据后，才会停止主动加载更多数据；如果缓冲低于这个值，会重新开始加载。
             private int minBufferMs = 50_000;
@@ -803,31 +753,41 @@ public class StartArgs implements Serializable {
             // 播放过程中缓冲，播放器在缓冲不足导致暂停后，需要重新缓冲 2 秒的数据，才会恢复播放。
             private int bufferForPlaybackAfterRebufferMs = 2000;
 
-            public BufferDurationsMs.Builder setMinBufferMs(int v) {
+            public Builder setMinBufferMs(int v) {
                 this.minBufferMs = v;
                 return this;
             }
 
-            public BufferDurationsMs.Builder setMaxBufferMs(int v) {
+            public Builder setMaxBufferMs(int v) {
                 this.maxBufferMs = v;
                 return this;
             }
 
-            public BufferDurationsMs.Builder setBufferForPlaybackMs(int v) {
+            public Builder setBufferForPlaybackMs(int v) {
                 this.bufferForPlaybackMs = v;
                 return this;
             }
 
-            public BufferDurationsMs.Builder setBufferForPlaybackAfterRebufferMs(int v) {
+            public Builder setBufferForPlaybackAfterRebufferMs(int v) {
                 this.bufferForPlaybackAfterRebufferMs = v;
+                return this;
+            }
+
+            public Builder setMaxBufferingTimeoutMs(long v) {
+                this.maxBufferingTimeoutMs = v;
+                return this;
+            }
+
+            public Builder setMinLivePlaybackTimelineOffsetMs(long v) {
+                this.minLivePlaybackTimelineOffsetMs = v;
                 return this;
             }
 
             public Builder() {
             }
 
-            public BufferDurationsMs build() {
-                return new BufferDurationsMs(this);
+            public BufferConfiguration build() {
+                return new BufferConfiguration(this);
             }
         }
     }
