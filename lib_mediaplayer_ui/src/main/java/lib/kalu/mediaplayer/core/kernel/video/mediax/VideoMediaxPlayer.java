@@ -415,11 +415,13 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
                     LogUtil.log(TAG, "startDecoder -> urlCount = " + urlCount);
                 }
 
-                int index = -1;
-                MediaSource[] mediaSources = new MediaSource[urlCount];
+                ArrayList<MediaSource> listMediaSource = new ArrayList<MediaSource>();
 
                 // mainUrl
-                mediaSources[++index] = buildMediaSource(context, httpFactory, startArgs, PlayerType.UrlType.VIDEO, mainVideo);
+                MediaSource mainMediaSource = buildMediaSource(context, httpFactory, startArgs, PlayerType.UrlType.VIDEO, mainVideo);
+                if (null == mainMediaSource)
+                    throw new Exception("error: mainMediaSource null");
+                listMediaSource.add(mainMediaSource);
 
                 // extVideo
                 UrlArgs.Item[] extVideo = urlArgs.getExtVideo();
@@ -428,11 +430,13 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
                         if (LogUtil.DEBUG) {
                             LogUtil.log(TAG, "startDecoder -> 外挂视频轨道: videoArgs = " + videoArgs);
                         }
-                        MediaSource mediaSource = buildMediaSource(context, httpFactory, startArgs, PlayerType.UrlType.VIDEO, videoArgs);
+                        MediaSource extVideoMediaSource = buildMediaSource(context, httpFactory, startArgs, PlayerType.UrlType.VIDEO, videoArgs);
                         if (LogUtil.DEBUG) {
-                            LogUtil.log(TAG, "startDecoder -> 外挂视频轨道: mediaSource = " + mediaSource);
+                            LogUtil.log(TAG, "startDecoder -> 外挂视频轨道: extVideoMediaSource = " + extVideoMediaSource);
                         }
-                        mediaSources[++index] = mediaSource;
+                        if (null != extVideoMediaSource) {
+                            listMediaSource.add(extVideoMediaSource);
+                        }
                     }
                 }
 
@@ -443,12 +447,13 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
                         if (LogUtil.DEBUG) {
                             LogUtil.log(TAG, "startDecoder -> 外挂音频轨道: audioArgs = " + audioArgs);
                         }
-                        MediaSource mediaSource = buildMediaSource(context, httpFactory, startArgs, PlayerType.UrlType.AUDIO, audioArgs);
+                        MediaSource extAudioMediaSource = buildMediaSource(context, httpFactory, startArgs, PlayerType.UrlType.AUDIO, audioArgs);
                         if (LogUtil.DEBUG) {
-                            LogUtil.log(TAG, "startDecoder -> 外挂音频轨道: mediaSource = " + mediaSource);
+                            LogUtil.log(TAG, "startDecoder -> 外挂音频轨道: extAudioMediaSource = " + extAudioMediaSource);
                         }
-                        if (null == mediaSource) continue;
-                        mediaSources[++index] = mediaSource;
+                        if (null != extAudioMediaSource) {
+                            listMediaSource.add(extAudioMediaSource);
+                        }
                     }
                 }
 
@@ -459,13 +464,24 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
                         if (LogUtil.DEBUG) {
                             LogUtil.log(TAG, "startDecoder -> 外挂字幕轨道: subtitle = " + item);
                         }
-                        MediaSource mediaSource = buildMediaSource(context, httpFactory, startArgs, PlayerType.UrlType.SUBTITLE, item);
+                        MediaSource extSubtitleMediaSource = buildMediaSource(context, httpFactory, startArgs, PlayerType.UrlType.SUBTITLE, item);
                         if (LogUtil.DEBUG) {
-                            LogUtil.log(TAG, "startDecoder -> 外挂字幕轨道: mediaSource = " + mediaSource);
+                            LogUtil.log(TAG, "startDecoder -> 外挂字幕轨道: extSubtitleMediaSource = " + extSubtitleMediaSource);
                         }
-                        if (null == mediaSource) continue;
-                        mediaSources[++index] = mediaSource;
+                        if (null != extSubtitleMediaSource) {
+                            listMediaSource.add(extSubtitleMediaSource);
+                        }
                     }
+                }
+
+
+                int size = listMediaSource.size();
+                if (size == 0)
+                    throw new Exception("error: listMediaSource isEmpty");
+
+                MediaSource[] mediaSources = new MediaSource[listMediaSource.size()];
+                for (int i = 0; i < size; i++) {
+                    mediaSources[i] = listMediaSource.get(i);
                 }
 
                 MergingMediaSource mergingMediaSource = new MergingMediaSource(mediaSources);
@@ -476,8 +492,11 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
                 if (LogUtil.DEBUG) {
                     LogUtil.log(TAG, "startDecoder -> 外挂轨道 无");
                 }
-                MediaSource mediaSource = buildMediaSource(context, httpFactory, startArgs, PlayerType.UrlType.VIDEO, mainVideo);
-                mExoPlayer.setMediaSource(mediaSource);
+                MediaSource onlyMainMediaSource = buildMediaSource(context, httpFactory, startArgs, PlayerType.UrlType.VIDEO, mainVideo);
+                if (null == onlyMainMediaSource)
+                    throw new Exception("error: onlyMainMediaSource null");
+
+                mExoPlayer.setMediaSource(onlyMainMediaSource);
             }
 
             boolean prepareAsync = startArgs.isPrepareAsync();
