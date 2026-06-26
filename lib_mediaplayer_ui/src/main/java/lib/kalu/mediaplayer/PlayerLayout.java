@@ -188,6 +188,21 @@ public class PlayerLayout extends RelativeLayout {
         }
     }
 
+    public final void updateStartArgs(StartArgs startArgs) {
+        try {
+            if (null == startArgs)
+                throw new Exception("error: startArgs null");
+            PlayerView playerView = getPlayerView();
+            if (null == playerView)
+                throw new Exception("playerView error: null");
+            playerView.updateStartArgs(startArgs);
+        } catch (Exception e) {
+            if (LogUtil.DEBUG) {
+                LogUtil.log("PlayerLayout -> updateStartArgs -> " + e.getMessage());
+            }
+        }
+    }
+
     public final void startFull() {
         try {
             StartArgs args = getStartArgs();

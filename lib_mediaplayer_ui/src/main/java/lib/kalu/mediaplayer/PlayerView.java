@@ -242,6 +242,21 @@ public final class PlayerView extends RelativeLayout implements VideoPlayerApi {
         }
     }
 
+    public void updateStartArgs(StartArgs startArgs) {
+        try {
+            if (null == startArgs)
+                throw new Exception("error: startArgs null");
+            VideoKernelApi videoKernel = getVideoKernel();
+            if (null == videoKernel)
+                throw new Exception("error: videoKernel null");
+            videoKernel.setStartArgs(startArgs);
+        } catch (Exception e) {
+            if (LogUtil.DEBUG) {
+                LogUtil.log(TAG, "updateStartArgs -> Exception: " + e.getMessage());
+            }
+        }
+    }
+
     /**************/
 
     private OnPlayerWindowStateChangeListener mOnPlayerWindowStateChangeListener = null;

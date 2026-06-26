@@ -707,7 +707,7 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
                                     LogUtil.log(TAG, "initKernel, RetryConfiguration1, retryUrl = " + retryUrl);
                                 }
 
-                                callEvent(PlayerType.EventType.RETRY);
+                                callEvent(PlayerType.EventType.RETRY_OTHER_URL);
 
                                 stop(false);
                                 release(false, false);
@@ -730,7 +730,7 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
                                     LogUtil.log(TAG, "initKernel, RetryConfiguration2, retryUrl = " + newStartArgs.getUrl());
                                 }
 
-                                callEvent(PlayerType.EventType.RETRY);
+                                callEvent(PlayerType.EventType.RETRY_CUR_URL);
 
                                 stop(false);
                                 release(false, false);
