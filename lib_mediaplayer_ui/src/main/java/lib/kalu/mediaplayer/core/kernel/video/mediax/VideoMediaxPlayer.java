@@ -2495,8 +2495,10 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
                 // 播放器可以跳过「预加载切片」的步骤，仅解析 M3U8 元数据就完成准备，从而加快播放启动速度，但可能牺牲首帧加载的稳定性。
                 .setAllowChunklessPreparation(true);
 
+
+        int retryCount = args.getRetryConfiguration().getRetryCount();
         //
-        hlsMediaSource.setLoadErrorHandlingPolicy(new CustomHlsLoadErrorHandlingPolicy(0));
+        hlsMediaSource.setLoadErrorHandlingPolicy(new CustomHlsLoadErrorHandlingPolicy(retryCount));
         // setPlaylistParserFactory
         hlsMediaSource.setPlaylistParserFactory(new CustomHlsPlaylistParserFactory(args.getProxyUrl()));
 

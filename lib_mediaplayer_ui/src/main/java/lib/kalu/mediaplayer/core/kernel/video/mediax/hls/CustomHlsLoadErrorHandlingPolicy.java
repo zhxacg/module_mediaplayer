@@ -2,10 +2,12 @@ package lib.kalu.mediaplayer.core.kernel.video.mediax.hls;
 
 
 import androidx.annotation.Nullable;
+import androidx.media3.common.C;
 import androidx.media3.exoplayer.upstream.DefaultLoadErrorHandlingPolicy;
 
 import java.io.IOException;
 
+import lib.kalu.mediaplayer.bean.type.PlayerType;
 import lib.kalu.mediaplayer.util.LogUtil;
 
 public final class CustomHlsLoadErrorHandlingPolicy extends DefaultLoadErrorHandlingPolicy {
@@ -40,13 +42,21 @@ public final class CustomHlsLoadErrorHandlingPolicy extends DefaultLoadErrorHand
     @Override
     public long getRetryDelayMsFor(LoadErrorInfo loadErrorInfo) {
 
-        long retryDelayMsFor = super.getRetryDelayMsFor(loadErrorInfo);
-        if (LogUtil.DEBUG) {
-            LogUtil.log(TAG, "getRetryDelayMsFor -> retryDelayMsFor = " + retryDelayMsFor + ", loadErrorInfo.errorCount = " + loadErrorInfo.errorCount);
-        }
+        try {
 
-        return retryDelayMsFor;
+            String dataUrl = loadErrorInfo.loadEventInfo.dataSpec.uri.toString();
+            if (LogUtil.DEBUG) {
+                LogUtil.log(TAG, "getRetryDelayMsFor -> loadErrorInfo.errorCount = " + loadErrorInfo.errorCount + ", loadErrorInfo.loadEventInfo.dataSpec.uri = " + dataUrl);
+            }
+
+            if (!dataUrl.contains(PlayerType.SchemeType._M3U8))
+                throw new Exception();
+            return C.TIME_UNSET;
+        } catch (Exception e) {
+            return super.getRetryDelayMsFor(loadErrorInfo);
+        }
     }
+
 
     /**
      * 返回最终的最小重试次数
