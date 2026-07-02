@@ -763,6 +763,9 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
                                 LogUtil.log(TAG, "initKernel, RetryConfiguration, not need");
                             }
 
+                            stop(false);
+                            release(false, false);
+
                             // 透传
                             callEvent(playState);
 
