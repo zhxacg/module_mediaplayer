@@ -41,9 +41,8 @@ public final class CustomHlsLoadErrorHandlingPolicy extends DefaultLoadErrorHand
     public long getRetryDelayMsFor(LoadErrorInfo loadErrorInfo) {
 
         long retryDelayMsFor = super.getRetryDelayMsFor(loadErrorInfo);
-
         if (LogUtil.DEBUG) {
-            LogUtil.log(TAG, "getRetryDelayMsFor -> retryDelayMsFor = " + retryDelayMsFor);
+            LogUtil.log(TAG, "getRetryDelayMsFor -> retryDelayMsFor = " + retryDelayMsFor + ", loadErrorInfo.errorCount = " + loadErrorInfo.errorCount);
         }
 
         return retryDelayMsFor;
