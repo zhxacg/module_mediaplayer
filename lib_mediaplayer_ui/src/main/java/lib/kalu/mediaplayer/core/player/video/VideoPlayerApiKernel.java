@@ -717,13 +717,6 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
                                         .setRetryConfiguration(newRetryConfiguration)
                                         .build();
                                 start(newStartArgs);
-
-//                                new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
-//                                    @Override
-//                                    public void run() {
-//
-//                                    }
-//                                }, 100);
                             } else {
 
                                 if (LogUtil.DEBUG) {
@@ -748,13 +741,6 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
                                         .setRetryConfiguration(newRetryConfiguration)
                                         .build();
                                 start(newStartArgs);
-
-//                                new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
-//                                    @Override
-//                                    public void run() {
-//
-//                                    }
-//                                }, 100);
                             }
 
                         } catch (Exception e) {
@@ -763,9 +749,6 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
                                 LogUtil.log(TAG, "initKernel, RetryConfiguration, not need");
                             }
 
-                            stop(false);
-                            release(false, false);
-
                             // 透传
                             callEvent(playState);
 
@@ -773,6 +756,10 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
                             onBuriedError(playState);
                             // 执行
                             setScreenKeep(false);
+
+                            //
+                            stop(false);
+                            release(false, false);
                         }
                     }
                     //
