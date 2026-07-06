@@ -536,7 +536,7 @@ public final class CustomHlsPlaylistParser implements ParsingLoadable.Parser<Hls
                 Uri uri;
                 if (isIFrameOnlyVariant) {
                     String format = parseStringAttr(line, REGEX_URI, variableDefinitions);
-                    String result = formatReferenceM3u8Url(proxyUrl, baseUri, format);
+                    String result = formatMultivariantM3u8Url(proxyUrl, baseUri, format);
                     if (LogUtil.DEBUG) {
                         LogUtil.log("CustomHlsPlaylistParser -> todo parseMultivariantPlaylist aa -> baseUri = " + baseUri + ", referencePath = " + result);
                     }
@@ -548,7 +548,7 @@ public final class CustomHlsPlaylistParser implements ParsingLoadable.Parser<Hls
                 } else {
                     // The following line contains #EXT-X-STREAM-INF's URI.
                     line = replaceVariableReferences(iterator.next(), variableDefinitions);
-                    String result = formatReferenceM3u8Url(proxyUrl, baseUri, line);
+                    String result = formatMultivariantM3u8Url(proxyUrl, baseUri, line);
                     if (LogUtil.DEBUG) {
                         LogUtil.log("CustomHlsPlaylistParser -> todo parseMultivariantPlaylist bb -> baseUri = " + baseUri + ", referencePath = " + result);
                     }
@@ -625,7 +625,7 @@ public final class CustomHlsPlaylistParser implements ParsingLoadable.Parser<Hls
                             .setLanguage(parseOptionalStringAttr(line, REGEX_LANGUAGE, variableDefinitions));
 
             @Nullable
-            String referenceUri = formatReferenceM3u8Url(proxyUrl, baseUri, parseOptionalStringAttr(line, REGEX_URI, variableDefinitions));
+            String referenceUri = formatMultivariantM3u8Url(proxyUrl, baseUri, parseOptionalStringAttr(line, REGEX_URI, variableDefinitions));
 
             if (LogUtil.DEBUG) {
                 LogUtil.log("CustomHlsPlaylistParser -> todo parseMultivariantPlaylist -> baseUri = " + baseUri + ", referenceUri = " + referenceUri + ", i = " + i);
@@ -1811,23 +1811,23 @@ public final class CustomHlsPlaylistParser implements ParsingLoadable.Parser<Hls
         return hlsMediaPlaylist;
     }
 
-    private static String formatReferenceM3u8Url(ProxyUrl proxyUrl, String baseUrl, String referencePath) {
+    private static String formatMultivariantM3u8Url(ProxyUrl proxyUrl, String baseUrl, String referencePath) {
         try {
             if (null == proxyUrl)
                 throw new Exception("waring: proxyUrl null");
             if (LogUtil.DEBUG) {
-                LogUtil.log("CustomHlsPlaylistParser -> formatReferenceM3u8Url -> baseUrl = " + baseUrl + ", referencePath = " + referencePath);
+                LogUtil.log("CustomHlsPlaylistParser -> formatMultivariantM3u8Url -> baseUrl = " + baseUrl + ", referencePath = " + referencePath);
             }
-            String formatSegmentPath = proxyUrl.formatReferenceM3u8Url(baseUrl, referencePath);
+            String formatSegmentPath = proxyUrl.formatMultivariantM3u8Url(baseUrl, referencePath);
             if (LogUtil.DEBUG) {
-                LogUtil.log("CustomHlsPlaylistParser -> formatReferenceM3u8Url -> formatSegmentPath = " + formatSegmentPath);
+                LogUtil.log("CustomHlsPlaylistParser -> formatMultivariantM3u8Url -> formatSegmentPath = " + formatSegmentPath);
             }
             if (null == formatSegmentPath || formatSegmentPath.isEmpty())
                 throw new Exception("waring: formatSegmentPath null");
             return formatSegmentPath;
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
-                LogUtil.log("CustomHlsPlaylistParser -> formatReferenceM3u8Url -> Exception: " + e.getMessage());
+                LogUtil.log("CustomHlsPlaylistParser -> formatMultivariantM3u8Url -> Exception: " + e.getMessage());
             }
             return referencePath;
         }

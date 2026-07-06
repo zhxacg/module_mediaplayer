@@ -6,8 +6,19 @@ public interface ProxyUrl extends Serializable {
 
     void formatInit(String url);
 
-    String formatReferenceM3u8Url(String mainUrl, String referencePath);
+    /**
+     * 多层 嵌套m3u8
+     * @param mainUrl
+     * @param multivariantPath
+     * @return
+     */
+    String formatMultivariantM3u8Url(String mainUrl, String multivariantPath);
 
+    /**
+     * 单层 m3u8
+     * @param url
+     * @return
+     */
     String formatM3u8Url(String url);
 
     String formatSubtitleUrl(String url);

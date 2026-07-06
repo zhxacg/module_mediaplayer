@@ -296,11 +296,11 @@ public final class TestActivity extends Activity {
                                 }
 
                                 @Override
-                                public String formatReferenceM3u8Url(String baseUrl, String referencePath) {
+                                public String formatMultivariantM3u8Url(String mainUrl, String multivariantPath) {
                                     if (LogUtil.DEBUG) {
-                                        LogUtil.log("TestActivity -> formatReferenceM3u8Url -> baseUrl = " + baseUrl + ", referencePath = " + referencePath + ", thread = " + Thread.currentThread().getName());
+                                        LogUtil.log("TestActivity -> formatReferenceM3u8Url -> mainUrl = " + mainUrl + ", multivariantPath = " + multivariantPath + ", thread = " + Thread.currentThread().getName());
                                     }
-                                    return referencePath;
+                                    return multivariantPath;
                                 }
                             })
                             .setProxyTrack(new ProxyTrack() {
