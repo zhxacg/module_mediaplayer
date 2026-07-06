@@ -4,7 +4,8 @@ import java.io.Serializable;
 
 public interface ProxyUrl extends Serializable {
 
-    void formatInit(String url);
+    default void formatInit(String url) {
+    }
 
     /**
      * 多层 嵌套m3u8
@@ -13,7 +14,9 @@ public interface ProxyUrl extends Serializable {
      * @param subUrl
      * @return
      */
-    String formatMultivariantM3u8Url(String mainUrl, String subUrl);
+    default String formatMultivariantM3u8Url(String mainUrl, String subUrl) {
+        return subUrl;
+    }
 
     /**
      * 单层 m3u8
@@ -21,11 +24,19 @@ public interface ProxyUrl extends Serializable {
      * @param url
      * @return
      */
-    String formatM3u8Url(String url);
+    default String formatM3u8Url(String url) {
+        return url;
+    }
 
-    String formatSubtitleUrl(String url);
+    default String formatSegmentUrl(String url) {
+        return url;
+    }
 
-    String formatSegmentUrl(String url);
+    default String formatSegmentPath(String baseUrl, String segmentPath) {
+        return segmentPath;
+    }
 
-    String formatSegmentPath(String baseUrl, String segmentPath);
+    default String formatSubtitleUrl(String url) {
+        return url;
+    }
 }
