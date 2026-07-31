@@ -4,7 +4,7 @@ import java.io.Serializable;
 
 public interface ProxyUrl extends Serializable {
 
-    default void formatOpenCheck(boolean isMaster, String url) {
+    default void formatOpenInit(boolean fromUser, String url) {
     }
 
     /**

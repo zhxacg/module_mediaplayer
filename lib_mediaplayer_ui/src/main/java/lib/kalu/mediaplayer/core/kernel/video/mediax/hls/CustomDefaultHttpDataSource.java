@@ -261,7 +261,7 @@ public final class CustomDefaultHttpDataSource extends BaseDataSource implements
     private int responseCode;
     private long bytesToRead;
     private long bytesRead;
-    private boolean isOpenMasterUrl = false;
+    private boolean isOpenFromUser = true;
 
     /**
      * @deprecated Use {@link Factory} instead.
@@ -404,11 +404,10 @@ public final class CustomDefaultHttpDataSource extends BaseDataSource implements
     @Override
     public long open(DataSpec dataSpec1) throws HttpDataSourceException {
 
-        if (!isOpenMasterUrl) {
-            isOpenMasterUrl = true;
+        formatOpenInit(isOpenFromUser, dataSpec1);
+        if (isOpenFromUser) {
+            isOpenFromUser = false;
         }
-
-        formatOpenInit(isOpenMasterUrl, dataSpec1);
 
         if (LogUtil.DEBUG) {
             LogUtil.log("CustomDefaultHttpDataSource -> open -> dataSpec.uri = " + dataSpec1.uri);
@@ -1042,7 +1041,7 @@ public final class CustomDefaultHttpDataSource extends BaseDataSource implements
 
     /****************/
 
-    private void formatOpenInit(boolean isOpenMasterUrl, DataSpec dataSpec) {
+    private void formatOpenInit(boolean fromUser, DataSpec dataSpec) {
 
         if (LogUtil.DEBUG) {
             LogUtil.log(TAG, "formatOpenInit ->");
@@ -1057,7 +1056,7 @@ public final class CustomDefaultHttpDataSource extends BaseDataSource implements
                 LogUtil.log(TAG, "formatOpenInit -> openUrl =  " + openUrl);
             }
 
-            proxyUrl.formatOpenCheck(isOpenMasterUrl, openUrl);
+            proxyUrl.formatOpenInit(fromUser, openUrl);
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
                 LogUtil.log(TAG, "formatOpenInit -> Exception: " + e.getMessage());
