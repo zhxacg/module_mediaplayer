@@ -82,13 +82,11 @@ public final class CustomDefaultHttpDataSource extends BaseDataSource implements
 
         private boolean noProxy;
         private ProxyUrl proxyUrl;
-        private String masterUrl;
 
         /**
          * Creates an instance.
          */
-        public Factory(String masterUrl, ProxyUrl proxy, boolean noProxy) {
-            this.masterUrl = masterUrl;
+        public Factory(ProxyUrl proxy, boolean noProxy) {
             this.noProxy = noProxy;
             this.proxyUrl = proxy;
             this.defaultRequestProperties = new RequestProperties();
@@ -208,7 +206,6 @@ public final class CustomDefaultHttpDataSource extends BaseDataSource implements
         public CustomDefaultHttpDataSource createDataSource() {
             CustomDefaultHttpDataSource dataSource =
                     new CustomDefaultHttpDataSource(
-                            masterUrl,
                             noProxy,
                             proxyUrl,
                             userAgent,
@@ -251,7 +248,6 @@ public final class CustomDefaultHttpDataSource extends BaseDataSource implements
 
     private final boolean noProxy;
     private final ProxyUrl proxyUrl;
-    private final String masterUrl;
 
     @Nullable
     private Predicate<String> contentTypePredicate;
@@ -265,14 +261,15 @@ public final class CustomDefaultHttpDataSource extends BaseDataSource implements
     private int responseCode;
     private long bytesToRead;
     private long bytesRead;
+    private boolean isOpenMasterUrl = false;
 
     /**
      * @deprecated Use {@link Factory} instead.
      */
     @SuppressWarnings("deprecation")
     @Deprecated
-    public CustomDefaultHttpDataSource(String masterUrl, boolean noProxy) {
-        this(masterUrl, noProxy, null, DEFAULT_CONNECT_TIMEOUT_MILLIS, DEFAULT_READ_TIMEOUT_MILLIS);
+    public CustomDefaultHttpDataSource(boolean noProxy) {
+        this(noProxy, null, DEFAULT_CONNECT_TIMEOUT_MILLIS, DEFAULT_READ_TIMEOUT_MILLIS);
     }
 
     /**
@@ -280,8 +277,8 @@ public final class CustomDefaultHttpDataSource extends BaseDataSource implements
      */
     @SuppressWarnings("deprecation")
     @Deprecated
-    public CustomDefaultHttpDataSource(String masterUrl, boolean noProxy, @Nullable String userAgent) {
-        this(masterUrl, noProxy, userAgent, DEFAULT_CONNECT_TIMEOUT_MILLIS, DEFAULT_READ_TIMEOUT_MILLIS);
+    public CustomDefaultHttpDataSource(boolean noProxy, @Nullable String userAgent) {
+        this(noProxy, userAgent, DEFAULT_CONNECT_TIMEOUT_MILLIS, DEFAULT_READ_TIMEOUT_MILLIS);
     }
 
     /**
@@ -290,11 +287,9 @@ public final class CustomDefaultHttpDataSource extends BaseDataSource implements
     @SuppressWarnings("deprecation")
     @Deprecated
     public CustomDefaultHttpDataSource(
-            String masterUrl,
             boolean noProxy,
             @Nullable String userAgent, int connectTimeoutMillis, int readTimeoutMillis) {
         this(
-                masterUrl,
                 noProxy,
                 userAgent,
                 connectTimeoutMillis,
@@ -308,7 +303,6 @@ public final class CustomDefaultHttpDataSource extends BaseDataSource implements
      */
     @Deprecated
     public CustomDefaultHttpDataSource(
-            String masterUrl,
             boolean noProxy,
             @Nullable String userAgent,
             int connectTimeoutMillis,
@@ -316,7 +310,6 @@ public final class CustomDefaultHttpDataSource extends BaseDataSource implements
             boolean allowCrossProtocolRedirects,
             @Nullable RequestProperties defaultRequestProperties) {
         this(
-                masterUrl,
                 noProxy,
                 null,
                 userAgent,
@@ -329,7 +322,6 @@ public final class CustomDefaultHttpDataSource extends BaseDataSource implements
     }
 
     private CustomDefaultHttpDataSource(
-            String masterUrl,
             boolean noProxy,
             ProxyUrl proxy,
             @Nullable String userAgent,
@@ -340,7 +332,6 @@ public final class CustomDefaultHttpDataSource extends BaseDataSource implements
             @Nullable Predicate<String> contentTypePredicate,
             boolean keepPostFor302Redirects) {
         super(/* isNetwork= */ true);
-        this.masterUrl = masterUrl;
         this.noProxy = noProxy;
         this.proxyUrl = proxy;
         this.userAgent = userAgent;
@@ -413,8 +404,11 @@ public final class CustomDefaultHttpDataSource extends BaseDataSource implements
     @Override
     public long open(DataSpec dataSpec1) throws HttpDataSourceException {
 
-        // init
-        formatOpenInit(masterUrl, dataSpec1);
+        if (!isOpenMasterUrl) {
+            isOpenMasterUrl = true;
+        }
+
+        formatOpenInit(isOpenMasterUrl, dataSpec1);
 
         if (LogUtil.DEBUG) {
             LogUtil.log("CustomDefaultHttpDataSource -> open -> dataSpec.uri = " + dataSpec1.uri);
@@ -1048,7 +1042,7 @@ public final class CustomDefaultHttpDataSource extends BaseDataSource implements
 
     /****************/
 
-    private void formatOpenInit(String masterUrl, DataSpec dataSpec) {
+    private void formatOpenInit(boolean isOpenMasterUrl, DataSpec dataSpec) {
 
         if (LogUtil.DEBUG) {
             LogUtil.log(TAG, "formatOpenInit ->");
@@ -1063,7 +1057,7 @@ public final class CustomDefaultHttpDataSource extends BaseDataSource implements
                 LogUtil.log(TAG, "formatOpenInit -> openUrl =  " + openUrl);
             }
 
-            proxyUrl.formatOpenCheck(openUrl.equals(masterUrl), openUrl);
+            proxyUrl.formatOpenCheck(isOpenMasterUrl, openUrl);
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
                 LogUtil.log(TAG, "formatOpenInit -> Exception: " + e.getMessage());
