@@ -392,15 +392,16 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
             if (LogUtil.DEBUG) {
                 LogUtil.log(TAG, "startDecoder -> initSimpleCache = " + initSimpleCache);
             }
+            String masterUrl = startArgs.getUrl();
             StartArgs.TimeoutConfiguration timeoutConfiguration = startArgs.getTimeoutConfiguration();
             int connectTimoutMs = timeoutConfiguration.getConnectTimeoutMs();
             ProxyUrl proxyUrl = startArgs.getProxyUrl();
             boolean noProxy = startArgs.isNoProxy();
             if (LogUtil.DEBUG) {
-                LogUtil.log(TAG, "startDecoder -> connectTimoutMs = " + connectTimoutMs + ", noProxy = " + noProxy + ", proxyUrl = " + proxyUrl);
+                LogUtil.log(TAG, "startDecoder -> connectTimoutMs = " + connectTimoutMs + ", noProxy = " + noProxy + ", proxyUrl = " + proxyUrl + ", masterUrl = " + masterUrl);
             }
             // HttpClient
-            CustomDefaultHttpDataSource.Factory httpFactory = new CustomDefaultHttpDataSource.Factory(proxyUrl, noProxy).setUserAgent(Util.getUserAgent(context, context.getApplicationInfo().packageName)).setConnectTimeoutMs(connectTimoutMs).setReadTimeoutMs(connectTimoutMs).setDefaultRequestProperties(new HashMap<>()).setAllowCrossProtocolRedirects(true).setKeepPostFor302Redirects(true);
+            CustomDefaultHttpDataSource.Factory httpFactory = new CustomDefaultHttpDataSource.Factory(masterUrl, proxyUrl, noProxy).setUserAgent(Util.getUserAgent(context, context.getApplicationInfo().packageName)).setConnectTimeoutMs(connectTimoutMs).setReadTimeoutMs(connectTimoutMs).setDefaultRequestProperties(new HashMap<>()).setAllowCrossProtocolRedirects(true).setKeepPostFor302Redirects(true);
             boolean containsExtUrl = startArgs.containsExtUrl();
             UrlArgs urlArgs = startArgs.getUrlArgs();
             UrlArgs.Item mainVideo = urlArgs.getMainVideo();

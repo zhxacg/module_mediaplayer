@@ -13,7 +13,6 @@ import lib.kalu.mediaplayer.PlayerLayout;
 import lib.kalu.mediaplayer.R;
 import lib.kalu.mediaplayer.bean.args.StartArgs;
 import lib.kalu.mediaplayer.bean.args.UrlArgs;
-import lib.kalu.mediaplayer.bean.info.PlayInfo;
 import lib.kalu.mediaplayer.bean.info.TrackInfo;
 import lib.kalu.mediaplayer.bean.type.PlayerType;
 import lib.kalu.mediaplayer.core.component.ComponentBuffering;
@@ -32,7 +31,6 @@ import lib.kalu.mediaplayer.listener.OnPlayerEventListener;
 import lib.kalu.mediaplayer.listener.OnPlayerProgressListener;
 import lib.kalu.mediaplayer.listener.OnPlayerWindowStateChangeListener;
 import lib.kalu.mediaplayer.proxy.Proxy;
-import lib.kalu.mediaplayer.buried.PlayBuried;
 import lib.kalu.mediaplayer.proxy.ProxyTrack;
 import lib.kalu.mediaplayer.proxy.ProxyUrl;
 import lib.kalu.mediaplayer.util.LogUtil;
@@ -260,9 +258,9 @@ public final class TestActivity extends Activity {
                             .setProxyUrl(new ProxyUrl() {
 
                                 @Override
-                                public void formatInit(String url) {
+                                public void formatOpenCheck(boolean isMaster, String url) {
                                     if (LogUtil.DEBUG) {
-                                        LogUtil.log("TestActivity -> formatInit -> url = " + url + ", thread = " + Thread.currentThread().getName());
+                                        LogUtil.log("TestActivity -> formatOpenCheck -> isMaster = " + isMaster + ", url = " + url + ", thread = " + Thread.currentThread().getName());
                                     }
                                 }
 
