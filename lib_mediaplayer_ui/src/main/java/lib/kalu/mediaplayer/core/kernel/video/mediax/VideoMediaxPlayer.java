@@ -411,13 +411,14 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
                         public DataSpec resolveDataSpec(DataSpec dataSpec) {
 
 
+                            boolean playing = isPlaying();
                             String dataUrl = dataSpec.uri.toString();
                             if (LogUtil.DEBUG) {
-                                LogUtil.log(TAG, "startDecoder -> resolveDataSpec, dataSpec.uri = " + dataUrl + ", masterUrl = " + masterUrl);
+                                LogUtil.log(TAG, "startDecoder -> resolveDataSpec, playing = " + playing + ", dataSpec.uri = " + dataUrl + ", masterUrl = " + masterUrl);
                             }
 
                             // 将自定义数据（如 Token、请求头）追加到新的 DataSpec 中
-                            if (dataUrl.equals(masterUrl)) {
+                            if (!playing && dataUrl.equals(masterUrl)) {
                                 return dataSpec.buildUpon()
                                         .setCustomData(CustomTag.MASTER_PLAY_URL_VIDEO) // 保留在 customData 中供下一个自定义 DataSource 使用
                                         .build();
