@@ -414,7 +414,7 @@ public final class CustomDefaultHttpDataSource extends BaseDataSource implements
     public long open(DataSpec dataSpec1) throws HttpDataSourceException {
 
         // init
-        formatOpenCheck(masterUrl, dataSpec1);
+        formatOpenInit(masterUrl, dataSpec1);
 
         if (LogUtil.DEBUG) {
             LogUtil.log("CustomDefaultHttpDataSource -> open -> dataSpec.uri = " + dataSpec1.uri);
@@ -1048,7 +1048,7 @@ public final class CustomDefaultHttpDataSource extends BaseDataSource implements
 
     /****************/
 
-    private void formatOpenCheck(String masterUrl, DataSpec dataSpec) {
+    private void formatOpenInit(String masterUrl, DataSpec dataSpec) {
 
         if (LogUtil.DEBUG) {
             LogUtil.log(TAG, "formatOpenInit ->");
@@ -1060,13 +1060,13 @@ public final class CustomDefaultHttpDataSource extends BaseDataSource implements
 
             String openUrl = dataSpec.uri.toString();
             if (LogUtil.DEBUG) {
-                LogUtil.log(TAG, "formatOpenCheck -> openUrl =  " + openUrl);
+                LogUtil.log(TAG, "formatOpenInit -> openUrl =  " + openUrl);
             }
 
             proxyUrl.formatOpenCheck(openUrl.equals(masterUrl), openUrl);
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
-                LogUtil.log(TAG, "formatOpenCheck -> Exception: " + e.getMessage());
+                LogUtil.log(TAG, "formatOpenInit -> Exception: " + e.getMessage());
             }
         }
     }
