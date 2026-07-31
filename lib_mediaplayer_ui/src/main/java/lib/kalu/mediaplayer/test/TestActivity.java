@@ -258,9 +258,9 @@ public final class TestActivity extends Activity {
                             .setProxyUrl(new ProxyUrl() {
 
                                 @Override
-                                public void formatOpenInit(boolean fromUser, String url) {
+                                public void formatOpenUrl(boolean isFirst, String url) {
                                     if (LogUtil.DEBUG) {
-                                        LogUtil.log("TestActivity -> formatOpenInit -> fromUser = " + fromUser + ", url = " + url + ", thread = " + Thread.currentThread().getName());
+                                        LogUtil.log("TestActivity -> formatOpenUrl -> isFirst = " + isFirst + ", url = " + url + ", thread = " + Thread.currentThread().getName());
                                     }
                                 }
 
