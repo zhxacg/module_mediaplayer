@@ -261,7 +261,6 @@ public final class CustomDefaultHttpDataSource extends BaseDataSource implements
     private int responseCode;
     private long bytesToRead;
     private long bytesRead;
-    private boolean isOpenFirst = true;
 
     /**
      * @deprecated Use {@link Factory} instead.
@@ -404,10 +403,7 @@ public final class CustomDefaultHttpDataSource extends BaseDataSource implements
     @Override
     public long open(DataSpec dataSpec1) throws HttpDataSourceException {
 
-        formatOpenInit(isOpenFirst, dataSpec1);
-        if (isOpenFirst) {
-            isOpenFirst = false;
-        }
+        formatOpenInit(dataSpec1);
 
         if (LogUtil.DEBUG) {
             LogUtil.log("CustomDefaultHttpDataSource -> open -> dataSpec.uri = " + dataSpec1.uri);
@@ -1041,7 +1037,7 @@ public final class CustomDefaultHttpDataSource extends BaseDataSource implements
 
     /****************/
 
-    private void formatOpenInit(boolean isFirst, DataSpec dataSpec) {
+    private void formatOpenInit(DataSpec dataSpec) {
 
         if (LogUtil.DEBUG) {
             LogUtil.log(TAG, "formatOpenInit ->");
@@ -1051,12 +1047,16 @@ public final class CustomDefaultHttpDataSource extends BaseDataSource implements
             if (null == proxyUrl)
                 throw new Exception("waring: proxyUrl null");
 
+            if (LogUtil.DEBUG) {
+                LogUtil.log(TAG, "formatOpenInit -> dataSpec.customData =  " + dataSpec.customData);
+            }
+
             String openUrl = dataSpec.uri.toString();
             if (LogUtil.DEBUG) {
                 LogUtil.log(TAG, "formatOpenInit -> openUrl =  " + openUrl);
             }
 
-            proxyUrl.formatOpenUrl(isFirst, openUrl);
+            proxyUrl.formatOpenUrl(CustomTag.MASTER_PLAY_URL_VIDEO == dataSpec.customData, openUrl);
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
                 LogUtil.log(TAG, "formatOpenInit -> Exception: " + e.getMessage());

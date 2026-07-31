@@ -30,7 +30,7 @@ import androidx.media3.datasource.DataSource;
 import androidx.media3.datasource.DataSpec;
 import androidx.media3.datasource.DefaultDataSource;
 import androidx.media3.datasource.FileDataSource;
-import androidx.media3.datasource.HttpDataSource;
+import androidx.media3.datasource.ResolvingDataSource;
 import androidx.media3.datasource.cache.CacheDataSink;
 import androidx.media3.datasource.cache.CacheDataSource;
 import androidx.media3.datasource.cache.CacheKeyFactory;
@@ -94,6 +94,7 @@ import lib.kalu.mediaplayer.core.kernel.video.mediax.hls.CustomDefaultHlsExtract
 import lib.kalu.mediaplayer.core.kernel.video.mediax.hls.CustomDefaultHttpDataSource;
 import lib.kalu.mediaplayer.core.kernel.video.mediax.hls.CustomHlsLoadErrorHandlingPolicy;
 import lib.kalu.mediaplayer.core.kernel.video.mediax.hls.CustomHlsPlaylistParserFactory;
+import lib.kalu.mediaplayer.core.kernel.video.mediax.hls.CustomTag;
 import lib.kalu.mediaplayer.proxy.ProxyUrl;
 import lib.kalu.mediaplayer.util.DisplayRefreshRateUtils;
 import lib.kalu.mediaplayer.util.LogUtil;
@@ -392,15 +393,41 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
             if (LogUtil.DEBUG) {
                 LogUtil.log(TAG, "startDecoder -> initSimpleCache = " + initSimpleCache);
             }
+            String masterUrl = startArgs.getUrl();
             StartArgs.TimeoutConfiguration timeoutConfiguration = startArgs.getTimeoutConfiguration();
             int connectTimoutMs = timeoutConfiguration.getConnectTimeoutMs();
             ProxyUrl proxyUrl = startArgs.getProxyUrl();
             boolean noProxy = startArgs.isNoProxy();
             if (LogUtil.DEBUG) {
-                LogUtil.log(TAG, "startDecoder -> connectTimoutMs = " + connectTimoutMs + ", noProxy = " + noProxy + ", proxyUrl = " + proxyUrl);
+                LogUtil.log(TAG, "startDecoder -> connectTimoutMs = " + connectTimoutMs + ", masterUrl = " + masterUrl + ", noProxy = " + noProxy + ", proxyUrl = " + proxyUrl);
             }
             // HttpClient
-            CustomDefaultHttpDataSource.Factory httpFactory = new CustomDefaultHttpDataSource.Factory(proxyUrl, noProxy).setUserAgent(Util.getUserAgent(context, context.getApplicationInfo().packageName)).setConnectTimeoutMs(connectTimoutMs).setReadTimeoutMs(connectTimoutMs).setDefaultRequestProperties(new HashMap<>()).setAllowCrossProtocolRedirects(true).setKeepPostFor302Redirects(true);
+            CustomDefaultHttpDataSource.Factory baseHttpDataSourceFactory = new CustomDefaultHttpDataSource.Factory(proxyUrl, noProxy).setUserAgent(Util.getUserAgent(context, context.getApplicationInfo().packageName)).setConnectTimeoutMs(connectTimoutMs).setReadTimeoutMs(connectTimoutMs).setDefaultRequestProperties(new HashMap<>()).setAllowCrossProtocolRedirects(true).setKeepPostFor302Redirects(true);
+            // 2. 用 ResolvingDataSource 包装它
+            ResolvingDataSource.Factory httpFactory = new ResolvingDataSource.Factory(
+                    baseHttpDataSourceFactory,
+                    new ResolvingDataSource.Resolver() {
+                        @Override
+                        public DataSpec resolveDataSpec(DataSpec dataSpec) {
+
+
+                            String dataUrl = dataSpec.uri.toString();
+                            if (LogUtil.DEBUG) {
+                                LogUtil.log(TAG, "startDecoder -> resolveDataSpec, dataSpec.uri = " + dataUrl + ", masterUrl = " + masterUrl);
+                            }
+
+                            // 将自定义数据（如 Token、请求头）追加到新的 DataSpec 中
+                            if (dataUrl.equals(masterUrl)) {
+                                return dataSpec.buildUpon()
+                                        .setCustomData(CustomTag.MASTER_PLAY_URL_VIDEO) // 保留在 customData 中供下一个自定义 DataSource 使用
+                                        .build();
+                            } else {
+                                return dataSpec;
+                            }
+                        }
+                    }
+            );
+
             boolean containsExtUrl = startArgs.containsExtUrl();
             UrlArgs urlArgs = startArgs.getUrlArgs();
             UrlArgs.Item mainVideo = urlArgs.getMainVideo();
@@ -2034,7 +2061,7 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
 
     /************************/
 
-    private MediaSource buildMediaSource(Context context, HttpDataSource.Factory httpFactory, StartArgs startArgs, @PlayerType.UrlType.Value int urlType, UrlArgs.Item urlItem) {
+    private MediaSource buildMediaSource(Context context, ResolvingDataSource.Factory httpFactory, StartArgs startArgs, @PlayerType.UrlType.Value int urlType, UrlArgs.Item urlItem) {
 
         try {
 
@@ -2216,11 +2243,22 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
                     .setMaxOffsetMs(startArgs.getLiveConfiguration().getMaxOffsetMs()).build();
 
             if (urlType == PlayerType.UrlType.AUDIO) {
-                return new MediaItem.Builder().setUri(Uri.parse(url)).setMediaId("audio:" + url.hashCode()).setLiveConfiguration(liveConfiguration).build();
+                return new MediaItem.Builder()
+                        .setUri(Uri.parse(url))
+                        .setMediaId("audio:" + url.hashCode())
+                        .setLiveConfiguration(liveConfiguration)
+                        .build();
             } else if (urlType == PlayerType.UrlType.VIDEO) {
-                return new MediaItem.Builder().setUri(Uri.parse(url)).setMediaId("video:" + url.hashCode()).setLiveConfiguration(liveConfiguration).build();
+                return new MediaItem.Builder()
+                        .setUri(Uri.parse(url))
+                        .setMediaId("video:" + url.hashCode())
+                        .setLiveConfiguration(liveConfiguration)
+                        .build();
             } else {
-                return new MediaItem.Builder().setUri(Uri.parse(url)).setLiveConfiguration(liveConfiguration).build();
+                return new MediaItem.Builder()
+                        .setUri(Uri.parse(url))
+                        .setLiveConfiguration(liveConfiguration)
+                        .build();
             }
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
@@ -2450,7 +2488,7 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
         }
     }
 
-    private DataSource.Factory buildDefaultDataSource(Context context, HttpDataSource.Factory httpFactory) {
+    private DataSource.Factory buildDefaultDataSource(Context context, ResolvingDataSource.Factory httpFactory) {
 
         if (LogUtil.DEBUG) {
             LogUtil.log(TAG, "buildDefaultDataSource -> mSimpleCache = " + mSimpleCache);
@@ -2487,7 +2525,7 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
     }
 
 
-    private HlsMediaSource.Factory buildHlsMediaSourceFactory(Context context, HttpDataSource.Factory httpFactory, StartArgs args, @PlayerType.UrlType.Value int urlType, UrlArgs.Item item) {
+    private HlsMediaSource.Factory buildHlsMediaSourceFactory(Context context, ResolvingDataSource.Factory httpFactory, StartArgs args, @PlayerType.UrlType.Value int urlType, UrlArgs.Item item) {
 
         DataSource.Factory factory = buildDefaultDataSource(context, httpFactory);
 
