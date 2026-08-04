@@ -61,7 +61,7 @@ public class StartArgs implements Serializable {
     private UrlArgs urlArgs;
 
 
-    public boolean containsMainUrl(){
+    public boolean containsMainUrl() {
         return null != urlArgs && urlArgs.containsUrl();
     }
 
@@ -359,22 +359,20 @@ public class StartArgs implements Serializable {
 
     public static class Builder implements Serializable {
 
-        private final ConfigArgs configArgs = PlayerSDK.getInstance().getConfigArgs();
-
         // 解码器类型
-        private int decoderType = configArgs.getDecoderType();
+        private int decoderType = PlayerSDK.decoderType;
         // 播放器类型
         @PlayerType.KernelType.Value
-        private int kernelType = configArgs.getKernelType();
+        private int kernelType = PlayerSDK.kernelType;
         // 画面缩放类型
         @PlayerType.ScaleType.Value
-        private int scaleType = configArgs.getScaleType();
+        private int scaleType = PlayerSDK.scaleType;
         // 旋转角度
         @PlayerType.RotationType.Value
-        private int rotation = configArgs.getRotation();
+        private int rotation = PlayerSDK.rotation;
 
         @PlayerType.SeekType.Value
-        private int seekType = configArgs.getSeekType();
+        private int seekType = PlayerSDK.seekType;
 
         @PlayerType.SeekType.Value
         public int getSeekType() {
@@ -383,7 +381,7 @@ public class StartArgs implements Serializable {
 
         // 视频渲染类型
         @PlayerType.RenderType.Value
-        private int renderType = configArgs.getRenderType();
+        private int renderType = PlayerSDK.renderType;
 
         public Builder setRenderType(@PlayerType.RenderType.Value int v) {
             this.renderType = v;
@@ -509,7 +507,7 @@ public class StartArgs implements Serializable {
         }
 
         // 禁止抓包
-        private boolean noProxy = configArgs.isNoProxy();
+        private boolean noProxy = PlayerSDK.noProxy;
 
         public Builder setNoProxy(Boolean v) {
             this.noProxy = v;
@@ -558,7 +556,7 @@ public class StartArgs implements Serializable {
 
         // 超时时间
         private TimeoutConfiguration timeoutConfiguration = new TimeoutConfiguration.Builder()
-                .setConnectTimeoutMs(configArgs.getConnectTimeoutMs())
+                .setConnectTimeoutMs(PlayerSDK.connectTimeoutMs)
                 .build();
 
         public Builder setTimeoutConfiguration(TimeoutConfiguration v) {

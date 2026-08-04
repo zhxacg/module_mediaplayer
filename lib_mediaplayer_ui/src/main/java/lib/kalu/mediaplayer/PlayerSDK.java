@@ -1,7 +1,6 @@
 package lib.kalu.mediaplayer;
 
 
-import lib.kalu.mediaplayer.bean.args.ConfigArgs;
 import lib.kalu.mediaplayer.bean.cache.Cache;
 import lib.kalu.mediaplayer.bean.type.PlayerType;
 import lib.kalu.mediaplayer.buried.PlayBuried;
@@ -9,107 +8,172 @@ import lib.kalu.mediaplayer.buried.PlayBuried;
 
 public final class PlayerSDK {
 
-    private ConfigArgs mConfig = null;
-    private ConfigArgs.Builder mConfigBuilder;
+    public static boolean log = false;
+    public static boolean initRelease = true;
+    public static boolean supportAutoRelease = true;
+    public static int connectTimeoutMs = 10_000;  // 连接超时 10s
+    public static boolean bufferingTimeoutRetry = false; // 缓冲失败重试
+    @PlayerType.KernelType.Value
+    public static int externalAudioKernel = PlayerType.KernelType.DEFAULT; // 音频播放器内核
+    @PlayerType.KernelType.Value
+    public static int kernelType = PlayerType.KernelType.DEFAULT; // 视频播放器内核
+    @PlayerType.RenderType.Value
+    public static int renderType = PlayerType.RenderType.DEFAULT; // 视频渲染类型
+    @PlayerType.DecoderType.Value
+    public static int decoderType = PlayerType.DecoderType.DEFAULT; // 解码器类型
+    @PlayerType.ScaleType
+    public static int scaleType = PlayerType.ScaleType.DEFAULT; // 视频缩放比例
+    // 旋转角度
+    @PlayerType.RotationType.Value
+    public static int rotation = PlayerType.RotationType.DEFAULT;
+    // 快进参数
+    @PlayerType.SeekType.Value
+    public static int seekType = PlayerType.SeekType.DEFAULT;
+    // 缓存
+    public static Cache cache = new Cache.Builder()
+            .build();
+    // 代理
+    public static boolean noProxy = false;
+    // 代理
+    public static PlayBuried playBuried = null;
 
-    /***************/
-
-    private static final class Holder {
-        private static final PlayerSDK mInstance = new PlayerSDK();
+    public static Builder newBuilder() {
+        return new Builder();
     }
 
-    public static PlayerSDK getInstance() {
-        return Holder.mInstance;
-    }
 
-    /***************/
+    public final static class Builder {
 
-    private PlayerSDK() {
-        mConfigBuilder = new ConfigArgs.Builder();
-    }
+        private boolean log = false;
+        private boolean initRelease = true;
+        private boolean supportAutoRelease = true;
+        private int connectTimeoutMs = 10_000;  // 连接超时 10s
+        private boolean bufferingTimeoutRetry = false; // 缓冲失败重试
+        @PlayerType.KernelType.Value
+        private int externalAudioKernel = PlayerType.KernelType.DEFAULT; // 音频播放器内核
+        @PlayerType.KernelType.Value
+        private int kernelType = PlayerType.KernelType.DEFAULT; // 视频播放器内核
+        @PlayerType.RenderType.Value
+        private int renderType = PlayerType.RenderType.DEFAULT; // 视频渲染类型
+        @PlayerType.DecoderType.Value
+        private int decoderType = PlayerType.DecoderType.DEFAULT; // 解码器类型
+        @PlayerType.ScaleType
+        private int scaleType = PlayerType.ScaleType.DEFAULT; // 视频缩放比例
 
-    public PlayerSDK setConnectTimeoutMs(int v) {
-        this.mConfigBuilder.setConnectTimeoutMs(v);
-        return this;
-    }
+        // 旋转角度
+        @PlayerType.RotationType.Value
+        private int rotation = PlayerType.RotationType.DEFAULT;
 
-    public PlayerSDK setBufferingTimeoutRetry(boolean v) {
-        this.mConfigBuilder.setBufferingTimeoutRetry(v);
-        return this;
-    }
+        // 快进参数
+        @PlayerType.SeekType.Value
+        private int seekType = PlayerType.SeekType.DEFAULT;
 
-    public PlayerSDK setSeekType(@PlayerType.SeekType.Value int v) {
-        mConfigBuilder.setSeekType(v);
-        return this;
-    }
+        // 缓存
+        private Cache cache = new Cache.Builder()
+                .build();
 
-    public PlayerSDK setLog(boolean v) {
-        mConfigBuilder.setLog(v);
-        return this;
-    }
+        // 代理
+        private boolean noProxy = false;
 
-    public PlayerSDK setInitRelease(boolean v) {
-        mConfigBuilder.setInitRelease(v);
-        return this;
-    }
+        // 代理
+        private PlayBuried playBuried = null;
 
-    public PlayerSDK setSupportAutoRelease(boolean v) {
-        mConfigBuilder.setSupportAutoRelease(v);
-        return this;
-    }
+        private Builder() {
+        }
 
-    public PlayerSDK setExternalAudioKernel(@PlayerType.KernelType.Value int v) {
-        mConfigBuilder.setExternalAudioKernel(v);
-        return this;
-    }
+        public Builder setRotation(int v) {
+            this.rotation = v;
+            return this;
+        }
 
-    public PlayerSDK setKernelType(@PlayerType.KernelType.Value int v) {
-        mConfigBuilder.setKernelType(v);
-        return this;
-    }
 
-    public PlayerSDK setRenderType(@PlayerType.RenderType.Value int v) {
-        mConfigBuilder.setRenderType(v);
-        return this;
-    }
+        public Builder setSeekType(@PlayerType.SeekType.Value int v) {
+            seekType = v;
+            return this;
+        }
 
-    public PlayerSDK setDecoderType(@PlayerType.DecoderType.Value int v) {
-        mConfigBuilder.setDecoderType(v);
-        return this;
-    }
+        public Builder setConnectTimeoutMs(int v) {
+            connectTimeoutMs = v;
+            return this;
+        }
 
-    public PlayerSDK setScaleType(@PlayerType.ScaleType.Value int v) {
-        mConfigBuilder.setScaleType(v);
-        updateConfigBuilder(false);
-        return this;
-    }
 
-    public PlayerSDK setCache(Cache v) {
-        mConfigBuilder.setCache(v);
-        return this;
-    }
+        public Builder setBufferingTimeoutRetry(boolean v) {
+            bufferingTimeoutRetry = v;
+            return this;
+        }
 
-    public PlayerSDK setPlayBuried(PlayBuried v) {
-        mConfigBuilder.setPlayBuried(v);
-        return this;
-    }
+        public Builder setDecoderType(@PlayerType.DecoderType int v) {
+            decoderType = v;
+            return this;
+        }
 
-    public void init() {
-        mConfig = mConfigBuilder.build();
-    }
+        public Builder setLog(boolean v) {
+            log = v;
+            return this;
+        }
 
-    public ConfigArgs getConfigArgs() {
-        updateConfigBuilder(true);
-        return mConfig;
-    }
+        public Builder setInitRelease(boolean v) {
+            initRelease = v;
+            return this;
+        }
 
-    private void updateConfigBuilder(boolean check) {
-        if (check) {
-            if (null == mConfig) {
-                mConfig = mConfigBuilder.build();
-            }
-        } else {
-            mConfig = mConfigBuilder.build();
+        public Builder setSupportAutoRelease(boolean v) {
+            supportAutoRelease = v;
+            return this;
+        }
+
+        public Builder setExternalAudioKernel(@PlayerType.KernelType.Value int v) {
+            externalAudioKernel = v;
+            return this;
+        }
+
+        public Builder setKernelType(@PlayerType.KernelType.Value int v) {
+            kernelType = v;
+            return this;
+        }
+
+        public Builder setRenderType(@PlayerType.RenderType.Value int v) {
+            renderType = v;
+            return this;
+        }
+
+        public Builder setScaleType(@PlayerType.ScaleType.Value int v) {
+            scaleType = v;
+            return this;
+        }
+
+        public Builder setCache(Cache v) {
+            this.cache = v;
+            return this;
+        }
+
+        public Builder setNoProxy(boolean v) {
+            this.noProxy = v;
+            return this;
+        }
+
+        public Builder setPlayBuried(PlayBuried v) {
+            this.playBuried = v;
+            return this;
+        }
+
+        public void init() {
+            PlayerSDK.log = log;
+            PlayerSDK.initRelease = initRelease;
+            PlayerSDK.supportAutoRelease = supportAutoRelease;
+            PlayerSDK.connectTimeoutMs = connectTimeoutMs;
+            PlayerSDK.bufferingTimeoutRetry = bufferingTimeoutRetry;
+            PlayerSDK.externalAudioKernel = externalAudioKernel;
+            PlayerSDK.kernelType = kernelType;
+            PlayerSDK.renderType = renderType;
+            PlayerSDK.decoderType = decoderType;
+            PlayerSDK.scaleType = scaleType;
+            PlayerSDK.rotation = rotation;
+            PlayerSDK.seekType = seekType;
+            PlayerSDK.cache = cache;
+            PlayerSDK.noProxy = noProxy;
+            PlayerSDK.playBuried = playBuried;
         }
     }
 

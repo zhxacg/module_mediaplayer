@@ -81,7 +81,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import lib.kalu.mediaplayer.PlayerSDK;
-import lib.kalu.mediaplayer.bean.args.ConfigArgs;
 import lib.kalu.mediaplayer.bean.args.StartArgs;
 import lib.kalu.mediaplayer.bean.args.UrlArgs;
 import lib.kalu.mediaplayer.bean.cache.Cache;
@@ -915,10 +914,7 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
             if (url.startsWith(PlayerType.SchemeType.FILE))
                 throw new Exception("error: url is file");
 
-            ConfigArgs configArgs = PlayerSDK.getInstance().getConfigArgs();
-            if (null == configArgs) throw new Exception("error: configArgs null");
-
-            Cache cache = configArgs.getCache();
+            Cache cache = PlayerSDK.cache;
             if (null == cache) throw new Exception("error: cache null");
 
             boolean cacheEnable = cache.isEnable();

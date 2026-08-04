@@ -647,7 +647,7 @@ public class MainActivity extends Activity {
                 break;
         }
 
-        PlayerSDK.getInstance()
+        PlayerSDK.newBuilder()
                 // 日志开关
                 .setLog(isLogEnable())
                 // 播放器类型（MediaPlayer Media3Player ExoPlayer IjkPLayer）

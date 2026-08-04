@@ -5,7 +5,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import lib.kalu.mediaplayer.PlayerSDK;
-import lib.kalu.mediaplayer.bean.args.ConfigArgs;
 import lib.kalu.mediaplayer.bean.args.StartArgs;
 import lib.kalu.mediaplayer.bean.info.PlayInfo;
 import lib.kalu.mediaplayer.bean.type.PlayerType;
@@ -511,12 +510,7 @@ public interface VideoPlayerApiCall extends VideoPlayerApiBase, VideoPlayerApiLi
             if (null == startArgs)
                 throw new Exception("error: startArgs null");
 
-            //
-            ConfigArgs configArgs = PlayerSDK.getInstance().getConfigArgs();
-            if (null == configArgs)
-                throw new Exception("error: configArgs null");
-
-            PlayBuried playBuried = configArgs.getPlayBuried();
+            PlayBuried playBuried = PlayerSDK.playBuried;
             if (null == playBuried)
                 throw new Exception("error: playBuried null");
 

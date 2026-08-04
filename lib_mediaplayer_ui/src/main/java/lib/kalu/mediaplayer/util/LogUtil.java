@@ -52,7 +52,7 @@ public final class LogUtil {
             if (LogUtil.DEBUG) {
                 LogUtil.log("VideoIjkPlayer -> initOptions -> step2");
             }
-            boolean log = PlayerSDK.getInstance().getConfigArgs().isLog();
+            boolean log = PlayerSDK.log;
             lib.kalu.ijkplayer.util.IjkLogUtil.setLogger(log);
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
