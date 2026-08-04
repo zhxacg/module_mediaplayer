@@ -441,7 +441,7 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
 
                 String m3u8DataPath = M3u8GeneratorUtil.getCacheM3u8Path(context, urlArgs);
                 UrlArgs.Item build = new UrlArgs.Item.Builder().setUrl(m3u8DataPath).build();
-                MediaSource multivariantMediaSource = buildMediaSource(context, httpFactory, startArgs, PlayerType.UrlType.FILE_VIDEO_MULTIVARIANT, build);
+                MediaSource multivariantMediaSource = buildMediaSource(context, httpFactory, startArgs, PlayerType.UrlType.FILE_HLS, build);
                 if (null == multivariantMediaSource)
                     throw new Exception("error: multivariantMediaSource null");
                 mExoPlayer.setMediaSource(multivariantMediaSource);
@@ -2187,6 +2187,16 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
                 MediaItem mediaItem = buildMediaItem(PlayerType.UrlType.VIDEO, startArgs, urlItem);
                 return new ProgressiveMediaSource.Factory(factory).createMediaSource(mediaItem);
             }
+            // 轨道视频 hls (本地拼接的索引文件)
+            else if (urlType == PlayerType.UrlType.FILE_HLS) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log(TAG, "buildMediaSource -> track video, type = file_hls, url = " + url);
+                }
+
+                HlsMediaSource.Factory factory = buildHlsMediaSourceFactory(context, httpFactory, startArgs, PlayerType.UrlType.VIDEO, urlItem);
+                MediaItem mediaItem = buildMediaItem(PlayerType.UrlType.FILE_HLS, startArgs, urlItem);
+                return ((MediaSource.Factory) factory).createMediaSource(mediaItem);
+            }
             // 轨道视频 def
             else {
                 if (LogUtil.DEBUG) {
@@ -2255,12 +2265,19 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
                         .build();
             } else if (urlType == PlayerType.UrlType.VIDEO) {
                 return new MediaItem.Builder()
-//                        .setUri(Uri.fromFile(new File(url)))
                         .setUri(Uri.parse(url))
                         .setMediaId("video:" + url.hashCode())
                         .setLiveConfiguration(liveConfiguration)
                         .build();
-            } else {
+            }
+            else if (urlType == PlayerType.UrlType.FILE_HLS) {
+                return new MediaItem.Builder()
+                        .setUri(Uri.fromFile(new File(url)))
+                        .setMediaId("video:" + url.hashCode())
+                        .setLiveConfiguration(liveConfiguration)
+                        .build();
+            }
+            else {
                 return new MediaItem.Builder()
                         .setUri(Uri.parse(url))
                         .setLiveConfiguration(liveConfiguration)
@@ -2510,7 +2527,7 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
                                     // 对于未设置长度的请求忽略缓存（比如请求体长度未知时不使用缓存）。
                                     | CacheDataSource.FLAG_IGNORE_CACHE_FOR_UNSET_LENGTH_REQUESTS).setCache(mSimpleCache)
                     // 网络请求工厂
-                    .setUpstreamDataSourceFactory(httpFactory)
+                    .setUpstreamDataSourceFactory(new DefaultDataSource.Factory(context, httpFactory))
                     // 缓存读取工厂
                     .setCacheReadDataSourceFactory(new FileDataSource.Factory())
                     // 写入数据到缓存

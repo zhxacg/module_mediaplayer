@@ -82,62 +82,6 @@ public final class UrlArgs implements Serializable {
         }
     }
 
-
-//    public boolean containsMainUrl() {
-//        return null != mainVideoArgs && mainVideoArgs.containsUrl();
-//    }
-//
-//    public boolean containsExtUrl() {
-//        return (null != extVideoArgs && extVideoArgs.length > 0) || (null != extAudioArgs && extAudioArgs.length > 0) || (null != extSubtitleArgs && extSubtitleArgs.length > 0);
-//    }
-
-//    public int getUrlCount() {
-//        try {
-//            int result = 0;
-//            // mainUrl
-//            if (null != mainVideoArgs && mainVideoArgs.containsUrl()) {
-//                result += 1;
-//            }
-//            // extVideoUrl
-//            if (null != extVideoArgs) {
-//                for (Item videoArgs : extVideoArgs) {
-//                    if (null == videoArgs)
-//                        continue;
-//                    if (!videoArgs.containsUrl())
-//                        continue;
-//                    result += 1;
-//                }
-//            }
-//            // extAudioUrl
-//            if (null != extAudioArgs) {
-//                for (Item url : extAudioArgs) {
-//                    if (null == url)
-//                        continue;
-//                    if (!url.containsUrl())
-//                        continue;
-//                    result += 1;
-//                }
-//            }
-//            // extVideoUrl
-//            if (null != extSubtitleArgs) {
-//                for (Item args : extSubtitleArgs) {
-//                    if (null == args)
-//                        continue;
-//                    String url = args.getUrl();
-//                    if (null == url)
-//                        continue;
-//                    if (url.isEmpty())
-//                        continue;
-//                    result += 1;
-//                }
-//            }
-//            return result;
-//        } catch (Exception e) {
-//            return 0;
-//        }
-//    }
-
-
     public List<Item> getExtraSubtitles() {
         return extraSubtitles;
     }
