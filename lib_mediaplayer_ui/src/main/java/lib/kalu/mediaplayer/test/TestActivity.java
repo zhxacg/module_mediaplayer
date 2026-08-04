@@ -147,10 +147,10 @@ public final class TestActivity extends Activity {
         // menu
         ComponentMenu menu = new ComponentMenu(getApplicationContext());
         playerLayout.addComponent(menu);
-//        // loading
-//        ComponentPrepareGradient loading = new ComponentPrepareGradient(getApplicationContext());
-//        loading.setComponentBackgroundColorInt(Color.BLACK);
-//        playerLayout.addComponent(loading);
+        // loading
+        ComponentPrepareGradient loading = new ComponentPrepareGradient(getApplicationContext());
+        loading.setComponentBackgroundColorInt(Color.BLACK);
+        playerLayout.addComponent(loading);
         // complete
         ComponentComplete end = new ComponentComplete(getApplicationContext());
         playerLayout.addComponent(end);

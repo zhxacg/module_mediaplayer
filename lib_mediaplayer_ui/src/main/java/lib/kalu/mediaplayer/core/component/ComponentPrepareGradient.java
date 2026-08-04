@@ -45,6 +45,10 @@ public class ComponentPrepareGradient extends RelativeLayout implements Componen
                 }
                 show();
                 break;
+            case PlayerType.EventType.MEDIA_INFO_VIDEO_RENDERING_START:
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("ComponentPrepareGradient -> callEvent -> MEDIA_INFO_VIDEO_RENDERING_START");
+                }
             case PlayerType.EventType.MEDIA_INFO_UPDATE_PLAYBACLK_SPEED:
                 if (LogUtil.DEBUG) {
                     LogUtil.log("ComponentPrepareGradient -> callEvent -> MEDIA_INFO_UPDATE_PLAYBACLK_SPEED");
