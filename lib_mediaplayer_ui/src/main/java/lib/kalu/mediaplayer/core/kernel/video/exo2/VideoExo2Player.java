@@ -376,127 +376,127 @@ public final class VideoExo2Player extends VideoBasePlayer {
 
     @Override
     public void startDecoder(Context context, StartArgs startArgs) {
-        try {
-            if (null == mExoPlayer)
-                throw new Exception("mExoPlayer error: null");
-            onEvent(PlayerType.KernelType.EXO_V2, PlayerType.EventType.READY);
-            // 缓存
-            boolean initSimpleCache = initSimpleCache(context, startArgs);
-            if (LogUtil.DEBUG) {
-                LogUtil.log(TAG, "startDecoder -> initSimpleCache = " + initSimpleCache);
-            }
-            StartArgs.TimeoutConfiguration timeoutConfiguration = startArgs.getTimeoutConfiguration();
-            int connectTimoutMs = timeoutConfiguration.getConnectTimeoutMs();
-            ProxyUrl proxyUrl = startArgs.getProxyUrl();
-            boolean noProxy = startArgs.isNoProxy();
-            if (LogUtil.DEBUG) {
-                LogUtil.log(TAG, "startDecoder -> connectTimoutMs = " + connectTimoutMs + ", noProxy = " + noProxy + ", proxyUrl = " + proxyUrl);
-            }
-            // HttpClient
-            CustomDefaultHttpDataSource.Factory httpFactory = new CustomDefaultHttpDataSource.Factory(proxyUrl, noProxy)
-                    .setUserAgent(ExoPlayerLibraryInfo.VERSION_SLASHY)
-                    .setConnectTimeoutMs(connectTimoutMs)
-                    .setReadTimeoutMs(connectTimoutMs)
-                    .setDefaultRequestProperties(new HashMap<>())
-                    .setAllowCrossProtocolRedirects(true)
-                    .setKeepPostFor302Redirects(true);
-            boolean containsExtUrl = startArgs.containsExtUrl();
-            UrlArgs urlArgs = startArgs.getUrlArgs();
-            UrlArgs.Item mainVideo = urlArgs.getMainVideo();
-            // 有 外挂轨道
-            if (containsExtUrl) {
-                if (LogUtil.DEBUG) {
-                    LogUtil.log(TAG, "startDecoder -> 外挂轨道 有");
-                }
-
-                int urlCount = urlArgs.getUrlCount();
-                if (LogUtil.DEBUG) {
-                    LogUtil.log(TAG, "startDecoder -> urlCount = " + urlCount);
-                }
-
-                int index = -1;
-                MediaSource[] mediaSources = new MediaSource[urlCount];
-
-                // mainUrl
-                mediaSources[++index] = buildMediaSource(context, httpFactory, startArgs, PlayerType.UrlType.VIDEO, mainVideo);
-
-                // extVideo
-                UrlArgs.Item[] extVideo = urlArgs.getExtVideo();
-                if (null != extVideo) {
-                    for (UrlArgs.Item videoArgs : extVideo) {
-                        if (LogUtil.DEBUG) {
-                            LogUtil.log(TAG, "startDecoder -> 外挂视频轨道: videoArgs = " + videoArgs);
-                        }
-                        MediaSource mediaSource = buildMediaSource(context, httpFactory, startArgs, PlayerType.UrlType.VIDEO, videoArgs);
-                        if (LogUtil.DEBUG) {
-                            LogUtil.log(TAG, "startDecoder -> 外挂视频轨道: mediaSource = " + mediaSource);
-                        }
-                        mediaSources[++index] = mediaSource;
-                    }
-                }
-
-                // extAudioUrl
-                UrlArgs.Item[] extAudio = urlArgs.getExtAudio();
-                if (null != extAudio) {
-                    for (UrlArgs.Item audioArgs : extAudio) {
-                        if (LogUtil.DEBUG) {
-                            LogUtil.log(TAG, "startDecoder -> 外挂音频轨道: audioArgs = " + audioArgs);
-                        }
-                        MediaSource mediaSource = buildMediaSource(context, httpFactory, startArgs, PlayerType.UrlType.AUDIO, audioArgs);
-                        if (LogUtil.DEBUG) {
-                            LogUtil.log(TAG, "startDecoder -> 外挂音频轨道: mediaSource = " + mediaSource);
-                        }
-                        if (null == mediaSource)
-                            continue;
-                        mediaSources[++index] = mediaSource;
-                    }
-                }
-
-                // extSubtitleUrl
-                UrlArgs.Item[] extSubtitle = urlArgs.getExtSubtitle();
-                if (null != extSubtitle) {
-                    for (UrlArgs.Item item : extSubtitle) {
-                        if (LogUtil.DEBUG) {
-                            LogUtil.log(TAG, "startDecoder -> 外挂字幕轨道: subtitle = " + item);
-                        }
-                        MediaSource mediaSource = buildMediaSource(context, httpFactory, startArgs, PlayerType.UrlType.SUBTITLE, item);
-                        if (LogUtil.DEBUG) {
-                            LogUtil.log(TAG, "startDecoder -> 外挂字幕轨道: mediaSource = " + mediaSource);
-                        }
-                        if (null == mediaSource)
-                            continue;
-                        mediaSources[++index] = mediaSource;
-                    }
-                }
-
-                MergingMediaSource mergingMediaSource = new MergingMediaSource(mediaSources);
-                mExoPlayer.setMediaSource(mergingMediaSource);
-            }
-            // 无 外挂轨道
-            else {
-                if (LogUtil.DEBUG) {
-                    LogUtil.log(TAG, "startDecoder -> 外挂轨道 无");
-                }
-                MediaSource mediaSource = buildMediaSource(context, httpFactory, startArgs, PlayerType.UrlType.VIDEO, mainVideo);
-                mExoPlayer.setMediaSource(mediaSource);
-            }
-
-            boolean prepareAsync = startArgs.isPrepareAsync();
-            if (prepareAsync) {
-                mExoPlayer.prepare();
-            } else {
-                mExoPlayer.prepare();
-            }
-            if (LogUtil.DEBUG) {
-                LogUtil.log(TAG, "startDecoder -> completed");
-            }
-        } catch (Exception e) {
-            stop();
-            onEvent(PlayerType.KernelType.EXO_V2, PlayerType.EventType.ERROR_DECODE);
-            if (LogUtil.DEBUG) {
-                LogUtil.log(TAG, "startDecoder -> Exception " + e.getMessage());
-            }
-        }
+//        try {
+//            if (null == mExoPlayer)
+//                throw new Exception("mExoPlayer error: null");
+//            onEvent(PlayerType.KernelType.EXO_V2, PlayerType.EventType.READY);
+//            // 缓存
+//            boolean initSimpleCache = initSimpleCache(context, startArgs);
+//            if (LogUtil.DEBUG) {
+//                LogUtil.log(TAG, "startDecoder -> initSimpleCache = " + initSimpleCache);
+//            }
+//            StartArgs.TimeoutConfiguration timeoutConfiguration = startArgs.getTimeoutConfiguration();
+//            int connectTimoutMs = timeoutConfiguration.getConnectTimeoutMs();
+//            ProxyUrl proxyUrl = startArgs.getProxyUrl();
+//            boolean noProxy = startArgs.isNoProxy();
+//            if (LogUtil.DEBUG) {
+//                LogUtil.log(TAG, "startDecoder -> connectTimoutMs = " + connectTimoutMs + ", noProxy = " + noProxy + ", proxyUrl = " + proxyUrl);
+//            }
+//            // HttpClient
+//            CustomDefaultHttpDataSource.Factory httpFactory = new CustomDefaultHttpDataSource.Factory(proxyUrl, noProxy)
+//                    .setUserAgent(ExoPlayerLibraryInfo.VERSION_SLASHY)
+//                    .setConnectTimeoutMs(connectTimoutMs)
+//                    .setReadTimeoutMs(connectTimoutMs)
+//                    .setDefaultRequestProperties(new HashMap<>())
+//                    .setAllowCrossProtocolRedirects(true)
+//                    .setKeepPostFor302Redirects(true);
+//            boolean containsExtUrl = startArgs.containsExtUrl();
+//            UrlArgs urlArgs = startArgs.getUrlArgs();
+//            UrlArgs.Item mainVideo = urlArgs.getMainVideo();
+//            // 有 外挂轨道
+//            if (containsExtUrl) {
+//                if (LogUtil.DEBUG) {
+//                    LogUtil.log(TAG, "startDecoder -> 外挂轨道 有");
+//                }
+//
+//                int urlCount = urlArgs.getUrlCount();
+//                if (LogUtil.DEBUG) {
+//                    LogUtil.log(TAG, "startDecoder -> urlCount = " + urlCount);
+//                }
+//
+//                int index = -1;
+//                MediaSource[] mediaSources = new MediaSource[urlCount];
+//
+//                // mainUrl
+//                mediaSources[++index] = buildMediaSource(context, httpFactory, startArgs, PlayerType.UrlType.VIDEO, mainVideo);
+//
+//                // extVideo
+//                UrlArgs.Item[] extVideo = urlArgs.getExtVideo();
+//                if (null != extVideo) {
+//                    for (UrlArgs.Item videoArgs : extVideo) {
+//                        if (LogUtil.DEBUG) {
+//                            LogUtil.log(TAG, "startDecoder -> 外挂视频轨道: videoArgs = " + videoArgs);
+//                        }
+//                        MediaSource mediaSource = buildMediaSource(context, httpFactory, startArgs, PlayerType.UrlType.VIDEO, videoArgs);
+//                        if (LogUtil.DEBUG) {
+//                            LogUtil.log(TAG, "startDecoder -> 外挂视频轨道: mediaSource = " + mediaSource);
+//                        }
+//                        mediaSources[++index] = mediaSource;
+//                    }
+//                }
+//
+//                // extAudioUrl
+//                UrlArgs.Item[] extAudio = urlArgs.getExtAudio();
+//                if (null != extAudio) {
+//                    for (UrlArgs.Item audioArgs : extAudio) {
+//                        if (LogUtil.DEBUG) {
+//                            LogUtil.log(TAG, "startDecoder -> 外挂音频轨道: audioArgs = " + audioArgs);
+//                        }
+//                        MediaSource mediaSource = buildMediaSource(context, httpFactory, startArgs, PlayerType.UrlType.AUDIO, audioArgs);
+//                        if (LogUtil.DEBUG) {
+//                            LogUtil.log(TAG, "startDecoder -> 外挂音频轨道: mediaSource = " + mediaSource);
+//                        }
+//                        if (null == mediaSource)
+//                            continue;
+//                        mediaSources[++index] = mediaSource;
+//                    }
+//                }
+//
+//                // extSubtitleUrl
+//                UrlArgs.Item[] extSubtitle = urlArgs.getExtSubtitle();
+//                if (null != extSubtitle) {
+//                    for (UrlArgs.Item item : extSubtitle) {
+//                        if (LogUtil.DEBUG) {
+//                            LogUtil.log(TAG, "startDecoder -> 外挂字幕轨道: subtitle = " + item);
+//                        }
+//                        MediaSource mediaSource = buildMediaSource(context, httpFactory, startArgs, PlayerType.UrlType.SUBTITLE, item);
+//                        if (LogUtil.DEBUG) {
+//                            LogUtil.log(TAG, "startDecoder -> 外挂字幕轨道: mediaSource = " + mediaSource);
+//                        }
+//                        if (null == mediaSource)
+//                            continue;
+//                        mediaSources[++index] = mediaSource;
+//                    }
+//                }
+//
+//                MergingMediaSource mergingMediaSource = new MergingMediaSource(mediaSources);
+//                mExoPlayer.setMediaSource(mergingMediaSource);
+//            }
+//            // 无 外挂轨道
+//            else {
+//                if (LogUtil.DEBUG) {
+//                    LogUtil.log(TAG, "startDecoder -> 外挂轨道 无");
+//                }
+//                MediaSource mediaSource = buildMediaSource(context, httpFactory, startArgs, PlayerType.UrlType.VIDEO, mainVideo);
+//                mExoPlayer.setMediaSource(mediaSource);
+//            }
+//
+//            boolean prepareAsync = startArgs.isPrepareAsync();
+//            if (prepareAsync) {
+//                mExoPlayer.prepare();
+//            } else {
+//                mExoPlayer.prepare();
+//            }
+//            if (LogUtil.DEBUG) {
+//                LogUtil.log(TAG, "startDecoder -> completed");
+//            }
+//        } catch (Exception e) {
+//            stop();
+//            onEvent(PlayerType.KernelType.EXO_V2, PlayerType.EventType.ERROR_DECODE);
+//            if (LogUtil.DEBUG) {
+//                LogUtil.log(TAG, "startDecoder -> Exception " + e.getMessage());
+//            }
+//        }
     }
 
     @Override
@@ -1925,18 +1925,18 @@ public final class VideoExo2Player extends VideoBasePlayer {
                 if (null == label) {
                     label = language;
                 }
-                int selectionFlags;
-                if (urlItem.isMain()) {
-                    selectionFlags = C.SELECTION_FLAG_AUTOSELECT;
-                } else {
-                    selectionFlags = 0;
-                }
-                int roleFlags;
-                if (urlItem.isMain()) {
-                    roleFlags = C.ROLE_FLAG_MAIN;
-                } else {
-                    roleFlags = C.ROLE_FLAG_SUBTITLE;
-                }
+//                int selectionFlags;
+//                if (urlItem.isMain()) {
+//                    selectionFlags = C.SELECTION_FLAG_AUTOSELECT;
+//                } else {
+//                    selectionFlags = 0;
+//                }
+//                int roleFlags;
+//                if (urlItem.isMain()) {
+//                    roleFlags = C.ROLE_FLAG_MAIN;
+//                } else {
+//                    roleFlags = C.ROLE_FLAG_SUBTITLE;
+//                }
 
                 String mimeType;
                 if (url.endsWith(PlayerType.SchemeType._SSA)) {
@@ -1953,10 +1953,10 @@ public final class VideoExo2Player extends VideoBasePlayer {
 
                 Object factory = buildDefaultDataSource(context, httpFactory);
                 MediaItem.SubtitleConfiguration subtitleConfig = new MediaItem.SubtitleConfiguration.Builder(Uri.parse(url))
-                        // 主轨道
-                        .setSelectionFlags(selectionFlags)
-                        // 描述轨道的「角色 / 用途」ROLE_FLAG_*		MAIN（主轨道）、SUBTITLE（字幕）、COMMENTARY（解说）
-                        .setRoleFlags(roleFlags)
+//                        // 主轨道
+//                        .setSelectionFlags(selectionFlags)
+//                        // 描述轨道的「角色 / 用途」ROLE_FLAG_*		MAIN（主轨道）、SUBTITLE（字幕）、COMMENTARY（解说）
+//                        .setRoleFlags(roleFlags)
                         .setMimeType(mimeType) // 也可以用 MimeTypes.APPLICATION_SUBRIP
                         .setLanguage(language)
                         .setLabel(label)

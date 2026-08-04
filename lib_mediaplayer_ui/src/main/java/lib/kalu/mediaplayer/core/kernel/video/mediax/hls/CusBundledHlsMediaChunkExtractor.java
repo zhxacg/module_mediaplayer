@@ -41,7 +41,7 @@ import java.io.IOException;
  * Extractors}.
  */
 @UnstableApi
-public final class CustomBundledHlsMediaChunkExtractor implements HlsMediaChunkExtractor {
+public final class CusBundledHlsMediaChunkExtractor implements HlsMediaChunkExtractor {
 
   private static final PositionHolder POSITION_HOLDER = new PositionHolder();
 
@@ -58,7 +58,7 @@ public final class CustomBundledHlsMediaChunkExtractor implements HlsMediaChunkE
    * @param multivariantPlaylistFormat The {@link Format} obtained from the multivariant playlist.
    * @param timestampAdjuster A {@link TimestampAdjuster} to adjust sample timestamps.
    */
-  public CustomBundledHlsMediaChunkExtractor(
+  public CusBundledHlsMediaChunkExtractor(
       Extractor extractor, Format multivariantPlaylistFormat, TimestampAdjuster timestampAdjuster) {
     this(
         extractor,
@@ -81,7 +81,7 @@ public final class CustomBundledHlsMediaChunkExtractor implements HlsMediaChunkE
    */
   // TODO(b/289983417): Once the subtitle-parsing-during-extraction is the only available flow, make
   // this constructor public and remove parseSubtitlesDuringExtraction parameter
-  /* package */ CustomBundledHlsMediaChunkExtractor(
+  /* package */ CusBundledHlsMediaChunkExtractor(
       Extractor extractor,
       Format multivariantPlaylistFormat,
       TimestampAdjuster timestampAdjuster,
@@ -148,7 +148,7 @@ public final class CustomBundledHlsMediaChunkExtractor implements HlsMediaChunkE
           "Unexpected extractor type for recreation: " + extractor.getClass().getSimpleName());
     }
     // LINT.ThenChange(DefaultHlsExtractorFactory.java:extractor_instantiation)
-    return new CustomBundledHlsMediaChunkExtractor(
+    return new CusBundledHlsMediaChunkExtractor(
         newExtractorInstance,
         multivariantPlaylistFormat,
         timestampAdjuster,

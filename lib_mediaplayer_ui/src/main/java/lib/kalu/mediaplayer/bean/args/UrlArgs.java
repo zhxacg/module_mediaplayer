@@ -1,141 +1,201 @@
 package lib.kalu.mediaplayer.bean.args;
 
 import java.io.Serializable;
-import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.List;
 
 import lib.kalu.mediaplayer.bean.type.PlayerType;
 
 public final class UrlArgs implements Serializable {
-    private Item mainVideoArgs;
-    private Item[] extVideoArgs;
-    private Item[] extAudioArgs;
-    private Item[] extSubtitleArgs;
 
+    private List<Item> defaultStreams;
+    private List<Item> extraStreams;
+    private List<Item> extraSubtitles;
 
     @Override
     public String toString() {
         return "UrlArgs{" +
-                "mainVideoArgs=" + mainVideoArgs +
-                ", extVideoArgs=" + Arrays.toString(extVideoArgs) +
-                ", extAudioArgs=" + Arrays.toString(extAudioArgs) +
-                ", extSubtitleArgs=" + Arrays.toString(extSubtitleArgs) +
+                "defaultStreams=" + defaultStreams +
+                ", extraStreams=" + extraStreams +
+                ", extraSubtitles=" + extraSubtitles +
                 '}';
     }
 
     public UrlArgs(Builder builder) {
-        this.mainVideoArgs = builder.mainVideoArgs;
-        this.extVideoArgs = builder.extVideoArgs;
-        this.extAudioArgs = builder.extAudioArgs;
-        this.extSubtitleArgs = builder.extSubtitleArgs;
+        this.defaultStreams = builder.defaultStreams;
+        this.extraStreams = builder.extraStreams;
+        this.extraSubtitles = builder.extraSubtitles;
     }
 
-    public boolean containsMainUrl() {
-        return null != mainVideoArgs && mainVideoArgs.containsUrl();
-    }
-
-    public boolean containsExtUrl() {
-        return (null != extVideoArgs && extVideoArgs.length > 0) || (null != extAudioArgs && extAudioArgs.length > 0) || (null != extSubtitleArgs && extSubtitleArgs.length > 0);
-    }
-
-    public int getUrlCount() {
-        try {
-            int result = 0;
-            // mainUrl
-            if (null != mainVideoArgs && mainVideoArgs.containsUrl()) {
-                result += 1;
-            }
-            // extVideoUrl
-            if (null != extVideoArgs) {
-                for (Item videoArgs : extVideoArgs) {
-                    if (null == videoArgs)
-                        continue;
-                    if (!videoArgs.containsUrl())
-                        continue;
-                    result += 1;
-                }
-            }
-            // extAudioUrl
-            if (null != extAudioArgs) {
-                for (Item url : extAudioArgs) {
-                    if (null == url)
-                        continue;
-                    if (!url.containsUrl())
-                        continue;
-                    result += 1;
-                }
-            }
-            // extVideoUrl
-            if (null != extSubtitleArgs) {
-                for (Item args : extSubtitleArgs) {
-                    if (null == args)
-                        continue;
-                    String url = args.getUrl();
-                    if (null == url)
-                        continue;
-                    if (url.isEmpty())
-                        continue;
-                    result += 1;
-                }
-            }
-            return result;
-        } catch (Exception e) {
-            return 0;
-        }
-    }
-
-    public Item[] getExtSubtitle() {
-        return extSubtitleArgs;
-    }
-
-    public Item[] getExtAudio() {
-        return extAudioArgs;
-    }
-
-    public Item[] getExtVideo() {
-        return extVideoArgs;
-    }
-
-    public Item getMainVideo() {
-        return mainVideoArgs;
-    }
-
-    public String getMainUrl() {
-        if (null == mainVideoArgs) {
-            return null;
+    public boolean hasParseMultivariantPlaylist() {
+        if (null != extraSubtitles && !extraSubtitles.isEmpty()) {
+            return true;
+        } else if (null != extraStreams && !extraStreams.isEmpty()) {
+            return true;
+        } else if (null != defaultStreams && defaultStreams.size() > 1) {
+            return true;
         } else {
-            return mainVideoArgs.getUrl();
+            return false;
         }
+    }
+
+    public boolean containsUrl() {
+        try {
+            for (Item item : defaultStreams) {
+                if (item.parser == PlayerType.ParserType.VIDEO) {
+                    return true;
+                }else if (item.parser == PlayerType.ParserType.DEFAULT) {
+                    return true;
+                }
+            }
+            throw new Exception();
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    public String getDefaultUrl() {
+        try {
+            for (Item item : defaultStreams) {
+                if (item.parser == PlayerType.ParserType.VIDEO) {
+                    return item.url;
+                } else if (item.parser == PlayerType.ParserType.DEFAULT) {
+                    return item.url;
+                }
+            }
+            throw new Exception();
+        } catch (Exception e) {
+            return "";
+        }
+    }
+
+    public Item getDefaultStream() {
+        try {
+            for (Item item : defaultStreams) {
+                if (item.parser == PlayerType.ParserType.VIDEO) {
+                    return item;
+                }
+            }
+            throw new Exception();
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+
+//    public boolean containsMainUrl() {
+//        return null != mainVideoArgs && mainVideoArgs.containsUrl();
+//    }
+//
+//    public boolean containsExtUrl() {
+//        return (null != extVideoArgs && extVideoArgs.length > 0) || (null != extAudioArgs && extAudioArgs.length > 0) || (null != extSubtitleArgs && extSubtitleArgs.length > 0);
+//    }
+
+//    public int getUrlCount() {
+//        try {
+//            int result = 0;
+//            // mainUrl
+//            if (null != mainVideoArgs && mainVideoArgs.containsUrl()) {
+//                result += 1;
+//            }
+//            // extVideoUrl
+//            if (null != extVideoArgs) {
+//                for (Item videoArgs : extVideoArgs) {
+//                    if (null == videoArgs)
+//                        continue;
+//                    if (!videoArgs.containsUrl())
+//                        continue;
+//                    result += 1;
+//                }
+//            }
+//            // extAudioUrl
+//            if (null != extAudioArgs) {
+//                for (Item url : extAudioArgs) {
+//                    if (null == url)
+//                        continue;
+//                    if (!url.containsUrl())
+//                        continue;
+//                    result += 1;
+//                }
+//            }
+//            // extVideoUrl
+//            if (null != extSubtitleArgs) {
+//                for (Item args : extSubtitleArgs) {
+//                    if (null == args)
+//                        continue;
+//                    String url = args.getUrl();
+//                    if (null == url)
+//                        continue;
+//                    if (url.isEmpty())
+//                        continue;
+//                    result += 1;
+//                }
+//            }
+//            return result;
+//        } catch (Exception e) {
+//            return 0;
+//        }
+//    }
+
+
+    public List<Item> getExtraSubtitles() {
+        return extraSubtitles;
+    }
+
+    public List<Item> getExtraStreams() {
+        return extraStreams;
+    }
+
+    public List<Item> getDefaultStreams() {
+        return defaultStreams;
     }
 
     public static class Builder implements Serializable {
 
-        private Item mainVideoArgs;
-        private Item[] extVideoArgs;
-        private Item[] extAudioArgs;
-        private Item[] extSubtitleArgs;
+        private List<Item> defaultStreams = new LinkedList<>();
+        private List<Item> extraStreams = new LinkedList<>();
+        private List<Item> extraSubtitles = new LinkedList<>();
 
         public UrlArgs.Builder setUrl(String v) {
-            this.mainVideoArgs = new Item.Builder().setUrl(v).setLanguage("Default").build();
+            this.defaultStreams.clear();
+            this.defaultStreams.add(new Item.Builder().setUrl(v)
+                    .setParser(PlayerType.ParserType.VIDEO)
+                    .setLabel("DefaultVideo")
+                    .setLanguage("DefaultVideo")
+                    .build());
             return this;
         }
 
-        public UrlArgs.Builder setUrl(UrlArgs.Item v) {
-            this.mainVideoArgs = v;
+//        public UrlArgs.Builder setUrl(String v) {
+//            this.defaultStreams = new Item[]{new Item.Builder().setUrl(v)
+//                    .setLabel("Default")
+//                    .setLanguage("Default")
+//                    .build()};
+//            return this;
+//        }
+
+        public UrlArgs.Builder setDefaultStreams(List<Item> v) {
+            this.defaultStreams = v;
             return this;
         }
 
-        public UrlArgs.Builder setExtVideo(Item[] v) {
-            this.extVideoArgs = v;
+        public UrlArgs.Builder setExtraStreams(List<Item> v) {
+            this.extraStreams = v;
             return this;
         }
 
-        public UrlArgs.Builder setExtAudio(Item[] v) {
-            this.extAudioArgs = v;
+        public UrlArgs.Builder appendExtraStreams(List<Item> v) {
+            this.extraStreams.addAll(v);
             return this;
         }
 
-        public UrlArgs.Builder setExtSubtitle(Item[] v) {
-            this.extSubtitleArgs = v;
+        public UrlArgs.Builder setExtraSubtitles(List<Item> v) {
+            this.extraSubtitles = v;
+            return this;
+        }
+
+        public UrlArgs.Builder appendExtraSubtitles(List<Item> v) {
+            this.extraSubtitles.addAll(v);
             return this;
         }
 
@@ -150,7 +210,7 @@ public final class UrlArgs implements Serializable {
 
     public final static class Item implements Serializable {
 
-        private boolean main;
+        private boolean def;
         private String url;
         private String language;
         private String label;
@@ -160,7 +220,7 @@ public final class UrlArgs implements Serializable {
         @Override
         public String toString() {
             return "Item{" +
-                    "main=" + main +
+                    "def=" + def +
                     ", url='" + url + '\'' +
                     ", language='" + language + '\'' +
                     ", label='" + label + '\'' +
@@ -173,15 +233,15 @@ public final class UrlArgs implements Serializable {
         }
 
         public Item(Item.Builder builder) {
-            this.main = builder.main;
+            this.def = builder.def;
             this.url = builder.url;
             this.language = builder.language;
             this.label = builder.label;
             this.parser = builder.parser;
         }
 
-        public boolean isMain() {
-            return main;
+        public boolean isDefault() {
+            return def;
         }
 
         @PlayerType.ParserType.Value
@@ -259,15 +319,15 @@ public final class UrlArgs implements Serializable {
 
         public static class Builder implements Serializable {
 
-            private boolean main;
+            private boolean def;
             private String url;
             private String language;
             private String label;
             @PlayerType.ParserType.Value
             private int parser = PlayerType.ParserType.DEFAULT;
 
-            public Item.Builder setMain(boolean v) {
-                this.main = v;
+            public Item.Builder setDefault(boolean v) {
+                this.def = v;
                 return this;
             }
 

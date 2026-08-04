@@ -9,21 +9,21 @@ import androidx.media3.exoplayer.upstream.ParsingLoadable;
 
 import lib.kalu.mediaplayer.proxy.ProxyUrl;
 
-public final class CustomHlsPlaylistParserFactory implements HlsPlaylistParserFactory {
+public final class CusHlsPlaylistParserFactory implements HlsPlaylistParserFactory {
 
     private final ProxyUrl proxyUrl;
 
-    public CustomHlsPlaylistParserFactory(ProxyUrl p) {
+    public CusHlsPlaylistParserFactory(ProxyUrl p) {
         proxyUrl = p;
     }
 
     @Override
     public ParsingLoadable.Parser<HlsPlaylist> createPlaylistParser() {
-        return new CustomHlsPlaylistParser(proxyUrl);
+        return new CusHlsPlaylistParser(proxyUrl);
     }
 
     @Override
     public ParsingLoadable.Parser<HlsPlaylist> createPlaylistParser(HlsMultivariantPlaylist hlsMultivariantPlaylist, @Nullable HlsMediaPlaylist hlsMediaPlaylist) {
-        return new CustomHlsPlaylistParser(proxyUrl);
+        return new CusHlsPlaylistParser(proxyUrl);
     }
 }

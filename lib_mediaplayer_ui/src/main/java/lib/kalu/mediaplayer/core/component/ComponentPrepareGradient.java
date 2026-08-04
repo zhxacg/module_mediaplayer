@@ -24,10 +24,14 @@ public class ComponentPrepareGradient extends RelativeLayout implements Componen
     @Override
     public void onUpdateEvent(int playState) {
 
+        if (LogUtil.DEBUG) {
+            LogUtil.log("ComponentPrepareGradient -> onUpdateEvent -> playState = " + playState);
+        }
+
         boolean error = PlayStateUtil.isError(playState);
         if (error) {
             if (LogUtil.DEBUG) {
-                LogUtil.log("ComponentBuffering -> callEvent -> show -> ERROR");
+                LogUtil.log("ComponentPrepareGradient -> callEvent -> show -> ERROR");
             }
             hide();
             return;
@@ -37,13 +41,13 @@ public class ComponentPrepareGradient extends RelativeLayout implements Componen
         switch (playState) {
             case PlayerType.EventType.INIT:
                 if (LogUtil.DEBUG) {
-                    LogUtil.log("ComponentLoadingGradient -> callEvent -> INIT");
+                    LogUtil.log("ComponentPrepareGradient -> callEvent -> INIT");
                 }
                 show();
                 break;
             case PlayerType.EventType.MEDIA_INFO_UPDATE_PLAYBACLK_SPEED:
                 if (LogUtil.DEBUG) {
-                    LogUtil.log("ComponentLoadingGradient -> callEvent -> MEDIA_INFO_UPDATE_PLAYBACLK_SPEED");
+                    LogUtil.log("ComponentPrepareGradient -> callEvent -> MEDIA_INFO_UPDATE_PLAYBACLK_SPEED");
                 }
                 hide();
                 break;
@@ -75,7 +79,7 @@ public class ComponentPrepareGradient extends RelativeLayout implements Componen
             }
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
-                LogUtil.log("ComponentLoadingGradient -> show -> Exception " + e.getMessage());
+                LogUtil.log("ComponentPrepareGradient -> show -> Exception " + e.getMessage());
             }
         }
     }
@@ -92,7 +96,7 @@ public class ComponentPrepareGradient extends RelativeLayout implements Componen
             setComponentText("");
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
-                LogUtil.log("ComponentLoadingGradient -> hide -> Exception " + e.getMessage());
+                LogUtil.log("ComponentPrepareGradient -> hide -> Exception " + e.getMessage());
             }
         }
     }

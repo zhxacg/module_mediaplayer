@@ -18,7 +18,7 @@ import lib.kalu.mediaplayer.util.LogUtil;
  * Holds metadata associated to an HLS media track.
  */
 @UnstableApi
-public final class CustomHlsTrackMetadataEntry implements Metadata.Entry {
+public final class CusHlsTrackMetadataEntry implements Metadata.Entry {
 
     /**
      * Holds attributes defined in an EXT-X-STREAM-INF tag.
@@ -97,7 +97,7 @@ public final class CustomHlsTrackMetadataEntry implements Metadata.Entry {
             if (other == null || getClass() != other.getClass()) {
                 return false;
             }
-            CustomHlsTrackMetadataEntry.VariantInfo that = (CustomHlsTrackMetadataEntry.VariantInfo) other;
+            CusHlsTrackMetadataEntry.VariantInfo that = (CusHlsTrackMetadataEntry.VariantInfo) other;
             return averageBitrate == that.averageBitrate
                     && peakBitrate == that.peakBitrate
                     && TextUtils.equals(videoGroupId, that.videoGroupId)
@@ -136,7 +136,7 @@ public final class CustomHlsTrackMetadataEntry implements Metadata.Entry {
      * The EXT-X-STREAM-INF tags attributes associated with this track. This field is non-applicable
      * (and therefore empty) if this track is derived from an EXT-X-MEDIA tag.
      */
-    public final List<CustomHlsTrackMetadataEntry.VariantInfo> variantInfos;
+    public final List<CusHlsTrackMetadataEntry.VariantInfo> variantInfos;
 
     /**
      * Creates an instance.
@@ -145,8 +145,8 @@ public final class CustomHlsTrackMetadataEntry implements Metadata.Entry {
      * @param name         See {@link #name}.
      * @param variantInfos See {@link #variantInfos}.
      */
-    public CustomHlsTrackMetadataEntry(
-            @Nullable String groupId, @Nullable String name, List<CustomHlsTrackMetadataEntry.VariantInfo> variantInfos) {
+    public CusHlsTrackMetadataEntry(
+            @Nullable String groupId, @Nullable String name, List<CusHlsTrackMetadataEntry.VariantInfo> variantInfos) {
 
         if (LogUtil.DEBUG) {
             LogUtil.log("CustomHlsTrackMetadataEntry ->");
@@ -171,7 +171,7 @@ public final class CustomHlsTrackMetadataEntry implements Metadata.Entry {
             return false;
         }
 
-        CustomHlsTrackMetadataEntry that = (CustomHlsTrackMetadataEntry) other;
+        CusHlsTrackMetadataEntry that = (CusHlsTrackMetadataEntry) other;
         return TextUtils.equals(groupId, that.groupId)
                 && TextUtils.equals(name, that.name)
                 && variantInfos.equals(that.variantInfos);

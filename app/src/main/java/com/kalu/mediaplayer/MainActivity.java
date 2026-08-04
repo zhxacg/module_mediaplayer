@@ -270,66 +270,73 @@ public class MainActivity extends Activity {
 
                 UrlArgs.Builder urlBuilder = new UrlArgs.Builder();
 
-                // mainUrl
+                // default stream 480
                 try {
-                    String[] urls = getResources().getStringArray(R.array.hls_extra_video_urls);
-                    urlBuilder.setUrl(new UrlArgs.Item.Builder()
+                    String[] urls = getResources().getStringArray(R.array.hls_default_streams_480);
+                    List<UrlArgs.Item> list = Arrays.asList(new UrlArgs.Item.Builder()
                             .setUrl(urls[0])
                             .setParser(PlayerType.ParserType.VIDEO)
-                            .setLabel("普清")
+                            .setLabel("480")
+                            .build(), new UrlArgs.Item.Builder()
+                            .setUrl(urls[1])
+                            .setParser(PlayerType.ParserType.AUDIO)
+                            .setLabel("480")
                             .build());
+                    urlBuilder.setDefaultStreams(list);
                 } catch (Exception e) {
                 }
 
-                // extVideoUrl
+                // extra stream 720
                 try {
-                    String[] urls = getResources().getStringArray(R.array.hls_extra_video_urls);
-                    String[] label = new String[]{"高清", "4K"};
-                    int length = urls.length;
-                    UrlArgs.Item[] videoArgs = new UrlArgs.Item[length - 1];
-                    for (int i = 1; i < length; i++) {
-                        videoArgs[i - 1] = new UrlArgs.Item.Builder()
-                                .setUrl(urls[i])
-                                .setLabel(label[i - 1])
-                                .setParser(PlayerType.ParserType.VIDEO)
-                                .build();
-                    }
-                    urlBuilder.setExtVideo(videoArgs);
+                    String[] urls = getResources().getStringArray(R.array.hls_extra_streams_720);
+                    List<UrlArgs.Item> list = Arrays.asList(new UrlArgs.Item.Builder()
+                            .setUrl(urls[0])
+                            .setParser(PlayerType.ParserType.VIDEO)
+                            .setLabel("720")
+                            .build(), new UrlArgs.Item.Builder()
+                            .setUrl(urls[1])
+                            .setParser(PlayerType.ParserType.AUDIO)
+                            .setLabel("720")
+                            .build());
+                    urlBuilder.appendExtraStreams(list);
                 } catch (Exception e) {
                 }
 
-                // extAudio
+                // extra stream 1080
                 try {
-                    String[] urls = getResources().getStringArray(R.array.hls_extra_audio_urls);
-                    String[] languages = getResources().getStringArray(R.array.hls_extra_languages);
-                    String[] labels = getResources().getStringArray(R.array.hls_extra_labels);
-                    int length = urls.length;
-                    UrlArgs.Item[] audioArgs = new UrlArgs.Item[length];
-                    for (int i = 0; i < length; i++) {
-                        audioArgs[i] = new UrlArgs.Item.Builder()
-                                .setUrl(urls[i])
-                                .setLanguage(languages[i])
-                                .setLabel(labels[i])
-                                .build();
-                    }
-                    urlBuilder.setExtAudio(audioArgs);
+                    String[] urls = getResources().getStringArray(R.array.hls_extra_streams_1080);
+                    List<UrlArgs.Item> list = Arrays.asList(new UrlArgs.Item.Builder()
+                            .setUrl(urls[0])
+                            .setParser(PlayerType.ParserType.VIDEO)
+                            .setLabel("1080")
+                            .build(), new UrlArgs.Item.Builder()
+                            .setUrl(urls[1])
+                            .setParser(PlayerType.ParserType.AUDIO)
+                            .setLabel("1080")
+                            .build());
+                    urlBuilder.appendExtraStreams(list);
                 } catch (Exception e) {
                 }
 
-                // extSubtitleUrl
+                // extra subtitle
                 try {
-                    String[] urls = getResources().getStringArray(R.array.hls_extra_subtitle_urls);
-                    String[] languages = getResources().getStringArray(R.array.hls_extra_languages);
-                    String[] labels = getResources().getStringArray(R.array.hls_extra_labels);
-                    UrlArgs.Item[] subtitleArgs = new UrlArgs.Item[urls.length];
-                    for (int i = 0; i < urls.length; i++) {
-                        subtitleArgs[i] = new UrlArgs.Item.Builder()
-                                .setUrl(urls[i])
-                                .setLanguage(languages[i])
-                                .setLabel(labels[i])
-                                .build();
-                    }
-                    urlBuilder.setExtSubtitle(subtitleArgs);
+                    String[] urls = getResources().getStringArray(R.array.hls_extra_streams_subtitles);
+                    String[] languages = getResources().getStringArray(R.array.hls_extra_streams_subtitles_languages);
+                    String[] labels = getResources().getStringArray(R.array.hls_extra_streams_subtitles_labels);
+                    List<UrlArgs.Item> list = Arrays.asList(new UrlArgs.Item.Builder()
+                            .setUrl(urls[0])
+                            .setLanguage(languages[0])
+                            .setLabel(labels[0])
+                            .build(), new UrlArgs.Item.Builder()
+                            .setUrl(urls[1])
+                            .setLanguage(languages[1])
+                            .setLabel(labels[1])
+                            .build(), new UrlArgs.Item.Builder()
+                            .setUrl(urls[2])
+                            .setLanguage(languages[2])
+                            .setLabel(labels[2])
+                            .build());
+                    urlBuilder.appendExtraSubtitles(list);
                 } catch (Exception e) {
                 }
 

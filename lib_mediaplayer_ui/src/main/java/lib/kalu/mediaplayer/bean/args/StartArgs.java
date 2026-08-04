@@ -60,12 +60,13 @@ public class StartArgs implements Serializable {
     // 视频url
     private UrlArgs urlArgs;
 
-    public boolean containsMainUrl() {
-        return null != urlArgs && urlArgs.containsMainUrl();
+
+    public boolean containsMainUrl(){
+        return null != urlArgs && urlArgs.containsUrl();
     }
 
-    public boolean containsExtUrl() {
-        return null != urlArgs && urlArgs.containsExtUrl();
+    public boolean hasParseMultivariantPlaylist() {
+        return null != urlArgs && urlArgs.hasParseMultivariantPlaylist();
     }
 
     public UrlArgs getUrlArgs() {
@@ -76,7 +77,7 @@ public class StartArgs implements Serializable {
         if (null == urlArgs) {
             return null;
         } else {
-            return urlArgs.getMainUrl();
+            return urlArgs.getDefaultUrl();
         }
     }
 

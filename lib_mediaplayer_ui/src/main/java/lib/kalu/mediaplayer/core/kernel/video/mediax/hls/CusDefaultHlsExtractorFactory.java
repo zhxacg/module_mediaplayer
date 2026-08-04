@@ -62,7 +62,7 @@ import lib.kalu.mediaplayer.util.LogUtil;
  * Default {@link HlsExtractorFactory} implementation.
  */
 @UnstableApi
-public final class CustomDefaultHlsExtractorFactory implements HlsExtractorFactory {
+public final class CusDefaultHlsExtractorFactory implements HlsExtractorFactory {
 
     // Extractors order is optimized according to
     // https://docs.google.com/document/d/1w2mKaWMxfz2Ei8-LdxqbPs1VLe_oudB-eryXXw9OvQQ.
@@ -86,11 +86,11 @@ public final class CustomDefaultHlsExtractorFactory implements HlsExtractorFacto
     private final boolean exposeCea608WhenMissingDeclarations;
 
     /**
-     * Equivalent to {@link #CustomDefaultHlsExtractorFactory(int, boolean) new
+     * Equivalent to {@link #CusDefaultHlsExtractorFactory(int, boolean) new
      * DefaultHlsExtractorFactory(payloadReaderFactoryFlags = 0, exposeCea608WhenMissingDeclarations =
      * true)}
      */
-    public CustomDefaultHlsExtractorFactory() {
+    public CusDefaultHlsExtractorFactory() {
         this(/* payloadReaderFactoryFlags= */ 0, /* exposeCea608WhenMissingDeclarations */ true);
     }
 
@@ -105,7 +105,7 @@ public final class CustomDefaultHlsExtractorFactory implements HlsExtractorFacto
      *                                            declarations. If the multivariant playlist contains any Closed Captions declarations, this
      *                                            flag is ignored.
      */
-    public CustomDefaultHlsExtractorFactory(
+    public CusDefaultHlsExtractorFactory(
             int payloadReaderFactoryFlags, boolean exposeCea608WhenMissingDeclarations) {
         this.payloadReaderFactoryFlags = payloadReaderFactoryFlags;
         this.exposeCea608WhenMissingDeclarations = exposeCea608WhenMissingDeclarations;
@@ -113,7 +113,7 @@ public final class CustomDefaultHlsExtractorFactory implements HlsExtractorFacto
     }
 
     @Override
-    public CustomBundledHlsMediaChunkExtractor createExtractor(
+    public CusBundledHlsMediaChunkExtractor createExtractor(
             Uri uri,
             Format format,
             @Nullable List<Format> muxedCaptionFormats,
@@ -148,7 +148,7 @@ public final class CustomDefaultHlsExtractorFactory implements HlsExtractorFacto
                     checkNotNull(
                             createExtractorByFileType(fileType, format, muxedCaptionFormats, timestampAdjuster));
             if (sniffQuietly(extractor, sniffingExtractorInput)) {
-                return new CustomBundledHlsMediaChunkExtractor(
+                return new CusBundledHlsMediaChunkExtractor(
                         extractor,
                         format,
                         timestampAdjuster,
@@ -166,7 +166,7 @@ public final class CustomDefaultHlsExtractorFactory implements HlsExtractorFacto
             }
         }
 
-        return new CustomBundledHlsMediaChunkExtractor(
+        return new CusBundledHlsMediaChunkExtractor(
                 checkNotNull(fallBackExtractor),
                 format,
                 timestampAdjuster,
@@ -175,21 +175,21 @@ public final class CustomDefaultHlsExtractorFactory implements HlsExtractorFacto
     }
 
     @Override
-    public CustomDefaultHlsExtractorFactory setSubtitleParserFactory(
+    public CusDefaultHlsExtractorFactory setSubtitleParserFactory(
             SubtitleParser.Factory subtitleParserFactory) {
         this.subtitleParserFactory = subtitleParserFactory;
         return this;
     }
 
     @Override
-    public CustomDefaultHlsExtractorFactory experimentalParseSubtitlesDuringExtraction(
+    public CusDefaultHlsExtractorFactory experimentalParseSubtitlesDuringExtraction(
             boolean parseSubtitlesDuringExtraction) {
         this.parseSubtitlesDuringExtraction = parseSubtitlesDuringExtraction;
         return this;
     }
 
     @Override
-    public CustomDefaultHlsExtractorFactory experimentalSetCodecsToParseWithinGopSampleDependencies(
+    public CusDefaultHlsExtractorFactory experimentalSetCodecsToParseWithinGopSampleDependencies(
             @C.VideoCodecFlags int codecsToParseWithinGopSampleDependencies) {
         this.codecsToParseWithinGopSampleDependencies = codecsToParseWithinGopSampleDependencies;
         return this;

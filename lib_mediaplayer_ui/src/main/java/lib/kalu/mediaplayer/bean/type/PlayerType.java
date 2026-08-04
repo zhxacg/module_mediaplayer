@@ -461,11 +461,13 @@ public @interface PlayerType {
         int VIDEO = 1;
         int AUDIO = 2;
         int SUBTITLE = 3;
+        int FILE_VIDEO_MULTIVARIANT = 4;
 
         @Documented
         @Retention(CLASS)
         @Target({METHOD, PARAMETER, FIELD, LOCAL_VARIABLE, ANNOTATION_TYPE, PACKAGE})
         @IntDef(value = {
+                UrlType.FILE_VIDEO_MULTIVARIANT,
                 UrlType.VIDEO,
                 UrlType.AUDIO,
                 UrlType.SUBTITLE})
@@ -564,7 +566,6 @@ public @interface PlayerType {
         @interface Value {
         }
     }
-
 
     @Documented
     @Retention(CLASS)

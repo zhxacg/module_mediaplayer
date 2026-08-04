@@ -10,11 +10,11 @@ import java.io.IOException;
 import lib.kalu.mediaplayer.bean.type.PlayerType;
 import lib.kalu.mediaplayer.util.LogUtil;
 
-public final class CustomHlsLoadErrorHandlingPolicy extends DefaultLoadErrorHandlingPolicy {
+public final class CusHlsLoadErrorHandlingPolicy extends DefaultLoadErrorHandlingPolicy {
 
     private String TAG = "CustomHlsLoadErrorHandlingPolicy22";
 
-    private CustomHlsLoadErrorHandlingPolicy() {
+    private CusHlsLoadErrorHandlingPolicy() {
         super();
     }
 
@@ -23,7 +23,7 @@ public final class CustomHlsLoadErrorHandlingPolicy extends DefaultLoadErrorHand
      *
      * @param retryCount
      */
-    public CustomHlsLoadErrorHandlingPolicy(int retryCount) {
+    public CusHlsLoadErrorHandlingPolicy(int retryCount) {
         super(retryCount);
     }
 

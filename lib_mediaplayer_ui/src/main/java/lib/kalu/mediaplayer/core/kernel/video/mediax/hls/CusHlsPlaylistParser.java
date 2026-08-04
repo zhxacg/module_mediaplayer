@@ -66,7 +66,7 @@ import lib.kalu.mediaplayer.util.LogUtil;
  * HLS playlists parsing logic.
  */
 @UnstableApi
-public final class CustomHlsPlaylistParser implements ParsingLoadable.Parser<HlsPlaylist> {
+public final class CusHlsPlaylistParser implements ParsingLoadable.Parser<HlsPlaylist> {
 
     /**
      * Exception thrown when merging a delta update fails.
@@ -298,7 +298,7 @@ public final class CustomHlsPlaylistParser implements ParsingLoadable.Parser<Hls
      * Creates an instance where media playlists are parsed without inheriting attributes from a
      * multivariant playlist.
      */
-    public CustomHlsPlaylistParser(ProxyUrl proxyUrl) {
+    public CusHlsPlaylistParser(ProxyUrl proxyUrl) {
         this(proxyUrl, HlsMultivariantPlaylist.EMPTY, /* previousMediaPlaylist= */ null);
     }
 
@@ -311,7 +311,7 @@ public final class CustomHlsPlaylistParser implements ParsingLoadable.Parser<Hls
      * @param previousMediaPlaylist The previous media playlist from which the new media playlist may
      *                              inherit skipped segments.
      */
-    public CustomHlsPlaylistParser(
+    public CusHlsPlaylistParser(
             ProxyUrl proxyUrl,
             HlsMultivariantPlaylist multivariantPlaylist,
             @Nullable HlsMediaPlaylist previousMediaPlaylist) {
@@ -431,7 +431,7 @@ public final class CustomHlsPlaylistParser implements ParsingLoadable.Parser<Hls
         }
 
 
-        HashMap<Uri, ArrayList<CustomHlsTrackMetadataEntry.VariantInfo>> urlToVariantInfos = new HashMap<>();
+        HashMap<Uri, ArrayList<CusHlsTrackMetadataEntry.VariantInfo>> urlToVariantInfos = new HashMap<>();
         HashMap<String, String> variableDefinitions = new HashMap<>();
         ArrayList<Variant> variants = new ArrayList<>();
         ArrayList<Rendition> videos = new ArrayList<>();
@@ -575,13 +575,13 @@ public final class CustomHlsPlaylistParser implements ParsingLoadable.Parser<Hls
                         new Variant(
                                 uri, formatHlsFormat(format1), videoGroupId, audioGroupId, subtitlesGroupId, closedCaptionsGroupId);
                 variants.add(variant);
-                @Nullable ArrayList<CustomHlsTrackMetadataEntry.VariantInfo> variantInfosForUrl = urlToVariantInfos.get(uri);
+                @Nullable ArrayList<CusHlsTrackMetadataEntry.VariantInfo> variantInfosForUrl = urlToVariantInfos.get(uri);
                 if (variantInfosForUrl == null) {
                     variantInfosForUrl = new ArrayList<>();
                     urlToVariantInfos.put(uri, variantInfosForUrl);
                 }
                 variantInfosForUrl.add(
-                        new CustomHlsTrackMetadataEntry.VariantInfo(
+                        new CusHlsTrackMetadataEntry.VariantInfo(
                                 averageBitrate,
                                 peakBitrate,
                                 videoGroupId,
@@ -598,8 +598,8 @@ public final class CustomHlsPlaylistParser implements ParsingLoadable.Parser<Hls
             Variant variant = variants.get(i);
             if (urlsInDeduplicatedVariants.add(variant.url)) {
                 Assertions.checkState(variant.format.metadata == null);
-                CustomHlsTrackMetadataEntry hlsMetadataEntry =
-                        new CustomHlsTrackMetadataEntry(
+                CusHlsTrackMetadataEntry hlsMetadataEntry =
+                        new CusHlsTrackMetadataEntry(
                                 /* groupId= */ null,
                                 /* name= */ null,
                                 checkNotNull(urlToVariantInfos.get(variant.url)));
@@ -637,7 +637,7 @@ public final class CustomHlsPlaylistParser implements ParsingLoadable.Parser<Hls
             }
 
             Metadata metadata =
-                    new Metadata(new CustomHlsTrackMetadataEntry(groupId, name, Collections.emptyList()));
+                    new Metadata(new CusHlsTrackMetadataEntry(groupId, name, Collections.emptyList()));
             switch (parseStringAttr(line, REGEX_TYPE, variableDefinitions)) {
                 case TYPE_VIDEO:
                     @Nullable Variant variant = getVariantWithVideoGroup(variants, groupId);

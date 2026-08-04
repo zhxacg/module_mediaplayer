@@ -147,10 +147,10 @@ public final class TestActivity extends Activity {
         // menu
         ComponentMenu menu = new ComponentMenu(getApplicationContext());
         playerLayout.addComponent(menu);
-        // loading
-        ComponentPrepareGradient loading = new ComponentPrepareGradient(getApplicationContext());
-        loading.setComponentBackgroundColorInt(Color.BLACK);
-        playerLayout.addComponent(loading);
+//        // loading
+//        ComponentPrepareGradient loading = new ComponentPrepareGradient(getApplicationContext());
+//        loading.setComponentBackgroundColorInt(Color.BLACK);
+//        playerLayout.addComponent(loading);
         // complete
         ComponentComplete end = new ComponentComplete(getApplicationContext());
         playerLayout.addComponent(end);
@@ -309,20 +309,20 @@ public final class TestActivity extends Activity {
                                         LogUtil.log("TestActivity -> formatVideoTrackInfo -> tracksList = " + tracksList);
                                     }
 
-                                    try {
-                                        UrlArgs urlArgs = startArgs.getUrlArgs();
-                                        UrlArgs.Item mainVideo = urlArgs.getMainVideo();
-                                        UrlArgs.Item[] extVideo = urlArgs.getExtVideo();
-                                        for (TrackInfo item : tracksList) {
-                                            int i = tracksList.indexOf(item);
-                                            if (i == 0) {
-                                                item.setLabel(mainVideo.getLabel());
-                                            } else {
-                                                item.setLabel(extVideo[i - 1].getLabel());
-                                            }
-                                        }
-                                    } catch (Exception e) {
-                                    }
+//                                    try {
+//                                        UrlArgs urlArgs = startArgs.getUrlArgs();
+//                                        UrlArgs.Item mainVideo = urlArgs.getMainVideo();
+//                                        UrlArgs.Item[] extVideo = urlArgs.getExtVideo();
+//                                        for (TrackInfo item : tracksList) {
+//                                            int i = tracksList.indexOf(item);
+//                                            if (i == 0) {
+//                                                item.setLabel(mainVideo.getLabel());
+//                                            } else {
+//                                                item.setLabel(extVideo[i - 1].getLabel());
+//                                            }
+//                                        }
+//                                    } catch (Exception e) {
+//                                    }
 
                                 }
 
@@ -332,16 +332,16 @@ public final class TestActivity extends Activity {
                                         LogUtil.log("TestActivity -> formatAudioTrackInfo -> tracksList = " + tracksList);
                                     }
 
-                                    try {
-                                        UrlArgs urlArgs = startArgs.getUrlArgs();
-                                        UrlArgs.Item[] extAudio = urlArgs.getExtAudio();
-                                        for (TrackInfo item : tracksList) {
-                                            int i = tracksList.indexOf(item);
-                                            item.setLabel(extAudio[i].getLabel());
-                                            item.setLanguage(extAudio[i].getLanguage());
-                                        }
-                                    } catch (Exception e) {
-                                    }
+//                                    try {
+//                                        UrlArgs urlArgs = startArgs.getUrlArgs();
+//                                        UrlArgs.Item[] extAudio = urlArgs.getExtAudio();
+//                                        for (TrackInfo item : tracksList) {
+//                                            int i = tracksList.indexOf(item);
+//                                            item.setLabel(extAudio[i].getLabel());
+//                                            item.setLanguage(extAudio[i].getLanguage());
+//                                        }
+//                                    } catch (Exception e) {
+//                                    }
                                 }
 
                                 @Override

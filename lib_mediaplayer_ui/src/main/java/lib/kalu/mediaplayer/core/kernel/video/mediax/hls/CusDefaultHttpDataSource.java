@@ -57,12 +57,12 @@ import lib.kalu.mediaplayer.bean.type.PlayerType;
 import lib.kalu.mediaplayer.proxy.ProxyUrl;
 import lib.kalu.mediaplayer.util.LogUtil;
 
-public final class CustomDefaultHttpDataSource extends BaseDataSource implements HttpDataSource {
+public final class CusDefaultHttpDataSource extends BaseDataSource implements HttpDataSource {
 
     private String TAG = "CustomDefaultHttpDataSource22";
 
     /**
-     * {@link DataSource.Factory} for {@link CustomDefaultHttpDataSource} instances.
+     * {@link DataSource.Factory} for {@link CusDefaultHttpDataSource} instances.
      */
     public static final class Factory implements HttpDataSource.Factory {
 
@@ -120,7 +120,7 @@ public final class CustomDefaultHttpDataSource extends BaseDataSource implements
         /**
          * Sets the connect timeout, in milliseconds.
          *
-         * <p>The default is {@link CustomDefaultHttpDataSource#DEFAULT_CONNECT_TIMEOUT_MILLIS}.
+         * <p>The default is {@link CusDefaultHttpDataSource#DEFAULT_CONNECT_TIMEOUT_MILLIS}.
          *
          * @param connectTimeoutMs The connect timeout, in milliseconds, that will be used.
          * @return This factory.
@@ -134,7 +134,7 @@ public final class CustomDefaultHttpDataSource extends BaseDataSource implements
         /**
          * Sets the read timeout, in milliseconds.
          *
-         * <p>The default is {@link CustomDefaultHttpDataSource#DEFAULT_READ_TIMEOUT_MILLIS}.
+         * <p>The default is {@link CusDefaultHttpDataSource#DEFAULT_READ_TIMEOUT_MILLIS}.
          *
          * @param readTimeoutMs The connect timeout, in milliseconds, that will be used.
          * @return This factory.
@@ -162,7 +162,7 @@ public final class CustomDefaultHttpDataSource extends BaseDataSource implements
         /**
          * Sets a content type {@link Predicate}. If a content type is rejected by the predicate then a
          * {@link InvalidContentTypeException} is thrown from {@link
-         * CustomDefaultHttpDataSource#open(DataSpec)}.
+         * CusDefaultHttpDataSource#open(DataSpec)}.
          *
          * <p>The default is {@code null}.
          *
@@ -203,9 +203,9 @@ public final class CustomDefaultHttpDataSource extends BaseDataSource implements
         }
 
         @Override
-        public CustomDefaultHttpDataSource createDataSource() {
-            CustomDefaultHttpDataSource dataSource =
-                    new CustomDefaultHttpDataSource(
+        public CusDefaultHttpDataSource createDataSource() {
+            CusDefaultHttpDataSource dataSource =
+                    new CusDefaultHttpDataSource(
                             noProxy,
                             proxyUrl,
                             userAgent,
@@ -267,7 +267,7 @@ public final class CustomDefaultHttpDataSource extends BaseDataSource implements
      */
     @SuppressWarnings("deprecation")
     @Deprecated
-    public CustomDefaultHttpDataSource(boolean noProxy) {
+    public CusDefaultHttpDataSource(boolean noProxy) {
         this(noProxy, null, DEFAULT_CONNECT_TIMEOUT_MILLIS, DEFAULT_READ_TIMEOUT_MILLIS);
     }
 
@@ -276,7 +276,7 @@ public final class CustomDefaultHttpDataSource extends BaseDataSource implements
      */
     @SuppressWarnings("deprecation")
     @Deprecated
-    public CustomDefaultHttpDataSource(boolean noProxy, @Nullable String userAgent) {
+    public CusDefaultHttpDataSource(boolean noProxy, @Nullable String userAgent) {
         this(noProxy, userAgent, DEFAULT_CONNECT_TIMEOUT_MILLIS, DEFAULT_READ_TIMEOUT_MILLIS);
     }
 
@@ -285,7 +285,7 @@ public final class CustomDefaultHttpDataSource extends BaseDataSource implements
      */
     @SuppressWarnings("deprecation")
     @Deprecated
-    public CustomDefaultHttpDataSource(
+    public CusDefaultHttpDataSource(
             boolean noProxy,
             @Nullable String userAgent, int connectTimeoutMillis, int readTimeoutMillis) {
         this(
@@ -301,7 +301,7 @@ public final class CustomDefaultHttpDataSource extends BaseDataSource implements
      * @deprecated Use {@link Factory} instead.
      */
     @Deprecated
-    public CustomDefaultHttpDataSource(
+    public CusDefaultHttpDataSource(
             boolean noProxy,
             @Nullable String userAgent,
             int connectTimeoutMillis,
@@ -320,7 +320,7 @@ public final class CustomDefaultHttpDataSource extends BaseDataSource implements
                 /* keepPostFor302Redirects= */ false);
     }
 
-    private CustomDefaultHttpDataSource(
+    private CusDefaultHttpDataSource(
             boolean noProxy,
             ProxyUrl proxy,
             @Nullable String userAgent,
@@ -1056,7 +1056,7 @@ public final class CustomDefaultHttpDataSource extends BaseDataSource implements
                 LogUtil.log(TAG, "formatOpenInit -> openUrl =  " + openUrl);
             }
 
-            proxyUrl.formatOpenUrl(CustomTag.MASTER_PLAY_URL_VIDEO == dataSpec.customData, openUrl);
+            proxyUrl.formatOpenUrl(CusTag.MASTER_PLAY_URL_VIDEO == dataSpec.customData, openUrl);
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
                 LogUtil.log(TAG, "formatOpenInit -> Exception: " + e.getMessage());
