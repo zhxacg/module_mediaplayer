@@ -275,9 +275,12 @@ public class MainActivity extends Activity {
                     String[] urls = getResources().getStringArray(R.array.hls_default_streams_480);
                     List<UrlArgs.Item> list = Arrays.asList(new UrlArgs.Item.Builder()
                             .setUrl(urls[0])
+                            .setDefault(true)
+                            .setResolution(PlayerType.ResolutionType._480)
                             .setParser(PlayerType.ParserType.VIDEO)
                             .setLabel("480")
                             .build(), new UrlArgs.Item.Builder()
+                            .setDefault(true)
                             .setUrl(urls[1])
                             .setParser(PlayerType.ParserType.AUDIO)
                             .setLabel("480")
@@ -291,6 +294,7 @@ public class MainActivity extends Activity {
                     String[] urls = getResources().getStringArray(R.array.hls_extra_streams_720);
                     List<UrlArgs.Item> list = Arrays.asList(new UrlArgs.Item.Builder()
                             .setUrl(urls[0])
+                            .setResolution(PlayerType.ResolutionType._720)
                             .setParser(PlayerType.ParserType.VIDEO)
                             .setLabel("720")
                             .build(), new UrlArgs.Item.Builder()
@@ -307,6 +311,7 @@ public class MainActivity extends Activity {
                     String[] urls = getResources().getStringArray(R.array.hls_extra_streams_1080);
                     List<UrlArgs.Item> list = Arrays.asList(new UrlArgs.Item.Builder()
                             .setUrl(urls[0])
+                            .setResolution(PlayerType.ResolutionType._1080)
                             .setParser(PlayerType.ParserType.VIDEO)
                             .setLabel("1080")
                             .build(), new UrlArgs.Item.Builder()

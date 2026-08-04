@@ -94,7 +94,6 @@ import lib.kalu.mediaplayer.core.kernel.video.mediax.hls.CusDefaultHlsExtractorF
 import lib.kalu.mediaplayer.core.kernel.video.mediax.hls.CusDefaultHttpDataSource;
 import lib.kalu.mediaplayer.core.kernel.video.mediax.hls.CusHlsLoadErrorHandlingPolicy;
 import lib.kalu.mediaplayer.core.kernel.video.mediax.hls.CusHlsPlaylistParserFactory;
-import lib.kalu.mediaplayer.core.kernel.video.mediax.hls.CusTag;
 import lib.kalu.mediaplayer.proxy.ProxyUrl;
 import lib.kalu.mediaplayer.util.DisplayRefreshRateUtils;
 import lib.kalu.mediaplayer.util.LogUtil;
@@ -438,90 +437,16 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
                     LogUtil.log(TAG, "startDecoder -> 外挂轨道 有");
                 }
 
-
-                String m3u8DataPath = M3u8GeneratorUtil.getCacheM3u8Path(context, urlArgs);
-                UrlArgs.Item build = new UrlArgs.Item.Builder().setUrl(m3u8DataPath).build();
-                MediaSource multivariantMediaSource = buildMediaSource(context, httpFactory, startArgs, PlayerType.UrlType.FILE_HLS, build);
+                String m3u8Data = M3u8GeneratorUtil.formatMasterM3u8DataUri(urlArgs);
+                if (LogUtil.DEBUG) {
+                    String m3u8Path = M3u8GeneratorUtil.saveCacheM3u8Path(context, urlArgs);
+                    LogUtil.log(TAG, "startDecoder -> m3u8Path = " + m3u8Path);
+                }
+                UrlArgs.Item build = new UrlArgs.Item.Builder().setUrl(m3u8Data).build();
+                MediaSource multivariantMediaSource = buildMediaSource(context, httpFactory, startArgs, PlayerType.UrlType.DATA_HLS_MULTIVARIANT_PLAYLIST, build);
                 if (null == multivariantMediaSource)
                     throw new Exception("error: multivariantMediaSource null");
                 mExoPlayer.setMediaSource(multivariantMediaSource);
-
-
-//                int urlCount = urlArgs.getUrlCount();
-//                if (LogUtil.DEBUG) {
-//                    LogUtil.log(TAG, "startDecoder -> urlCount = " + urlCount);
-//                }
-//
-//                ArrayList<MediaSource> listMediaSource = new ArrayList<MediaSource>();
-//
-//                // mainUrl
-//                MediaSource mainMediaSource = buildMediaSource(context, httpFactory, startArgs, PlayerType.UrlType.VIDEO, mainVideo);
-//                if (null == mainMediaSource)
-//                    throw new Exception("error: mainMediaSource null");
-//                listMediaSource.add(mainMediaSource);
-//
-//                // extVideo
-//                UrlArgs.Item[] extVideo = urlArgs.getExtVideo();
-//                if (null != extVideo) {
-//                    for (UrlArgs.Item videoArgs : extVideo) {
-//                        if (LogUtil.DEBUG) {
-//                            LogUtil.log(TAG, "startDecoder -> 外挂视频轨道: videoArgs = " + videoArgs);
-//                        }
-//                        MediaSource extVideoMediaSource = buildMediaSource(context, httpFactory, startArgs, PlayerType.UrlType.VIDEO, videoArgs);
-//                        if (LogUtil.DEBUG) {
-//                            LogUtil.log(TAG, "startDecoder -> 外挂视频轨道: extVideoMediaSource = " + extVideoMediaSource);
-//                        }
-//                        if (null != extVideoMediaSource) {
-//                            listMediaSource.add(extVideoMediaSource);
-//                        }
-//                    }
-//                }
-//
-////                // extAudioUrl
-////                UrlArgs.Item[] extAudio = urlArgs.getExtAudio();
-////                if (null != extAudio) {
-////                    for (UrlArgs.Item audioArgs : extAudio) {
-////                        if (LogUtil.DEBUG) {
-////                            LogUtil.log(TAG, "startDecoder -> 外挂音频轨道: audioArgs = " + audioArgs);
-////                        }
-////                        MediaSource extAudioMediaSource = buildMediaSource(context, httpFactory, startArgs, PlayerType.UrlType.AUDIO, audioArgs);
-////                        if (LogUtil.DEBUG) {
-////                            LogUtil.log(TAG, "startDecoder -> 外挂音频轨道: extAudioMediaSource = " + extAudioMediaSource);
-////                        }
-////                        if (null != extAudioMediaSource) {
-////                            listMediaSource.add(extAudioMediaSource);
-////                        }
-////                    }
-////                }
-//
-////                // extSubtitleUrl
-////                UrlArgs.Item[] extSubtitle = urlArgs.getExtSubtitle();
-////                if (null != extSubtitle) {
-////                    for (UrlArgs.Item item : extSubtitle) {
-////                        if (LogUtil.DEBUG) {
-////                            LogUtil.log(TAG, "startDecoder -> 外挂字幕轨道: subtitle = " + item);
-////                        }
-////                        MediaSource extSubtitleMediaSource = buildMediaSource(context, httpFactory, startArgs, PlayerType.UrlType.SUBTITLE, item);
-////                        if (LogUtil.DEBUG) {
-////                            LogUtil.log(TAG, "startDecoder -> 外挂字幕轨道: extSubtitleMediaSource = " + extSubtitleMediaSource);
-////                        }
-////                        if (null != extSubtitleMediaSource) {
-////                            listMediaSource.add(extSubtitleMediaSource);
-////                        }
-////                    }
-////                }
-//
-//                int size = listMediaSource.size();
-//                if (size == 0)
-//                    throw new Exception("error: listMediaSource isEmpty");
-//
-//                MediaSource[] mediaSources = new MediaSource[listMediaSource.size()];
-//                for (int i = 0; i < size; i++) {
-//                    mediaSources[i] = listMediaSource.get(i);
-//                }
-//
-//                MergingMediaSource mergingMediaSource = new MergingMediaSource(mediaSources);
-//                mExoPlayer.setMediaSource(mergingMediaSource);
             }
             // 无 外挂轨道
             else {
@@ -2188,13 +2113,13 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
                 return new ProgressiveMediaSource.Factory(factory).createMediaSource(mediaItem);
             }
             // 轨道视频 hls (本地拼接的索引文件)
-            else if (urlType == PlayerType.UrlType.FILE_HLS) {
+            else if (urlType == PlayerType.UrlType.DATA_HLS_MULTIVARIANT_PLAYLIST) {
                 if (LogUtil.DEBUG) {
-                    LogUtil.log(TAG, "buildMediaSource -> track video, type = file_hls, url = " + url);
+                    LogUtil.log(TAG, "buildMediaSource -> track video, type = data_hls_multivariant_playlist, url = " + url);
                 }
 
                 HlsMediaSource.Factory factory = buildHlsMediaSourceFactory(context, httpFactory, startArgs, PlayerType.UrlType.VIDEO, urlItem);
-                MediaItem mediaItem = buildMediaItem(PlayerType.UrlType.FILE_HLS, startArgs, urlItem);
+                MediaItem mediaItem = buildMediaItem(PlayerType.UrlType.DATA_HLS_MULTIVARIANT_PLAYLIST, startArgs, urlItem);
                 return ((MediaSource.Factory) factory).createMediaSource(mediaItem);
             }
             // 轨道视频 def
@@ -2269,15 +2194,14 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
                         .setMediaId("video:" + url.hashCode())
                         .setLiveConfiguration(liveConfiguration)
                         .build();
-            }
-            else if (urlType == PlayerType.UrlType.FILE_HLS) {
+            } else if (urlType == PlayerType.UrlType.DATA_HLS_MULTIVARIANT_PLAYLIST) {
                 return new MediaItem.Builder()
-                        .setUri(Uri.fromFile(new File(url)))
+                        .setUri(Uri.parse(url))
+                        .setMimeType(MimeTypes.APPLICATION_M3U8)
                         .setMediaId("video:" + url.hashCode())
                         .setLiveConfiguration(liveConfiguration)
                         .build();
-            }
-            else {
+            } else {
                 return new MediaItem.Builder()
                         .setUri(Uri.parse(url))
                         .setLiveConfiguration(liveConfiguration)

@@ -461,13 +461,13 @@ public @interface PlayerType {
         int VIDEO = 1;
         int AUDIO = 2;
         int SUBTITLE = 3;
-        int FILE_HLS = 4;
+        int DATA_HLS_MULTIVARIANT_PLAYLIST = 4;
 
         @Documented
         @Retention(CLASS)
         @Target({METHOD, PARAMETER, FIELD, LOCAL_VARIABLE, ANNOTATION_TYPE, PACKAGE})
         @IntDef(value = {
-                UrlType.FILE_HLS,
+                UrlType.DATA_HLS_MULTIVARIANT_PLAYLIST,
                 UrlType.VIDEO,
                 UrlType.AUDIO,
                 UrlType.SUBTITLE})
@@ -587,6 +587,34 @@ public @interface PlayerType {
                 AUDIO,
                 SUBTITLE,
                 DEFAULT})
+        @interface Value {
+        }
+    }
+
+    @Documented
+    @Retention(CLASS)
+    @Target({METHOD, PARAMETER, FIELD, LOCAL_VARIABLE, ANNOTATION_TYPE, PACKAGE})
+    @interface ResolutionType {
+
+        String DEFAULT = "";
+        String _8K = "8K";
+        String _4K = "4K";
+        String _1080 = "1080";
+        String _720 = "720";
+        String _480 = "480";
+        String _360 = "360";
+
+        @Documented
+        @Retention(CLASS)
+        @Target({METHOD, PARAMETER, FIELD, LOCAL_VARIABLE, ANNOTATION_TYPE, PACKAGE})
+        @StringDef({
+                DEFAULT,
+                _8K,
+                _4K,
+                _1080,
+                _720,
+                _480,
+                _360})
         @interface Value {
         }
     }

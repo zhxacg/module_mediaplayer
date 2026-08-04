@@ -44,7 +44,7 @@ public final class UrlArgs implements Serializable {
             for (Item item : defaultStreams) {
                 if (item.parser == PlayerType.ParserType.VIDEO) {
                     return true;
-                }else if (item.parser == PlayerType.ParserType.DEFAULT) {
+                } else if (item.parser == PlayerType.ParserType.DEFAULT) {
                     return true;
                 }
             }
@@ -160,6 +160,8 @@ public final class UrlArgs implements Serializable {
         private String label;
         @PlayerType.ParserType.Value
         private int parser;
+        @PlayerType.ResolutionType.Value
+        private String resolution;
 
         @Override
         public String toString() {
@@ -169,6 +171,7 @@ public final class UrlArgs implements Serializable {
                     ", language='" + language + '\'' +
                     ", label='" + label + '\'' +
                     ", parser=" + parser +
+                    ", resolution='" + resolution + '\'' +
                     '}';
         }
 
@@ -182,6 +185,7 @@ public final class UrlArgs implements Serializable {
             this.language = builder.language;
             this.label = builder.label;
             this.parser = builder.parser;
+            this.resolution = builder.resolution;
         }
 
         public boolean isDefault() {
@@ -191,6 +195,11 @@ public final class UrlArgs implements Serializable {
         @PlayerType.ParserType.Value
         public int getParser() {
             return parser;
+        }
+
+        @PlayerType.ResolutionType.Value
+        public String getResolution() {
+            return resolution;
         }
 
         public String getLabel() {
@@ -269,9 +278,16 @@ public final class UrlArgs implements Serializable {
             private String label;
             @PlayerType.ParserType.Value
             private int parser = PlayerType.ParserType.DEFAULT;
+            @PlayerType.ResolutionType.Value
+            private String resolution = PlayerType.ResolutionType.DEFAULT;
 
             public Item.Builder setDefault(boolean v) {
                 this.def = v;
+                return this;
+            }
+
+            public Item.Builder setResolution(@PlayerType.ResolutionType.Value String v) {
+                this.resolution = v;
                 return this;
             }
 
