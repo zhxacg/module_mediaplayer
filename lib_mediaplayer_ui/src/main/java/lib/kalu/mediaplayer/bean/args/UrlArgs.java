@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.List;
 
+import lib.kalu.mediaplayer.PlayerConst;
 import lib.kalu.mediaplayer.bean.type.PlayerType;
 
 public final class UrlArgs implements Serializable {
@@ -285,9 +286,9 @@ public final class UrlArgs implements Serializable {
             private String language;
             private String label;
             @PlayerType.ParserType.Value
-            private int parser = PlayerType.ParserType.DEFAULT;
+            private int parser = PlayerConst.DEFAULT_TYPE_PRASE;
             @PlayerType.ResolutionType.Value
-            private String resolution = PlayerType.ResolutionType.DEFAULT;
+            private String resolution = PlayerConst.DEFAULT_TYPE_RESOLUTION;
 
             public Item.Builder setDefault(boolean v) {
                 this.def = v;

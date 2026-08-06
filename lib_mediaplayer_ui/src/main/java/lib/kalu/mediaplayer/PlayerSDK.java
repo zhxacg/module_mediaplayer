@@ -11,24 +11,24 @@ public final class PlayerSDK {
     public static boolean log = false;
     public static boolean initRelease = true;
     public static boolean supportAutoRelease = true;
-    public static int connectTimeoutMs = 60_000;  // 连接超时 60s
+    public static int connectTimeoutMs = PlayerConst.DEFAULT_CONNECT_TIMEOUT;
     public static boolean bufferingTimeoutRetry = false; // 缓冲失败重试
     @PlayerType.KernelType.Value
-    public static int externalAudioKernel = PlayerType.KernelType.DEFAULT; // 音频播放器内核
+    private static int externalAudioKernel = PlayerConst.DEFAULT_TYPE_KERNEL_EXTERNAL_AUDIO;
     @PlayerType.KernelType.Value
-    public static int kernelType = PlayerType.KernelType.DEFAULT; // 视频播放器内核
+    private static int kernelType = PlayerConst.DEFAULT_TYPE_KERNEL;
     @PlayerType.RenderType.Value
-    public static int renderType = PlayerType.RenderType.DEFAULT; // 视频渲染类型
+    private static int renderType = PlayerConst.DEFAULT_TYPE_RENDER;
     @PlayerType.DecoderType.Value
-    public static int decoderType = PlayerType.DecoderType.DEFAULT; // 解码器类型
+    private static int decoderType = PlayerConst.DEFAULT_TYPE_DECODER;
     @PlayerType.ScaleType
-    public static int scaleType = PlayerType.ScaleType.DEFAULT; // 视频缩放比例
-    // 旋转角度
+    private static int scaleType = PlayerConst.DEFAULT_TYPE_SCALE;
+
     @PlayerType.RotationType.Value
-    public static int rotation = PlayerType.RotationType.DEFAULT;
-    // 快进参数
+    private static int rotation = PlayerConst.DEFAULT_TYPE_ROTATION;
+
     @PlayerType.SeekType.Value
-    public static int seekType = PlayerType.SeekType.DEFAULT;
+    private static int seekType = PlayerConst.DEFAULT_TYPE_SEEK;
     // 缓存
     public static Cache cache = new Cache.Builder()
             .build();
@@ -47,26 +47,24 @@ public final class PlayerSDK {
         private boolean log = false;
         private boolean initRelease = true;
         private boolean supportAutoRelease = true;
-        private int connectTimeoutMs = 60_000;  // 连接超时 60s
-        private boolean bufferingTimeoutRetry = false; // 缓冲失败重试
+        private int connectTimeoutMs = PlayerConst.DEFAULT_CONNECT_TIMEOUT;
+        private boolean bufferingTimeoutRetry = false;
         @PlayerType.KernelType.Value
-        private int externalAudioKernel = PlayerType.KernelType.DEFAULT; // 音频播放器内核
+        private int externalAudioKernel = PlayerConst.DEFAULT_TYPE_KERNEL_EXTERNAL_AUDIO;
         @PlayerType.KernelType.Value
-        private int kernelType = PlayerType.KernelType.DEFAULT; // 视频播放器内核
+        private int kernelType = PlayerConst.DEFAULT_TYPE_KERNEL;
         @PlayerType.RenderType.Value
-        private int renderType = PlayerType.RenderType.DEFAULT; // 视频渲染类型
+        private int renderType = PlayerConst.DEFAULT_TYPE_RENDER;
         @PlayerType.DecoderType.Value
-        private int decoderType = PlayerType.DecoderType.DEFAULT; // 解码器类型
+        private int decoderType = PlayerConst.DEFAULT_TYPE_DECODER;
         @PlayerType.ScaleType
-        private int scaleType = PlayerType.ScaleType.DEFAULT; // 视频缩放比例
+        private int scaleType = PlayerConst.DEFAULT_TYPE_SCALE;
 
-        // 旋转角度
         @PlayerType.RotationType.Value
-        private int rotation = PlayerType.RotationType.DEFAULT;
+        private int rotation = PlayerConst.DEFAULT_TYPE_ROTATION;
 
-        // 快进参数
         @PlayerType.SeekType.Value
-        private int seekType = PlayerType.SeekType.DEFAULT;
+        private int seekType = PlayerConst.DEFAULT_TYPE_SEEK;
 
         // 缓存
         private Cache cache = new Cache.Builder()
