@@ -13,6 +13,7 @@
 
 # sdk
 -keep class lib.kalu.mediaplayer.PlayerSDK {
+    <methods>;
 }
 -keep class lib.kalu.mediaplayer.PlayerSDK$Builder {
     <methods>;

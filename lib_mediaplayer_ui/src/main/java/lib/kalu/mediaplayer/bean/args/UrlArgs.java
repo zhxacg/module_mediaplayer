@@ -40,11 +40,14 @@ public final class UrlArgs implements Serializable {
     }
 
     public boolean containsUrl() {
+
         try {
             for (Item item : defaultStreams) {
-                if (item.parser == PlayerType.ParserType.VIDEO) {
-                    return true;
-                } else if (item.parser == PlayerType.ParserType.DEFAULT) {
+                if (item.parser == PlayerType.ParserType.AUDIO) {
+                    return false;
+                } else if (item.parser == PlayerType.ParserType.SUBTITLE) {
+                    return false;
+                } else {
                     return true;
                 }
             }
@@ -103,7 +106,7 @@ public final class UrlArgs implements Serializable {
         public UrlArgs.Builder setUrl(String v) {
             this.defaultStreams.clear();
             this.defaultStreams.add(new Item.Builder().setUrl(v)
-                    .setParser(PlayerType.ParserType.VIDEO)
+                    .setParser(PlayerType.ParserType.DEFAULT)
                     .setLabel("DefaultVideo")
                     .setLanguage("DefaultVideo")
                     .build());
