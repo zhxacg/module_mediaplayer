@@ -40,14 +40,13 @@ public final class UrlArgs implements Serializable {
     }
 
     public boolean containsUrl() {
-
         try {
             for (Item item : defaultStreams) {
-                if (item.parser == PlayerType.ParserType.AUDIO) {
-                    return false;
-                } else if (item.parser == PlayerType.ParserType.SUBTITLE) {
-                    return false;
-                } else {
+                if (item.parser == PlayerType.ParserType.VIDEO) {
+                    return true;
+                } else if (item.parser == PlayerType.ParserType.VIDEO_AUDIO) {
+                    return true;
+                } else if (item.parser == PlayerType.ParserType.DEFAULT) {
                     return true;
                 }
             }
