@@ -103,12 +103,30 @@ public final class M3u8GeneratorUtil {
     public static String buildMasterM3u8Text(UrlArgs args) {
         if (args == null) return "";
 
+
         List<UrlArgs.Item> allStreams = new ArrayList<>();
-        if (args.getDefaultStreams() != null) {
+        List<UrlArgs.Item> defaultStreams = args.getDefaultStreams();
+        if (defaultStreams != null) {
+            if (LogUtil.DEBUG) {
+                LogUtil.log(TAG, "buildMasterM3u8Text: defaultStreams.size = " + defaultStreams.size());
+            }
             allStreams.addAll(args.getDefaultStreams());
+        } else {
+            if (LogUtil.DEBUG) {
+                LogUtil.log(TAG, "buildMasterM3u8Text: defaultStreams.size = null");
+            }
         }
-        if (args.getExtraStreams() != null) {
+
+        List<UrlArgs.Item> extraStreams = args.getExtraStreams();
+        if (extraStreams != null) {
+            if (LogUtil.DEBUG) {
+                LogUtil.log(TAG, "buildMasterM3u8Text: extraStreams.size = " + extraStreams.size());
+            }
             allStreams.addAll(args.getExtraStreams());
+        } else {
+            if (LogUtil.DEBUG) {
+                LogUtil.log(TAG, "buildMasterM3u8Text: extraStreams.size = null");
+            }
         }
 
         List<UrlArgs.Item> videoStreams = new ArrayList<>();
@@ -117,6 +135,11 @@ public final class M3u8GeneratorUtil {
 
         // 1. 整理分类视频轨与音频轨，并实现视频轨道 isDefault 优先置顶
         for (UrlArgs.Item item : allStreams) {
+
+            if (LogUtil.DEBUG) {
+                LogUtil.log(TAG, "buildMasterM3u8Text: item.parser = " + item.getParser() + ", item.url = " + item.getUrl());
+            }
+
             if (item == null || !item.containsUrl()) continue;
 
             if (item.getParser() == PlayerType.ParserType.AUDIO) {
@@ -202,12 +225,16 @@ public final class M3u8GeneratorUtil {
             // 估算码率与分辨率
             long estimatedBandwidth = estimateBandwidth(video.getLabel(), i);
             String resolution = estimateResolution(video.getResolution());
-            if (null == resolution)
+            if (LogUtil.DEBUG) {
+                LogUtil.log(TAG, "buildMasterM3u8Text: resolution = " + resolution + ", video.isDefault = " + video.isDefault());
+            }
+
+            if (video.isDefault() && null == resolution)
                 continue;
 
             sb.append("#EXT-X-STREAM-INF:BANDWIDTH=").append(estimatedBandwidth);
 
-            if (resolution != null) {
+            if (resolution != null && !resolution.isEmpty()) {
                 sb.append(",RESOLUTION=").append(resolution);
             }
             if (hasAudioGroup) {

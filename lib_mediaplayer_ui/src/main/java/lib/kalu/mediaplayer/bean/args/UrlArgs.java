@@ -109,13 +109,24 @@ public final class UrlArgs implements Serializable {
                     .setParser(PlayerType.ParserType.DEFAULT)
                     .setLabel("DefaultVideo")
                     .setLanguage("DefaultVideo")
+                    .setDefault(true)
                     .build());
             return this;
         }
 
         public UrlArgs.Builder setUrl(Item item) {
             this.defaultStreams.clear();
-            this.defaultStreams.add(item);
+
+            if (item.isDefault()) {
+                this.defaultStreams.add(item);
+            } else {
+                this.defaultStreams.add(new Item.Builder().setUrl(item.url)
+                        .setParser(item.parser)
+                        .setLabel(item.label)
+                        .setLanguage(item.language)
+                        .setDefault(true)
+                        .build());
+            }
             return this;
         }
 
