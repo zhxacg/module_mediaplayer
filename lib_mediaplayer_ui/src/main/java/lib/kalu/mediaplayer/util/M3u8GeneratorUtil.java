@@ -229,7 +229,7 @@ public final class M3u8GeneratorUtil {
                 LogUtil.log(TAG, "buildMasterM3u8Text: resolution = " + resolution + ", video.isDefault = " + video.isDefault());
             }
 
-            if (video.isDefault() && null == resolution)
+            if (!video.isDefault() && null == resolution)
                 continue;
 
             sb.append("#EXT-X-STREAM-INF:BANDWIDTH=").append(estimatedBandwidth);
