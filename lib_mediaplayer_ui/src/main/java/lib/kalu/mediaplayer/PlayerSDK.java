@@ -14,21 +14,21 @@ public final class PlayerSDK {
     public static int connectTimeoutMs = PlayerConst.DEFAULT_CONNECT_TIMEOUT;
     public static boolean bufferingTimeoutRetry = false; // 缓冲失败重试
     @PlayerType.KernelType.Value
-    private static int externalAudioKernel = PlayerConst.DEFAULT_TYPE_KERNEL_EXTERNAL_AUDIO;
+    public static int externalAudioKernel = PlayerConst.DEFAULT_TYPE_KERNEL_EXTERNAL_AUDIO;
     @PlayerType.KernelType.Value
-    private static int kernelType = PlayerConst.DEFAULT_TYPE_KERNEL;
+    public static int kernelType = PlayerConst.DEFAULT_TYPE_KERNEL;
     @PlayerType.RenderType.Value
-    private static int renderType = PlayerConst.DEFAULT_TYPE_RENDER;
+    public static int renderType = PlayerConst.DEFAULT_TYPE_RENDER;
     @PlayerType.DecoderType.Value
-    private static int decoderType = PlayerConst.DEFAULT_TYPE_DECODER;
+    public static int decoderType = PlayerConst.DEFAULT_TYPE_DECODER;
     @PlayerType.ScaleType
-    private static int scaleType = PlayerConst.DEFAULT_TYPE_SCALE;
+    public static int scaleType = PlayerConst.DEFAULT_TYPE_SCALE;
 
     @PlayerType.RotationType.Value
-    private static int rotation = PlayerConst.DEFAULT_TYPE_ROTATION;
+    public static int rotation = PlayerConst.DEFAULT_TYPE_ROTATION;
 
     @PlayerType.SeekType.Value
-    private static int seekType = PlayerConst.DEFAULT_TYPE_SEEK;
+    public static int seekType = PlayerConst.DEFAULT_TYPE_SEEK;
     // 缓存
     public static Cache cache = new Cache.Builder()
             .build();
