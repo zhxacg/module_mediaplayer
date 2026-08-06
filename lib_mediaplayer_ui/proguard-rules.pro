@@ -13,8 +13,9 @@
 
 # sdk
 -keep class lib.kalu.mediaplayer.PlayerSDK {
-    public <fields>;
-    public <methods>;
+}
+-keep class lib.kalu.mediaplayer.PlayerSDK$Builder {
+    <methods>;
 }
 
 # bean

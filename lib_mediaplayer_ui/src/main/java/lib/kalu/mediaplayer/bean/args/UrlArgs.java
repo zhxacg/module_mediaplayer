@@ -110,6 +110,12 @@ public final class UrlArgs implements Serializable {
             return this;
         }
 
+        public UrlArgs.Builder setUrl(Item item) {
+            this.defaultStreams.clear();
+            this.defaultStreams.add(item);
+            return this;
+        }
+
 //        public UrlArgs.Builder setUrl(String v) {
 //            this.defaultStreams = new Item[]{new Item.Builder().setUrl(v)
 //                    .setLabel("Default")
