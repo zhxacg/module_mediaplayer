@@ -46,7 +46,7 @@ public final class UrlArgs implements Serializable {
                     return true;
                 } else if (item.parser == PlayerType.ParserType.VIDEO_AUDIO) {
                     return true;
-                } else if (item.parser == PlayerType.ParserType.DEFAULT) {
+                } else if (item.parser == PlayerType.ParserType.VIDEO_AUDIO_SUBTITLE) {
                     return true;
                 }
             }
