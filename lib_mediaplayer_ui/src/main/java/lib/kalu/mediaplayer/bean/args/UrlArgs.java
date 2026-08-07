@@ -28,18 +28,6 @@ public final class UrlArgs implements Serializable {
         this.extraSubtitles = builder.extraSubtitles;
     }
 
-    public boolean hasParseMultivariantPlaylist() {
-        if (null != extraSubtitles && !extraSubtitles.isEmpty()) {
-            return true;
-        } else if (null != extraStreams && !extraStreams.isEmpty()) {
-            return true;
-        } else if (null != defaultStreams && defaultStreams.size() > 1) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-
     public boolean containsUrl() {
         try {
             for (Item item : defaultStreams) {
@@ -72,7 +60,7 @@ public final class UrlArgs implements Serializable {
         }
     }
 
-    public Item getDefaultStream() {
+    public Item getMasterItem() {
         try {
             for (Item item : defaultStreams) {
                 if (item.parser == PlayerType.ParserType.VIDEO) {
@@ -95,6 +83,20 @@ public final class UrlArgs implements Serializable {
 
     public List<Item> getDefaultStreams() {
         return defaultStreams;
+    }
+
+    public List<Item> getAllStreams() {
+        LinkedList<Item> list = new LinkedList<>();
+        if (null != defaultStreams && !defaultStreams.isEmpty()) {
+            list.addAll(defaultStreams);
+        }
+        if (null != extraStreams && !extraStreams.isEmpty()) {
+            list.addAll(extraStreams);
+        }
+        if (null != extraSubtitles && !extraSubtitles.isEmpty()) {
+            list.addAll(extraSubtitles);
+        }
+        return list;
     }
 
     public static class Builder implements Serializable {

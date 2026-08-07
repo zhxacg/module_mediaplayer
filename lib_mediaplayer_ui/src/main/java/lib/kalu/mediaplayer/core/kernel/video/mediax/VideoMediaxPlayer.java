@@ -56,6 +56,7 @@ import androidx.media3.exoplayer.source.DefaultMediaSourceFactory;
 import androidx.media3.exoplayer.source.LoadEventInfo;
 import androidx.media3.exoplayer.source.MediaLoadData;
 import androidx.media3.exoplayer.source.MediaSource;
+import androidx.media3.exoplayer.source.MergingMediaSource;
 import androidx.media3.exoplayer.source.ProgressiveMediaSource;
 import androidx.media3.exoplayer.source.SingleSampleMediaSource;
 import androidx.media3.exoplayer.text.TextOutput;
@@ -429,11 +430,59 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
             );
 
             UrlArgs urlArgs = startArgs.getUrlArgs();
-            boolean hasParseMultivariantPlaylist = urlArgs.hasParseMultivariantPlaylist();
+            int streamType = startArgs.getStreamType();
             // 有 外挂轨道
-            if (hasParseMultivariantPlaylist) {
+            if (streamType == PlayerType.StreamType.MERGE_ALL) {
                 if (LogUtil.DEBUG) {
-                    LogUtil.log(TAG, "startDecoder -> 外挂轨道 有");
+                    LogUtil.log(TAG, "startDecoder -> 外挂轨道 有 MERGE_ALL");
+                }
+
+
+                ArrayList<MediaSource> listMediaSource = new ArrayList<MediaSource>();
+
+
+                List<UrlArgs.Item> allStreams = urlArgs.getAllStreams();
+                if (LogUtil.DEBUG) {
+                    LogUtil.log(TAG, "startDecoder -> allStreams.size = " + allStreams.size());
+                }
+
+                for (UrlArgs.Item item : allStreams) {
+
+                    if (item.getParser() == PlayerType.ParserType.SUBTITLE) {
+                        MediaSource mainMediaSource = buildMediaSource(context, httpFactory, startArgs, PlayerType.UrlType.SUBTITLE, item);
+                        if (null != mainMediaSource) {
+                            listMediaSource.add(mainMediaSource);
+                        }
+                    } else if (item.getParser() == PlayerType.ParserType.AUDIO) {
+                        MediaSource mainMediaSource = buildMediaSource(context, httpFactory, startArgs, PlayerType.UrlType.AUDIO, item);
+                        if (null != mainMediaSource) {
+                            listMediaSource.add(mainMediaSource);
+                        }
+                    } else {
+                        MediaSource mainMediaSource = buildMediaSource(context, httpFactory, startArgs, PlayerType.UrlType.VIDEO, item);
+                        if (null != mainMediaSource) {
+                            listMediaSource.add(mainMediaSource);
+                        }
+                    }
+                }
+
+
+                int size = listMediaSource.size();
+                if (size == 0)
+                    throw new Exception("error: listMediaSource isEmpty");
+
+                MediaSource[] mediaSources = new MediaSource[listMediaSource.size()];
+                for (int i = 0; i < size; i++) {
+                    mediaSources[i] = listMediaSource.get(i);
+                }
+
+                MergingMediaSource mergingMediaSource = new MergingMediaSource(mediaSources);
+                mExoPlayer.setMediaSource(mergingMediaSource);
+            }
+            // 有 外挂轨道 自己拼装playlist, 所有的m3u8必须是单层的
+            else if (streamType == PlayerType.StreamType.FORMAT_MULTI_VARIANT_PLAYLIST) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log(TAG, "startDecoder -> 外挂轨道 有 FORMAT_MULTI_VARIANT_PLAYLIST");
                 }
 
                 String m3u8Data = M3u8GeneratorUtil.formatMasterM3u8DataUri(urlArgs);
@@ -453,11 +502,11 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
                     LogUtil.log(TAG, "startDecoder -> 外挂轨道 无");
                 }
 
-                UrlArgs.Item defaultStream = urlArgs.getDefaultStream();
-                if (null == defaultStream)
-                    throw new Exception("error: defaultStream null");
+                UrlArgs.Item masterItem = urlArgs.getMasterItem();
+                if (null == masterItem)
+                    throw new Exception("error: masterItem null");
 
-                MediaSource onlyMainMediaSource = buildMediaSource(context, httpFactory, startArgs, PlayerType.UrlType.VIDEO, defaultStream);
+                MediaSource onlyMainMediaSource = buildMediaSource(context, httpFactory, startArgs, PlayerType.UrlType.VIDEO, masterItem);
                 if (null == onlyMainMediaSource)
                     throw new Exception("error: onlyMainMediaSource null");
 

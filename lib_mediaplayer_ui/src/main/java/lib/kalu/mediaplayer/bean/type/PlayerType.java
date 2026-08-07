@@ -478,6 +478,25 @@ public @interface PlayerType {
     @Documented
     @Retention(CLASS)
     @Target({METHOD, PARAMETER, FIELD, LOCAL_VARIABLE, ANNOTATION_TYPE, PACKAGE})
+    @interface StreamType {
+        int DEFAULT = 1;
+        int MERGE_ALL = 2;
+        int FORMAT_MULTI_VARIANT_PLAYLIST = 4;
+
+        @Documented
+        @Retention(CLASS)
+        @Target({METHOD, PARAMETER, FIELD, LOCAL_VARIABLE, ANNOTATION_TYPE, PACKAGE})
+        @IntDef(value = {
+                StreamType.DEFAULT,
+                StreamType.MERGE_ALL,
+                StreamType.FORMAT_MULTI_VARIANT_PLAYLIST})
+        @interface Value {
+        }
+    }
+
+    @Documented
+    @Retention(CLASS)
+    @Target({METHOD, PARAMETER, FIELD, LOCAL_VARIABLE, ANNOTATION_TYPE, PACKAGE})
     @interface ScreenOrientation {
         int PORTRAIT = 1;
         int LANDSPACE = 2;

@@ -8,6 +8,7 @@ import org.json.JSONObject;
 import java.io.Serializable;
 import java.util.Arrays;
 
+import lib.kalu.mediaplayer.PlayerConst;
 import lib.kalu.mediaplayer.PlayerSDK;
 import lib.kalu.mediaplayer.bean.menu.Menu;
 import lib.kalu.mediaplayer.bean.type.PlayerType;
@@ -63,10 +64,6 @@ public class StartArgs implements Serializable {
 
     public boolean containsMainUrl() {
         return null != urlArgs && urlArgs.containsUrl();
-    }
-
-    public boolean hasParseMultivariantPlaylist() {
-        return null != urlArgs && urlArgs.hasParseMultivariantPlaylist();
     }
 
     public UrlArgs getUrlArgs() {
@@ -258,6 +255,13 @@ public class StartArgs implements Serializable {
         return retryConfiguration;
     }
 
+    @PlayerType.StreamType.Value
+    private int streamType;
+
+    public int getStreamType() {
+        return streamType;
+    }
+
     @Override
     public String toString() {
         return "StartArgs{" +
@@ -290,6 +294,7 @@ public class StartArgs implements Serializable {
                 ", timeoutConfiguration=" + timeoutConfiguration +
                 ", retryType=" + retryType +
                 ", retryConfiguration=" + retryConfiguration +
+                ", streamType=" + streamType +
                 '}';
     }
 
@@ -322,6 +327,7 @@ public class StartArgs implements Serializable {
         this.timeoutConfiguration = builder.timeoutConfiguration;
         this.retryType = builder.retryType;
         this.retryConfiguration = builder.retryConfiguration;
+        this.streamType = builder.streamType;
     }
 
     public Builder newBuilder() {
@@ -354,6 +360,7 @@ public class StartArgs implements Serializable {
         builder.timeoutConfiguration = timeoutConfiguration;
         builder.retryType = 0;
         builder.retryConfiguration = retryConfiguration;
+        builder.streamType = streamType;
         return builder;
     }
 
@@ -576,6 +583,14 @@ public class StartArgs implements Serializable {
 
         public Builder setRetryConfiguration(RetryConfiguration v) {
             this.retryConfiguration = v;
+            return this;
+        }
+
+        @PlayerType.StreamType.Value
+        private int streamType = PlayerConst.DEFAULT_STREAM_TYPE;
+
+        public Builder setStreamType( @PlayerType.StreamType.Value int v) {
+            this.streamType = v;
             return this;
         }
 

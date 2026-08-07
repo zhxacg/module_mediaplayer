@@ -42,4 +42,7 @@ public class PlayerConst {
     // 音频播放器内核
     @PlayerType.KernelType.Value
     public static int DEFAULT_TYPE_KERNEL_EXTERNAL_AUDIO = PlayerType.KernelType.DEFAULT;
+
+    @PlayerType.StreamType.Value
+    public static int DEFAULT_STREAM_TYPE = PlayerType.StreamType.DEFAULT;
 }
