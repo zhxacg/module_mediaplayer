@@ -44,6 +44,11 @@
 #### 更新
 
 ```
+2026-9-12
+1. 新增： media3 1.11.0
+```
+
+```
 2025-10-21
 1. 新增：exoplayer2 media3 字幕时移api appSuntitleOffsetMs(long offsetMs)
 ```

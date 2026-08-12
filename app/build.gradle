@@ -106,7 +106,7 @@ dependencies {
 //    api(files("../repo/aar/lib_player_ui_1.0.0_release_20251127.aar"))
 
     // media3
-    api files('../repo/aar/lib_player_mediax_mini_3.1.9.0_release_20260113.aar')
+    api files('../repo/aar/lib_player_mediax_mini_3.1.11.0_release_20260812.aar')
     // exo2
     api files('../repo/aar/lib_player_exo_mini_2.19.1_release_20251022.aar')
     // ijk
