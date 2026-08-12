@@ -649,7 +649,7 @@ public class MainActivity extends Activity {
 
         PlayerSDK.newBuilder()
                 // 日志开关
-                .setLog(isLogEnable())
+                .setLogEnable(isLogEnable())
                 // 播放器类型（MediaPlayer Media3Player ExoPlayer IjkPLayer）
                 .setKernelType(getKernelType())
                 // 渲染类型（TextuteView SurafecView）
