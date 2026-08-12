@@ -4,11 +4,12 @@ package lib.kalu.mediaplayer;
 import lib.kalu.mediaplayer.bean.cache.Cache;
 import lib.kalu.mediaplayer.bean.type.PlayerType;
 import lib.kalu.mediaplayer.buried.PlayBuried;
+import lib.kalu.mediaplayer.util.LogUtil;
 
 
 public final class PlayerSDK {
 
-    public static boolean log = false;
+    public static boolean logEnable = false;
     public static boolean initRelease = true;
     public static boolean supportAutoRelease = true;
     public static int connectTimeoutMs = PlayerConst.DEFAULT_CONNECT_TIMEOUT;
@@ -44,7 +45,7 @@ public final class PlayerSDK {
 
     public final static class Builder {
 
-        private boolean log = false;
+        private boolean logEnable = false;
         private boolean initRelease = true;
         private boolean supportAutoRelease = true;
         private int connectTimeoutMs = PlayerConst.DEFAULT_CONNECT_TIMEOUT;
@@ -106,8 +107,8 @@ public final class PlayerSDK {
             return this;
         }
 
-        public Builder setLog(boolean v) {
-            log = v;
+        public Builder setLogEnable(boolean v) {
+            logEnable = v;
             return this;
         }
 
@@ -157,7 +158,7 @@ public final class PlayerSDK {
         }
 
         public void init() {
-            PlayerSDK.log = log;
+            PlayerSDK.logEnable = logEnable;
             PlayerSDK.initRelease = initRelease;
             PlayerSDK.supportAutoRelease = supportAutoRelease;
             PlayerSDK.connectTimeoutMs = connectTimeoutMs;
@@ -172,6 +173,8 @@ public final class PlayerSDK {
             PlayerSDK.cache = cache;
             PlayerSDK.noProxy = noProxy;
             PlayerSDK.playBuried = playBuried;
+            //
+            LogUtil.setEnable(PlayerSDK.logEnable);
         }
     }
 

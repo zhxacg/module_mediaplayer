@@ -57,8 +57,6 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
     @Override
     default void start(StartArgs startArgs) {
         try {
-            boolean log = PlayerSDK.log;
-            LogUtil.setLogger(log);
 
             // fixbug
             boolean prepared = isPrepared();

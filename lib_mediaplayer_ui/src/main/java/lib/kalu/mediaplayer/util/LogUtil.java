@@ -12,7 +12,7 @@ public final class LogUtil {
     private static String mTag = "MP_COMMON";
     public static boolean DEBUG = false;
 
-    public static void setLogger(boolean v) {
+    public static void setEnable(boolean v) {
         DEBUG = v;
         setIJkLogger(DEBUG);
         setVlcLogger(DEBUG);
@@ -20,21 +20,21 @@ public final class LogUtil {
         setMediaxV3Logger(DEBUG);
     }
 
-    private static void setMediaxV3Logger(boolean v){
+    private static void setMediaxV3Logger(boolean v) {
         try {
             lib.kalu.mediax.util.MediaLogUtil.setDebug(v);
         } catch (Exception e) {
         }
     }
 
-    private static void setExoV2Logger(boolean v){
+    private static void setExoV2Logger(boolean v) {
         try {
             lib.kalu.mediax.util.MediaLogUtil.setDebug(v);
         } catch (Exception e) {
         }
     }
 
-    private static void setVlcLogger(boolean v){
+    private static void setVlcLogger(boolean v) {
         try {
             Class<?> clazz = Class.forName("lib.kalu.vlc.util.VlcLogUtil");
             if (null == clazz)
@@ -52,8 +52,7 @@ public final class LogUtil {
             if (LogUtil.DEBUG) {
                 LogUtil.log("VideoIjkPlayer -> initOptions -> step2");
             }
-            boolean log = PlayerSDK.log;
-            lib.kalu.ijkplayer.util.IjkLogUtil.setLogger(log);
+            lib.kalu.ijkplayer.util.IjkLogUtil.setLogger(v);
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
                 LogUtil.log("VideoIjkPlayer -> initOptions -> step2 Exception " + e.getMessage());
