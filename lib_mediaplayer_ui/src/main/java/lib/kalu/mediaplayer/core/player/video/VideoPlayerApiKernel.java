@@ -623,9 +623,9 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
                 @Override
                 public void onUpdateProgress(long trySeeDuration, long position, long duration) {
 
-                    if (LogUtil.DEBUG) {
-                        LogUtil.log(TAG, "initKernel -> onUpdateProgress, trySeeDuration = " + trySeeDuration + ", position = " + position + ", duration = " + duration);
-                    }
+//                    if (LogUtil.DEBUG) {
+//                        LogUtil.log(TAG, "initKernel -> onUpdateProgress, trySeeDuration = " + trySeeDuration + ", position = " + position + ", duration = " + duration);
+//                    }
 
                     callProgress(trySeeDuration, position, duration);
 

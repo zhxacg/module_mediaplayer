@@ -1098,7 +1098,7 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
 
         try {
             if (null == mExoPlayer) throw new Exception("mExoPlayer error: null");
-//            mExoPlayer.pause();
+            mExoPlayer.pause();
             mExoPlayer.stop();
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
