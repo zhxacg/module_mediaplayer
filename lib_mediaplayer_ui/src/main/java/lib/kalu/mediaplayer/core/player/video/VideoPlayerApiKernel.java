@@ -623,6 +623,10 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
                 @Override
                 public void onUpdateProgress(long trySeeDuration, long position, long duration) {
 
+                    if (LogUtil.DEBUG) {
+                        LogUtil.log(TAG, "initKernel -> onUpdateProgress, trySeeDuration = " + trySeeDuration + ", position = " + position + ", duration = " + duration);
+                    }
+
                     callProgress(trySeeDuration, position, duration);
 
                     try {
@@ -637,8 +641,8 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
                         onBuriedTrySeeEnd();
 
                         // 试看结束
-                        stop(true);
                         callEvent(PlayerType.EventType.TRY_SEE_END);
+                        stop(true);
                     } catch (Exception e) {
                     }
                 }
