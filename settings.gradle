@@ -13,3 +13,6 @@ include ':lib_mediaxplayer_r1.8.0_mini'
 
 // 1.9.0
 include ':lib_mediaxplayer_r1.9.0_mini'
+
+// 1.11.0
+include ':lib_mediaxplayer_r1.11.0_mini'
