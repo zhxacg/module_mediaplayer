@@ -84,6 +84,7 @@ import lib.kalu.mediaplayer.PlayerSDK;
 import lib.kalu.mediaplayer.bean.args.StartArgs;
 import lib.kalu.mediaplayer.bean.args.UrlArgs;
 import lib.kalu.mediaplayer.bean.cache.Cache;
+import lib.kalu.mediaplayer.bean.configuration.TimeoutConfiguration;
 import lib.kalu.mediaplayer.bean.info.HlsSpanInfo;
 import lib.kalu.mediaplayer.bean.info.TrackInfo;
 import lib.kalu.mediaplayer.bean.type.PlayerType;
@@ -157,7 +158,7 @@ public final class VideoExo2Player extends VideoBasePlayer {
             if (null == startArgs)
                 throw new Exception("error: startArgs null");
 
-            StartArgs.TimeoutConfiguration timeoutConfiguration = startArgs.getTimeoutConfiguration();
+            TimeoutConfiguration timeoutConfiguration = startArgs.getTimeoutConfiguration();
             int connectTimeoutMs = timeoutConfiguration.getConnectTimeoutMs();
             if (LogUtil.DEBUG) {
                 LogUtil.log(TAG, "checkDecoder -> connectTimeoutMs = " + connectTimeoutMs);

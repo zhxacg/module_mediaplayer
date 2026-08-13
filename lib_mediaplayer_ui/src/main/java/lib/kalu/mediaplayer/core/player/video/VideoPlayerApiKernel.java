@@ -1,15 +1,15 @@
 package lib.kalu.mediaplayer.core.player.video;
 
 import android.content.Context;
-import android.os.Handler;
-import android.os.Looper;
 
 import androidx.annotation.FloatRange;
 
 import java.util.List;
 
-import lib.kalu.mediaplayer.PlayerSDK;
 import lib.kalu.mediaplayer.bean.args.StartArgs;
+import lib.kalu.mediaplayer.bean.configuration.BufferConfiguration;
+import lib.kalu.mediaplayer.bean.configuration.RetryConfiguration;
+import lib.kalu.mediaplayer.bean.configuration.TimeoutConfiguration;
 import lib.kalu.mediaplayer.bean.info.TrackInfo;
 import lib.kalu.mediaplayer.bean.type.PlayerType;
 import lib.kalu.mediaplayer.collect.HlsSpanList;
@@ -680,7 +680,7 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
                         //
                         try {
 
-                            StartArgs.RetryConfiguration oldRetryConfiguration = args.getRetryConfiguration();
+                            RetryConfiguration oldRetryConfiguration = args.getRetryConfiguration();
 
                             String[] retryUrls = oldRetryConfiguration.getRetryUrls();
                             int retryIndex = oldRetryConfiguration.getRetryIndex();
@@ -710,7 +710,7 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
                                     LogUtil.log(TAG, "initKernel, RetryConfiguration1, retryUrl = " + retryUrl);
                                 }
 
-                                StartArgs.RetryConfiguration newRetryConfiguration = oldRetryConfiguration.newBuilder()
+                                RetryConfiguration newRetryConfiguration = oldRetryConfiguration.newBuilder()
                                         .setRetryIndex(retryIndex + 1)
                                         .build();
                                 StartArgs newStartArgs = args.newBuilder()
@@ -735,7 +735,7 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
                                     LogUtil.log(TAG, "initKernel, RetryConfiguration2, retryUrl = " + args.getUrl());
                                 }
 
-                                StartArgs.RetryConfiguration newRetryConfiguration = oldRetryConfiguration.newBuilder()
+                                RetryConfiguration newRetryConfiguration = oldRetryConfiguration.newBuilder()
                                         .setRetryIndex(retryIndex + 1)
                                         .build();
                                 StartArgs newStartArgs = args.newBuilder()
@@ -783,7 +783,7 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
 //                        case PlayerType.EventType.INIT:
                                 case PlayerType.EventType.READY:
                                     //
-                                    StartArgs.TimeoutConfiguration timeoutConfiguration = args.getTimeoutConfiguration();
+                                    TimeoutConfiguration timeoutConfiguration = args.getTimeoutConfiguration();
                                     int connectTimeout = timeoutConfiguration.getConnectTimeoutMs();
                                     @PlayerType.KernelType.Value
                                     int kernelType = args.getKernelType();
@@ -810,7 +810,7 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
                                     // 埋点
                                     onBuriedBufferingStart();
                                     // 检测：缓冲超时
-                                    StartArgs.BufferConfiguration bufferingConfiguration = args.getBufferConfiguration();
+                                    BufferConfiguration bufferingConfiguration = args.getBufferConfiguration();
                                     if (null != bufferingConfiguration) {
                                         long maxBufferingTimeoutMs = bufferingConfiguration.getMaxBufferingTimeoutMs();
                                         if (maxBufferingTimeoutMs > 0L) {

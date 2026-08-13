@@ -21,6 +21,31 @@ import java.lang.annotation.Target;
 @Target({METHOD, PARAMETER, FIELD, LOCAL_VARIABLE, ANNOTATION_TYPE, PACKAGE})
 public @interface PlayerType {
 
+
+    /**
+     * 播放模式
+     * 普通模式，小窗口模式，正常模式三种其中一种
+     */
+    @Documented
+    @Retention(CLASS)
+    @Target({METHOD, PARAMETER, FIELD, LOCAL_VARIABLE, ANNOTATION_TYPE, PACKAGE})
+    @interface DeviceType {
+        //普通模式
+        int BOX = 1_001;
+        //全屏模式
+        int PHONE = 1002;
+        //窗口模式
+        int DEFAULT = BOX;
+
+        @Documented
+        @Retention(CLASS)
+        @Target({METHOD, PARAMETER, FIELD, LOCAL_VARIABLE, ANNOTATION_TYPE, PACKAGE})
+        @IntDef({BOX, PHONE, DEFAULT})
+        @interface Value {
+        }
+    }
+
+
     /**
      * 播放模式
      * 普通模式，小窗口模式，正常模式三种其中一种

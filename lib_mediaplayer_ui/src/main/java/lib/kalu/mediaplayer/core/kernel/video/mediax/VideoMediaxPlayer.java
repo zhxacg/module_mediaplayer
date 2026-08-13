@@ -83,6 +83,11 @@ import lib.kalu.mediaplayer.PlayerSDK;
 import lib.kalu.mediaplayer.bean.args.StartArgs;
 import lib.kalu.mediaplayer.bean.args.UrlArgs;
 import lib.kalu.mediaplayer.bean.cache.Cache;
+import lib.kalu.mediaplayer.bean.configuration.AdaptiveConfiguration;
+import lib.kalu.mediaplayer.bean.configuration.BufferConfiguration;
+import lib.kalu.mediaplayer.bean.configuration.LiveConfiguration;
+import lib.kalu.mediaplayer.bean.configuration.StuckConfiguration;
+import lib.kalu.mediaplayer.bean.configuration.TimeoutConfiguration;
 import lib.kalu.mediaplayer.bean.info.HlsSpanInfo;
 import lib.kalu.mediaplayer.bean.info.TrackInfo;
 import lib.kalu.mediaplayer.bean.type.PlayerType;
@@ -92,7 +97,6 @@ import lib.kalu.mediaplayer.core.kernel.video.mediax.hls.CusDefaultHlsExtractorF
 import lib.kalu.mediaplayer.core.kernel.video.mediax.hls.CusDefaultHttpDataSource;
 import lib.kalu.mediaplayer.core.kernel.video.mediax.hls.CusHlsLoadErrorHandlingPolicy;
 import lib.kalu.mediaplayer.core.kernel.video.mediax.hls.CusHlsPlaylistParserFactory;
-import lib.kalu.mediaplayer.core.kernel.video.mediax.hls.CusTrackSelector;
 import lib.kalu.mediaplayer.proxy.ProxyUrl;
 import lib.kalu.mediaplayer.util.LogUtil;
 import lib.kalu.mediaplayer.util.M3u8GeneratorUtil;
@@ -166,22 +170,20 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
 
             if (null == startArgs) throw new Exception("error: startArgs null");
 
-            StartArgs.TimeoutConfiguration timeoutConfiguration = startArgs.getTimeoutConfiguration();
-            boolean adaptiveEnable = startArgs.getAdaptiveTrackSelection().isAdaptiveEnable();
-            int connectTimeoutMs = timeoutConfiguration.getConnectTimeoutMs();
-            if (LogUtil.DEBUG) {
-                LogUtil.log(TAG, "checkDecoder -> connectTimeoutMs = " + connectTimeoutMs + ", adaptiveEnable = " + adaptiveEnable);
-            }
+            LiveConfiguration liveConfiguration = startArgs.getLiveConfiguration();
+            AdaptiveConfiguration adaptiveConfiguration = startArgs.getAdaptiveConfiguration();
+            StuckConfiguration stuckConfiguration = startArgs.getStuckConfiguration();
+            BufferConfiguration bufferConfiguration = startArgs.getBufferConfiguration();
 
             ExoPlayer.Builder builder = new ExoPlayer.Builder(context)
                     // 核心：配置缓冲卡死超时（解决你最初的 StuckPlayerException）
-                    .setStuckBufferingDetectionTimeoutMs(startArgs.getStuckDetectorMs().getBufferingDetectionTimeoutMs())
+                    .setStuckBufferingDetectionTimeoutMs(stuckConfiguration.getBufferingDetectionTimeoutMs())
                     // 配置播放状态卡死超时（画面/声音静止检测）
-                    .setStuckPlayingDetectionTimeoutMs(startArgs.getStuckDetectorMs().getPlayingDetectionTimeoutMs())
+                    .setStuckPlayingDetectionTimeoutMs(stuckConfiguration.getPlayingDetectionTimeoutMs())
                     // 配置播放未结束卡死超时（播放完成异常检测）
-                    .setStuckPlayingNotEndingTimeoutMs(startArgs.getStuckDetectorMs().getPlayingNotEndingTimeoutMs())
+                    .setStuckPlayingNotEndingTimeoutMs(stuckConfiguration.getPlayingNotEndingTimeoutMs())
                     // 配置抑制状态卡死超时（后台播放/焦点丢失检测）
-                    .setStuckSuppressedDetectionTimeoutMs(startArgs.getStuckDetectorMs().getSuppressedDetectionTimeoutMs())
+                    .setStuckSuppressedDetectionTimeoutMs(stuckConfiguration.getSuppressedDetectionTimeoutMs())
                     // 启用懒加载准备
                     .setUseLazyPreparation(true)
                     // 播放器调试和诊断相关的配置项
@@ -204,45 +206,15 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
                     // 监听
                     .setAnalyticsCollector(new DefaultAnalyticsCollector(Clock.DEFAULT))
                     // 自适应码率
-                    .setTrackSelector(CusTrackSelector.createTrackSelector(context, adaptiveEnable))
+                    .setTrackSelector(VideoMediaxConfig.createTrackSelector(context, adaptiveConfiguration))
                     // 配置带宽测量器
                     .setBandwidthMeter(new DefaultBandwidthMeter.Builder(context)
                             // 初始带宽估算为100Mbps
                             .setInitialBitrateEstimate(100_000_000).build())
                     // 增大内存缓存（默认 2MB，按需调整）
-                    .setLoadControl(new DefaultLoadControl.Builder()
-                            /**
-                             * private int minBufferMs = 50000;
-                             *         private int maxBufferMs = 50000;
-                             *         private int bufferForPlaybackMs = 1000;
-                             *         private int bufferForPlaybackAfterRebufferMs = 2000;
-                             */.setBufferDurationsMs(
-                                    // minBufferMs：播放器至少要缓冲 1 秒的数据后，才会停止主动加载更多数据；如果缓冲低于这个值，会重新开始加载。
-                                    startArgs.getBufferConfiguration().getMinBufferMs(),
-                                    // maxBufferMs：播放器最多缓冲 5 秒的数据，达到这个值后会停止加载，避免占用过多内存。
-                                    startArgs.getBufferConfiguration().getMaxBufferMs(),
-                                    // bufferForPlaybackMs：播放器需要至少缓冲 1 秒的数据，才会开始播放（或从暂停恢复播放）。
-                                    startArgs.getBufferConfiguration().getBufferForPlaybackMs(),
-                                    // bufferForPlaybackAfterRebufferMs：播放器在缓冲不足导致暂停后，需要重新缓冲 1 秒的数据，才会恢复播放。
-                                    startArgs.getBufferConfiguration().getBufferForPlaybackAfterRebufferMs())
-                            // 内存分配器 默认 64 * 1024 = 65536
-                            .setAllocator(new DefaultAllocator(true, 64 * 1024)).build())
+                    .setLoadControl(VideoMediaxConfig.createLoadControl(bufferConfiguration))
                     // 直播场景
-                    .setLivePlaybackSpeedControl(new DefaultLivePlaybackSpeedControl.Builder()
-                            // 兜底最小播放速度：当无法计算动态速度时，使用的保底最小速度（最终 minPlaybackSpeed 会等于该值）
-                            .setFallbackMinPlaybackSpeed(startArgs.getLiveConfiguration().getFallbackMinPlaybackSpeed())
-                            // 兜底最大播放速度：同上，保底最大速度（最终 maxPlaybackSpeed 会等于该值）
-                            .setFallbackMaxPlaybackSpeed(startArgs.getLiveConfiguration().getFallbackMaxPlaybackSpeed())
-                            // 速度更新最小间隔：两次速度调整的最小时间差（避免频繁变速）
-                            .setMinUpdateIntervalMs(startArgs.getLiveConfiguration().getMinUpdateIntervalMs())
-                            // 比例控制因子：速度调整的 “灵敏度”—— 延迟差值越大，速度调整幅度越大（核心算法参数）
-                            .setProportionalControlFactor(startArgs.getLiveConfiguration().getProportionalControlFactorUs())
-                            // 匀速阈值：直播延迟误差小于该值时，使用 1.0f 匀速播放（不调整速度）
-                            .setMaxLiveOffsetErrorMsForUnitSpeed(startArgs.getLiveConfiguration().getMaxLiveOffsetErrorUsForUnitSpeed())
-                            // 缓冲保护阈值：当直播延迟低于「目标延迟 - 该值」时，触发减速，避免缓冲不足导致卡顿
-                            .setTargetLiveOffsetIncrementOnRebufferMs(startArgs.getLiveConfiguration().getTargetLiveOffsetIncrementOnRebufferUs())
-                            // 最小延迟平滑因子：对 “最小可播放延迟” 进行平滑处理的系数（避免延迟波动导致速度频繁变化）
-                            .setMinPossibleLiveOffsetSmoothingFactor(startArgs.getLiveConfiguration().getMinPossibleLiveOffsetSmoothingFactor()).build());
+                    .setLivePlaybackSpeedControl(VideoMediaxConfig.createLivePlaybackSpeedControl(liveConfiguration));
 
 
             int decoderType = startArgs.getDecoderType();
@@ -363,7 +335,7 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
             if (LogUtil.DEBUG) {
                 LogUtil.log(TAG, "startDecoder -> initSimpleCache = " + initSimpleCache);
             }
-            StartArgs.TimeoutConfiguration timeoutConfiguration = startArgs.getTimeoutConfiguration();
+            TimeoutConfiguration timeoutConfiguration = startArgs.getTimeoutConfiguration();
             int connectTimoutMs = timeoutConfiguration.getConnectTimeoutMs();
             ProxyUrl proxyUrl = startArgs.getProxyUrl();
             boolean noProxy = startArgs.isNoProxy();
@@ -1268,8 +1240,8 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
                     throw new Exception("warning: current not live");
 
                 StartArgs startArgs = getStartArgs();
-                StartArgs.BufferConfiguration bufferingConfiguration = startArgs.getBufferConfiguration();
-                long minLivePlaybackTimelineOffsetMs = bufferingConfiguration.getMinLivePlaybackTimelineOffsetMs();
+                BufferConfiguration bufferConfiguration = startArgs.getBufferConfiguration();
+                long minLivePlaybackTimelineOffsetMs = bufferConfiguration.getMinLivePlaybackTimelineOffsetMs();
                 long currentPlaybackPositionMs = eventTime.currentPlaybackPositionMs;
                 if (LogUtil.DEBUG) {
                     LogUtil.log(TAG, "onTimelineChanged1 -> minLivePlaybackTimelineOffsetMs = " + minLivePlaybackTimelineOffsetMs + ", currentPlaybackPositionMs = " + currentPlaybackPositionMs);

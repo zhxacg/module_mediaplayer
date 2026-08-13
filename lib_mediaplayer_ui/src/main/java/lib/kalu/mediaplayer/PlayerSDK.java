@@ -10,11 +10,12 @@ import lib.kalu.mediaplayer.util.LogUtil;
 public final class PlayerSDK {
 
     public static boolean logEnable = PlayerConst.DEFAULT_LOG_ENABLE;
-    public static boolean adaptiveEnable = PlayerConst.DEFAULT_ADAPTIVE_ENABLE;
     public static boolean initRelease = true;
     public static boolean supportAutoRelease = true;
     public static int connectTimeoutMs = PlayerConst.DEFAULT_CONNECT_TIMEOUT;
     public static boolean bufferingTimeoutRetry = false; // 缓冲失败重试
+    @PlayerType.DeviceType.Value
+    public static int deviceType = PlayerConst.DEFAULT_TYPE_DEVICE;
     @PlayerType.KernelType.Value
     public static int externalAudioKernel = PlayerConst.DEFAULT_TYPE_KERNEL_EXTERNAL_AUDIO;
     @PlayerType.KernelType.Value
@@ -47,13 +48,14 @@ public final class PlayerSDK {
     public final static class Builder {
 
         private boolean logEnable = PlayerConst.DEFAULT_LOG_ENABLE;
-        private boolean adaptiveEnable = PlayerConst.DEFAULT_ADAPTIVE_ENABLE;
         private boolean initRelease = true;
         private boolean supportAutoRelease = true;
         private int connectTimeoutMs = PlayerConst.DEFAULT_CONNECT_TIMEOUT;
         private boolean bufferingTimeoutRetry = false;
         @PlayerType.KernelType.Value
         private int externalAudioKernel = PlayerConst.DEFAULT_TYPE_KERNEL_EXTERNAL_AUDIO;
+        @PlayerType.DeviceType.Value
+        private int deviceType = PlayerConst.DEFAULT_TYPE_DEVICE;
         @PlayerType.KernelType.Value
         private int kernelType = PlayerConst.DEFAULT_TYPE_KERNEL;
         @PlayerType.RenderType.Value
@@ -114,8 +116,8 @@ public final class PlayerSDK {
             return this;
         }
 
-        public Builder setAdaptiveEnable(boolean v) {
-            adaptiveEnable = v;
+        public Builder setDeviceType(@PlayerType.DeviceType.Value int v) {
+            deviceType = v;
             return this;
         }
 
@@ -166,12 +168,12 @@ public final class PlayerSDK {
 
         public void init() {
             PlayerSDK.logEnable = logEnable;
-            PlayerSDK.adaptiveEnable = adaptiveEnable;
             PlayerSDK.initRelease = initRelease;
             PlayerSDK.supportAutoRelease = supportAutoRelease;
             PlayerSDK.connectTimeoutMs = connectTimeoutMs;
             PlayerSDK.bufferingTimeoutRetry = bufferingTimeoutRetry;
             PlayerSDK.externalAudioKernel = externalAudioKernel;
+            PlayerSDK.decoderType = decoderType;
             PlayerSDK.kernelType = kernelType;
             PlayerSDK.renderType = renderType;
             PlayerSDK.decoderType = decoderType;
