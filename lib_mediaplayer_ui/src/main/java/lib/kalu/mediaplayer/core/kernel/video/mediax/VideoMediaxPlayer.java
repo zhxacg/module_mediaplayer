@@ -61,8 +61,6 @@ import androidx.media3.exoplayer.source.ProgressiveMediaSource;
 import androidx.media3.exoplayer.source.SingleSampleMediaSource;
 import androidx.media3.exoplayer.text.TextOutput;
 import androidx.media3.exoplayer.text.TextRenderer;
-import androidx.media3.exoplayer.trackselection.AdaptiveTrackSelection;
-import androidx.media3.exoplayer.trackselection.DefaultTrackSelector;
 import androidx.media3.exoplayer.trackselection.TrackSelector;
 import androidx.media3.exoplayer.upstream.DefaultAllocator;
 import androidx.media3.exoplayer.upstream.DefaultBandwidthMeter;
@@ -94,8 +92,8 @@ import lib.kalu.mediaplayer.core.kernel.video.mediax.hls.CusDefaultHlsExtractorF
 import lib.kalu.mediaplayer.core.kernel.video.mediax.hls.CusDefaultHttpDataSource;
 import lib.kalu.mediaplayer.core.kernel.video.mediax.hls.CusHlsLoadErrorHandlingPolicy;
 import lib.kalu.mediaplayer.core.kernel.video.mediax.hls.CusHlsPlaylistParserFactory;
+import lib.kalu.mediaplayer.core.kernel.video.mediax.hls.CusTrackSelector;
 import lib.kalu.mediaplayer.proxy.ProxyUrl;
-import lib.kalu.mediaplayer.util.DisplayRefreshRateUtils;
 import lib.kalu.mediaplayer.util.LogUtil;
 import lib.kalu.mediaplayer.util.M3u8GeneratorUtil;
 import lib.kalu.mediax.subtitle.OffsetMsTextRenderer;
@@ -169,9 +167,10 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
             if (null == startArgs) throw new Exception("error: startArgs null");
 
             StartArgs.TimeoutConfiguration timeoutConfiguration = startArgs.getTimeoutConfiguration();
+            boolean adaptiveEnable = startArgs.getAdaptiveTrackSelection().isAdaptiveEnable();
             int connectTimeoutMs = timeoutConfiguration.getConnectTimeoutMs();
             if (LogUtil.DEBUG) {
-                LogUtil.log(TAG, "checkDecoder -> connectTimeoutMs = " + connectTimeoutMs);
+                LogUtil.log(TAG, "checkDecoder -> connectTimeoutMs = " + connectTimeoutMs + ", adaptiveEnable = " + adaptiveEnable);
             }
 
             ExoPlayer.Builder builder = new ExoPlayer.Builder(context)
@@ -205,36 +204,7 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
                     // 监听
                     .setAnalyticsCollector(new DefaultAnalyticsCollector(Clock.DEFAULT))
                     // 自适应码率
-                    .setTrackSelector(new DefaultTrackSelector(context, DefaultTrackSelector.Parameters.getDefaults(context).buildUpon()
-                            // 限制最大帧率为设备当前刷新率
-                            .setMaxVideoFrameRate((int) DisplayRefreshRateUtils.getCurrentRefreshRate(context))
-                            // 关闭非整数倍帧率适配（减少跳帧）
-                            .setForceHighestSupportedBitrate(false)
-                            // 主字幕轨道
-                            .setPreferredTextRoleFlags(C.ROLE_FLAG_MAIN)
-                            // 主音频轨道
-                            .setPreferredAudioRoleFlags(C.ROLE_FLAG_MAIN)
-                            // 主视频轨道
-                            .setPreferredVideoRoleFlags(C.ROLE_FLAG_MAIN)
-                            // 视频禁止混合 MIME 类型切换（如视频+音频单独切换）
-                            .setAllowVideoMixedMimeTypeAdaptiveness(false)
-                            // 音频混合时解码器支持自适应
-                            .setAllowVideoMixedDecoderSupportAdaptiveness(false)
-                            // 视频禁止非无缝切换
-                            .setAllowVideoNonSeamlessAdaptiveness(false)
-                            // 音频禁止混合 MIME 类型切换（如视频+音频单独切换）
-                            .setAllowAudioMixedMimeTypeAdaptiveness(false)
-                            // 音频禁止非无缝切换
-                            .setAllowAudioNonSeamlessAdaptiveness(false)
-                            // 音频混合声道数量的自适应性
-                            .setAllowAudioMixedChannelCountAdaptiveness(false)
-                            // 音频混合采样率自适应
-                            .setAllowAudioMixedSampleRateAdaptiveness(false)
-                            // 音频混合时解码器支持自适应
-                            .setAllowAudioMixedDecoderSupportAdaptiveness(false).build(), new AdaptiveTrackSelection.Factory(10000,// 至少 10 秒后才允许升码率
-                            25000, // 最多 2.5 秒后允许降码率
-                            25000, //
-                            0.7F)))
+                    .setTrackSelector(CusTrackSelector.createTrackSelector(context, adaptiveEnable))
                     // 配置带宽测量器
                     .setBandwidthMeter(new DefaultBandwidthMeter.Builder(context)
                             // 初始带宽估算为100Mbps

@@ -45,4 +45,10 @@ public class PlayerConst {
 
     @PlayerType.StreamType.Value
     public static int DEFAULT_STREAM_TYPE = PlayerType.StreamType.DEFAULT;
+
+    // dash hls 自适应码率 默认关闭
+    public static boolean DEFAULT_ADAPTIVE_ENABLE = false;
+
+    // log 日志 默认关闭
+    public static boolean DEFAULT_LOG_ENABLE = false;
 }

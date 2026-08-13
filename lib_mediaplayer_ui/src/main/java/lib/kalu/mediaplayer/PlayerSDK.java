@@ -9,7 +9,8 @@ import lib.kalu.mediaplayer.util.LogUtil;
 
 public final class PlayerSDK {
 
-    public static boolean logEnable = false;
+    public static boolean logEnable = PlayerConst.DEFAULT_LOG_ENABLE;
+    public static boolean adaptiveEnable = PlayerConst.DEFAULT_ADAPTIVE_ENABLE;
     public static boolean initRelease = true;
     public static boolean supportAutoRelease = true;
     public static int connectTimeoutMs = PlayerConst.DEFAULT_CONNECT_TIMEOUT;
@@ -45,7 +46,8 @@ public final class PlayerSDK {
 
     public final static class Builder {
 
-        private boolean logEnable = false;
+        private boolean logEnable = PlayerConst.DEFAULT_LOG_ENABLE;
+        private boolean adaptiveEnable = PlayerConst.DEFAULT_ADAPTIVE_ENABLE;
         private boolean initRelease = true;
         private boolean supportAutoRelease = true;
         private int connectTimeoutMs = PlayerConst.DEFAULT_CONNECT_TIMEOUT;
@@ -112,6 +114,11 @@ public final class PlayerSDK {
             return this;
         }
 
+        public Builder setAdaptiveEnable(boolean v) {
+            adaptiveEnable = v;
+            return this;
+        }
+
         public Builder setInitRelease(boolean v) {
             initRelease = v;
             return this;
@@ -159,6 +166,7 @@ public final class PlayerSDK {
 
         public void init() {
             PlayerSDK.logEnable = logEnable;
+            PlayerSDK.adaptiveEnable = adaptiveEnable;
             PlayerSDK.initRelease = initRelease;
             PlayerSDK.supportAutoRelease = supportAutoRelease;
             PlayerSDK.connectTimeoutMs = connectTimeoutMs;

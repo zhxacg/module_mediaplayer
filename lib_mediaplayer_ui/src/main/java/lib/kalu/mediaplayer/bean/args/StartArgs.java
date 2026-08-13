@@ -589,7 +589,7 @@ public class StartArgs implements Serializable {
         @PlayerType.StreamType.Value
         private int streamType = PlayerConst.DEFAULT_STREAM_TYPE;
 
-        public Builder setStreamType( @PlayerType.StreamType.Value int v) {
+        public Builder setStreamType(@PlayerType.StreamType.Value int v) {
             this.streamType = v;
             return this;
         }
@@ -1002,6 +1002,7 @@ public class StartArgs implements Serializable {
 
     public static final class AdaptiveTrackSelection implements Serializable {
 
+        private boolean enable = PlayerSDK.adaptiveEnable;
         private final int minDurationForQualityIncreaseMs;
         private final int maxDurationForQualityDecreaseMs;
         private final int minDurationToRetainAfterDiscardMs;
@@ -1010,8 +1011,12 @@ public class StartArgs implements Serializable {
         private final float bandwidthFraction;
         private final float bufferedFractionToLiveEdgeForQualityIncrease;
 
+        public boolean isAdaptiveEnable() {
+            return enable;
+        }
 
         public AdaptiveTrackSelection(AdaptiveTrackSelection.Builder builder) {
+            this.enable = builder.enable;
             this.minDurationForQualityIncreaseMs = builder.minDurationForQualityIncreaseMs;
             this.maxDurationForQualityDecreaseMs = builder.maxDurationForQualityDecreaseMs;
             this.minDurationToRetainAfterDiscardMs = builder.minDurationToRetainAfterDiscardMs;
@@ -1023,6 +1028,7 @@ public class StartArgs implements Serializable {
 
         public static class Builder implements Serializable {
 
+            private boolean enable = PlayerSDK.adaptiveEnable;
             private int minDurationForQualityIncreaseMs;
             private int maxDurationForQualityDecreaseMs;
             private int minDurationToRetainAfterDiscardMs;
@@ -1030,6 +1036,11 @@ public class StartArgs implements Serializable {
             private int maxHeightToDiscard;
             private float bandwidthFraction;
             private float bufferedFractionToLiveEdgeForQualityIncrease;
+
+            public Builder setEnable(boolean v) {
+                this.enable = v;
+                return this;
+            }
 
             public Builder setMinDurationForQualityIncreaseMs(int v) {
                 this.minDurationForQualityIncreaseMs = v;
