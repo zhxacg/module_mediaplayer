@@ -1,12 +1,12 @@
 package lib.kalu.mediaplayer.collect;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.LinkedList;
 
 import lib.kalu.mediaplayer.bean.info.HlsSpanInfo;
 
-public final class HlsSpanList extends LinkedList<HlsSpanInfo> {
+public final class HlsSpanList extends ArrayList<HlsSpanInfo> {
     // 按startTimeMs升序排列（若需按endTimeMs，替换为getEndTimeMs即可）
     private final Comparator<HlsSpanInfo> COMPARATOR = (o1, o2) -> {
         long startTime1 = o1.getStartTimeMs();
