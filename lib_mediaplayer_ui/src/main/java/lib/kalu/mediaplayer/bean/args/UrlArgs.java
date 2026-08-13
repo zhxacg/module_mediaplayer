@@ -9,12 +9,11 @@ import lib.kalu.mediaplayer.bean.type.PlayerType;
 
 public final class UrlArgs implements Serializable {
 
+    @PlayerType.StreamType.Value
+    private int streamType;
     private List<Item> defaultStreams;
     private List<Item> extraStreams;
     private List<Item> extraSubtitles;
-
-    @PlayerType.StreamType.Value
-    private int streamType;
 
     public int getStreamType() {
         return streamType;
@@ -23,7 +22,8 @@ public final class UrlArgs implements Serializable {
     @Override
     public String toString() {
         return "UrlArgs{" +
-                "defaultStreams=" + defaultStreams +
+                "streamType=" + streamType +
+                ", defaultStreams=" + defaultStreams +
                 ", extraStreams=" + extraStreams +
                 ", extraSubtitles=" + extraSubtitles +
                 '}';
