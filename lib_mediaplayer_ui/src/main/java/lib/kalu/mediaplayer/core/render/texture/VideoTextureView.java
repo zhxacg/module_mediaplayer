@@ -7,6 +7,7 @@ import android.os.Build;
 import android.view.KeyEvent;
 import android.view.Surface;
 import android.view.TextureView;
+import android.view.View;
 
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
@@ -236,8 +237,21 @@ public class VideoTextureView extends TextureView implements VideoRenderApi {
         @Override
         public void onSurfaceTextureSizeChanged(SurfaceTexture surface, int width, int height) {
             if (LogUtil.DEBUG) {
-                LogUtil.log("VideoTextureView -> onSurfaceTextureSizeChanged -> " + this);
+                LogUtil.log("VideoTextureView -> onSurfaceTextureSizeChanged -> width = " + width + ", height = " + height + ", this = " + this);
             }
+
+//            post(new Runnable() {
+//                @Override
+//                public void run() {
+//                    setVisibility(View.GONE);
+//                }
+//            });
+//            postDelayed(new Runnable() {
+//                @Override
+//                public void run() {
+//                    setVisibility(View.VISIBLE);
+//                }
+//            }, 100);
         }
 
         /**

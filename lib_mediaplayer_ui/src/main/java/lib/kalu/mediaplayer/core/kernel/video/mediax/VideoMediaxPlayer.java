@@ -400,7 +400,7 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
             );
 
             UrlArgs urlArgs = startArgs.getUrlArgs();
-            int streamType = startArgs.getStreamType();
+            int streamType = urlArgs.getStreamType();
             // 有 外挂轨道
             if (streamType == PlayerType.StreamType.MERGE_ALL) {
                 if (LogUtil.DEBUG) {

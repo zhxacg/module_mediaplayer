@@ -69,6 +69,9 @@ public class MainActivity extends Activity {
                         .setMinOffsetMs(Integer.MAX_VALUE)
                         .setMinPlaybackSpeed(Integer.MAX_VALUE)
                         .build())
+                .setAdaptiveTrackSelection(new StartArgs.AdaptiveTrackSelection.Builder()
+                        .setEnable(isAdaptiveEnable())
+                        .build())
                 .build();
 
         Intent intent = new Intent(getApplicationContext(), TestActivity.class);
@@ -242,6 +245,11 @@ public class MainActivity extends Activity {
         return checkBox.isChecked();
     }
 
+    private boolean isAdaptiveEnable() {
+        CheckBox checkBox = findViewById(R.id.main_adaptive);
+        return checkBox.isChecked();
+    }
+
     private UrlArgs getUrl() {
         try {
 
@@ -346,7 +354,9 @@ public class MainActivity extends Activity {
                 }
 
                 //
-                return urlBuilder.build();
+                return urlBuilder
+                        .setStreamType(PlayerType.StreamType.FORMAT_MULTI_VARIANT_PLAYLIST)
+                        .build();
             }
         } catch (Exception e) {
             return null;

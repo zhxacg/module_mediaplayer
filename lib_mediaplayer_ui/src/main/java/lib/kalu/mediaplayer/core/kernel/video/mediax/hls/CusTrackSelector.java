@@ -8,9 +8,18 @@ import androidx.media3.exoplayer.trackselection.DefaultTrackSelector;
 import androidx.media3.exoplayer.trackselection.TrackSelector;
 
 import lib.kalu.mediaplayer.util.DisplayRefreshRateUtils;
+import lib.kalu.mediaplayer.util.LogUtil;
 
 public class CusTrackSelector {
+
+
+    private static final String TAG = "CusTrackSelector";
+
     public static final TrackSelector createTrackSelector(Context context, boolean adaptiveEnable) {
+
+        if (LogUtil.DEBUG) {
+            LogUtil.log(TAG, "createTrackSelector -> adaptiveEnable = " + adaptiveEnable);
+        }
 
         // 1. 获取系统默认配置并初始化 Parameters 构建器
         DefaultTrackSelector.Parameters.Builder parametersBuilder = DefaultTrackSelector.Parameters

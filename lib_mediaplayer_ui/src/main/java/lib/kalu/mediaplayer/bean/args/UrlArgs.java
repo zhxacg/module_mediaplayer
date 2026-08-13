@@ -13,6 +13,13 @@ public final class UrlArgs implements Serializable {
     private List<Item> extraStreams;
     private List<Item> extraSubtitles;
 
+    @PlayerType.StreamType.Value
+    private int streamType;
+
+    public int getStreamType() {
+        return streamType;
+    }
+
     @Override
     public String toString() {
         return "UrlArgs{" +
@@ -26,6 +33,7 @@ public final class UrlArgs implements Serializable {
         this.defaultStreams = builder.defaultStreams;
         this.extraStreams = builder.extraStreams;
         this.extraSubtitles = builder.extraSubtitles;
+        this.streamType = builder.streamType;
     }
 
     public boolean containsUrl() {
@@ -104,6 +112,14 @@ public final class UrlArgs implements Serializable {
         private List<Item> defaultStreams = new LinkedList<>();
         private List<Item> extraStreams = new LinkedList<>();
         private List<Item> extraSubtitles = new LinkedList<>();
+
+        @PlayerType.StreamType.Value
+        private int streamType = PlayerConst.DEFAULT_STREAM_TYPE;
+
+        public UrlArgs.Builder setStreamType(@PlayerType.StreamType.Value int v) {
+            this.streamType = v;
+            return this;
+        }
 
         public UrlArgs.Builder setUrl(String v) {
             this.defaultStreams.clear();
