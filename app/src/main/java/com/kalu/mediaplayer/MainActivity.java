@@ -273,28 +273,38 @@ public class MainActivity extends Activity {
             }
 
             if (!inputUrl.isEmpty()) {
-                return new UrlArgs.Builder().setUrl(inputUrl).build();
+                return UrlArgs.newBuilder()
+                        .setUrl(inputUrl)
+                        .setStreamType(PlayerType.StreamType.DEFAULT)
+                        .build();
             } else if (null != checkUrl && !checkUrl.isEmpty()) {
-                return new UrlArgs.Builder().setUrl(checkUrl).build();
+                return UrlArgs.newBuilder()
+                        .setUrl(checkUrl)
+                        .setStreamType(PlayerType.StreamType.DEFAULT)
+                        .build();
             } else {
 
-                UrlArgs.Builder urlBuilder = new UrlArgs.Builder();
+                UrlArgs.Builder urlBuilder = UrlArgs.newBuilder();
 
                 // default stream 480
                 try {
                     String[] urls = getResources().getStringArray(R.array.hls_default_streams_480);
-                    List<UrlArgs.Item> list = Arrays.asList(new UrlArgs.Item.Builder()
-                            .setUrl(urls[0])
-                            .setDefault(true)
-                            .setResolution(PlayerType.ResolutionType._480)
-                            .setParser(PlayerType.ParserType.VIDEO)
-                            .setLabel("480")
-                            .build(), new UrlArgs.Item.Builder()
-                            .setDefault(true)
-                            .setUrl(urls[1])
-                            .setParser(PlayerType.ParserType.AUDIO)
-                            .setLabel("480")
-                            .build());
+                    List<UrlArgs.Item> list = Arrays.asList(
+
+                            UrlArgs.Item.newBuilder()
+                                    .setParser(PlayerType.ParserType.VIDEO)
+                                    .setUrl(urls[0])
+                                    .setDefault(true)
+                                    .setResolution(PlayerType.ResolutionType._480)
+                                    .setLabel("480")
+                                    .build(),
+
+                            UrlArgs.Item.newBuilder()
+                                    .setParser(PlayerType.ParserType.AUDIO)
+                                    .setDefault(true)
+                                    .setUrl(urls[1])
+                                    .setLabel("480")
+                                    .build());
                     urlBuilder.setDefaultStreams(list);
                 } catch (Exception e) {
                 }
@@ -302,16 +312,18 @@ public class MainActivity extends Activity {
                 // extra stream 720
                 try {
                     String[] urls = getResources().getStringArray(R.array.hls_extra_streams_720);
-                    List<UrlArgs.Item> list = Arrays.asList(new UrlArgs.Item.Builder()
-                            .setUrl(urls[0])
-                            .setResolution(PlayerType.ResolutionType._720)
-                            .setParser(PlayerType.ParserType.VIDEO)
-                            .setLabel("720")
-                            .build(), new UrlArgs.Item.Builder()
-                            .setUrl(urls[1])
-                            .setParser(PlayerType.ParserType.AUDIO)
-                            .setLabel("720")
-                            .build());
+                    List<UrlArgs.Item> list = Arrays.asList(
+                            UrlArgs.Item.newBuilder()
+                                    .setUrl(urls[0])
+                                    .setParser(PlayerType.ParserType.VIDEO)
+                                    .setResolution(PlayerType.ResolutionType._720)
+                                    .setLabel("720")
+                                    .build(),
+                            UrlArgs.Item.newBuilder()
+                                    .setParser(PlayerType.ParserType.AUDIO)
+                                    .setUrl(urls[1])
+                                    .setLabel("720")
+                                    .build());
                     urlBuilder.appendExtraStreams(list);
                 } catch (Exception e) {
                 }
@@ -319,16 +331,18 @@ public class MainActivity extends Activity {
                 // extra stream 1080
                 try {
                     String[] urls = getResources().getStringArray(R.array.hls_extra_streams_1080);
-                    List<UrlArgs.Item> list = Arrays.asList(new UrlArgs.Item.Builder()
-                            .setUrl(urls[0])
-                            .setResolution(PlayerType.ResolutionType._1080)
-                            .setParser(PlayerType.ParserType.VIDEO)
-                            .setLabel("1080")
-                            .build(), new UrlArgs.Item.Builder()
-                            .setUrl(urls[1])
-                            .setParser(PlayerType.ParserType.AUDIO)
-                            .setLabel("1080")
-                            .build());
+                    List<UrlArgs.Item> list = Arrays.asList(
+                            UrlArgs.Item.newBuilder()
+                                    .setParser(PlayerType.ParserType.VIDEO)
+                                    .setUrl(urls[0])
+                                    .setResolution(PlayerType.ResolutionType._1080)
+                                    .setLabel("1080")
+                                    .build(),
+                            UrlArgs.Item.newBuilder()
+                                    .setParser(PlayerType.ParserType.AUDIO)
+                                    .setUrl(urls[1])
+                                    .setLabel("1080")
+                                    .build());
                     urlBuilder.appendExtraStreams(list);
                 } catch (Exception e) {
                 }
@@ -338,26 +352,32 @@ public class MainActivity extends Activity {
                     String[] urls = getResources().getStringArray(R.array.hls_extra_streams_subtitles);
                     String[] languages = getResources().getStringArray(R.array.hls_extra_streams_subtitles_languages);
                     String[] labels = getResources().getStringArray(R.array.hls_extra_streams_subtitles_labels);
-                    List<UrlArgs.Item> list = Arrays.asList(new UrlArgs.Item.Builder()
-                            .setUrl(urls[0])
-                            .setLanguage(languages[0])
-                            .setLabel(labels[0])
-                            .build(), new UrlArgs.Item.Builder()
-                            .setUrl(urls[1])
-                            .setLanguage(languages[1])
-                            .setLabel(labels[1])
-                            .build(), new UrlArgs.Item.Builder()
-                            .setUrl(urls[2])
-                            .setLanguage(languages[2])
-                            .setLabel(labels[2])
-                            .build());
+                    List<UrlArgs.Item> list = Arrays.asList(
+                            UrlArgs.Item.newBuilder()
+                                    .setParser(PlayerType.ParserType.SUBTITLE)
+                                    .setUrl(urls[0])
+                                    .setLanguage(languages[0])
+                                    .setLabel(labels[0])
+                                    .build(),
+                            UrlArgs.Item.newBuilder()
+                                    .setParser(PlayerType.ParserType.SUBTITLE)
+                                    .setUrl(urls[1])
+                                    .setLanguage(languages[1])
+                                    .setLabel(labels[1])
+                                    .build(),
+                            UrlArgs.Item.newBuilder()
+                                    .setParser(PlayerType.ParserType.SUBTITLE)
+                                    .setUrl(urls[2])
+                                    .setLanguage(languages[2])
+                                    .setLabel(labels[2])
+                                    .build());
                     urlBuilder.appendExtraSubtitles(list);
                 } catch (Exception e) {
                 }
 
                 //
                 return urlBuilder
-                        .setStreamType(PlayerType.StreamType.FORMAT_MULTI_VARIANT_PLAYLIST)
+                        .setStreamType(PlayerType.StreamType.MERGE_ALL)
                         .build();
             }
         } catch (Exception e) {

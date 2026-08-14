@@ -19,6 +19,10 @@ public final class UrlArgs implements Serializable {
         return streamType;
     }
 
+    public static Builder newBuilder() {
+        return new Builder();
+    }
+
     @Override
     public String toString() {
         return "UrlArgs{" +
@@ -181,7 +185,7 @@ public final class UrlArgs implements Serializable {
             return this;
         }
 
-        public Builder() {
+        private Builder() {
         }
 
         public UrlArgs build() {
@@ -200,6 +204,10 @@ public final class UrlArgs implements Serializable {
         private int parser;
         @PlayerType.ResolutionType.Value
         private String resolution;
+
+        public static Builder newBuilder() {
+            return new Builder();
+        }
 
         @Override
         public String toString() {
@@ -349,7 +357,7 @@ public final class UrlArgs implements Serializable {
                 return this;
             }
 
-            public Builder() {
+            private Builder() {
             }
 
             public Item build() {

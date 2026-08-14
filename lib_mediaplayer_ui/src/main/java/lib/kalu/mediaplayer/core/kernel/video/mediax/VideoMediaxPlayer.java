@@ -34,7 +34,6 @@ import androidx.media3.datasource.FileDataSource;
 import androidx.media3.datasource.ResolvingDataSource;
 import androidx.media3.datasource.cache.CacheDataSink;
 import androidx.media3.datasource.cache.CacheDataSource;
-import androidx.media3.datasource.cache.CacheKeyFactory;
 import androidx.media3.datasource.cache.CacheSpan;
 import androidx.media3.datasource.cache.LeastRecentlyUsedCacheEvictor;
 import androidx.media3.datasource.cache.SimpleCache;
@@ -451,7 +450,7 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
                     String m3u8Path = M3u8GeneratorUtil.saveCacheM3u8Path(context, urlArgs);
                     LogUtil.log(TAG, "startDecoder -> m3u8Path = " + m3u8Path);
                 }
-                UrlArgs.Item build = new UrlArgs.Item.Builder().setUrl(m3u8Data).build();
+                UrlArgs.Item build = UrlArgs.Item.newBuilder().setUrl(m3u8Data).build();
                 MediaSource multivariantMediaSource = buildMediaSource(context, httpFactory, startArgs, PlayerType.UrlType.DATA_HLS_MULTIVARIANT_PLAYLIST, build);
                 if (null == multivariantMediaSource) {
                     if (LogUtil.DEBUG) {
