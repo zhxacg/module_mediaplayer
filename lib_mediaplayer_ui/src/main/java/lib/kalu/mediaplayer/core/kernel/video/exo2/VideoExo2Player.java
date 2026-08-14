@@ -893,7 +893,7 @@ public final class VideoExo2Player extends VideoBasePlayer {
                 if (LogUtil.DEBUG) {
                     LogUtil.log(TAG, "setSpeed -> mMediaPlayer error: null");
                 }
-                return;
+                return 1.0f;
             }
             return mExoPlayer.getPlaybackParameters().speed;
         } catch (Exception e) {
@@ -932,7 +932,7 @@ public final class VideoExo2Player extends VideoBasePlayer {
                 if (LogUtil.DEBUG) {
                     LogUtil.log(TAG, "releaseDecoder -> mExoPlayer error: null");
                 }
-                return;
+                return 0f;
             }
             return mExoPlayer.getVolume();
         } catch (Exception e) {
@@ -1867,7 +1867,7 @@ public final class VideoExo2Player extends VideoBasePlayer {
                 if (LogUtil.DEBUG) {
                     LogUtil.log(TAG, "initOptions -> error: mExoPlayer null");
                 }
-                return;
+                return null;
             }
 
             //
@@ -2090,7 +2090,7 @@ public final class VideoExo2Player extends VideoBasePlayer {
                 if (LogUtil.DEBUG) {
                     LogUtil.log(TAG, "initOptions -> error: mExoPlayer null");
                 }
-                return;
+                return false;
             }
             int rendererCount = mExoPlayer.getRendererCount();
             for (int i = 0; i < rendererCount; i++) {
