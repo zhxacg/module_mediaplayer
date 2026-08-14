@@ -15,6 +15,7 @@ import lib.kalu.mediaplayer.core.component.ComponentApi;
 import lib.kalu.mediaplayer.core.kernel.video.VideoKernelApi;
 import lib.kalu.mediaplayer.core.player.video.VideoPlayerApi;
 import lib.kalu.mediaplayer.core.render.VideoRenderApi;
+import lib.kalu.mediaplayer.listener.OnPlayerBandwidthListener;
 import lib.kalu.mediaplayer.listener.OnPlayerEpisodeListener;
 import lib.kalu.mediaplayer.listener.OnPlayerEventListener;
 import lib.kalu.mediaplayer.listener.OnPlayerPlaybackChangedListener;
@@ -367,5 +368,19 @@ public final class PlayerView extends RelativeLayout implements VideoPlayerApi {
     @Override
     public void setOnPlayerScreenOrientationChangeListener(OnPlayerScreenOrientationChangeListener l) {
         this.mOnPlayerScreenOrientationChangeListener = l;
+    }
+
+    /**************/
+
+    private OnPlayerBandwidthListener mOnPlayerBandwidthListener = null;
+
+    @Override
+    public void setOnPlayerBandwidthListener(OnPlayerBandwidthListener l) {
+        this.mOnPlayerBandwidthListener = l;
+    }
+
+    @Override
+    public OnPlayerBandwidthListener getOnPlayerBandwidthListener() {
+        return mOnPlayerBandwidthListener;
     }
 }

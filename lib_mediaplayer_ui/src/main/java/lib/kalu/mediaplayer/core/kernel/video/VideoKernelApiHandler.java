@@ -477,7 +477,8 @@ public interface VideoKernelApiHandler extends VideoKernelApiBase, VideoKernelAp
                 }
 
                 if (!isPrepared()) {
-                    onUpdateNetSpeed(msg.arg1);
+                    // TODO: 2026/8/14
+                    // onUpdateNetSpeed(msg.arg1);
                     sendMessageSpeedUpdate(msg.arg1, true);
                 }
             }

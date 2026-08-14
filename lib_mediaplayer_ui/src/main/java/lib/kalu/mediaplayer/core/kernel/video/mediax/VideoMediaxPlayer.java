@@ -39,8 +39,6 @@ import androidx.media3.datasource.cache.CacheSpan;
 import androidx.media3.datasource.cache.LeastRecentlyUsedCacheEvictor;
 import androidx.media3.datasource.cache.SimpleCache;
 import androidx.media3.exoplayer.DecoderReuseEvaluation;
-import androidx.media3.exoplayer.DefaultLivePlaybackSpeedControl;
-import androidx.media3.exoplayer.DefaultLoadControl;
 import androidx.media3.exoplayer.DefaultRenderersFactory;
 import androidx.media3.exoplayer.ExoPlayer;
 import androidx.media3.exoplayer.Renderer;
@@ -62,7 +60,6 @@ import androidx.media3.exoplayer.source.SingleSampleMediaSource;
 import androidx.media3.exoplayer.text.TextOutput;
 import androidx.media3.exoplayer.text.TextRenderer;
 import androidx.media3.exoplayer.trackselection.TrackSelector;
-import androidx.media3.exoplayer.upstream.DefaultAllocator;
 import androidx.media3.exoplayer.upstream.DefaultBandwidthMeter;
 import androidx.media3.extractor.ts.DefaultTsPayloadReaderFactory;
 
@@ -1155,7 +1152,7 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
          * @param eventTime        事件时间上下文
          * @param totalLoadTimeMs  累计加载耗时（ms）
          * @param totalBytesLoaded 累计加载字节数
-         * @param bitrateEstimate  估算带宽（bps）
+         * @param bitrateEstimate  估算带宽（bps，比特每秒）
          */
         @Override
         public void onBandwidthEstimate(EventTime eventTime,
@@ -1163,29 +1160,29 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
                                         long totalBytesLoaded,
                                         long bitrateEstimate) {
 
-//            // 1. 当前估算带宽
-//            long kbps = bitrateEstimate / 1000;
-//            Log.d("BW", "估算带宽: " + kbps + " Kbps");
-//
-//            // 2. 自己计算实际平均速度（双重验证）
-//            if (totalLoadTimeMs > 0) {
-//                long actualBps = (totalBytesLoaded * 8 * 1000L) / totalLoadTimeMs;
-//                Log.d("BW", "实际平均带宽: " + actualBps / 1000 + " Kbps");
-//            }
-//
-//            // 3. 判断网络状况
-//            if (bitrateEstimate < 500_000) {        // < 500 Kbps
-//                Log.w("BW", "网络较差，可能卡顿");
-//            } else if (bitrateEstimate < 2_000_000) { // < 2 Mbps
-//                Log.d("BW", "网络一般");
-//            } else {
-//                Log.d("BW", "网络良好");
-//            }
-//
-//            // 4. 流量统计（注意是累计值，需要做差值）
-//            Log.d("BW", "累计加载: " + totalBytesLoaded / 1024 + " KB"
-//                    + "，耗时: " + totalLoadTimeMs + " ms");
+            if (totalLoadTimeMs <= 0) {
+                return;
+            }
+
+            // ========== 单位换算修正 ==========
+            // bitrateEstimate 单位: bps (bit/s)
+            // 1 KB/s = 1024 Byte/s = 1024 *8 bit/s = 8192 bit/s
+            // 估算带宽 → KB/s (千字节每秒)
+            long estimateKBs = bitrateEstimate / 8 / 1024L;
+
+            // 自己计算实际平均速度：totalBytesLoaded 是总字节，totalLoadTimeMs总耗时ms
+            // bytes *1000 → 转成每秒字节，再 /1024 → KB/s
+            long realAvgKBs = (totalBytesLoaded * 1000L) / totalLoadTimeMs / 1024L;
+
+            if (LogUtil.DEBUG) {
+                LogUtil.log(TAG, "onBandwidthEstimate -> totalLoadTimeMs = " + totalLoadTimeMs
+                        + ", estimateKBs(估算KB/s) = " + estimateKBs
+                        + ", realAvgKBs(实际平均KB/s) = " + realAvgKBs);
+            }
+
+            onUpdateBandwidth(PlayerType.KernelType.MEDIA_V3, totalLoadTimeMs, estimateKBs, realAvgKBs);
         }
+
 
         /**
          * 丢帧回调，当视频帧因渲染超时被丢弃时触发

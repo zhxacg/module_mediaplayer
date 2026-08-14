@@ -5,13 +5,13 @@ import lib.kalu.mediaplayer.bean.type.PlayerType;
 
 public interface VideoKernelApiEvent {
 
-    default void onUpdateProgress(long trySeeDuration, long position, long duration){
+    default void onUpdateProgress(long trySeeDuration, long position, long duration) {
     }
 
     default void onUpdateSubtitle(int kernel, CharSequence result) {
     }
 
-    default void onUpdateNetSpeed(int kernel) {
+    default void onUpdateBandwidth(int kernel, long totalLoadTimeMs, long estimateKBs, long realAvgKBs) {
     }
 
     default void onEvent(@PlayerType.KernelType.Value int kernel, @PlayerType.EventType.Value int event) {

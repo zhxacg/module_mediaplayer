@@ -10,6 +10,7 @@ import lib.kalu.mediaplayer.bean.info.PlayInfo;
 import lib.kalu.mediaplayer.bean.type.PlayerType;
 import lib.kalu.mediaplayer.buried.PlayBuried;
 import lib.kalu.mediaplayer.core.component.ComponentApi;
+import lib.kalu.mediaplayer.listener.OnPlayerBandwidthListener;
 import lib.kalu.mediaplayer.listener.OnPlayerEpisodeListener;
 import lib.kalu.mediaplayer.listener.OnPlayerEventListener;
 import lib.kalu.mediaplayer.listener.OnPlayerPlaybackChangedListener;
@@ -168,10 +169,13 @@ public interface VideoPlayerApiCall extends VideoPlayerApiBase, VideoPlayerApiLi
         // listener
     }
 
-    default void callNetSpeed(int kernel, CharSequence value) {
+    default void callBandwidth(int kernel, long totalLoadTimeMs, long estimateKBs, long realAvgKBs) {
 
         // component
-        callComponentNetSpeed(kernel, value);
+        callComponentBandwidth(kernel, totalLoadTimeMs, estimateKBs, realAvgKBs);
+
+        // listener
+        callPlayerBandwidth(kernel, totalLoadTimeMs, estimateKBs, realAvgKBs);
     }
 
     default void callPlaybackSpeed(int kernel, float value) {
@@ -201,7 +205,8 @@ public interface VideoPlayerApiCall extends VideoPlayerApiBase, VideoPlayerApiLi
         }
     }
 
-    default void callComponentNetSpeed(int kernel, CharSequence value) {
+
+    default void callComponentBandwidth(int kernel, long totalLoadTimeMs, long estimateKBs, long realAvgKBs) {
         try {
             ViewGroup viewGroup = getBaseComponentViewGroup();
             int childCount = viewGroup.getChildCount();
@@ -213,14 +218,26 @@ public interface VideoPlayerApiCall extends VideoPlayerApiBase, VideoPlayerApiLi
                     continue;
                 if (!(childAt instanceof ComponentApi))
                     continue;
-                ((ComponentApi) childAt).onUpdateNetSpeed(kernel, value);
+                ((ComponentApi) childAt).onUpdateBandwidth(kernel, totalLoadTimeMs, estimateKBs, realAvgKBs);
             }
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
-                LogUtil.log(TAG, "callComponentSpeed -> " + e.getMessage());
+                LogUtil.log(TAG, "callComponentBandwidth -> " + e.getMessage());
             }
         }
     }
+
+    default void callPlayerBandwidth(int kernel, long totalLoadTimeMs, long estimateKBs, long realAvgKBs) {
+
+        OnPlayerBandwidthListener listener = getOnPlayerBandwidthListener();
+        if (LogUtil.DEBUG) {
+            LogUtil.log(TAG, "callPlayerBandwidth -> kernel = " + kernel + ", totalLoadTimeMs = " + totalLoadTimeMs + ", estimateKBs = " + estimateKBs + ", realAvgKBs = " + realAvgKBs + ", listener = " + listener);
+        }
+        if (null == listener)
+            return;
+        listener.onBandwidth(kernel, totalLoadTimeMs, estimateKBs, realAvgKBs);
+    }
+
 
     default void callComponentProgress(long trySeeDuration, long position, long duration) {
 

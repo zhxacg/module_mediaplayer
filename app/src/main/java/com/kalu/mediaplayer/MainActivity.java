@@ -22,6 +22,8 @@ import lib.kalu.mediaplayer.PlayerSDK;
 import lib.kalu.mediaplayer.bean.args.StartArgs;
 import lib.kalu.mediaplayer.bean.args.UrlArgs;
 import lib.kalu.mediaplayer.bean.cache.Cache;
+import lib.kalu.mediaplayer.bean.configuration.AdaptiveConfiguration;
+import lib.kalu.mediaplayer.bean.configuration.LiveConfiguration;
 import lib.kalu.mediaplayer.bean.menu.Menu;
 import lib.kalu.mediaplayer.bean.type.PlayerType;
 import lib.kalu.mediaplayer.test.TestActivity;
@@ -63,13 +65,13 @@ public class MainActivity extends Activity {
                 .setTrySeeDuration(getTrySeeDuration())
                 .setShowSpeed(isShowNet())
                 .setMenu(createMenu())
-                .setLiveConfiguration(new StartArgs.LiveConfiguration.Builder()
+                .setLiveConfiguration(LiveConfiguration.newBuilder()
                         .setMaxOffsetMs(Integer.MAX_VALUE)
                         .setMaxPlaybackSpeed(Integer.MAX_VALUE)
                         .setMinOffsetMs(Integer.MAX_VALUE)
                         .setMinPlaybackSpeed(Integer.MAX_VALUE)
                         .build())
-                .setAdaptiveTrackSelection(new StartArgs.AdaptiveTrackSelection.Builder()
+                .setAdaptiveConfiguration(AdaptiveConfiguration.newBuilder()
                         .setEnable(isAdaptiveEnable())
                         .build())
                 .build();

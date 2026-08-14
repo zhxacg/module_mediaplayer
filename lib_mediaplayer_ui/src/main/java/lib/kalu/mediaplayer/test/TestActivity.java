@@ -26,6 +26,7 @@ import lib.kalu.mediaplayer.core.component.ComponentSeek;
 import lib.kalu.mediaplayer.core.component.ComponentSubtitle;
 import lib.kalu.mediaplayer.core.component.ComponentWarningPlayInfo;
 import lib.kalu.mediaplayer.core.component.ComponentWarningTrySee;
+import lib.kalu.mediaplayer.listener.OnPlayerBandwidthListener;
 import lib.kalu.mediaplayer.listener.OnPlayerEpisodeListener;
 import lib.kalu.mediaplayer.listener.OnPlayerEventListener;
 import lib.kalu.mediaplayer.listener.OnPlayerProgressListener;
@@ -187,6 +188,14 @@ public final class TestActivity extends Activity {
     private void initListener() {
         // playerLayout
         PlayerLayout playerLayout = findViewById(R.id.module_mediaplayer_test_video);
+        playerLayout.setOnPlayerBandwidthListener(new OnPlayerBandwidthListener() {
+            @Override
+            public void onBandwidth(int kernel, long totalLoadTimeMs, long estimateKBs, long realAvgKBs) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("TestActivity -> onBandwidth -> kernel = " + kernel + ", totalLoadTimeMs = " + totalLoadTimeMs + ", estimateKBs = " + estimateKBs + ", realAvgKBs = " + realAvgKBs + ", thread = " + Thread.currentThread().getName());
+                }
+            }
+        });
         playerLayout.setOnPlayerWindowStateChangeListener(new OnPlayerWindowStateChangeListener() {
             @Override
             public void onState(int state) {

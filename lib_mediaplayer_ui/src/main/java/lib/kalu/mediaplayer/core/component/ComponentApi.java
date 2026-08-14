@@ -50,7 +50,7 @@ public interface ComponentApi {
     default void onUpdateSubtitle(int kernel, CharSequence result) {
     }
 
-    default void onUpdateNetSpeed(int kernel, CharSequence value) {
+    default void onUpdateBandwidth(int kernel, long totalLoadTimeMs, long estimateKBs, long realAvgKBs) {
     }
 
     /******************/

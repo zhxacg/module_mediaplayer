@@ -23,7 +23,6 @@ import lib.kalu.mediaplayer.proxy.ProxyTrack;
 import lib.kalu.mediaplayer.util.LogUtil;
 import lib.kalu.mediaplayer.util.NetworkUtil;
 import lib.kalu.mediaplayer.util.PlayStateUtil;
-import lib.kalu.mediaplayer.util.SpeedUtil;
 
 public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
         VideoPlayerApiComponent,
@@ -652,17 +651,8 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
                 }
 
                 @Override
-                public void onUpdateNetSpeed(int kernel) {
-                    try {
-                        boolean showSpeed = args.isShowSpeed();
-                        if (!showSpeed)
-                            throw new Exception("warning: showSpeed false");
-                        String speed = SpeedUtil.getNetSpeed(getBaseContext());
-                        if (speed.isEmpty())
-                            throw new Exception("warning: speed isEmpty");
-                        callNetSpeed(kernel, speed);
-                    } catch (Exception e) {
-                    }
+                public void onUpdateBandwidth(int kernel, long totalLoadTimeMs, long netKBps, long curKBps) {
+                    callBandwidth(kernel, totalLoadTimeMs, netKBps, curKBps);
                 }
 
                 @Override
@@ -789,10 +779,12 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
                                     int kernelType = args.getKernelType();
                                     long timeMillis = System.currentTimeMillis();
                                     kernelApi.removeAllMessages();
-                                    boolean showSpeed = args.isShowSpeed();
-                                    if (showSpeed) {
-                                        kernelApi.sendMessageSpeedUpdate(kernel, false);
-                                    }
+
+                                    // TODO: 2026/8/14
+//                                    boolean showSpeed = args.isShowSpeed();
+//                                    if (showSpeed) {
+//                                        kernelApi.sendMessageSpeedUpdate(kernel, false);
+//                                    }
                                     kernelApi.sendMessageConnectTimeout(kernelType, timeMillis, connectTimeout, false);
                                     break;
                                 // 轮训：视频进度条

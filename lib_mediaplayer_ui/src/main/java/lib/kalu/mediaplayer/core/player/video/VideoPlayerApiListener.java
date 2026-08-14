@@ -1,6 +1,7 @@
 
 package lib.kalu.mediaplayer.core.player.video;
 
+import lib.kalu.mediaplayer.listener.OnPlayerBandwidthListener;
 import lib.kalu.mediaplayer.listener.OnPlayerEpisodeListener;
 import lib.kalu.mediaplayer.listener.OnPlayerEventListener;
 import lib.kalu.mediaplayer.listener.OnPlayerProgressListener;
@@ -85,5 +86,12 @@ public interface VideoPlayerApiListener extends VideoPlayerApiBase {
     }
 
     default void setOnPlayerWindowAttachChangedListener(OnPlayerWindowAttachChangedListener l){
+    }
+
+    default OnPlayerBandwidthListener getOnPlayerBandwidthListener(){
+        return null;
+    }
+
+    default void setOnPlayerBandwidthListener(OnPlayerBandwidthListener l){
     }
 }

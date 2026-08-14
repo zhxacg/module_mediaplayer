@@ -59,9 +59,10 @@ public class ComponentPrepareGradient extends RelativeLayout implements Componen
     }
 
     @Override
-    public void onUpdateNetSpeed(int kernel, CharSequence result) {
+    public void onUpdateBandwidth(int kernel, long totalLoadTimeMs, long netKBps, long curKBps) {
+
         TextView textView = findViewById(R.id.module_mediaplayer_component_prepare_gradient_net);
-        textView.setText(result);
+        textView.setText(netKBps + ":" + curKBps);
     }
 
     @Override
