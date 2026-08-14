@@ -19,6 +19,14 @@
     <methods>;
 }
 
+# PlayerType
+-keep @interface lib.kalu.mediaplayer.bean.type.PlayerType {
+    *;
+}
+-keep @interface lib.kalu.mediaplayer.bean.type.PlayerType$* {
+    *;
+}
+
 -keep class lib.kalu.mediaplayer.PlayerSDK$* {
     # 保护内部类的所有方法
     <methods>;
@@ -47,14 +55,6 @@
 }
 -keep class lib.kalu.mediaplayer.buried.PlayBuried {
     public <methods>;
-}
-
-# type
--keep @interface lib.kalu.mediaplayer.bean.type.PlayerType {
-    *;
-}
--keep @interface lib.kalu.mediaplayer.bean.type.PlayerType$* {
-    *;
 }
 
 # listener
