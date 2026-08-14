@@ -8,6 +8,7 @@ import android.view.SurfaceHolder;
 
 import androidx.annotation.Nullable;
 
+import lib.kalu.mediaplayer.bean.type.PlayerType;
 import lib.kalu.mediaplayer.core.kernel.video.VideoKernelApi;
 import lib.kalu.mediaplayer.core.render.VideoRenderApi;
 import lib.kalu.mediaplayer.util.LogUtil;
@@ -21,6 +22,61 @@ public class VideoGLSurfaceView extends GLSurfaceView implements VideoRenderApi 
     @Nullable
     private VideoKernelApi mKernel;
 
+    private int mVideoWidth = -1;
+    private int mVideoHeight = -1;
+    private int mVideoBitrate = -1;
+    private int mVideoRotation = PlayerType.RotationType.DEFAULT;
+    private int mVideoScaleType = PlayerType.ScaleType.DEFAULT;
+
+    @Override
+    public void updateVideoWidth(int videoWidth) {
+        this.mVideoWidth = videoWidth;
+    }
+
+    @Override
+    public int getVideoWidth() {
+        return mVideoWidth;
+    }
+
+    @Override
+    public void updateVideoHeight(int videoHeight) {
+        this.mVideoHeight = videoHeight;
+    }
+
+    @Override
+    public int getVideoHeight() {
+        return mVideoHeight;
+    }
+
+    @Override
+    public void updateVideoBitrate(int videoBitrate) {
+        this.mVideoBitrate = videoBitrate;
+    }
+
+    @Override
+    public int getVideoBitrate() {
+        return mVideoBitrate;
+    }
+
+    @Override
+    public void updateVideoRotation(int videoRotation) {
+        this.mVideoRotation = videoRotation;
+    }
+
+    @Override
+    public int getVideoRotation() {
+        return mVideoRotation;
+    }
+
+    @Override
+    public void updateVideoScaleType(int scaleType) {
+        this.mVideoScaleType = scaleType;
+    }
+
+    @Override
+    public int getVideoScale() {
+        return mVideoScaleType;
+    }
 
     public VideoGLSurfaceView(Context context) {
         super(context);

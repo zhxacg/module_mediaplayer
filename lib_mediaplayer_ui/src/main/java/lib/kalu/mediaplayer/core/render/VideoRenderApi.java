@@ -26,20 +26,28 @@ public interface VideoRenderApi extends VideoRenderApiBase {
 
     /********/
 
-    int[] mVideoWidth = new int[]{0};
-    int[] mVideoHeight = new int[]{0};
-    int[] mVideoBitrate = new int[]{0};
+    void updateVideoWidth(int videoWidth);
+
+    int getVideoWidth();
+
+    void updateVideoHeight(int videoHeight);
+
+    int getVideoHeight();
+
+    void updateVideoBitrate(int videoBitrate);
+
+    int getVideoBitrate();
 
     default void setVideoSize(int videoWidth, int videoHeight) {
         try {
-            if (mVideoWidth[0] == videoWidth && mVideoHeight[0] == videoHeight) {
+            if (getVideoWidth() == videoWidth && getVideoHeight() == videoHeight) {
                 if (LogUtil.DEBUG) {
                     LogUtil.log("VideoRenderApi", "setVideoSize -> warning: mVideoWidth && mVideoHeight not change");
                 }
                 return;
             }
-            this.mVideoWidth[0] = videoWidth;
-            this.mVideoHeight[0] = videoHeight;
+            updateVideoWidth(videoWidth);
+            updateVideoHeight(videoHeight);
             ((View) this).requestLayout();
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
@@ -48,31 +56,22 @@ public interface VideoRenderApi extends VideoRenderApiBase {
         }
     }
 
-    default int getVideoWidth() {
-        return this.mVideoWidth[0];
-    }
-
-    default int getVideoHeight() {
-        return this.mVideoHeight[0];
-    }
-
-    default int getVideoBitrate() {
-        return this.mVideoBitrate[0];
-    }
-
     /********/
 
-    int[] mVideoRotation = new int[]{PlayerType.RotationType.DEFAULT};
+    void updateVideoRotation(@PlayerType.RotationType.Value int videoRotation);
+
+    @PlayerType.RotationType.Value
+    int getVideoRotation();
 
     default void setVideoRotation(@PlayerType.RotationType.Value int videoRotation) {
         try {
-            if (mVideoRotation[0] == videoRotation) {
+            if (getVideoRotation() == videoRotation) {
                 if (LogUtil.DEBUG) {
                     LogUtil.log("VideoRenderApi", "setVideoRotation -> warning: mVideoRotation not change");
                 }
                 return;
             }
-            this.mVideoRotation[0] = videoRotation;
+            updateVideoRotation(videoRotation);
             ((View) this).requestLayout();
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
@@ -81,24 +80,22 @@ public interface VideoRenderApi extends VideoRenderApiBase {
         }
     }
 
-    @PlayerType.RotationType.Value
-    default int getVideoRotation() {
-        return mVideoRotation[0];
-    }
-
     /********/
 
-    int[] mVideoScaleType = new int[]{PlayerType.ScaleType.DEFAULT};
+    void updateVideoScaleType(@PlayerType.ScaleType.Value int scaleType);
+
+    @PlayerType.ScaleType.Value
+    int getVideoScale();
 
     default void setVideoScaleType(@PlayerType.ScaleType.Value int scaleType) {
         try {
-            if (mVideoScaleType[0] == scaleType) {
+            if (getVideoScale() == scaleType) {
                 if (LogUtil.DEBUG) {
                     LogUtil.log("VideoRenderApi", "setVideoScaleType -> warning: mVideoScaleType not change");
                 }
                 return;
             }
-            this.mVideoScaleType[0] = scaleType;
+            updateVideoScaleType(scaleType);
             ((View) this).requestLayout();
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
@@ -107,26 +104,21 @@ public interface VideoRenderApi extends VideoRenderApiBase {
         }
     }
 
-    @PlayerType.ScaleType.Value
-    default int getVideoScale() {
-        return mVideoScaleType[0];
-    }
-
     /********/
 
     default void setVideoFormat(int kernel, int rotation, int scaleType, int width, int height, int bitrate) {
         try {
-            if (mVideoWidth[0] == width && mVideoHeight[0] == height && mVideoRotation[0] == rotation && mVideoScaleType[0] == scaleType && mVideoBitrate[0] == bitrate) {
+            if (getVideoWidth() == width && getVideoHeight() == height && getVideoRotation() == rotation && getVideoScale() == scaleType && getVideoBitrate() == bitrate) {
                 if (LogUtil.DEBUG) {
                     LogUtil.log("VideoRenderApi", "setVideoFormat -> warning: not change");
                 }
                 return;
             }
-            this.mVideoWidth[0] = width;
-            this.mVideoHeight[0] = height;
-            this.mVideoBitrate[0] = bitrate;
-            this.mVideoRotation[0] = rotation;
-            this.mVideoScaleType[0] = scaleType;
+            updateVideoWidth(width);
+            updateVideoHeight(height);
+            updateVideoBitrate(bitrate);
+            updateVideoRotation(rotation);
+            updateVideoScaleType(scaleType);
             ((View) this).requestLayout();
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
@@ -138,11 +130,11 @@ public interface VideoRenderApi extends VideoRenderApiBase {
     /********/
 
     default void init() {
-        mVideoWidth[0] = -1;
-        mVideoHeight[0] = -1;
-        mVideoBitrate[0] = -1;
-        mVideoRotation[0] = PlayerType.RotationType.DEFAULT;
-        mVideoScaleType[0] = PlayerType.ScaleType.DEFAULT;
+        updateVideoWidth(-1);
+        updateVideoHeight(-1);
+        updateVideoBitrate(-1);
+        updateVideoRotation(PlayerType.RotationType.DEFAULT);
+        updateVideoScaleType(PlayerType.ScaleType.DEFAULT);
     }
 
     void registListener();

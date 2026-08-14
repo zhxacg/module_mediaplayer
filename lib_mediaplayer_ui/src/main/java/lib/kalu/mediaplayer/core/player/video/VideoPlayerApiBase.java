@@ -46,12 +46,11 @@ public interface VideoPlayerApiBase {
 
     default ViewGroup findDecorView(View view) {
         try {
-            View parent = (View) view.getParent();
-            if (null == parent) {
-                return (ViewGroup) view;
-            } else {
-                return findDecorView(parent);
+            View current = view;
+            while (current.getParent() instanceof View) {
+                current = (View) current.getParent();
             }
+            return (ViewGroup) current;
         } catch (Exception e) {
             return (ViewGroup) view;
         }

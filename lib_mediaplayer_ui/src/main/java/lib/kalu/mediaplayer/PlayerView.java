@@ -2,11 +2,12 @@ package lib.kalu.mediaplayer;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.RelativeLayout;
+import android.widget.FrameLayout;
 
 import androidx.annotation.NonNull;
 
@@ -27,7 +28,7 @@ import lib.kalu.mediaplayer.listener.OnPlayerWindowVisibilityChangedListener;
 import lib.kalu.mediaplayer.util.LogUtil;
 
 
-public final class PlayerView extends RelativeLayout implements VideoPlayerApi {
+public final class PlayerView extends FrameLayout implements VideoPlayerApi {
 
     private final String TAG = "PlayerView";
 
@@ -36,24 +37,37 @@ public final class PlayerView extends RelativeLayout implements VideoPlayerApi {
     // 视频渲染
     private VideoRenderApi mVideoRenderApi;
 
+    private final ViewGroup mVideoLayout;
+    private final ViewGroup mComponentLayout;
+
     public PlayerView(Context context) {
         super(context);
         setBackgroundColor(Color.BLACK);
         setId(R.id.module_mediaplayer_id_player);
         // player
-        RelativeLayout playerLayout = new RelativeLayout(getContext());
-        playerLayout.setId(R.id.module_mediaplayer_video);
+        mVideoLayout = new FrameLayout(getContext());
+        mVideoLayout.setId(R.id.module_mediaplayer_video);
         LayoutParams playerLayoutParams = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
-        playerLayoutParams.addRule(RelativeLayout.CENTER_IN_PARENT);
-        playerLayout.setLayoutParams(playerLayoutParams);
-        addView(playerLayout, 0);
+        playerLayoutParams.gravity = Gravity.CENTER;
+        mVideoLayout.setLayoutParams(playerLayoutParams);
+        addView(mVideoLayout, 0);
         // control
-        RelativeLayout controlLayout = new RelativeLayout(getContext());
-        controlLayout.setId(R.id.module_mediaplayer_component);
+        mComponentLayout = new FrameLayout(getContext());
+        mComponentLayout.setId(R.id.module_mediaplayer_component);
         LayoutParams controlLayoutParams = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
-        controlLayoutParams.addRule(RelativeLayout.CENTER_IN_PARENT);
-        controlLayout.setLayoutParams(controlLayoutParams);
-        addView(controlLayout, 1);
+        controlLayoutParams.gravity = Gravity.CENTER;
+        mComponentLayout.setLayoutParams(controlLayoutParams);
+        addView(mComponentLayout, 1);
+    }
+
+    @Override
+    public ViewGroup getBaseVideoViewGroup() {
+        return mVideoLayout;
+    }
+
+    @Override
+    public ViewGroup getBaseComponentViewGroup() {
+        return mComponentLayout;
     }
 
     @Override
@@ -88,48 +102,43 @@ public final class PlayerView extends RelativeLayout implements VideoPlayerApi {
     @Override
     public boolean dispatchTouchEvent(MotionEvent ev) {
         try {
-
-            // Component step1
-            ViewGroup componentGroup = getBaseComponentViewGroup();
-            int childCount = componentGroup.getChildCount();
-            for (int i = 0; i < childCount; i++) {
-                View childAt = componentGroup.getChildAt(i);
-                if (null == childAt)
-                    continue;
-                boolean assignableFrom = ComponentApi.class.isAssignableFrom(childAt.getClass());
-                if (!assignableFrom)
-                    continue;
-                boolean componentShowing = ((ComponentApi) childAt).isComponentShowing();
-                if (!componentShowing)
-                    continue;
-                boolean dispatchTouchEvent = childAt.dispatchTouchEvent(ev);
-                if (dispatchTouchEvent) {
-                    if (LogUtil.DEBUG) {
-                        LogUtil.log("PlayerView -> dispatchTouchEvent1 true, childAt = " + childAt);
-                    }
-                    return true;
-                }
+            // Component distribution
+            int childCount = mComponentLayout.getChildCount();
+            if (childCount <= 0) {
+                return false;
             }
-            // Component step2
+
+            // Step 1: Priority to showing components
             for (int i = 0; i < childCount; i++) {
-                View childAt = componentGroup.getChildAt(i);
-                if (null == childAt)
-                    continue;
-                boolean assignableFrom = ComponentApi.class.isAssignableFrom(childAt.getClass());
-                if (!assignableFrom)
-                    continue;
-                boolean dispatchTouchEvent = childAt.dispatchTouchEvent(ev);
-                if (dispatchTouchEvent) {
-                    if (LogUtil.DEBUG) {
-                        LogUtil.log("PlayerView -> dispatchTouchEvent2 true, childAt = " + childAt);
+                View childAt = mComponentLayout.getChildAt(i);
+                if (childAt instanceof ComponentApi && ((ComponentApi) childAt).isComponentShowing()) {
+                    if (childAt.dispatchTouchEvent(ev)) {
+                        if (LogUtil.DEBUG) {
+                            LogUtil.log("PlayerView -> dispatchTouchEvent (Showing) true, childAt = " + childAt);
+                        }
+                        return true;
                     }
-                    return true;
                 }
             }
 
-            // error
+            // Step 2: Others (if needed, but usually only showing components consume touch)
+            for (int i = 0; i < childCount; i++) {
+                View childAt = mComponentLayout.getChildAt(i);
+                if (childAt instanceof ComponentApi && !((ComponentApi) childAt).isComponentShowing()) {
+                    if (childAt.dispatchTouchEvent(ev)) {
+                        if (LogUtil.DEBUG) {
+                            LogUtil.log("PlayerView -> dispatchTouchEvent (Hidden) true, childAt = " + childAt);
+                        }
+                        return true;
+                    }
+                }
+            }
+
             return false;
         } catch (Exception e) {
+            if (LogUtil.DEBUG) {
+                LogUtil.log("PlayerView -> dispatchTouchEvent Exception: " + e.getMessage());
+            }
             return true;
         }
     }
@@ -137,51 +146,45 @@ public final class PlayerView extends RelativeLayout implements VideoPlayerApi {
     @Override
     public boolean dispatchKeyEvent(KeyEvent event) {
         if (LogUtil.DEBUG) {
-            LogUtil.log("PlayerView -> dispatchKeyEvent0 -> action = " + event.getAction() + ", ketCode = " + event.getKeyCode() + ", repeatCount = " + event.getRepeatCount());
+            LogUtil.log("PlayerView -> dispatchKeyEvent -> action = " + event.getAction() + ", keyCode = " + event.getKeyCode());
         }
         try {
-
-            // Component step1
-            ViewGroup componentGroup = getBaseComponentViewGroup();
-            int childCount = componentGroup.getChildCount();
-            for (int i = 0; i < childCount; i++) {
-                View childAt = componentGroup.getChildAt(i);
-                if (null == childAt)
-                    continue;
-                boolean assignableFrom = ComponentApi.class.isAssignableFrom(childAt.getClass());
-                if (!assignableFrom)
-                    continue;
-                boolean componentShowing = ((ComponentApi) childAt).isComponentShowing();
-                if (!componentShowing)
-                    continue;
-                boolean dispatchKeyEvent = childAt.dispatchKeyEvent(event);
-                if (dispatchKeyEvent) {
-                    if (LogUtil.DEBUG) {
-                        LogUtil.log("PlayerView -> dispatchKeyEvent1 -> i = " + i + ", childAt = " + childAt);
-                    }
-                    return true;
-                }
+            int childCount = mComponentLayout.getChildCount();
+            if (childCount <= 0) {
+                return false;
             }
-            // Component step2
+
+            // Step 1: Priority to showing components
             for (int i = 0; i < childCount; i++) {
-                View childAt = componentGroup.getChildAt(i);
-                if (null == childAt)
-                    continue;
-                boolean assignableFrom = ComponentApi.class.isAssignableFrom(childAt.getClass());
-                if (!assignableFrom)
-                    continue;
-                boolean dispatchKeyEvent = childAt.dispatchKeyEvent(event);
-                if (dispatchKeyEvent) {
-                    if (LogUtil.DEBUG) {
-                        LogUtil.log("PlayerView -> dispatchKeyEvent2 -> i = " + i + ", childAt = " + childAt);
+                View childAt = mComponentLayout.getChildAt(i);
+                if (childAt instanceof ComponentApi && ((ComponentApi) childAt).isComponentShowing()) {
+                    if (childAt.dispatchKeyEvent(event)) {
+                        if (LogUtil.DEBUG) {
+                            LogUtil.log("PlayerView -> dispatchKeyEvent (Showing) true, childAt = " + childAt);
+                        }
+                        return true;
                     }
-                    return true;
                 }
             }
 
-            // error
+            // Step 2: Others
+            for (int i = 0; i < childCount; i++) {
+                View childAt = mComponentLayout.getChildAt(i);
+                if (childAt instanceof ComponentApi && !((ComponentApi) childAt).isComponentShowing()) {
+                    if (childAt.dispatchKeyEvent(event)) {
+                        if (LogUtil.DEBUG) {
+                            LogUtil.log("PlayerView -> dispatchKeyEvent (Hidden) true, childAt = " + childAt);
+                        }
+                        return true;
+                    }
+                }
+            }
+
             return false;
         } catch (Exception e) {
+            if (LogUtil.DEBUG) {
+                LogUtil.log("PlayerView -> dispatchKeyEvent Exception: " + e.getMessage());
+            }
             return true;
         }
     }
@@ -319,7 +322,7 @@ public final class PlayerView extends RelativeLayout implements VideoPlayerApi {
 
     @Override
     public void setOnPlayerProgressListener(OnPlayerProgressListener l) {
-        this.mOnPlayerProgressListener = null;
+        this.mOnPlayerProgressListener = l;
     }
 
     /**************/

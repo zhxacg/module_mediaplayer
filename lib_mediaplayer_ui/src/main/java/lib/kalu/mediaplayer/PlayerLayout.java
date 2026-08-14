@@ -32,6 +32,8 @@ import lib.kalu.mediaplayer.util.LogUtil;
 
 public class PlayerLayout extends RelativeLayout {
 
+    private PlayerView mPlayerView;
+
     public PlayerLayout(Context context) {
         super(context);
         initPlayerView(context, null);
@@ -55,16 +57,22 @@ public class PlayerLayout extends RelativeLayout {
 
     private void initPlayerView(Context context, AttributeSet attrs) {
         try {
-            int childCount = getChildCount();
-            if (childCount > 0) {
-                if (LogUtil.DEBUG) {
-                    LogUtil.log("PlayerLayout", "initPlayerView -> childCount warning: " + childCount);
-                }
+            if (null != mPlayerView) {
                 return;
             }
-            PlayerView playerView = new PlayerView(context);
-            playerView.setLayoutParams(new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT));
-            addView(playerView);
+            int childCount = getChildCount();
+            if (childCount > 0) {
+                for (int i = 0; i < childCount; i++) {
+                    View childAt = getChildAt(i);
+                    if (childAt instanceof PlayerView) {
+                        mPlayerView = (PlayerView) childAt;
+                        return;
+                    }
+                }
+            }
+            mPlayerView = new PlayerView(context);
+            mPlayerView.setLayoutParams(new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT));
+            addView(mPlayerView);
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
                 LogUtil.log("PlayerLayout -> initPlayerView -> " + e.getMessage());
@@ -124,31 +132,34 @@ public class PlayerLayout extends RelativeLayout {
     }
 
     private PlayerView getPlayerView() {
+        if (null != mPlayerView) {
+            return mPlayerView;
+        }
         try {
             int childCount = getChildCount();
-            // sample
-            if (childCount == 1) {
-                return (PlayerView) getChildAt(0);
-            }
-            // not
-            else {
-                ViewGroup decorView = findDecorView(this);
-                if (null == decorView) {
-                    if (LogUtil.DEBUG) {
-                        LogUtil.log("PlayerLayout", "getPlayerView -> decorView error: null");
+            if (childCount > 0) {
+                for (int i = 0; i < childCount; i++) {
+                    View childAt = getChildAt(i);
+                    if (childAt instanceof PlayerView) {
+                        mPlayerView = (PlayerView) childAt;
+                        return mPlayerView;
                     }
-                    return null;
                 }
+            }
+
+            // fall back to DecorView search only if absolutely necessary
+            ViewGroup decorView = findDecorView(this);
+            if (null != decorView) {
                 int decorChildCount = decorView.getChildCount();
                 for (int i = 0; i < decorChildCount; i++) {
                     View childAt = decorView.getChildAt(i);
-                    if (null == childAt)
-                        continue;
-                    if (childAt.getId() == R.id.module_mediaplayer_id_player) {
-                        return (PlayerView) childAt;
+                    if (childAt instanceof PlayerView && childAt.getId() == R.id.module_mediaplayer_id_player) {
+                        mPlayerView = (PlayerView) childAt;
+                        return mPlayerView;
                     }
                 }
             }
+
             if (LogUtil.DEBUG) {
                 LogUtil.log("PlayerLayout", "getPlayerView -> not find");
             }
@@ -817,7 +828,7 @@ public class PlayerLayout extends RelativeLayout {
                 }
                 return;
             }
-            playerView.closeVolume();
+            playerView.openVolume();
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
                 LogUtil.log("PlayerLayout -> openVolume -> " + e.getMessage());
