@@ -376,6 +376,7 @@ public class VideoGLSurfaceView extends GLSurfaceView implements VideoRenderApi 
                 if (LogUtil.DEBUG) {
                     LogUtil.log("VideoGLSurfaceView", "onMeasure -> warning: measureSpec null");
                 }
+                super.onMeasure(widthMeasureSpec, heightMeasureSpec);
                 return;
             }
             int width = measureSpec[0];

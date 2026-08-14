@@ -4,9 +4,6 @@ import android.util.Log;
 
 import androidx.annotation.Nullable;
 
-import lib.kalu.mediaplayer.PlayerSDK;
-import lib.kalu.vlc.util.VlcLogUtil;
-
 public final class LogUtil {
 
     private static String mTag = "MP_COMMON";
@@ -29,25 +26,20 @@ public final class LogUtil {
 
     private static void setExoV2Logger(boolean v) {
         try {
-            lib.kalu.mediax.util.MediaLogUtil.setDebug(v);
+            lib.kalu.exoplayer2.util.ExoLogUtil.setDebug(v);
         } catch (Exception e) {
         }
     }
 
     private static void setVlcLogger(boolean v) {
         try {
-            Class.forName("lib.kalu.vlc.util.VlcLogUtil");
-            VlcLogUtil.setLogger(v);
+            lib.kalu.vlc.util.VlcLogUtil.setLogger(v);
         } catch (Exception e) {
         }
     }
 
     private static void setIJkLogger(boolean v) {
         try {
-            Class.forName("lib.kalu.ijkplayer.util.IjkLogUtil");
-            if (LogUtil.DEBUG) {
-                LogUtil.log("VideoIjkPlayer -> initOptions -> step2");
-            }
             lib.kalu.ijkplayer.util.IjkLogUtil.setLogger(v);
         } catch (Exception e) {
             if (LogUtil.DEBUG) {

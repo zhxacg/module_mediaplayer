@@ -241,6 +241,7 @@ public class VideoTextureView extends TextureView implements VideoRenderApi {
                 if (LogUtil.DEBUG) {
                     LogUtil.log("VideoTextureView", "onMeasure -> warning: measureSpec null");
                 }
+                super.onMeasure(widthMeasureSpec, heightMeasureSpec);
                 return;
             }
             int width = measureSpec[0];
