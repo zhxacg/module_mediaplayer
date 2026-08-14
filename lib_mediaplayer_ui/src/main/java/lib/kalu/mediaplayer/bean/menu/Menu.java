@@ -20,7 +20,7 @@ public final class Menu implements Serializable {
                     return ((Episode) item).getPlayUrls();
                 }
             }
-            throw new Exception();
+            return null;
         } catch (Exception e) {
             return null;
         }
@@ -33,7 +33,7 @@ public final class Menu implements Serializable {
                     return ((Episode) item).getPlayPos();
                 }
             }
-            throw new Exception();
+            return -1;
         } catch (Exception e) {
             return -1;
         }
@@ -46,7 +46,7 @@ public final class Menu implements Serializable {
                     return ((Episode) item).getPlayCount();
                 }
             }
-            throw new Exception();
+            return -1;
         } catch (Exception e) {
             return -1;
         }

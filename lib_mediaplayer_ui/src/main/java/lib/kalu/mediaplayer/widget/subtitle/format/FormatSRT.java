@@ -67,9 +67,7 @@ public class FormatSRT implements TimedTextFileFormat {
                     //the first thing should be an increasing number
                     try {
                         int num = Integer.parseInt(line);
-                        if (num != captionNumber)
-                            throw new Exception();
-                        else {
+                        if (num == captionNumber) {
                             captionNumber++;
                             allGood = true;
                         }

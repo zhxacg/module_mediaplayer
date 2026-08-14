@@ -34,12 +34,20 @@ public interface VideoPlayerApiOrientation extends VideoPlayerApiBase, VideoPlay
     default boolean isLandscape(Context context) {
         try {
             Activity activity = ContextUtil.getActivitySafely(context);
-            if (null == activity)
-                throw new Exception("error: activity null");
+            if (null == activity) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log(TAG, "isLandscape -> error: activity null");
+                }
+                return false;
+            }
 
             PlayerLayout playerLayout = getPlayerLayout();
-            if (null == playerLayout)
-                throw new Exception("error: screenRestore null");
+            if (null == playerLayout) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log(TAG, "isLandscape -> error: screenRestore null");
+                }
+                return false;
+            }
 
             View decorView = activity.getWindow().getDecorView();
             Rect visibleRect = new Rect();
@@ -66,12 +74,20 @@ public interface VideoPlayerApiOrientation extends VideoPlayerApiBase, VideoPlay
         try {
 
             Activity activity = ContextUtil.getActivitySafely(context);
-            if (null == activity)
-                throw new Exception("error: activity null");
+            if (null == activity) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log(TAG, "isPortrait -> error: activity null");
+                }
+                return false;
+            }
 
             PlayerLayout playerLayout = getPlayerLayout();
-            if (null == playerLayout)
-                throw new Exception("error: screenRestore null");
+            if (null == playerLayout) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log(TAG, "isPortrait -> error: screenRestore null");
+                }
+                return false;
+            }
 
             View decorView = activity.getWindow().getDecorView();
             Rect visibleRect = new Rect();
@@ -211,8 +227,12 @@ public interface VideoPlayerApiOrientation extends VideoPlayerApiBase, VideoPlay
         try {
 
             Activity activity = ContextUtil.getActivitySafely(context);
-            if (null == activity)
-                throw new Exception("error: activity null");
+            if (null == activity) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log(TAG, "requestScreenOrientation -> error: activity null");
+                }
+                return false;
+            }
 
             // 状态栏 导航栏
             if (formatScreen) {
@@ -340,8 +360,12 @@ public interface VideoPlayerApiOrientation extends VideoPlayerApiBase, VideoPlay
         try {
 
             Activity activity = ContextUtil.getActivitySafely(context);
-            if (null == activity)
-                throw new Exception("error: activity null");
+            if (null == activity) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log(TAG, "getNavigationBarHeight -> error: activity null");
+                }
+                return 0;
+            }
 
             Window window = activity.getWindow();
             int height = 0;
@@ -388,8 +412,12 @@ public interface VideoPlayerApiOrientation extends VideoPlayerApiBase, VideoPlay
         try {
 
             Activity activity = ContextUtil.getActivitySafely(context);
-            if (null == activity)
-                throw new Exception("error: activity null");
+            if (null == activity) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log(TAG, "getStatusBarHeight -> error: activity null");
+                }
+                return 0;
+            }
 
             Window window = activity.getWindow();
             int height = 0;

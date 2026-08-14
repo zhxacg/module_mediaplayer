@@ -113,14 +113,14 @@ public class MainActivity extends Activity {
         try {
             String[] names = getResources().getStringArray(R.array.names);
             String[] urls = getResources().getStringArray(R.array.urls);
-            if (names.length != urls.length)
-                throw new Exception();
-            ViewGroup viewGroup = findViewById(R.id.main_urls);
-            for (int i = 0; i < names.length; i++) {
-                LayoutInflater.from(this).inflate(R.layout.activity_main_radio_button, viewGroup);
-                RadioButton radioButton = (RadioButton) viewGroup.getChildAt(i);
-                radioButton.setText(names[i]);
-                radioButton.setTag(urls[i]);
+            if (names.length == urls.length) {
+                ViewGroup viewGroup = findViewById(R.id.main_urls);
+                for (int i = 0; i < names.length; i++) {
+                    LayoutInflater.from(this).inflate(R.layout.activity_main_radio_button, viewGroup);
+                    RadioButton radioButton = (RadioButton) viewGroup.getChildAt(i);
+                    radioButton.setText(names[i]);
+                    radioButton.setTag(urls[i]);
+                }
             }
         } catch (Exception e) {
         }
@@ -565,7 +565,7 @@ public class MainActivity extends Activity {
                     return getResources().getIntArray(R.array.kernels_ids)[i];
                 }
             }
-            throw new Exception();
+            return -1;
         } catch (Exception e) {
             return -1;
         }
@@ -582,7 +582,7 @@ public class MainActivity extends Activity {
                     return getResources().getIntArray(R.array.decoders_ids)[i];
                 }
             }
-            throw new Exception();
+            return -1;
         } catch (Exception e) {
             return -1;
         }

@@ -55,8 +55,13 @@ public final class SeekBar extends android.widget.SeekBar {
         // 计算 paddingLeft paddingRight
         try {
             long duration = getMax();
-            if (duration <= 0)
-                throw new Exception("warning: duration <= 0");
+            if (duration <= 0) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("SeekBar -> onMeasure -> warning: duration <= 0");
+                }
+                super.onMeasure(widthMeasureSpec, -2);
+                return;
+            }
 
             if (null == mPaint) {
                 mPaint = new Paint();
@@ -98,12 +103,20 @@ public final class SeekBar extends android.widget.SeekBar {
         try {
 
             int visibility = getVisibility();
-            if (visibility != View.VISIBLE)
-                throw new Exception("error: visibility != View.VISIBLE");
+            if (visibility != View.VISIBLE) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("SeekBar -> onDraw -> error: visibility != View.VISIBLE");
+                }
+                return;
+            }
 
             long duration = getMax();
-            if (duration <= 0)
-                throw new Exception("warning: duration <= 0");
+            if (duration <= 0) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("SeekBar -> onDraw -> warning: duration <= 0");
+                }
+                return;
+            }
             super.onDraw(canvas);
         } catch (Exception e) {
             if (LogUtil.DEBUG) {

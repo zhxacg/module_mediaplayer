@@ -36,9 +36,7 @@ public final class LogUtil {
 
     private static void setVlcLogger(boolean v) {
         try {
-            Class<?> clazz = Class.forName("lib.kalu.vlc.util.VlcLogUtil");
-            if (null == clazz)
-                throw new Exception("warning: lib.kalu.vlc.util.VlcLogUtil not find");
+            Class.forName("lib.kalu.vlc.util.VlcLogUtil");
             VlcLogUtil.setLogger(v);
         } catch (Exception e) {
         }
@@ -46,9 +44,7 @@ public final class LogUtil {
 
     private static void setIJkLogger(boolean v) {
         try {
-            Class<?> clazz = Class.forName("lib.kalu.ijkplayer.util.IjkLogUtil");
-            if (null == clazz)
-                throw new Exception("warning: lib.kalu.ijkplayer.util.IjkLogUtil not find");
+            Class.forName("lib.kalu.ijkplayer.util.IjkLogUtil");
             if (LogUtil.DEBUG) {
                 LogUtil.log("VideoIjkPlayer -> initOptions -> step2");
             }

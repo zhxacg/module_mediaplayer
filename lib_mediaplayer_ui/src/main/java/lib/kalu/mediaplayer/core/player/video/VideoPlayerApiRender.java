@@ -26,8 +26,12 @@ public interface VideoPlayerApiRender extends VideoPlayerApiBase, VideoPlayerApi
     default void setVideoScaleType(@PlayerType.ScaleType.Value int scaleType) {
         try {
             VideoRenderApi render = getVideoRender();
-            if (null == render)
-                throw new Exception("render error: null");
+            if (null == render) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("VideoPlayerApiRender", "setVideoScaleType -> render error: null");
+                }
+                return;
+            }
             render.setVideoScaleType(scaleType);
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
@@ -40,12 +44,16 @@ public interface VideoPlayerApiRender extends VideoPlayerApiBase, VideoPlayerApi
     default int getVideoScale() {
         try {
             VideoRenderApi render = getVideoRender();
-            if (null == render)
-                throw new Exception("render error: null");
+            if (null == render) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("VideoPlayerApiRender", "getVideoScale -> render error: null");
+                }
+                return PlayerType.ScaleType.DEFAULT;
+            }
             return render.getVideoScale();
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
-                LogUtil.log("VideoPlayerApiRender -> getVideoScaleType -> " + e.getMessage());
+                LogUtil.log("VideoPlayerApiRender", "getVideoScaleType -> " + e.getMessage());
             }
             return PlayerType.ScaleType.DEFAULT;
         }
@@ -114,7 +122,10 @@ public interface VideoPlayerApiRender extends VideoPlayerApiBase, VideoPlayerApi
                     continue;
                 return (VideoRenderApi) view;
             }
-            throw new Exception("not find");
+            if (LogUtil.DEBUG) {
+                LogUtil.log("VideoPlayerApiRender", "searchVideoRender -> not find");
+            }
+            return null;
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
                 LogUtil.log("VideoPlayerApiRender -> searchVideoRender -> " + e.getMessage());
@@ -130,11 +141,19 @@ public interface VideoPlayerApiRender extends VideoPlayerApiBase, VideoPlayerApi
     default void releaseRender() {
         try {
             ViewGroup renderGroup = getBaseVideoViewGroup();
-            if (null == renderGroup)
-                throw new Exception("warning: null renderGroup");
+            if (null == renderGroup) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("VideoPlayerApiRender", "releaseRender -> warning: null renderGroup");
+                }
+                return;
+            }
             int childCount = renderGroup.getChildCount();
-            if (childCount == 0)
-                throw new Exception("warning: childCount == 0");
+            if (childCount == 0) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("VideoPlayerApiRender", "releaseRender -> warning: childCount == 0");
+                }
+                return;
+            }
             for (int i = 0; i < childCount; i++) {
                 View childAt = renderGroup.getChildAt(i);
                 if (null == childAt)
@@ -154,11 +173,19 @@ public interface VideoPlayerApiRender extends VideoPlayerApiBase, VideoPlayerApi
     default void initRender(StartArgs args) {
         try {
             ViewGroup renderGroup = getBaseVideoViewGroup();
-            if (null == renderGroup)
-                throw new Exception("renderGroup error: null");
+            if (null == renderGroup) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("VideoPlayerApiRender", "initRender -> renderGroup error: null");
+                }
+                return;
+            }
             int childCount = renderGroup.getChildCount();
-            if (childCount > 0)
-                throw new Exception("error: renderGroup childCount > 0");
+            if (childCount > 0) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("VideoPlayerApiRender", "initRender -> error: renderGroup childCount > 0");
+                }
+                return;
+            }
             Context context = getBaseContext();
             int renderType = args.getRenderType();
             VideoRenderApi videoRender = VideoRenderFactoryManager.createRender(context, renderType);
@@ -176,11 +203,19 @@ public interface VideoPlayerApiRender extends VideoPlayerApiBase, VideoPlayerApi
     default void attachRenderKernel() {
         try {
             VideoRenderApi videoRender = getVideoRender();
-            if (null == videoRender)
-                throw new Exception("error: null == videoRender");
+            if (null == videoRender) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("VideoPlayerApiRender", "attachRenderKernel -> error: null == videoRender");
+                }
+                return;
+            }
             VideoKernelApi videoKernel = getVideoKernel();
-            if (null == videoKernel)
-                throw new Exception("error: null == videoKernel");
+            if (null == videoKernel) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("VideoPlayerApiRender", "attachRenderKernel -> error: null == videoKernel");
+                }
+                return;
+            }
             videoRender.setVideoKernel(videoKernel);
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
@@ -192,8 +227,12 @@ public interface VideoPlayerApiRender extends VideoPlayerApiBase, VideoPlayerApi
     default void initRenderView() {
         try {
             StartArgs args = getStartArgs();
-            if (null == args)
-                throw new Exception("error: args null");
+            if (null == args) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("VideoPlayerApiRender", "initRenderView -> error: args null");
+                }
+                return;
+            }
 
             @PlayerType.DecoderType.Value
             int decoderType = args.getDecoderType();
@@ -214,7 +253,9 @@ public interface VideoPlayerApiRender extends VideoPlayerApiBase, VideoPlayerApi
                 VideoRenderApi videoRender = getVideoRender();
                 videoRender.reset();
             } else {
-                throw new Exception("warning: kernel not ijk");
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("VideoPlayerApiRender", "initRenderView -> warning: kernel not ijk");
+                }
             }
         } catch (Exception e) {
             if (LogUtil.DEBUG) {

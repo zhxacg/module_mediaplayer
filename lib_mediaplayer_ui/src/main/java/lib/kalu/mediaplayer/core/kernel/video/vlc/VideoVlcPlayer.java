@@ -28,8 +28,12 @@ public final class VideoVlcPlayer extends VideoBasePlayer {
     @Override
     public void releaseDecoder() {
         try {
-            if (null == mVlcPlayer)
-                throw new Exception("mVlcPlayer error: null");
+            if (null == mVlcPlayer) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("VideoVlcPlayer", "releaseDecoder -> mVlcPlayer error: null");
+                }
+                return;
+            }
             setEvent(null);
             unRegistListener();
             release();
@@ -40,8 +44,12 @@ public final class VideoVlcPlayer extends VideoBasePlayer {
     @Override
     public void checkDecoder(Context context, StartArgs args) {
         try {
-            if (null != mVlcPlayer)
-                throw new Exception("warning: null != mVlcPlayer");
+            if (null != mVlcPlayer) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("VideoVlcPlayer", "checkDecoder -> warning: null != mVlcPlayer");
+                }
+                return;
+            }
             mVlcPlayer = new VlcPlayer(context);
             registListener();
         } catch (Exception e) {
@@ -51,13 +59,25 @@ public final class VideoVlcPlayer extends VideoBasePlayer {
     @Override
     public void startDecoder(Context context, StartArgs args) {
         try {
-            if (null == mVlcPlayer)
-                throw new Exception("error: mVlcPlayer null");
-            if (null == args)
-                throw new Exception("error: args null");
+            if (null == mVlcPlayer) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("VideoVlcPlayer", "startDecoder -> error: mVlcPlayer null");
+                }
+                return;
+            }
+            if (null == args) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("VideoVlcPlayer", "startDecoder -> error: args null");
+                }
+                return;
+            }
             boolean containsMainUrl = args.containsMainUrl();
-            if (!containsMainUrl)
-                throw new Exception("error: containsMainUrl false");
+            if (!containsMainUrl) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("VideoVlcPlayer", "startDecoder -> error: containsMainUrl false");
+                }
+                return;
+            }
             onEvent(PlayerType.KernelType.VLC, PlayerType.EventType.READY);
             mVlcPlayer.setDataSource(Uri.parse(args.getUrl()), isPlayWhenReady());
             mVlcPlayer.play();
@@ -72,8 +92,12 @@ public final class VideoVlcPlayer extends VideoBasePlayer {
     public void initOptions(Context context, StartArgs args) {
 
         try {
-            if (null == mVlcPlayer)
-                throw new Exception("error: mVlcPlayer null");
+            if (null == mVlcPlayer) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("VideoVlcPlayer", "initOptions -> error: mVlcPlayer null");
+                }
+                return;
+            }
             boolean mute = args.isMute();
             if (mute) {
                 mVlcPlayer.setVolume(0f, 0f);
@@ -93,8 +117,12 @@ public final class VideoVlcPlayer extends VideoBasePlayer {
     @Override
     public void registListener() {
         try {
-            if (null == mVlcPlayer)
-                throw new Exception("error: mVlcPlayer null");
+            if (null == mVlcPlayer) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("VideoVlcPlayer", "registListener -> error: mVlcPlayer null");
+                }
+                return;
+            }
             mVlcPlayer.setOnVlcInfoChangeListener(mVlcPlayerListener);
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
@@ -106,8 +134,12 @@ public final class VideoVlcPlayer extends VideoBasePlayer {
     @Override
     public void unRegistListener() {
         try {
-            if (null == mVlcPlayer)
-                throw new Exception("error: mVlcPlayer null");
+            if (null == mVlcPlayer) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("VideoVlcPlayer", "unRegistListener -> error: mVlcPlayer null");
+                }
+                return;
+            }
             mVlcPlayer.setOnVlcInfoChangeListener(null);
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
@@ -119,8 +151,12 @@ public final class VideoVlcPlayer extends VideoBasePlayer {
     @Override
     public void release() {
         try {
-            if (null == mVlcPlayer)
-                throw new Exception("mVlcPlayer error: null");
+            if (null == mVlcPlayer) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("VideoVlcPlayer", "release -> mVlcPlayer error: null");
+                }
+                return;
+            }
             mVlcPlayer.setSurface(null, 0, 0);
             mVlcPlayer.release();
             mVlcPlayer = null;
@@ -142,8 +178,12 @@ public final class VideoVlcPlayer extends VideoBasePlayer {
     @Override
     public void start() {
         try {
-            if (null == mVlcPlayer)
-                throw new Exception("mVlcPlayer error: null");
+            if (null == mVlcPlayer) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("VideoVlcPlayer", "start -> mVlcPlayer error: null");
+                }
+                return;
+            }
             mVlcPlayer.play();
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
@@ -158,10 +198,18 @@ public final class VideoVlcPlayer extends VideoBasePlayer {
     @Override
     public void pause() {
         try {
-            if (!isPrepared)
-                throw new Exception("mPrepared warning: false");
-            if (null == mVlcPlayer)
-                throw new Exception("mVlcPlayer error: null");
+            if (!isPrepared) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("VideoVlcPlayer", "pause -> mPrepared warning: false");
+                }
+                return;
+            }
+            if (null == mVlcPlayer) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("VideoVlcPlayer", "pause -> mVlcPlayer error: null");
+                }
+                return;
+            }
             mVlcPlayer.pause();
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
@@ -176,8 +224,12 @@ public final class VideoVlcPlayer extends VideoBasePlayer {
     @Override
     public void stop() {
         try {
-            if (null == mVlcPlayer)
-                throw new Exception("mVlcPlayer error: null");
+            if (null == mVlcPlayer) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("VideoVlcPlayer", "stop -> mVlcPlayer error: null");
+                }
+                return;
+            }
             mVlcPlayer.stop();
 //            mVlcPlayer.reset();
         } catch (Exception e) {
@@ -193,10 +245,18 @@ public final class VideoVlcPlayer extends VideoBasePlayer {
     @Override
     public boolean isPlaying() {
         try {
-            if (!isPrepared)
-                throw new Exception("mPrepared warning: false");
-            if (null == mVlcPlayer)
-                throw new Exception("mVlcPlayer error: null");
+            if (!isPrepared) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("VideoVlcPlayer", "isPlaying -> mPrepared warning: false");
+                }
+                return false;
+            }
+            if (null == mVlcPlayer) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("VideoVlcPlayer", "isPlaying -> mVlcPlayer error: null");
+                }
+                return false;
+            }
             return mVlcPlayer.isPlaying();
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
@@ -228,13 +288,25 @@ public final class VideoVlcPlayer extends VideoBasePlayer {
     @Override
     public long getPosition() {
         try {
-            if (!isPrepared)
-                throw new Exception("mPrepared warning: false");
-            if (null == mVlcPlayer)
-                throw new Exception("mVlcPlayer error: null");
+            if (!isPrepared) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("VideoVlcPlayer", "getPosition -> mPrepared warning: false");
+                }
+                return 0L;
+            }
+            if (null == mVlcPlayer) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("VideoVlcPlayer", "getPosition -> mVlcPlayer error: null");
+                }
+                return 0L;
+            }
             long position = mVlcPlayer.getPosition();
-            if (position < 0)
-                throw new Exception("position warning: " + position);
+            if (position < 0) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("VideoVlcPlayer", "getPosition -> position warning: " + position);
+                }
+                return 0L;
+            }
             return position;
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
@@ -250,13 +322,25 @@ public final class VideoVlcPlayer extends VideoBasePlayer {
     @Override
     public long getDuration() {
         try {
-            if (!isPrepared)
-                throw new Exception("mPrepared warning: false");
-            if (null == mVlcPlayer)
-                throw new Exception("mVlcPlayer error: null");
+            if (!isPrepared) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("VideoVlcPlayer", "getDuration -> mPrepared warning: false");
+                }
+                return 0L;
+            }
+            if (null == mVlcPlayer) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("VideoVlcPlayer", "getDuration -> mVlcPlayer error: null");
+                }
+                return 0L;
+            }
             long duration = mVlcPlayer.getDuration();
-            if (duration <= 0)
-                throw new Exception("duration warning: " + duration);
+            if (duration <= 0) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("VideoVlcPlayer", "getDuration -> duration warning: " + duration);
+                }
+                return 0L;
+            }
             return duration;
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
@@ -285,8 +369,12 @@ public final class VideoVlcPlayer extends VideoBasePlayer {
     @Override
     public void setSpeed(float speed) {
         try {
-            if (null == mVlcPlayer)
-                throw new Exception("mIjkPlayer error: null");
+            if (null == mVlcPlayer) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("VideoVlcPlayer", "setSpeed -> mIjkPlayer error: null");
+                }
+                return;
+            }
             onEvent(PlayerType.KernelType.VLC, PlayerType.EventType.MEDIA_INFO_UPDATE_PLAYBACLK_SPEED);
             mVlcPlayer.setSpeed(speed);
         } catch (Exception e) {
@@ -306,11 +394,19 @@ public final class VideoVlcPlayer extends VideoBasePlayer {
     @Override
     public void setVolume(float v1, float v2) {
         try {
-            if (null == mVlcPlayer)
-                throw new Exception("mVlcPlayer error: null");
+            if (null == mVlcPlayer) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("VideoVlcPlayer", "setVolume -> mVlcPlayer error: null");
+                }
+                return;
+            }
             float volume = Math.max(v1, v2);
-            if (volume < 0)
-                throw new Exception("error: volume < 0");
+            if (volume < 0) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("VideoVlcPlayer", "setVolume -> error: volume < 0");
+                }
+                return;
+            }
             mVlcPlayer.setVolume(volume, volume);
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
@@ -322,8 +418,12 @@ public final class VideoVlcPlayer extends VideoBasePlayer {
     @Override
     public float getVolume() {
         try {
-            if (null == mVlcPlayer)
-                throw new Exception("mVlcPlayer error: null");
+            if (null == mVlcPlayer) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("VideoVlcPlayer", "getVolume -> mVlcPlayer error: null");
+                }
+                return 0f;
+            }
             return mVlcPlayer.getVolume();
         } catch (Exception e) {
             if (LogUtil.DEBUG) {

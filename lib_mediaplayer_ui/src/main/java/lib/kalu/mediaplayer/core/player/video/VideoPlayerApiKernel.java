@@ -35,8 +35,12 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
     default boolean isDoWindowing() {
         try {
             VideoKernelApi videoKernel = getVideoKernel();
-            if (null == videoKernel)
-                throw new Exception("error: videoKernel null");
+            if (null == videoKernel) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log(TAG, "isDoWindowing -> error: videoKernel null");
+                }
+                return false;
+            }
             return videoKernel.isDoWindowing();
         } catch (Exception e) {
             return false;
@@ -46,8 +50,12 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
     default void setDoWindowing(boolean v) {
         try {
             VideoKernelApi videoKernel = getVideoKernel();
-            if (null == videoKernel)
-                throw new Exception("error: videoKernel null");
+            if (null == videoKernel) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log(TAG, "setDoWindowing -> error: videoKernel null");
+                }
+                return;
+            }
             videoKernel.setDoWindowing(v);
         } catch (Exception e) {
         }
@@ -272,11 +280,19 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
     default void restart() {
         try {
             StartArgs startArgs = getStartArgs();
-            if (null == startArgs)
-                throw new Exception("error: args null");
+            if (null == startArgs) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log(TAG, "restart -> error: args null");
+                }
+                return;
+            }
             boolean containsMainUrl = startArgs.containsMainUrl();
-            if (!containsMainUrl)
-                throw new Exception("error: containsMainUrl false");
+            if (!containsMainUrl) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log(TAG, "restart -> error: containsMainUrl false");
+                }
+                return;
+            }
             StartArgs newArgs = startArgs.newBuilder()
                     .setPlayWhenReadySeekToPosition(0L)
                     .setRetryType(PlayerType.EventType.RETRY_RELOAD)
@@ -292,11 +308,19 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
     default void restartSeekToPosition() {
         try {
             StartArgs startArgs = getStartArgs();
-            if (null == startArgs)
-                throw new Exception("error: args null");
+            if (null == startArgs) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log(TAG, "restart -> error: args null");
+                }
+                return;
+            }
             boolean containsMainUrl = startArgs.containsMainUrl();
-            if (!containsMainUrl)
-                throw new Exception("error: containsMainUrl false");
+            if (!containsMainUrl) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log(TAG, "restart -> error: containsMainUrl false");
+                }
+                return;
+            }
 
             long position = 0L;
             boolean live = isLiveStream();
@@ -342,11 +366,19 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
                 position = 0;
             }
             VideoKernelApi kernel = getVideoKernel();
-            if (null == kernel)
-                throw new Exception("warning: kernel null");
+            if (null == kernel) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log(TAG, "seekTo -> warning: kernel null");
+                }
+                return;
+            }
             boolean prepared = isPrepared();
-            if (!prepared)
-                throw new Exception("warning: prepared false");
+            if (!prepared) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log(TAG, "seekTo -> warning: prepared false");
+                }
+                return;
+            }
             kernel.seekTo(position);
             setScreenKeep(true);
         } catch (Exception e) {
@@ -359,11 +391,19 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
     default void seekToDefaultPosition() {
         try {
             VideoKernelApi kernel = getVideoKernel();
-            if (null == kernel)
-                throw new Exception("warning: kernel null");
+            if (null == kernel) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log(TAG, "seekTo -> warning: kernel null");
+                }
+                return;
+            }
             boolean prepared = isPrepared();
-            if (!prepared)
-                throw new Exception("warning: prepared false");
+            if (!prepared) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log(TAG, "seekTo -> warning: prepared false");
+                }
+                return;
+            }
             kernel.seekToDefaultPosition();
             setScreenKeep(true);
         } catch (Exception e) {
@@ -378,8 +418,12 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
             if (step < 0)
                 return;
             VideoKernelApi kernel = getVideoKernel();
-            if (null == kernel)
-                throw new Exception("warning: kernel null");
+            if (null == kernel) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log(TAG, "fastRewind -> warning: kernel null");
+                }
+                return;
+            }
             long position = kernel.getPosition();
             long nextPosition = position - step;
             if (nextPosition < 0L) {
@@ -399,8 +443,12 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
             if (step < 0)
                 return;
             VideoKernelApi kernel = getVideoKernel();
-            if (null == kernel)
-                throw new Exception("warning: kernel null");
+            if (null == kernel) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log(TAG, "fastForward -> warning: kernel null");
+                }
+                return;
+            }
             long position = kernel.getPosition();
             long duration = kernel.getDuration();
             long nextPosition = position + step;
@@ -419,8 +467,12 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
     default boolean isLiveStream() {
         try {
             VideoKernelApi videoKernel = getVideoKernel();
-            if (null == videoKernel)
-                throw new Exception("error: videoKernel null");
+            if (null == videoKernel) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log(TAG, "isLiveStream -> error: videoKernel null");
+                }
+                return false;
+            }
             return videoKernel.isLiveStream();
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
@@ -479,8 +531,12 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
     default void initStartArgs(StartArgs args) {
         try {
             VideoKernelApi kernel = getVideoKernel();
-            if (null == kernel)
-                throw new Exception("warning: kernel null");
+            if (null == kernel) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log(TAG, "initStartArgs -> warning: kernel null");
+                }
+                return;
+            }
             kernel.setStartArgs(args);
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
@@ -492,11 +548,19 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
     default void initDecoder() {
         try {
             StartArgs startArgs = getStartArgs();
-            if (null == startArgs)
-                throw new Exception("error: startArgs null");
+            if (null == startArgs) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log(TAG, "initDecoder -> error: startArgs null");
+                }
+                return;
+            }
             VideoKernelApi kernel = getVideoKernel();
-            if (null == kernel)
-                throw new Exception("warning: kernel null");
+            if (null == kernel) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log(TAG, "initDecoder -> warning: kernel null");
+                }
+                return;
+            }
             Context context = getBaseContext();
             kernel.initHandler();
             kernel.checkDecoder(context, startArgs);
@@ -511,8 +575,12 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
     default void releaseKernel() {
         try {
             VideoKernelApi kernel = getVideoKernel();
-            if (null == kernel)
-                throw new Exception("warning: kernel null");
+            if (null == kernel) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log(TAG, "releaseKernel -> warning: kernel null");
+                }
+                return;
+            }
             // 埋点
             onBuriedRelease();
             //
@@ -530,8 +598,12 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
     default void stopKernel(boolean callEvent) {
         try {
             VideoKernelApi kernel = getVideoKernel();
-            if (null == kernel)
-                throw new Exception("warning: kernel null");
+            if (null == kernel) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log(TAG, "stopKernel -> warning: kernel null");
+                }
+                return;
+            }
             // 埋点
             boolean prepared = isPrepared();
             if (prepared) {
@@ -542,8 +614,6 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
             }
             kernel.removeAllMessages();
             kernel.stop();
-            if (!callEvent)
-                throw new Exception("warning: callEvent false");
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
                 LogUtil.log(TAG, "stopKernel -> " + e.getMessage());
@@ -554,21 +624,33 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
     default void pauseKernel(boolean callEvent) {
         try {
             VideoKernelApi kernel = getVideoKernel();
-            if (null == kernel)
-                throw new Exception("warning: kernel null");
+            if (null == kernel) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log(TAG, "pauseKernel -> warning: kernel null");
+                }
+                return;
+            }
             boolean prepared = isPrepared();
-            if (!prepared)
-                throw new Exception("warning: prepared false");
+            if (!prepared) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log(TAG, "pauseKernel -> warning: prepared false");
+                }
+                return;
+            }
             boolean playing = isPlaying();
-            if (!playing)
-                throw new Exception("warning: playing false");
+            if (!playing) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log(TAG, "pauseKernel -> warning: playing false");
+                }
+                return;
+            }
             // 埋点
             onBuriedPause();
             // 执行
             kernel.pause();
-            if (!callEvent)
-                throw new Exception("warning: callEvent false");
-            callEvent(PlayerType.EventType.PAUSE);
+            if (callEvent) {
+                callEvent(PlayerType.EventType.PAUSE);
+            }
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
                 LogUtil.log(TAG, "pauseKernel -> " + e.getMessage());
@@ -579,22 +661,34 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
     default void resumeKernel(boolean callEvent) {
         try {
             VideoKernelApi kernel = getVideoKernel();
-            if (null == kernel)
-                throw new Exception("warning: kernel null");
+            if (null == kernel) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log(TAG, "resumeKernel -> warning: kernel null");
+                }
+                return;
+            }
             boolean prepared = isPrepared();
-            if (!prepared)
-                throw new Exception("warning: prepared false");
+            if (!prepared) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log(TAG, "resumeKernel -> warning: prepared false");
+                }
+                return;
+            }
             boolean playing = isPlaying();
-            if (playing)
-                throw new Exception("warning: playing true");
+            if (playing) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log(TAG, "resumeKernel -> warning: playing true");
+                }
+                return;
+            }
             // 埋点
             onBuriedResume();
             // 执行
             kernel.resume();
             setScreenKeep(true);
-            if (!callEvent)
-                throw new Exception("warning: callEvent false");
-            callEvent(PlayerType.EventType.RESUME);
+            if (callEvent) {
+                callEvent(PlayerType.EventType.RESUME);
+            }
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
                 LogUtil.log(TAG, "resumeKernel -> " + e.getMessage());
@@ -606,8 +700,12 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
 
     default void initKernel(StartArgs args) {
         try {
-            if (null != getVideoKernel())
-                throw new Exception("warning: getVideoKernel not null");
+            if (null != getVideoKernel()) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log(TAG, "initKernel -> warning: getVideoKernel not null");
+                }
+                return;
+            }
             //
             int kernelType = args.getKernelType();
             //
@@ -627,12 +725,15 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
                     callProgress(trySeeDuration, position, duration);
 
                     try {
-                        if (trySeeDuration <= 0L)
-                            throw new Exception("waning: trySeeDuration<=0L");
-                        if (position < 0L)
-                            throw new Exception("waning: position<0L");
-                        if (position < trySeeDuration)
-                            throw new Exception("waning: position<trySeeDuration");
+                        if (trySeeDuration <= 0L) {
+                            return;
+                        }
+                        if (position < 0L) {
+                            return;
+                        }
+                        if (position < trySeeDuration) {
+                            return;
+                        }
 
                         // 埋点
                         onBuriedTrySeeEnd();
@@ -688,8 +789,21 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
                                     LogUtil.log(TAG, "initKernel, RetryConfiguration, retryIndex = " + retryIndex + ", retryUrlsCount = " + retryUrlsCount);
                                 }
 
-                                if (retryIndex >= retryUrls.length)
-                                    throw new Exception("warning: retryIndex = " + retryIndex + ", retryUrls.length = " + retryUrls.length);
+                                if (retryIndex >= retryUrls.length) {
+                                    if (LogUtil.DEBUG) {
+                                        LogUtil.log(TAG, "initKernel -> warning: retryIndex = " + retryIndex + ", retryUrls.length = " + retryUrls.length);
+                                    }
+                                    // 透传
+                                    callEvent(playState);
+                                    // 埋点
+                                    onBuriedError(playState);
+                                    // 执行
+                                    setScreenKeep(false);
+                                    //
+                                    stop(false);
+                                    release(false, false);
+                                    return;
+                                }
 
 
                                 stop(false);
@@ -715,8 +829,21 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
                                     LogUtil.log(TAG, "initKernel, RetryConfiguration, retryIndex = " + retryIndex + ", retryCount = " + retryCount);
                                 }
 
-                                if (retryIndex >= retryCount)
-                                    throw new Exception("warning: retryIndex = " + retryIndex + ", retryCount = " + retryCount);
+                                if (retryIndex >= retryCount) {
+                                    if (LogUtil.DEBUG) {
+                                        LogUtil.log(TAG, "initKernel -> warning: retryIndex = " + retryIndex + ", retryCount = " + retryCount);
+                                    }
+                                    // 透传
+                                    callEvent(playState);
+                                    // 埋点
+                                    onBuriedError(playState);
+                                    // 执行
+                                    setScreenKeep(false);
+                                    //
+                                    stop(false);
+                                    release(false, false);
+                                    return;
+                                }
 
                                 stop(false);
                                 release(false, false);
@@ -908,8 +1035,12 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
     default boolean toggleTrack(TrackInfo trackInfo) {
         try {
             VideoKernelApi kernel = getVideoKernel();
-            if (null == kernel)
-                throw new Exception("warning: kernel null");
+            if (null == kernel) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log(TAG, "toggleTrack -> warning: kernel null");
+                }
+                return false;
+            }
             return kernel.toggleTrack(trackInfo);
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
@@ -922,8 +1053,12 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
     default List<TrackInfo> getTrackInfoAll() {
         try {
             VideoKernelApi kernel = getVideoKernel();
-            if (null == kernel)
-                throw new Exception("warning: kernel null");
+            if (null == kernel) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log(TAG, "getTrackInfoAll -> warning: kernel null");
+                }
+                return null;
+            }
             return kernel.getTrackInfoAll();
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
@@ -936,11 +1071,19 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
     default List<TrackInfo> getTrackInfoVideo() {
         try {
             VideoKernelApi kernel = getVideoKernel();
-            if (null == kernel)
-                throw new Exception("warning: kernel null");
+            if (null == kernel) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log(TAG, "getTrackInfoVideo -> warning: kernel null");
+                }
+                return null;
+            }
             List<TrackInfo> trackInfoVideo = kernel.getTrackInfoVideo();
-            if (null == trackInfoVideo)
-                throw new Exception("warning: trackInfoVideo null");
+            if (null == trackInfoVideo) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log(TAG, "getTrackInfoVideo -> warning: trackInfoVideo null");
+                }
+                return null;
+            }
 
             StartArgs startArgs = getStartArgs();
             if (null != startArgs) {
@@ -965,11 +1108,19 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
     default List<TrackInfo> getTrackInfoAudio() {
         try {
             VideoKernelApi kernel = getVideoKernel();
-            if (null == kernel)
-                throw new Exception("warning: kernel null");
+            if (null == kernel) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log(TAG, "getTrackInfoAudio -> warning: kernel null");
+                }
+                return null;
+            }
             List<TrackInfo> trackInfoAudio = kernel.getTrackInfoAudio();
-            if (null == trackInfoAudio)
-                throw new Exception("warning: trackInfoAudio null");
+            if (null == trackInfoAudio) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log(TAG, "getTrackInfoAudio -> warning: trackInfoAudio null");
+                }
+                return null;
+            }
 
             StartArgs startArgs = getStartArgs();
             if (LogUtil.DEBUG) {
@@ -997,11 +1148,19 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
     default List<TrackInfo> getTrackInfoSubtitle() {
         try {
             VideoKernelApi kernel = getVideoKernel();
-            if (null == kernel)
-                throw new Exception("warning: kernel null");
+            if (null == kernel) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log(TAG, "getTrackInfoSubtitle -> warning: kernel null");
+                }
+                return null;
+            }
             List<TrackInfo> trackInfoSubtitle = kernel.getTrackInfoSubtitle();
-            if (null == trackInfoSubtitle)
-                throw new Exception("warning: trackInfoSubtitle null");
+            if (null == trackInfoSubtitle) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log(TAG, "getTrackInfoSubtitle -> warning: trackInfoSubtitle null");
+                }
+                return null;
+            }
 
             StartArgs startArgs = getStartArgs();
             if (null != startArgs) {
@@ -1026,8 +1185,12 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
     default HlsSpanList getSegments() {
         try {
             VideoKernelApi kernel = getVideoKernel();
-            if (null == kernel)
-                throw new Exception("warning: kernel null");
+            if (null == kernel) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log(TAG, "getSegments -> warning: kernel null");
+                }
+                return null;
+            }
             return kernel.getSegments();
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
@@ -1040,12 +1203,16 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
     default long[] getSegmentsMs() {
         try {
             VideoKernelApi kernel = getVideoKernel();
-            if (null == kernel)
-                throw new Exception("warning: kernel null");
+            if (null == kernel) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log(TAG, "getSegmentsMs -> warning: kernel null");
+                }
+                return null;
+            }
             return kernel.getSegmentsMs();
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
-                LogUtil.log(TAG, "getSegments -> " + e.getMessage());
+                LogUtil.log(TAG, "getSegmentsMs -> " + e.getMessage());
             }
             return null;
         }

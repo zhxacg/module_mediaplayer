@@ -31,8 +31,12 @@ public abstract class VideoBasePlayer implements VideoKernelApi {
     @Override
     public void onUpdateProgress(long trySeeDuration, long position, long duration) {
         try {
-            if (null == eventApi)
-                throw new Exception("eventApi warning: null");
+            if (null == eventApi) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("VideoBasePlayer -> onUpdateProgress -> eventApi warning: null");
+                }
+                return;
+            }
             eventApi.onUpdateProgress(trySeeDuration, position, duration);
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
@@ -44,8 +48,12 @@ public abstract class VideoBasePlayer implements VideoKernelApi {
     @Override
     public void onUpdateSubtitle(int kernel, CharSequence result) {
         try {
-            if (null == eventApi || null == eventApi)
-                throw new Exception("eventApi error: null");
+            if (null == eventApi) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("VideoBasePlayer -> onUpdateSubtitle -> eventApi error: null");
+                }
+                return;
+            }
             eventApi.onUpdateSubtitle(kernel, result);
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
@@ -57,8 +65,12 @@ public abstract class VideoBasePlayer implements VideoKernelApi {
     @Override
     public void onUpdateBandwidth(int kernel, long totalLoadTimeMs,long estimateKBs, long realAvgKBs) {
         try {
-            if (null == eventApi || null == eventApi)
-                throw new Exception("eventApi error: null");
+            if (null == eventApi) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("VideoBasePlayer -> onUpdateBandwidth -> eventApi error: null");
+                }
+                return;
+            }
             eventApi.onUpdateBandwidth(kernel, totalLoadTimeMs, estimateKBs, realAvgKBs);
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
@@ -70,8 +82,12 @@ public abstract class VideoBasePlayer implements VideoKernelApi {
     @Override
     public void onEvent(int kernel, int event) {
         try {
-            if (null == eventApi)
-                throw new Exception("eventApi error: null");
+            if (null == eventApi) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("VideoBasePlayer -> onEvent -> eventApi error: null");
+                }
+                return;
+            }
             eventApi.onEvent(kernel, event);
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
@@ -83,8 +99,12 @@ public abstract class VideoBasePlayer implements VideoKernelApi {
     @Override
     public void onVideoFormatChanged(int kernel, int rotation, int scaleType, int width, int height, int bitrate) {
         try {
-            if (null == eventApi || null == eventApi)
-                throw new Exception("eventApi error: null");
+            if (null == eventApi) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("VideoBasePlayer -> onVideoFormatChanged -> eventApi error: null");
+                }
+                return;
+            }
             eventApi.onVideoFormatChanged(kernel, rotation, scaleType, width, height, bitrate);
         } catch (Exception e) {
             if (LogUtil.DEBUG) {

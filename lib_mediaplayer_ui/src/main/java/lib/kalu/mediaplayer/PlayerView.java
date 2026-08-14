@@ -103,9 +103,12 @@ public final class PlayerView extends RelativeLayout implements VideoPlayerApi {
                 if (!componentShowing)
                     continue;
                 boolean dispatchTouchEvent = childAt.dispatchTouchEvent(ev);
-                if (!dispatchTouchEvent)
-                    continue;
-                throw new Exception("warning: dispatchTouchEvent true, childAt = " + childAt);
+                if (dispatchTouchEvent) {
+                    if (LogUtil.DEBUG) {
+                        LogUtil.log("PlayerView -> dispatchTouchEvent1 true, childAt = " + childAt);
+                    }
+                    return true;
+                }
             }
             // Component step2
             for (int i = 0; i < childCount; i++) {
@@ -116,9 +119,12 @@ public final class PlayerView extends RelativeLayout implements VideoPlayerApi {
                 if (!assignableFrom)
                     continue;
                 boolean dispatchTouchEvent = childAt.dispatchTouchEvent(ev);
-                if (!dispatchTouchEvent)
-                    continue;
-                throw new Exception("warning: dispatchTouchEvent true, childAt = " + childAt);
+                if (dispatchTouchEvent) {
+                    if (LogUtil.DEBUG) {
+                        LogUtil.log("PlayerView -> dispatchTouchEvent2 true, childAt = " + childAt);
+                    }
+                    return true;
+                }
             }
 
             // error
@@ -149,12 +155,12 @@ public final class PlayerView extends RelativeLayout implements VideoPlayerApi {
                 if (!componentShowing)
                     continue;
                 boolean dispatchKeyEvent = childAt.dispatchKeyEvent(event);
-                if (!dispatchKeyEvent)
-                    continue;
-                if (LogUtil.DEBUG) {
-                    LogUtil.log("PlayerView -> dispatchKeyEvent1 -> i = " + i + ", childAt = " + childAt);
+                if (dispatchKeyEvent) {
+                    if (LogUtil.DEBUG) {
+                        LogUtil.log("PlayerView -> dispatchKeyEvent1 -> i = " + i + ", childAt = " + childAt);
+                    }
+                    return true;
                 }
-                throw new Exception("warning: dispatchKeyEvent1 true, childAt = " + childAt);
             }
             // Component step2
             for (int i = 0; i < childCount; i++) {
@@ -165,12 +171,12 @@ public final class PlayerView extends RelativeLayout implements VideoPlayerApi {
                 if (!assignableFrom)
                     continue;
                 boolean dispatchKeyEvent = childAt.dispatchKeyEvent(event);
-                if (!dispatchKeyEvent)
-                    continue;
-                if (LogUtil.DEBUG) {
-                    LogUtil.log("PlayerView -> dispatchKeyEvent2 -> i = " + i + ", childAt = " + childAt);
+                if (dispatchKeyEvent) {
+                    if (LogUtil.DEBUG) {
+                        LogUtil.log("PlayerView -> dispatchKeyEvent2 -> i = " + i + ", childAt = " + childAt);
+                    }
+                    return true;
                 }
-                throw new Exception("warning: dispatchKeyEvent2 true, childAt = " + childAt);
             }
 
             // error
@@ -204,9 +210,9 @@ public final class PlayerView extends RelativeLayout implements VideoPlayerApi {
     public void checkVideoVisibility() {
         try {
             int visibility = getVisibility();
-            if (visibility == View.VISIBLE)
-                throw new Exception("warning: visibility == View.VISIBLE");
-            pause(true);
+            if (visibility != View.VISIBLE) {
+                pause(true);
+            }
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
                 LogUtil.log("PlayerView -> checkVideoVisibility -> Exception " + e.getMessage());
@@ -229,11 +235,19 @@ public final class PlayerView extends RelativeLayout implements VideoPlayerApi {
     public StartArgs getStartArgs() {
         try {
             VideoKernelApi videoKernel = getVideoKernel();
-            if (null == videoKernel)
-                throw new Exception("error: videoKernel null");
+            if (null == videoKernel) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log(TAG, "getStartArgs -> error: videoKernel null");
+                }
+                return null;
+            }
             StartArgs startArgs = videoKernel.getStartArgs();
-            if (null == startArgs)
-                throw new Exception("error: startArgs null");
+            if (null == startArgs) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log(TAG, "getStartArgs -> error: startArgs null");
+                }
+                return null;
+            }
             return startArgs;
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
@@ -245,11 +259,19 @@ public final class PlayerView extends RelativeLayout implements VideoPlayerApi {
 
     public void updateStartArgs(StartArgs startArgs) {
         try {
-            if (null == startArgs)
-                throw new Exception("error: startArgs null");
+            if (null == startArgs) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log(TAG, "updateStartArgs -> error: startArgs null");
+                }
+                return;
+            }
             VideoKernelApi videoKernel = getVideoKernel();
-            if (null == videoKernel)
-                throw new Exception("error: videoKernel null");
+            if (null == videoKernel) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log(TAG, "updateStartArgs -> error: videoKernel null");
+                }
+                return;
+            }
             videoKernel.setStartArgs(startArgs);
         } catch (Exception e) {
             if (LogUtil.DEBUG) {

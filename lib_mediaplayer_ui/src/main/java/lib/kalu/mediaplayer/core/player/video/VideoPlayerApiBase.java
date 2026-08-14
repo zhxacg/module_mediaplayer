@@ -18,8 +18,12 @@ public interface VideoPlayerApiBase {
     default StartArgs getStartArgs() {
         try {
             PlayerLayout playerLayout = getPlayerLayout();
-            if (null == playerLayout)
-                throw new Exception("error: playerLayout null");
+            if (null == playerLayout) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log(TAG, "getStartArgs -> error: playerLayout null");
+                }
+                return null;
+            }
             return playerLayout.getStartArgs();
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
@@ -64,14 +68,26 @@ public interface VideoPlayerApiBase {
     default boolean isFull() {
         try {
             ViewGroup decorView = findDecorView((View) this);
-            if (null == decorView)
-                throw new Exception("decorView error: null");
+            if (null == decorView) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("VideoPlayerApiBase", "isFull -> decorView error: null");
+                }
+                return false;
+            }
             View focus = decorView.findFocus();
-            if (null == focus)
-                throw new Exception("error: focus null");
+            if (null == focus) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("VideoPlayerApiBase", "isFull -> error: focus null");
+                }
+                return false;
+            }
             int focusId = focus.getId();
-            if (focusId != R.id.module_mediaplayer_id_player)
-                throw new Exception("error: focusId != R.id.module_mediaplayer_id_player");
+            if (focusId != R.id.module_mediaplayer_id_player) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("VideoPlayerApiBase", "isFull -> error: focusId != R.id.module_mediaplayer_id_player");
+                }
+                return false;
+            }
 //            ViewGroup viewRoot = decorView.findViewById(R.id.module_mediaplayer_root);
 //            if (null == viewRoot)
 //                throw new Exception("viewRoot error: null");
@@ -93,16 +109,32 @@ public interface VideoPlayerApiBase {
     default boolean isFloat() {
         try {
             ViewGroup decorView = findDecorView((View) this);
-            if (null == decorView)
-                throw new Exception("decorView error: null");
+            if (null == decorView) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("VideoPlayerApiBase", "isFloat -> decorView error: null");
+                }
+                return false;
+            }
             View rootView = decorView.findViewById(R.id.module_mediaplayer_id_player);
-            if (null == rootView)
-                throw new Exception("error: rootView null");
+            if (null == rootView) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("VideoPlayerApiBase", "isFloat -> error: rootView null");
+                }
+                return false;
+            }
             ViewParent parentView = rootView.getParent();
-            if (null == parentView)
-                throw new Exception("error: parentView null");
-            if (parentView instanceof PlayerLayout)
-                throw new Exception("warning: parentView is PlayerLayout");
+            if (null == parentView) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("VideoPlayerApiBase", "isFloat -> error: parentView null");
+                }
+                return false;
+            }
+            if (parentView instanceof PlayerLayout) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("VideoPlayerApiBase", "isFloat -> warning: parentView is PlayerLayout");
+                }
+                return false;
+            }
             ViewGroup.LayoutParams layoutParams = rootView.getLayoutParams();
             int width = layoutParams.width;
             int height = layoutParams.height;

@@ -56,8 +56,12 @@ public class PlayerLayout extends RelativeLayout {
     private void initPlayerView(Context context, AttributeSet attrs) {
         try {
             int childCount = getChildCount();
-            if (childCount > 0)
-                throw new Exception("childCount warning: " + childCount);
+            if (childCount > 0) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("PlayerLayout", "initPlayerView -> childCount warning: " + childCount);
+                }
+                return;
+            }
             PlayerView playerView = new PlayerView(context);
             playerView.setLayoutParams(new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT));
             addView(playerView);
@@ -72,8 +76,12 @@ public class PlayerLayout extends RelativeLayout {
     public boolean dispatchTouchEvent(MotionEvent ev) {
         try {
             PlayerView playerView = getPlayerView();
-            if (null == playerView)
-                throw new Exception("warning: null == playerView");
+            if (null == playerView) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("PlayerLayout", "dispatchTouchEvent -> warning: null == playerView");
+                }
+                return false;
+            }
             return playerView.dispatchTouchEvent(ev);
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
@@ -87,8 +95,12 @@ public class PlayerLayout extends RelativeLayout {
     public boolean dispatchKeyEvent(KeyEvent event) {
         try {
             PlayerView playerView = getPlayerView();
-            if (null == playerView)
-                throw new Exception("warning: null == playerView");
+            if (null == playerView) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("PlayerLayout", "dispatchKeyEvent -> warning: null == playerView");
+                }
+                return false;
+            }
             return playerView.dispatchKeyEvent(event);
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
@@ -121,8 +133,12 @@ public class PlayerLayout extends RelativeLayout {
             // not
             else {
                 ViewGroup decorView = findDecorView(this);
-                if (null == decorView)
-                    throw new Exception("decorView error: null");
+                if (null == decorView) {
+                    if (LogUtil.DEBUG) {
+                        LogUtil.log("PlayerLayout", "getPlayerView -> decorView error: null");
+                    }
+                    return null;
+                }
                 int decorChildCount = decorView.getChildCount();
                 for (int i = 0; i < decorChildCount; i++) {
                     View childAt = decorView.getChildAt(i);
@@ -133,7 +149,10 @@ public class PlayerLayout extends RelativeLayout {
                     }
                 }
             }
-            throw new Exception("not find");
+            if (LogUtil.DEBUG) {
+                LogUtil.log("PlayerLayout", "getPlayerView -> not find");
+            }
+            return null;
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
                 LogUtil.log("PlayerLayout -> getPlayerView -> " + e.getMessage());
@@ -147,8 +166,12 @@ public class PlayerLayout extends RelativeLayout {
     public final boolean isFull() {
         try {
             PlayerView playerView = getPlayerView();
-            if (null == playerView)
-                throw new Exception("playerView error: null");
+            if (null == playerView) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("PlayerLayout", "isFull -> playerView error: null");
+                }
+                return false;
+            }
             return playerView.isFull();
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
@@ -161,8 +184,12 @@ public class PlayerLayout extends RelativeLayout {
     public final boolean isFloat() {
         try {
             PlayerView playerView = getPlayerView();
-            if (null == playerView)
-                throw new Exception("playerView error: null");
+            if (null == playerView) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("PlayerLayout", "isFloat -> playerView error: null");
+                }
+                return false;
+            }
             return playerView.isFloat();
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
@@ -175,11 +202,19 @@ public class PlayerLayout extends RelativeLayout {
     public final StartArgs getStartArgs() {
         try {
             PlayerView playerView = getPlayerView();
-            if (null == playerView)
-                throw new Exception("playerView error: null");
+            if (null == playerView) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("PlayerLayout", "getStartArgs -> playerView error: null");
+                }
+                return null;
+            }
             StartArgs args = playerView.getStartArgs();
-            if (null == args)
-                throw new Exception("warning: args null");
+            if (null == args) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("PlayerLayout", "getStartArgs -> warning: args null");
+                }
+                return null;
+            }
             return args;
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
@@ -191,11 +226,19 @@ public class PlayerLayout extends RelativeLayout {
 
     public final void updateStartArgs(StartArgs startArgs) {
         try {
-            if (null == startArgs)
-                throw new Exception("error: startArgs null");
+            if (null == startArgs) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("PlayerLayout", "updateStartArgs -> error: startArgs null");
+                }
+                return;
+            }
             PlayerView playerView = getPlayerView();
-            if (null == playerView)
-                throw new Exception("playerView error: null");
+            if (null == playerView) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("PlayerLayout", "updateStartArgs -> playerView error: null");
+                }
+                return;
+            }
             playerView.updateStartArgs(startArgs);
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
@@ -207,14 +250,26 @@ public class PlayerLayout extends RelativeLayout {
     public final void startFull() {
         try {
             StartArgs args = getStartArgs();
-            if (null == args)
-                throw new Exception("warning: args null");
+            if (null == args) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("PlayerLayout", "startFull -> warning: args null");
+                }
+                return;
+            }
             boolean containsMainUrl = args.containsMainUrl();
-            if (!containsMainUrl)
-                throw new Exception("error: containsMainUrl false");
+            if (!containsMainUrl) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("PlayerLayout", "startFull -> error: containsMainUrl false");
+                }
+                return;
+            }
             PlayerView playerView = getPlayerView();
-            if (null == playerView)
-                throw new Exception("playerView error: null");
+            if (null == playerView) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("PlayerLayout", "startFull -> playerView error: null");
+                }
+                return;
+            }
             boolean startFull = playerView.startFull();
             if (LogUtil.DEBUG) {
                 LogUtil.log("PlayerLayout -> startFull -> status = " + startFull);
@@ -229,14 +284,26 @@ public class PlayerLayout extends RelativeLayout {
     public final void stopFull() {
         try {
             StartArgs args = getStartArgs();
-            if (null == args)
-                throw new Exception("warning: args null");
+            if (null == args) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("PlayerLayout", "stopFull -> warning: args null");
+                }
+                return;
+            }
             boolean containsMainUrl = args.containsMainUrl();
-            if (!containsMainUrl)
-                throw new Exception("error: containsMainUrl false");
+            if (!containsMainUrl) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("PlayerLayout", "stopFull -> error: containsMainUrl false");
+                }
+                return;
+            }
             PlayerView playerView = getPlayerView();
-            if (null == playerView)
-                throw new Exception("playerView error: null");
+            if (null == playerView) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("PlayerLayout", "stopFull -> playerView error: null");
+                }
+                return;
+            }
             boolean stopFull = playerView.stopFull();
             if (LogUtil.DEBUG) {
                 LogUtil.log("PlayerLayout -> stopFull -> status = " + stopFull);
@@ -251,14 +318,26 @@ public class PlayerLayout extends RelativeLayout {
     public final void startFloat() {
         try {
             StartArgs args = getStartArgs();
-            if (null == args)
-                throw new Exception("warning: args null");
+            if (null == args) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("PlayerLayout", "startFloat -> warning: args null");
+                }
+                return;
+            }
             boolean containsMainUrl = args.containsMainUrl();
-            if (!containsMainUrl)
-                throw new Exception("error: containsMainUrl false");
+            if (!containsMainUrl) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("PlayerLayout", "startFloat -> error: containsMainUrl false");
+                }
+                return;
+            }
             PlayerView playerView = getPlayerView();
-            if (null == playerView)
-                throw new Exception("playerView error: null");
+            if (null == playerView) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("PlayerLayout", "startFloat -> playerView error: null");
+                }
+                return;
+            }
             boolean startFull = playerView.startFloat();
             if (LogUtil.DEBUG) {
                 LogUtil.log("PlayerLayout -> startFloat -> status = " + startFull);
@@ -274,14 +353,26 @@ public class PlayerLayout extends RelativeLayout {
     public final void stopFloat() {
         try {
             StartArgs args = getStartArgs();
-            if (null == args)
-                throw new Exception("warning: args null");
+            if (null == args) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("PlayerLayout", "stopFloat -> warning: args null");
+                }
+                return;
+            }
             boolean containsMainUrl = args.containsMainUrl();
-            if (!containsMainUrl)
-                throw new Exception("error: containsMainUrl false");
+            if (!containsMainUrl) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("PlayerLayout", "stopFloat -> error: containsMainUrl false");
+                }
+                return;
+            }
             PlayerView playerView = getPlayerView();
-            if (null == playerView)
-                throw new Exception("playerView error: null");
+            if (null == playerView) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("PlayerLayout", "stopFloat -> playerView error: null");
+                }
+                return;
+            }
             boolean stopFull = playerView.stopFloat();
             if (LogUtil.DEBUG) {
                 LogUtil.log("PlayerLayout -> stopFloat -> status = " + stopFull);
@@ -296,8 +387,12 @@ public class PlayerLayout extends RelativeLayout {
     public long getPosition() {
         try {
             PlayerView playerView = getPlayerView();
-            if (null == playerView)
-                throw new Exception("playerView error: null");
+            if (null == playerView) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("PlayerLayout", "getPosition -> playerView error: null");
+                }
+                return 0;
+            }
             return playerView.getPosition();
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
@@ -310,8 +405,12 @@ public class PlayerLayout extends RelativeLayout {
     public long getDuration() {
         try {
             PlayerView playerView = getPlayerView();
-            if (null == playerView)
-                throw new Exception("playerView error: null");
+            if (null == playerView) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("PlayerLayout", "getDuration -> playerView error: null");
+                }
+                return 0;
+            }
             return playerView.getDuration();
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
@@ -324,8 +423,12 @@ public class PlayerLayout extends RelativeLayout {
     public final void setVideoScaleType(@PlayerType.ScaleType.Value int scaleType) {
         try {
             PlayerView playerView = getPlayerView();
-            if (null == playerView)
-                throw new Exception("playerView error: null");
+            if (null == playerView) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("PlayerLayout", "setVideoScaleType -> playerView error: null");
+                }
+                return;
+            }
             playerView.setVideoScaleType(scaleType);
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
@@ -337,8 +440,12 @@ public class PlayerLayout extends RelativeLayout {
     public final void setVideoRotation(@PlayerType.RotationType.Value int rotationType) {
         try {
             PlayerView playerView = getPlayerView();
-            if (null == playerView)
-                throw new Exception("playerView error: null");
+            if (null == playerView) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("PlayerLayout", "setVideoRotation -> playerView error: null");
+                }
+                return;
+            }
             playerView.setVideoRotation(rotationType);
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
@@ -350,8 +457,12 @@ public class PlayerLayout extends RelativeLayout {
     public final void addComponent(ComponentApi componentApi) {
         try {
             PlayerView playerView = getPlayerView();
-            if (null == playerView)
-                throw new Exception("playerView error: null");
+            if (null == playerView) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("PlayerLayout", "addComponent -> playerView error: null");
+                }
+                return;
+            }
             playerView.addComponent(componentApi);
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
@@ -363,8 +474,12 @@ public class PlayerLayout extends RelativeLayout {
     public final void addAllComponent(List<ComponentApi> componentApis) {
         try {
             PlayerView playerView = getPlayerView();
-            if (null == playerView)
-                throw new Exception("playerView error: null");
+            if (null == playerView) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("PlayerLayout", "addAllComponent -> playerView error: null");
+                }
+                return;
+            }
             playerView.addAllComponent(componentApis);
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
@@ -376,8 +491,12 @@ public class PlayerLayout extends RelativeLayout {
     public final <T extends ComponentApi> T findComponent(java.lang.Class<?> cls) {
         try {
             PlayerView playerView = getPlayerView();
-            if (null == playerView)
-                throw new Exception("playerView error: null");
+            if (null == playerView) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("PlayerLayout", "findComponent -> playerView error: null");
+                }
+                return null;
+            }
             return playerView.findComponent(cls);
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
@@ -390,8 +509,12 @@ public class PlayerLayout extends RelativeLayout {
     public final boolean showComponent(java.lang.Class<?> cls) {
         try {
             ComponentApi component = findComponent(cls);
-            if (null == component)
-                throw new Exception("component error: null");
+            if (null == component) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("PlayerLayout", "showComponent -> component error: null");
+                }
+                return false;
+            }
             component.show();
             return true;
         } catch (Exception e) {
@@ -405,8 +528,12 @@ public class PlayerLayout extends RelativeLayout {
     public final boolean hideComponent(java.lang.Class<?> cls) {
         try {
             ComponentApi component = findComponent(cls);
-            if (null == component)
-                throw new Exception("component error: null");
+            if (null == component) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("PlayerLayout", "hideComponent -> component error: null");
+                }
+                return false;
+            }
             component.hide();
             return true;
         } catch (Exception e) {
@@ -420,8 +547,12 @@ public class PlayerLayout extends RelativeLayout {
     public final void toggle() {
         try {
             PlayerView playerView = getPlayerView();
-            if (null == playerView)
-                throw new Exception("playerView error: null");
+            if (null == playerView) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("PlayerLayout", "toggle -> playerView error: null");
+                }
+                return;
+            }
             playerView.toggle();
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
@@ -437,8 +568,12 @@ public class PlayerLayout extends RelativeLayout {
     public final void resume(boolean callEvent) {
         try {
             PlayerView playerView = getPlayerView();
-            if (null == playerView)
-                throw new Exception("playerView error: null");
+            if (null == playerView) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("PlayerLayout", "resume -> playerView error: null");
+                }
+                return;
+            }
             playerView.resume(callEvent);
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
@@ -454,8 +589,12 @@ public class PlayerLayout extends RelativeLayout {
     public final void pause(boolean callEvent) {
         try {
             PlayerView playerView = getPlayerView();
-            if (null == playerView)
-                throw new Exception("playerView error: null");
+            if (null == playerView) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("PlayerLayout", "pause -> playerView error: null");
+                }
+                return;
+            }
             playerView.pause(callEvent);
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
@@ -474,8 +613,12 @@ public class PlayerLayout extends RelativeLayout {
     public final void release(boolean callEvent) {
         try {
             PlayerView playerView = getPlayerView();
-            if (null == playerView)
-                throw new Exception("playerView error: null");
+            if (null == playerView) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("PlayerLayout", "release -> playerView error: null");
+                }
+                return;
+            }
             playerView.release(callEvent, false);
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
@@ -494,8 +637,12 @@ public class PlayerLayout extends RelativeLayout {
     public final void stop(boolean callEvent) {
         try {
             PlayerView playerView = getPlayerView();
-            if (null == playerView)
-                throw new Exception("playerView error: null");
+            if (null == playerView) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("PlayerLayout", "stop -> playerView error: null");
+                }
+                return;
+            }
             playerView.stop(callEvent);
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
@@ -507,8 +654,12 @@ public class PlayerLayout extends RelativeLayout {
     public final boolean isPlaying() {
         try {
             PlayerView playerView = getPlayerView();
-            if (null == playerView)
-                throw new Exception("playerView error: null");
+            if (null == playerView) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("PlayerLayout", "isPlaying -> playerView error: null");
+                }
+                return false;
+            }
             return playerView.isPlaying();
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
@@ -521,8 +672,12 @@ public class PlayerLayout extends RelativeLayout {
     public final boolean isPrepared() {
         try {
             PlayerView playerView = getPlayerView();
-            if (null == playerView)
-                throw new Exception("playerView error: null");
+            if (null == playerView) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("PlayerLayout", "isPrepared -> playerView error: null");
+                }
+                return false;
+            }
             return playerView.isPrepared();
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
@@ -535,8 +690,12 @@ public class PlayerLayout extends RelativeLayout {
     public final String getUrl() {
         try {
             StartArgs args = getStartArgs();
-            if (null == args)
-                throw new Exception("warning: args null");
+            if (null == args) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("PlayerLayout", "getUrl -> warning: args null");
+                }
+                return null;
+            }
             return args.getUrl();
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
@@ -549,8 +708,12 @@ public class PlayerLayout extends RelativeLayout {
     public final UrlArgs getUrlArgs() {
         try {
             StartArgs args = getStartArgs();
-            if (null == args)
-                throw new Exception("warning: args null");
+            if (null == args) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("PlayerLayout", "getUrlArgs -> warning: args null");
+                }
+                return null;
+            }
             return args.getUrlArgs();
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
@@ -563,8 +726,12 @@ public class PlayerLayout extends RelativeLayout {
     public void restart() {
         try {
             PlayerView playerView = getPlayerView();
-            if (null == playerView)
-                throw new Exception("playerView error: null");
+            if (null == playerView) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("PlayerLayout", "restart -> playerView error: null");
+                }
+                return;
+            }
             playerView.restart();
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
@@ -576,8 +743,12 @@ public class PlayerLayout extends RelativeLayout {
     public void restartSeekToPosition() {
         try {
             PlayerView playerView = getPlayerView();
-            if (null == playerView)
-                throw new Exception("playerView error: null");
+            if (null == playerView) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("PlayerLayout", "restartSeekToPosition -> playerView error: null");
+                }
+                return;
+            }
             playerView.restartSeekToPosition();
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
@@ -589,8 +760,12 @@ public class PlayerLayout extends RelativeLayout {
     public void start(StartArgs args) {
         try {
             PlayerView playerView = getPlayerView();
-            if (null == playerView)
-                throw new Exception("playerView error: null");
+            if (null == playerView) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("PlayerLayout", "start -> playerView error: null");
+                }
+                return;
+            }
             playerView.start(args);
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
@@ -602,8 +777,12 @@ public class PlayerLayout extends RelativeLayout {
     public final void setVolume(float left, float right) {
         try {
             PlayerView playerView = getPlayerView();
-            if (null == playerView)
-                throw new Exception("playerView error: null");
+            if (null == playerView) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("PlayerLayout", "setVolume -> playerView error: null");
+                }
+                return;
+            }
             playerView.setVolume(left, right);
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
@@ -615,8 +794,12 @@ public class PlayerLayout extends RelativeLayout {
     public final void closeVolume() {
         try {
             PlayerView playerView = getPlayerView();
-            if (null == playerView)
-                throw new Exception("playerView error: null");
+            if (null == playerView) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("PlayerLayout", "closeVolume -> playerView error: null");
+                }
+                return;
+            }
             playerView.closeVolume();
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
@@ -628,8 +811,12 @@ public class PlayerLayout extends RelativeLayout {
     public final void openVolume() {
         try {
             PlayerView playerView = getPlayerView();
-            if (null == playerView)
-                throw new Exception("playerView error: null");
+            if (null == playerView) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("PlayerLayout", "openVolume -> playerView error: null");
+                }
+                return;
+            }
             playerView.closeVolume();
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
@@ -641,8 +828,12 @@ public class PlayerLayout extends RelativeLayout {
     public final long getPlayWhenReadySeekToPosition() {
         try {
             StartArgs args = getStartArgs();
-            if (null == args)
-                throw new Exception("warning: args null");
+            if (null == args) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("PlayerLayout", "getPlayWhenReadySeekToPosition -> warning: args null");
+                }
+                return 0L;
+            }
             return args.getPlayWhenReadySeekToPosition();
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
@@ -655,8 +846,12 @@ public class PlayerLayout extends RelativeLayout {
     public final long getTrySeeDuration() {
         try {
             StartArgs args = getStartArgs();
-            if (null == args)
-                throw new Exception("error: args null");
+            if (null == args) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("PlayerLayout", "getTrySeeDuration -> error: args null");
+                }
+                return 0L;
+            }
             return args.getTrySeeDuration();
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
@@ -669,8 +864,12 @@ public class PlayerLayout extends RelativeLayout {
     public final void seekTo(long postion) {
         try {
             PlayerView playerView = getPlayerView();
-            if (null == playerView)
-                throw new Exception("playerView error: null");
+            if (null == playerView) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("PlayerLayout", "seekTo -> playerView error: null");
+                }
+                return;
+            }
             playerView.seekTo(postion);
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
@@ -682,8 +881,12 @@ public class PlayerLayout extends RelativeLayout {
     public final void seekToDefaultPosition() {
         try {
             PlayerView playerView = getPlayerView();
-            if (null == playerView)
-                throw new Exception("playerView error: null");
+            if (null == playerView) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("PlayerLayout", "seekToDefaultPosition -> playerView error: null");
+                }
+                return;
+            }
             playerView.seekToDefaultPosition();
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
@@ -695,8 +898,12 @@ public class PlayerLayout extends RelativeLayout {
     public final boolean isLiveStream() {
         try {
             PlayerView playerView = getPlayerView();
-            if (null == playerView)
-                throw new Exception("playerView error: null");
+            if (null == playerView) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("PlayerLayout", "isLiveStream -> playerView error: null");
+                }
+                return false;
+            }
             return playerView.isLiveStream();
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
@@ -709,8 +916,12 @@ public class PlayerLayout extends RelativeLayout {
     public final void setPlayerBackgroundColor(@ColorInt int color) {
         try {
             PlayerView playerView = getPlayerView();
-            if (null == playerView)
-                throw new Exception("playerView error: null");
+            if (null == playerView) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("PlayerLayout", "setPlayerBackgroundColor -> playerView error: null");
+                }
+                return;
+            }
             playerView.setBackgroundColor(color);
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
@@ -722,8 +933,12 @@ public class PlayerLayout extends RelativeLayout {
     public final void setSpeed(float speed) {
         try {
             PlayerView playerView = getPlayerView();
-            if (null == playerView)
-                throw new Exception("playerView error: null");
+            if (null == playerView) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("PlayerLayout", "setSpeed -> playerView error: null");
+                }
+                return;
+            }
             playerView.setSpeed(speed);
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
@@ -735,8 +950,12 @@ public class PlayerLayout extends RelativeLayout {
     public final float getSpeed() {
         try {
             PlayerView playerView = getPlayerView();
-            if (null == playerView)
-                throw new Exception("playerView error: null");
+            if (null == playerView) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("PlayerLayout", "getSpeed -> playerView error: null");
+                }
+                return 1.0f;
+            }
             return playerView.getSpeed();
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
@@ -749,8 +968,12 @@ public class PlayerLayout extends RelativeLayout {
     public final boolean toggleTrack(TrackInfo trackInfo) {
         try {
             PlayerView playerView = getPlayerView();
-            if (null == playerView)
-                throw new Exception("playerView error: null");
+            if (null == playerView) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("PlayerLayout", "toggleTrack -> playerView error: null");
+                }
+                return false;
+            }
             return playerView.toggleTrack(trackInfo);
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
@@ -763,8 +986,12 @@ public class PlayerLayout extends RelativeLayout {
     public final List<TrackInfo> getTrackInfo() {
         try {
             PlayerView playerView = getPlayerView();
-            if (null == playerView)
-                throw new Exception("playerView error: null");
+            if (null == playerView) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("PlayerLayout", "getTrackInfo -> playerView error: null");
+                }
+                return null;
+            }
             return playerView.getTrackInfoAll();
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
@@ -777,8 +1004,12 @@ public class PlayerLayout extends RelativeLayout {
     public final List<TrackInfo> getTrackInfoVideo() {
         try {
             PlayerView playerView = getPlayerView();
-            if (null == playerView)
-                throw new Exception("playerView error: null");
+            if (null == playerView) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("PlayerLayout", "getTrackInfoVideo -> playerView error: null");
+                }
+                return null;
+            }
             return playerView.getTrackInfoVideo();
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
@@ -791,8 +1022,12 @@ public class PlayerLayout extends RelativeLayout {
     public final List<TrackInfo> getTrackInfoAudio() {
         try {
             PlayerView playerView = getPlayerView();
-            if (null == playerView)
-                throw new Exception("playerView error: null");
+            if (null == playerView) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("PlayerLayout", "getTrackInfoAudio -> playerView error: null");
+                }
+                return null;
+            }
             return playerView.getTrackInfoAudio();
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
@@ -805,8 +1040,12 @@ public class PlayerLayout extends RelativeLayout {
     public final List<TrackInfo> getTrackInfoSubtitle() {
         try {
             PlayerView playerView = getPlayerView();
-            if (null == playerView)
-                throw new Exception("playerView error: null");
+            if (null == playerView) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("PlayerLayout", "getTrackInfoSubtitle -> playerView error: null");
+                }
+                return null;
+            }
             return playerView.getTrackInfoSubtitle();
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
@@ -819,8 +1058,12 @@ public class PlayerLayout extends RelativeLayout {
     public final List<HlsSpanInfo> getSegments() {
         try {
             PlayerView playerView = getPlayerView();
-            if (null == playerView)
-                throw new Exception("playerView error: null");
+            if (null == playerView) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("PlayerLayout", "getSegments -> playerView error: null");
+                }
+                return null;
+            }
             return playerView.getSegments();
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
@@ -833,11 +1076,19 @@ public class PlayerLayout extends RelativeLayout {
     public final String screenshot() {
         try {
             PlayerView playerView = getPlayerView();
-            if (null == playerView)
-                throw new Exception("playerView error: null");
+            if (null == playerView) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("PlayerLayout", "screenshot -> playerView error: null");
+                }
+                return null;
+            }
             String screenshot = playerView.screenshot();
-            if (null == screenshot || screenshot.length() == 0)
-                throw new Exception("error: null == screenshot || screenshot.length() == 0");
+            if (null == screenshot || screenshot.length() == 0) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("PlayerLayout", "screenshot -> error: null == screenshot || screenshot.length() == 0");
+                }
+                return null;
+            }
             return screenshot;
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
@@ -850,8 +1101,12 @@ public class PlayerLayout extends RelativeLayout {
     public final void sendSelfEvent(int playState) {
         try {
             PlayerView playerView = getPlayerView();
-            if (null == playerView)
-                throw new Exception("playerView error: null");
+            if (null == playerView) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("PlayerLayout", "sendSelfEvent -> playerView error: null");
+                }
+                return;
+            }
             playerView.callEvent(playState);
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
@@ -863,8 +1118,12 @@ public class PlayerLayout extends RelativeLayout {
     public final boolean setPlaybackSubtitleOffsetMs(int offset) {
         try {
             PlayerView playerView = getPlayerView();
-            if (null == playerView)
-                throw new Exception("playerView error: null");
+            if (null == playerView) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("PlayerLayout", "setPlaybackSubtitleOffsetMs -> playerView error: null");
+                }
+                return false;
+            }
             return playerView.subtitleOffsetMs(offset);
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
@@ -877,8 +1136,12 @@ public class PlayerLayout extends RelativeLayout {
     public final boolean addSubtitleTrack(String url) {
         try {
             PlayerView playerView = getPlayerView();
-            if (null == playerView)
-                throw new Exception("playerView error: null");
+            if (null == playerView) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("PlayerLayout", "addSubtitleTrack -> playerView error: null");
+                }
+                return false;
+            }
             return playerView.addSubtitleTrack(url);
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
@@ -890,11 +1153,19 @@ public class PlayerLayout extends RelativeLayout {
 
     public final void setOnPlayerEpisodeListener(OnPlayerEpisodeListener listener) {
         try {
-            if (null == listener)
-                throw new Exception("listener error: null");
+            if (null == listener) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("PlayerLayout", "setOnPlayerEpisodeListener -> listener error: null");
+                }
+                return;
+            }
             PlayerView playerView = getPlayerView();
-            if (null == playerView)
-                throw new Exception("playerView error: null");
+            if (null == playerView) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("PlayerLayout", "setOnPlayerEpisodeListener -> playerView error: null");
+                }
+                return;
+            }
             playerView.setOnPlayerEpisodeListener(listener);
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
@@ -905,11 +1176,19 @@ public class PlayerLayout extends RelativeLayout {
 
     public final void setOnPlayerWindowStateChangeListener(OnPlayerWindowStateChangeListener listener) {
         try {
-            if (null == listener)
-                throw new Exception("listener error: null");
+            if (null == listener) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("PlayerLayout", "setOnPlayerWindowStateChangeListener -> listener error: null");
+                }
+                return;
+            }
             PlayerView playerView = getPlayerView();
-            if (null == playerView)
-                throw new Exception("playerView error: null");
+            if (null == playerView) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("PlayerLayout", "setOnPlayerWindowStateChangeListener -> playerView error: null");
+                }
+                return;
+            }
             playerView.setOnPlayerWindowStateChangeListener(listener);
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
@@ -920,11 +1199,19 @@ public class PlayerLayout extends RelativeLayout {
 
     public final void setOnPlayerEventListener(OnPlayerEventListener listener) {
         try {
-            if (null == listener)
-                throw new Exception("listener error: null");
+            if (null == listener) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("PlayerLayout", "setOnPlayerEventListener -> listener error: null");
+                }
+                return;
+            }
             PlayerView playerView = getPlayerView();
-            if (null == playerView)
-                throw new Exception("playerView error: null");
+            if (null == playerView) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("PlayerLayout", "setOnPlayerEventListener -> playerView error: null");
+                }
+                return;
+            }
             playerView.setOnPlayerEventListener(listener);
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
@@ -935,11 +1222,19 @@ public class PlayerLayout extends RelativeLayout {
 
     public final void setOnPlayerProgressListener(OnPlayerProgressListener listener) {
         try {
-            if (null == listener)
-                throw new Exception("listener error: null");
+            if (null == listener) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("PlayerLayout", "setOnPlayerProgressListener -> listener error: null");
+                }
+                return;
+            }
             PlayerView playerView = getPlayerView();
-            if (null == playerView)
-                throw new Exception("playerView error: null");
+            if (null == playerView) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("PlayerLayout", "setOnPlayerProgressListener -> playerView error: null");
+                }
+                return;
+            }
             playerView.setOnPlayerProgressListener(listener);
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
@@ -951,8 +1246,12 @@ public class PlayerLayout extends RelativeLayout {
     public final void setOnPlayerBandwidthListener(OnPlayerBandwidthListener l) {
         try {
             PlayerView playerView = getPlayerView();
-            if (null == playerView)
-                throw new Exception("playerView error: null");
+            if (null == playerView) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("PlayerLayout", "setOnPlayerBandwidthListener -> playerView error: null");
+                }
+                return;
+            }
             playerView.setOnPlayerBandwidthListener(l);
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
@@ -963,12 +1262,20 @@ public class PlayerLayout extends RelativeLayout {
 
     public final void setOnPlayerWindowVisibilityChangedListener(OnPlayerWindowVisibilityChangedListener listener) {
         try {
-            if (null == listener)
-                throw new Exception("listener error: null");
+            if (null == listener) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("PlayerLayout", "setOnPlayerWindowVisibilityChangedListener -> listener error: null");
+                }
+                return;
+            }
             PlayerView playerView = getPlayerView();
-            if (null == playerView)
-                throw new Exception("playerView error: null");
-            playerView.setOnPlayerWindowVisibilityChangedListener(listener);
+            if (null == playerView) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("PlayerLayout", "setOnPlayerWindowVisibilityChangedListener -> playerView error: null");
+                }
+                return;
+            }
+            playerView.setmOnPlayerWindowVisibilityChangedListener(listener);
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
                 LogUtil.log("PlayerLayout -> setOnPlayerWindowVisibilityChangedListener -> " + e.getMessage());
@@ -978,11 +1285,19 @@ public class PlayerLayout extends RelativeLayout {
 
     public final void setOnPlayerWindowAttachChangedListener(OnPlayerWindowAttachChangedListener listener) {
         try {
-            if (null == listener)
-                throw new Exception("listener error: null");
+            if (null == listener) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("PlayerLayout", "setOnPlayerWindowAttachChangedListener -> listener error: null");
+                }
+                return;
+            }
             PlayerView playerView = getPlayerView();
-            if (null == playerView)
-                throw new Exception("playerView error: null");
+            if (null == playerView) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("PlayerLayout", "setOnPlayerWindowAttachChangedListener -> playerView error: null");
+                }
+                return;
+            }
             playerView.setOnPlayerWindowAttachChangedListener(listener);
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
@@ -994,8 +1309,12 @@ public class PlayerLayout extends RelativeLayout {
     public final void setOnPlayerVisibilityChangedListener(OnPlayerVisibilityChangedListener l) {
         try {
             PlayerView playerView = getPlayerView();
-            if (null == playerView)
-                throw new Exception("playerView error: null");
+            if (null == playerView) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("PlayerLayout", "setOnPlayerVisibilityChangedListener -> playerView error: null");
+                }
+                return;
+            }
             playerView.setOnPlayerVisibilityChangedListener(l);
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
@@ -1007,8 +1326,12 @@ public class PlayerLayout extends RelativeLayout {
     public final void removeAllPlayerListener() {
         try {
             PlayerView playerView = getPlayerView();
-            if (null == playerView)
-                throw new Exception("playerView error: null");
+            if (null == playerView) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("PlayerLayout", "removeAllPlayerListener -> playerView error: null");
+                }
+                return;
+            }
             playerView.clearPlayerListener();
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
@@ -1020,8 +1343,12 @@ public class PlayerLayout extends RelativeLayout {
     public final int getComponentCount() {
         try {
             PlayerView playerView = getPlayerView();
-            if (null == playerView)
-                throw new Exception("playerView error: null");
+            if (null == playerView) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("PlayerLayout", "getComponentCount -> playerView error: null");
+                }
+                return 0;
+            }
             return playerView.getComponentCount();
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
@@ -1034,8 +1361,12 @@ public class PlayerLayout extends RelativeLayout {
     public final boolean showOnlyComponent(java.lang.Class<?> cls) {
         try {
             PlayerView playerView = getPlayerView();
-            if (null == playerView)
-                throw new Exception("playerView error: null");
+            if (null == playerView) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("PlayerLayout", "showOnlyComponent -> playerView error: null");
+                }
+                return false;
+            }
             return playerView.showOnlyComponent(cls);
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
@@ -1048,8 +1379,12 @@ public class PlayerLayout extends RelativeLayout {
     public final boolean isComponentEmpty() {
         try {
             PlayerView playerView = getPlayerView();
-            if (null == playerView)
-                throw new Exception("playerView error: null");
+            if (null == playerView) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("PlayerLayout", "isComponentEmpty -> playerView error: null");
+                }
+                return false;
+            }
             return playerView.isComponentEmpty();
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
@@ -1062,8 +1397,12 @@ public class PlayerLayout extends RelativeLayout {
     public final boolean isComponentNotEmpty() {
         try {
             PlayerView playerView = getPlayerView();
-            if (null == playerView)
-                throw new Exception("playerView error: null");
+            if (null == playerView) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("PlayerLayout", "isComponentNotEmpty -> playerView error: null");
+                }
+                return false;
+            }
             return playerView.isComponentNotEmpty();
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
@@ -1076,8 +1415,12 @@ public class PlayerLayout extends RelativeLayout {
     public final void hideAllComponent() {
         try {
             PlayerView playerView = getPlayerView();
-            if (null == playerView)
-                throw new Exception("playerView error: null");
+            if (null == playerView) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("PlayerLayout", "hideAllComponent -> playerView error: null");
+                }
+                return;
+            }
             playerView.hideAllComponent();
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
@@ -1089,8 +1432,12 @@ public class PlayerLayout extends RelativeLayout {
     public final void clearAllComponent() {
         try {
             PlayerView playerView = getPlayerView();
-            if (null == playerView)
-                throw new Exception("playerView error: null");
+            if (null == playerView) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("PlayerLayout", "clearAllComponent -> playerView error: null");
+                }
+                return;
+            }
             playerView.clearAllComponent();
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
@@ -1102,11 +1449,19 @@ public class PlayerLayout extends RelativeLayout {
     public final StartArgs.Builder newBuilderStartArgs() {
         try {
             PlayerView playerView = getPlayerView();
-            if (null == playerView)
-                throw new Exception("error: playerView null");
+            if (null == playerView) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("PlayerLayout", "newBuilderStartArgs -> error: playerView null");
+                }
+                return null;
+            }
             StartArgs args = playerView.getStartArgs();
-            if (null == args)
-                throw new Exception("error: args null");
+            if (null == args) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("PlayerLayout", "newBuilderStartArgs -> error: args null");
+                }
+                return null;
+            }
             return args.newBuilder();
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
@@ -1151,8 +1506,12 @@ public class PlayerLayout extends RelativeLayout {
     public final boolean requestScreenOrientation(@PlayerType.ScreenOrientation.Value int value, boolean formatScreen) {
         try {
             PlayerView playerView = getPlayerView();
-            if (null == playerView)
-                throw new Exception("playerView error: null");
+            if (null == playerView) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("PlayerLayout", "requestScreenOrientation -> playerView error: null");
+                }
+                return false;
+            }
             return playerView.requestScreenOrientation(getContext(), value, formatScreen);
         } catch (Exception e) {
             if (LogUtil.DEBUG) {

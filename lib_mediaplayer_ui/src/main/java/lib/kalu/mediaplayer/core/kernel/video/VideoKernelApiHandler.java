@@ -33,8 +33,12 @@ public interface VideoKernelApiHandler extends VideoKernelApiBase, VideoKernelAp
 
         try {
             Handler handler = getHandler();
-            if (null == handler)
-                throw new Exception("warning: handler null");
+            if (null == handler) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log(TAG, "startPlayWhenReadyDelayedTime -> warning: handler null");
+                }
+                return;
+            }
             //
             onEvent(kernelType, PlayerType.EventType.MEDIA_INFO_PLAY_WHEN_READY_DELAYED_TIME_START);
             //
@@ -58,8 +62,12 @@ public interface VideoKernelApiHandler extends VideoKernelApiBase, VideoKernelAp
 
         try {
             Handler handler = getHandler();
-            if (null == handler)
-                throw new Exception("warning: handler null");
+            if (null == handler) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log(TAG, "sendMessageConnectTimeout -> warning: handler null");
+                }
+                return;
+            }
             Message message = Message.obtain();
             message.what = WHAT_ConnectTimeout;
             message.arg1 = kernelType;
@@ -80,8 +88,12 @@ public interface VideoKernelApiHandler extends VideoKernelApiBase, VideoKernelAp
 
         try {
             Handler handler = getHandler();
-            if (null == handler)
-                throw new Exception("warning: handler null");
+            if (null == handler) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log(TAG, "removeMessagesConnectTimeout -> warning: handler null");
+                }
+                return;
+            }
             handler.removeMessages(WHAT_ConnectTimeout);
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
@@ -121,8 +133,12 @@ public interface VideoKernelApiHandler extends VideoKernelApiBase, VideoKernelAp
 
         try {
             Handler handler = getHandler();
-            if (null == handler)
-                throw new Exception("warning: handler null");
+            if (null == handler) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log(TAG, "sendMessageProgressUpdate -> warning: handler null");
+                }
+                return;
+            }
             Message message = Message.obtain();
             message.what = WHAT_ProgressUpdate;
             message.arg1 = kernelType;
@@ -142,8 +158,12 @@ public interface VideoKernelApiHandler extends VideoKernelApiBase, VideoKernelAp
 
         try {
             Handler handler = getHandler();
-            if (null == handler)
-                throw new Exception("warning: handler null");
+            if (null == handler) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log(TAG, "removeMessagesProgressUpdate -> warning: handler null");
+                }
+                return;
+            }
             handler.removeMessages(WHAT_ProgressUpdate);
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
@@ -160,8 +180,12 @@ public interface VideoKernelApiHandler extends VideoKernelApiBase, VideoKernelAp
 
         try {
             Handler handler = getHandler();
-            if (null == handler)
-                throw new Exception("warning: handler null");
+            if (null == handler) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log(TAG, "sendMessageSpeedUpdate -> warning: handler null");
+                }
+                return;
+            }
             Message message = Message.obtain();
             message.what = WHAT_UPDATE_SPEED;
             message.arg1 = kernelType;
@@ -181,8 +205,12 @@ public interface VideoKernelApiHandler extends VideoKernelApiBase, VideoKernelAp
 
         try {
             Handler handler = getHandler();
-            if (null == handler)
-                throw new Exception("warning: handler null");
+            if (null == handler) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log(TAG, "removeAllMessages -> warning: handler null");
+                }
+                return;
+            }
             handler.removeCallbacksAndMessages(null);
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
@@ -199,8 +227,12 @@ public interface VideoKernelApiHandler extends VideoKernelApiBase, VideoKernelAp
 
         try {
             Handler handler = getHandler();
-            if (null == handler)
-                throw new Exception("warning: handler null");
+            if (null == handler) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log(TAG, "removeMessagesSpeedUpdate -> warning: handler null");
+                }
+                return;
+            }
             handler.removeMessages(WHAT_UPDATE_SPEED);
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
@@ -216,11 +248,19 @@ public interface VideoKernelApiHandler extends VideoKernelApiBase, VideoKernelAp
         }
 
         try {
-            if (maxTimeoutMs <= 0)
-                throw new Exception("warning: maxTimeoutMs <= 0, maxTimeoutMs = " + maxTimeoutMs);
+            if (maxTimeoutMs <= 0) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log(TAG, "startMessageBufferingTimeout -> warning: maxTimeoutMs <= 0, maxTimeoutMs = " + maxTimeoutMs);
+                }
+                return;
+            }
             Handler handler = getHandler();
-            if (null == handler)
-                throw new Exception("warning: handler null");
+            if (null == handler) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log(TAG, "startMessageBufferingTimeout -> warning: handler null");
+                }
+                return;
+            }
             Message message = Message.obtain();
             message.what = WHAT_BufferingTimeout;
             message.arg1 = kernelType;
@@ -244,8 +284,12 @@ public interface VideoKernelApiHandler extends VideoKernelApiBase, VideoKernelAp
 
         try {
             Handler handler = getHandler();
-            if (null == handler)
-                throw new Exception("warning: handler null");
+            if (null == handler) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log(TAG, "closeMessagesBufferingTimeout -> warning: handler null");
+                }
+                return;
+            }
             handler.removeMessages(WHAT_BufferingTimeout);
             if (LogUtil.DEBUG) {
                 LogUtil.log(TAG, "closeMessagesBufferingTimeout -> WHAT_BufferingTimeout, completed");
@@ -264,11 +308,19 @@ public interface VideoKernelApiHandler extends VideoKernelApiBase, VideoKernelAp
         }
 
         try {
-            if (maxTimeoutMs <= 0)
-                throw new Exception("warning: maxTimeoutMs <= 0, maxTimeoutMs = " + maxTimeoutMs);
+            if (maxTimeoutMs <= 0) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log(TAG, "nextMessageBufferingTimeout -> warning: maxTimeoutMs <= 0, maxTimeoutMs = " + maxTimeoutMs);
+                }
+                return;
+            }
             Handler handler = getHandler();
-            if (null == handler)
-                throw new Exception("warning: handler null");
+            if (null == handler) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log(TAG, "nextMessageBufferingTimeout -> warning: handler null");
+                }
+                return;
+            }
             Message message = Message.obtain();
             message.what = WHAT_BufferingTimeout;
             message.arg1 = kernelType;
@@ -344,8 +396,12 @@ public interface VideoKernelApiHandler extends VideoKernelApiBase, VideoKernelAp
         }
 
         try {
-            if (null == msg)
-                throw new Exception("warning: msg null");
+            if (null == msg) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log(TAG, "formatMessage -> warning: msg null");
+                }
+                return;
+            }
             // 延迟播放
             if (msg.what == WHAT_PlayWhenReadyDelayedTime) {
                 if (LogUtil.DEBUG) {
@@ -361,15 +417,21 @@ public interface VideoKernelApiHandler extends VideoKernelApiBase, VideoKernelAp
                     LogUtil.log(TAG, "formatMessage -> WHAT_ConnectTimeout");
                 }
 
-                if (isPrepared())
-                    throw new Exception("warning: isPrepared true");
+                if (isPrepared()) {
+                    if (LogUtil.DEBUG) {
+                        LogUtil.log(TAG, "formatMessage -> warning: isPrepared true");
+                    }
+                    return;
+                }
                 long timeout = ((long[]) msg.obj)[1];
                 long start = ((long[]) msg.obj)[0];
                 long cast = System.currentTimeMillis() - start;
                 if (cast >= timeout) {
                     getPlayerApi().stop(true);
                     onEvent(msg.arg1, PlayerType.EventType.ERROR_TIMEOUT_LOAD);
-                    throw new Exception("warning: connect timeout");
+                    if (LogUtil.DEBUG) {
+                        LogUtil.log(TAG, "formatMessage -> warning: connect timeout");
+                    }
                 } else {
                     sendMessageConnectTimeout(msg.arg1, start, timeout, true);
                 }
@@ -426,15 +488,23 @@ public interface VideoKernelApiHandler extends VideoKernelApiBase, VideoKernelAp
                 if (LogUtil.DEBUG) {
                     LogUtil.log(TAG, "formatMessage -> WHAT_BufferingTimeout, prepared = " + prepared);
                 }
-                if (!prepared)
-                    throw new Exception("warning: prepared false");
+                if (!prepared) {
+                    if (LogUtil.DEBUG) {
+                        LogUtil.log(TAG, "formatMessage -> warning: prepared false");
+                    }
+                    return;
+                }
 
                 boolean buffering = isBuffering();
                 if (LogUtil.DEBUG) {
                     LogUtil.log(TAG, "formatMessage -> WHAT_BufferingTimeout, buffering = " + buffering);
                 }
-                if (!buffering)
-                    throw new Exception("warning: buffering false");
+                if (!buffering) {
+                    if (LogUtil.DEBUG) {
+                        LogUtil.log(TAG, "formatMessage -> warning: buffering false");
+                    }
+                    return;
+                }
 
                 long startTimeMillis = ((long[]) msg.obj)[0];
                 long maxTimeoutMs = ((long[]) msg.obj)[1];

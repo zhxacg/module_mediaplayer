@@ -32,8 +32,12 @@ public interface VideoRenderApi extends VideoRenderApiBase {
 
     default void setVideoSize(int videoWidth, int videoHeight) {
         try {
-            if (mVideoWidth[0] == videoWidth && mVideoHeight[0] == videoWidth)
-                throw new Exception("warning: mVideoWidth && mVideoHeight not change");
+            if (mVideoWidth[0] == videoWidth && mVideoHeight[0] == videoHeight) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("VideoRenderApi", "setVideoSize -> warning: mVideoWidth && mVideoHeight not change");
+                }
+                return;
+            }
             this.mVideoWidth[0] = videoWidth;
             this.mVideoHeight[0] = videoHeight;
             ((View) this).requestLayout();
@@ -62,8 +66,12 @@ public interface VideoRenderApi extends VideoRenderApiBase {
 
     default void setVideoRotation(@PlayerType.RotationType.Value int videoRotation) {
         try {
-            if (mVideoRotation[0] == videoRotation)
-                throw new Exception("warning: mVideoRotation not change");
+            if (mVideoRotation[0] == videoRotation) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("VideoRenderApi", "setVideoRotation -> warning: mVideoRotation not change");
+                }
+                return;
+            }
             this.mVideoRotation[0] = videoRotation;
             ((View) this).requestLayout();
         } catch (Exception e) {
@@ -84,8 +92,12 @@ public interface VideoRenderApi extends VideoRenderApiBase {
 
     default void setVideoScaleType(@PlayerType.ScaleType.Value int scaleType) {
         try {
-            if (mVideoScaleType[0] == scaleType)
-                throw new Exception("warning: mVideoScaleType not change");
+            if (mVideoScaleType[0] == scaleType) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("VideoRenderApi", "setVideoScaleType -> warning: mVideoScaleType not change");
+                }
+                return;
+            }
             this.mVideoScaleType[0] = scaleType;
             ((View) this).requestLayout();
         } catch (Exception e) {
@@ -104,8 +116,12 @@ public interface VideoRenderApi extends VideoRenderApiBase {
 
     default void setVideoFormat(int kernel, int rotation, int scaleType, int width, int height, int bitrate) {
         try {
-            if (mVideoWidth[0] == width && mVideoHeight[0] == height && mVideoRotation[0] == rotation && mVideoScaleType[0] == scaleType && mVideoBitrate[0] == bitrate)
-                throw new Exception("warning: not change");
+            if (mVideoWidth[0] == width && mVideoHeight[0] == height && mVideoRotation[0] == rotation && mVideoScaleType[0] == scaleType && mVideoBitrate[0] == bitrate) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("VideoRenderApi", "setVideoFormat -> warning: not change");
+                }
+                return;
+            }
             this.mVideoWidth[0] = width;
             this.mVideoHeight[0] = height;
             this.mVideoBitrate[0] = bitrate;
@@ -175,10 +191,18 @@ public interface VideoRenderApi extends VideoRenderApiBase {
                 LogUtil.log("VideoRenderApi -> doMeasureSpec -> videoWidth = " + videoWidth + ", videoHeight = " + videoHeight + ", screenWidth = " + screenWidth + ", screenHeight = " + screenHeight);
             }
 
-            if (videoWidth <= 0 || videoHeight <= 0)
-                throw new Exception("warning: videoWidth <= 0 || videoHeight <= 0");
-            if (screenWidth <= 0 || screenHeight <= 0)
-                throw new Exception("warning: screenWidth <= 0 || screenHeight <= 0");
+            if (videoWidth <= 0 || videoHeight <= 0) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("VideoRenderApi", "doMeasureSpec -> warning: videoWidth <= 0 || videoHeight <= 0");
+                }
+                return null;
+            }
+            if (screenWidth <= 0 || screenHeight <= 0) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("VideoRenderApi", "doMeasureSpec -> warning: screenWidth <= 0 || screenHeight <= 0");
+                }
+                return null;
+            }
 
             // 1. 定义目标比例
             float targetRate;
@@ -297,8 +321,12 @@ public interface VideoRenderApi extends VideoRenderApiBase {
 
     default void clearSurface(Surface surface) {
         try {
-            if (null == surface)
-                throw new Exception("surface error: null");
+            if (null == surface) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("VideoRenderApi", "clearSurface -> surface error: null");
+                }
+                return;
+            }
             Paint paint = new Paint();
             paint.setColor(0xff000000);
             Canvas canvas = surface.lockCanvas(null);
@@ -314,10 +342,18 @@ public interface VideoRenderApi extends VideoRenderApiBase {
 
     default void clearSurfaceGLES(Surface surface) {
         try {
-            if (null == surface)
-                throw new Exception("surface error: null");
-            if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.JELLY_BEAN_MR1)
-                throw new Exception("sdkVersion warning: " + android.os.Build.VERSION.SDK_INT);
+            if (null == surface) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("VideoRenderApi", "clearSurfaceGLES -> surface error: null");
+                }
+                return;
+            }
+            if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.JELLY_BEAN_MR1) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("VideoRenderApi", "clearSurfaceGLES -> sdkVersion warning: " + android.os.Build.VERSION.SDK_INT);
+                }
+                return;
+            }
             EGLDisplay display = EGL14.eglGetDisplay(EGL14.EGL_DEFAULT_DISPLAY);
             int[] version = new int[2];
             EGL14.eglInitialize(display, version, 0, version, 1);

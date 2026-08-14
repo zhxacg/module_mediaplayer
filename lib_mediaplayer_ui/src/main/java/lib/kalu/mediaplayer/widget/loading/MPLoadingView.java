@@ -115,8 +115,12 @@ public class MPLoadingView extends View {
 
         try {
             int visibility = getVisibility();
-            if (visibility != View.VISIBLE)
-                throw new Exception("visibility warning: " + visibility);
+            if (visibility != View.VISIBLE) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("MPLoadingView -> onDraw -> visibility warning: " + visibility);
+                }
+                return;
+            }
             // 循环次数
             if (mLoop + 1 >= mCount) {
                 mLoop = 0;
@@ -206,10 +210,15 @@ public class MPLoadingView extends View {
         public void handleMessage(@NonNull Message msg) {
             try {
                 int visibility = getVisibility();
-                if (visibility != View.VISIBLE)
-                    throw new Exception();
-                if (msg.what != 9001)
-                    throw new Exception("msg.what error: " + msg.what);
+                if (visibility != View.VISIBLE) {
+                    return;
+                }
+                if (msg.what != 9001) {
+                    if (LogUtil.DEBUG) {
+                        LogUtil.log("MPLoadingView -> handleMessage -> msg.what error: " + msg.what);
+                    }
+                    return;
+                }
                 invalidate();
                 // looping
                 loopingMsg();
@@ -223,8 +232,12 @@ public class MPLoadingView extends View {
 
     private void clearMsg() {
         try {
-            if (null == mHandler)
-                throw new Exception("error: null == mHandler");
+            if (null == mHandler) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("MPLoadingView -> clearMsg -> error: null == mHandler");
+                }
+                return;
+            }
             mHandler.removeCallbacksAndMessages(null);
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
@@ -236,8 +249,12 @@ public class MPLoadingView extends View {
     private void loopingMsg() {
         clearMsg();
         try {
-            if (null == mHandler)
-                throw new Exception("error: null == mHandler");
+            if (null == mHandler) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("MPLoadingView -> loopingMsg -> error: null == mHandler");
+                }
+                return;
+            }
             mHandler.sendEmptyMessageDelayed(9001, mDelayMillis);
         } catch (Exception e) {
             if (LogUtil.DEBUG) {

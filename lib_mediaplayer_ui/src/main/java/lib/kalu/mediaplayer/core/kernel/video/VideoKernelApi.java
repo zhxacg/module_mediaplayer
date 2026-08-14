@@ -62,8 +62,12 @@ public interface VideoKernelApi extends VideoKernelApiHandler,
     default void initDecoderPlayWhenReadyDelayed(Context context) {
         try {
             StartArgs args = getStartArgs();
-            if (null == args)
-                throw new Exception("error: args null");
+            if (null == args) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("VideoKernelApi -> callPlayWhenReadyDelayedTimeComplete -> error: args null");
+                }
+                return;
+            }
             // 2
             initOptions(context, args);
             startDecoder(context, args);

@@ -14,10 +14,18 @@ public interface VideoKernelApiHls {
     default long[] getSegmentsMs() {
         try {
             HlsSpanList segments = getSegments();
-            if (null == segments)
-                throw new Exception("error: segments null");
-            if (segments.isEmpty())
-                throw new Exception("error: segments isEmpty");
+            if (null == segments) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("VideoKernelApiHls -> getSegmentsMs -> error: segments null");
+                }
+                return null;
+            }
+            if (segments.isEmpty()) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("VideoKernelApiHls -> getSegmentsMs -> error: segments isEmpty");
+                }
+                return null;
+            }
             if (LogUtil.DEBUG) {
                 LogUtil.log("VideoKernelApiHls -> getSegmentsMs -> segments.size = " + segments.size());
             }

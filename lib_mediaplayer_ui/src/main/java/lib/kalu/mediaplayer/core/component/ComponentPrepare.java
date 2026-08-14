@@ -72,8 +72,12 @@ public class ComponentPrepare extends RelativeLayout implements ComponentApi {
 
         try {
             boolean componentShowing = isComponentShowing();
-            if (!componentShowing)
-                throw new Exception("warning: componentShowing false");
+            if (!componentShowing) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("ComponentLoading -> gone -> warning: componentShowing false");
+                }
+                return;
+            }
             setComponentText("");
         } catch (Exception e) {
             if (LogUtil.DEBUG) {

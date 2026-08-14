@@ -46,8 +46,12 @@ public final class VideoIjkPlayer extends VideoBasePlayer {
     @Override
     public void releaseDecoder() {
         try {
-            if (null == mIjkPlayer)
-                throw new Exception("mIjkPlayer warning: null");
+            if (null == mIjkPlayer) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("VideoIjkPlayer", "releaseDecoder -> mIjkPlayer warning: null");
+                }
+                return;
+            }
             if (LogUtil.DEBUG) {
                 LogUtil.log("VideoIjkPlayer -> releaseDecoder ->");
             }
@@ -64,8 +68,12 @@ public final class VideoIjkPlayer extends VideoBasePlayer {
     @Override
     public void checkDecoder(Context context, StartArgs args) {
         try {
-            if (null != mIjkPlayer)
-                throw new Exception("warning: mIjkPlayer not null");
+            if (null != mIjkPlayer) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("VideoIjkPlayer", "checkDecoder -> warning: mIjkPlayer not null");
+                }
+                return;
+            }
             if (LogUtil.DEBUG) {
                 LogUtil.log("VideoIjkPlayer -> checkDecoder ->");
             }
@@ -81,16 +89,28 @@ public final class VideoIjkPlayer extends VideoBasePlayer {
     @Override
     public void startDecoder(Context context, StartArgs args) {
         try {
-            if (null == mIjkPlayer)
-                throw new Exception("error: mIjkPlayer null");
-            if (null == args)
-                throw new Exception("error: args null");
+            if (null == mIjkPlayer) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("VideoIjkPlayer", "startDecoder -> error: mIjkPlayer null");
+                }
+                return;
+            }
+            if (null == args) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("VideoIjkPlayer", "startDecoder -> error: args null");
+                }
+                return;
+            }
             if (LogUtil.DEBUG) {
                 LogUtil.log("VideoIjkPlayer -> startDecoder ->");
             }
             boolean containsMainUrl = args.containsMainUrl();
-            if (!containsMainUrl)
-                throw new Exception("error: containsMainUrl false");
+            if (!containsMainUrl) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("VideoIjkPlayer", "startDecoder -> error: containsMainUrl false");
+                }
+                return;
+            }
             onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.READY);
             mIjkPlayer.setDataSource(context, Uri.parse(args.getUrl()), null);
             boolean prepareAsync = args.isPrepareAsync();
@@ -110,8 +130,12 @@ public final class VideoIjkPlayer extends VideoBasePlayer {
     @Override
     public void initOptions(Context context, StartArgs args) {
         try {
-            if (null == mIjkPlayer)
-                throw new Exception("error: mIjkPlayer null");
+            if (null == mIjkPlayer) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("VideoIjkPlayer", "initOptions -> error: mIjkPlayer null");
+                }
+                return;
+            }
             boolean mute = args.isMute();
             if (mute) {
                 mIjkPlayer.setVolume(0f, 0f);
@@ -129,10 +153,18 @@ public final class VideoIjkPlayer extends VideoBasePlayer {
 
         // ijk options
         try {
-            if (null == mIjkPlayer)
-                throw new Exception("mIjkPlayer error: null");
-            if (null == args)
-                throw new Exception("error: args null");
+            if (null == mIjkPlayer) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("VideoIjkPlayer", "initOptions -> mIjkPlayer error: null");
+                }
+                return;
+            }
+            if (null == args) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("VideoIjkPlayer", "initOptions -> error: args null");
+                }
+                return;
+            }
             int decoderType = args.getDecoderType();
             boolean useMediaCodec = decoderType == PlayerType.DecoderType.ONLY_CODEC;
             if (LogUtil.DEBUG) {
@@ -256,10 +288,18 @@ public final class VideoIjkPlayer extends VideoBasePlayer {
 
         // format
         try {
-            if (null == mIjkPlayer)
-                throw new Exception("mIjkPlayer error: null");
-            if (null == args)
-                throw new Exception("error: args null");
+            if (null == mIjkPlayer) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("VideoIjkPlayer", "initOptions -> mIjkPlayer error: null");
+                }
+                return;
+            }
+            if (null == args) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("VideoIjkPlayer", "initOptions -> error: args null");
+                }
+                return;
+            }
             if (LogUtil.DEBUG) {
                 LogUtil.log("VideoIjkPlayer -> initOptions -> step4");
             }
@@ -310,10 +350,18 @@ public final class VideoIjkPlayer extends VideoBasePlayer {
 
         // codec
         try {
-            if (null == mIjkPlayer)
-                throw new Exception("mIjkPlayer error: null");
-            if (null == args)
-                throw new Exception("error: args null");
+            if (null == mIjkPlayer) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("VideoIjkPlayer", "initOptions -> mIjkPlayer error: null");
+                }
+                return;
+            }
+            if (null == args) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("VideoIjkPlayer", "initOptions -> error: args null");
+                }
+                return;
+            }
             if (LogUtil.DEBUG) {
                 LogUtil.log("VideoIjkPlayer -> initOptions -> step5");
             }
@@ -339,8 +387,12 @@ public final class VideoIjkPlayer extends VideoBasePlayer {
     @Override
     public void setSurface(Surface surface, int w, int h) {
         try {
-            if (null == mIjkPlayer)
-                throw new Exception("mIjkPlayer error: null");
+            if (null == mIjkPlayer) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("VideoIjkPlayer", "setSurface -> mIjkPlayer error: null");
+                }
+                return;
+            }
             if (LogUtil.DEBUG) {
                 LogUtil.log("VideoIjkPlayer -> setSurface ->");
             }
@@ -355,8 +407,12 @@ public final class VideoIjkPlayer extends VideoBasePlayer {
     @Override
     public void registListener() {
         try {
-            if (null == mIjkPlayer)
-                throw new Exception("error: mIjkPlayer null");
+            if (null == mIjkPlayer) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("VideoIjkPlayer", "registListener -> error: mIjkPlayer null");
+                }
+                return;
+            }
             if (LogUtil.DEBUG) {
                 LogUtil.log("VideoIjkPlayer -> registListener ->");
             }
@@ -381,8 +437,12 @@ public final class VideoIjkPlayer extends VideoBasePlayer {
     @Override
     public void unRegistListener() {
         try {
-            if (null == mIjkPlayer)
-                throw new Exception("error: mIjkPlayer null");
+            if (null == mIjkPlayer) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("VideoIjkPlayer", "unRegistListener -> error: mIjkPlayer null");
+                }
+                return;
+            }
             if (LogUtil.DEBUG) {
                 LogUtil.log("VideoIjkPlayer -> unRegistListener ->");
             }
@@ -429,10 +489,18 @@ public final class VideoIjkPlayer extends VideoBasePlayer {
     @Override
     public void pause() {
         try {
-            if (null == mIjkPlayer)
-                throw new Exception("mIjkPlayer error: null");
-            if (!isPrepared)
-                throw new Exception("mPrepared warning: false");
+            if (null == mIjkPlayer) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("VideoIjkPlayer", "pause -> mIjkPlayer error: null");
+                }
+                return;
+            }
+            if (!isPrepared) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("VideoIjkPlayer", "pause -> mPrepared warning: false");
+                }
+                return;
+            }
             if (LogUtil.DEBUG) {
                 LogUtil.log("VideoIjkPlayer -> pause ->");
             }
@@ -447,8 +515,12 @@ public final class VideoIjkPlayer extends VideoBasePlayer {
     @Override
     public void release() {
         try {
-            if (null == mIjkPlayer)
-                throw new Exception("mIjkPlayer error: null");
+            if (null == mIjkPlayer) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("VideoIjkPlayer", "release -> mIjkPlayer error: null");
+                }
+                return;
+            }
             if (LogUtil.DEBUG) {
                 LogUtil.log("VideoIjkPlayer -> release ->");
             }
@@ -470,8 +542,12 @@ public final class VideoIjkPlayer extends VideoBasePlayer {
     @Override
     public void start() {
         try {
-            if (null == mIjkPlayer)
-                throw new Exception("mIjkPlayer error: null");
+            if (null == mIjkPlayer) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("VideoIjkPlayer", "start -> mIjkPlayer error: null");
+                }
+                return;
+            }
             if (LogUtil.DEBUG) {
                 LogUtil.log("VideoIjkPlayer -> start ->");
             }
@@ -486,8 +562,12 @@ public final class VideoIjkPlayer extends VideoBasePlayer {
     @Override
     public void stop() {
         try {
-            if (null == mIjkPlayer)
-                throw new Exception("mIjkPlayer error: null");
+            if (null == mIjkPlayer) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("VideoIjkPlayer", "stop -> mIjkPlayer error: null");
+                }
+                return;
+            }
             if (LogUtil.DEBUG) {
                 LogUtil.log("VideoIjkPlayer -> stop ->");
             }
@@ -503,10 +583,18 @@ public final class VideoIjkPlayer extends VideoBasePlayer {
     @Override
     public boolean isPlaying() {
         try {
-            if (!isPrepared)
-                throw new Exception("mPrepared warning: false");
-            if (null == mIjkPlayer)
-                throw new Exception("mIjkPlayer error: null");
+            if (!isPrepared) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("VideoIjkPlayer", "isPlaying -> mPrepared warning: false");
+                }
+                return false;
+            }
+            if (null == mIjkPlayer) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("VideoIjkPlayer", "isPlaying -> mIjkPlayer error: null");
+                }
+                return false;
+            }
             return mIjkPlayer.isPlaying();
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
@@ -524,13 +612,25 @@ public final class VideoIjkPlayer extends VideoBasePlayer {
     @Override
     public void seekTo(long seek) {
         try {
-            if (seek < 0)
-                throw new Exception("error: seek<0");
-            if (null == mIjkPlayer)
-                throw new Exception("error: mIjkPlayer null");
+            if (seek < 0) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("VideoIjkPlayer", "seekTo -> error: seek < 0");
+                }
+                return;
+            }
+            if (null == mIjkPlayer) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("VideoIjkPlayer", "seekTo -> error: mIjkPlayer null");
+                }
+                return;
+            }
             StartArgs args = getStartArgs();
-            if (null == args)
-                throw new Exception("error: args null");
+            if (null == args) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("VideoIjkPlayer", "seekTo -> error: args null");
+                }
+                return;
+            }
             if (LogUtil.DEBUG) {
                 LogUtil.log("VideoIjkPlayer -> seekTo ->");
             }
@@ -555,13 +655,25 @@ public final class VideoIjkPlayer extends VideoBasePlayer {
     @Override
     public long getPosition() {
         try {
-            if (!isPrepared)
-                throw new Exception("mPrepared warning: false");
-            if (null == mIjkPlayer)
-                throw new Exception("mIjkPlayer error: null");
+            if (!isPrepared) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("VideoIjkPlayer", "getPosition -> mPrepared warning: false");
+                }
+                return 0L;
+            }
+            if (null == mIjkPlayer) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("VideoIjkPlayer", "getPosition -> mIjkPlayer error: null");
+                }
+                return 0L;
+            }
             long currentPosition = mIjkPlayer.getCurrentPosition();
-            if (currentPosition < 0)
-                throw new Exception("currentPosition warning: " + currentPosition);
+            if (currentPosition < 0) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("VideoIjkPlayer", "getPosition -> currentPosition warning: " + currentPosition);
+                }
+                return 0L;
+            }
             return currentPosition;
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
@@ -574,13 +686,25 @@ public final class VideoIjkPlayer extends VideoBasePlayer {
     @Override
     public long getDuration() {
         try {
-            if (!isPrepared)
-                throw new Exception("mPrepared warning: false");
-            if (null == mIjkPlayer)
-                throw new Exception("mIjkPlayer error: null");
+            if (!isPrepared) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("VideoIjkPlayer", "getDuration -> mPrepared warning: false");
+                }
+                return 0L;
+            }
+            if (null == mIjkPlayer) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("VideoIjkPlayer", "getDuration -> mIjkPlayer error: null");
+                }
+                return 0L;
+            }
             long duration = mIjkPlayer.getDuration();
-            if (duration <= 0)
-                throw new Exception("duration warning: " + duration);
+            if (duration <= 0) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("VideoIjkPlayer", "getDuration -> duration warning: " + duration);
+                }
+                return 0L;
+            }
             return duration;
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
@@ -598,8 +722,12 @@ public final class VideoIjkPlayer extends VideoBasePlayer {
     @Override
     public void setSpeed(float speed) {
         try {
-            if (null == mIjkPlayer)
-                throw new Exception("mIjkPlayer error: null");
+            if (null == mIjkPlayer) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("VideoIjkPlayer", "setSpeed -> mIjkPlayer error: null");
+                }
+                return;
+            }
             onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.MEDIA_INFO_UPDATE_PLAYBACLK_SPEED);
             mIjkPlayer.setSpeed(speed);
         } catch (Exception e) {
@@ -612,8 +740,12 @@ public final class VideoIjkPlayer extends VideoBasePlayer {
     @Override
     public float getSpeed() {
         try {
-            if (null == mIjkPlayer)
-                throw new Exception("mIjkPlayer error: null");
+            if (null == mIjkPlayer) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("VideoIjkPlayer", "getSpeed -> mIjkPlayer error: null");
+                }
+                return 1.0f;
+            }
             return mIjkPlayer.getSpeed();
         } catch (Exception e) {
             return 1.0f;
@@ -625,11 +757,19 @@ public final class VideoIjkPlayer extends VideoBasePlayer {
     @Override
     public void setVolume(float v1, float v2) {
         try {
-            if (null == mIjkPlayer)
-                throw new Exception("mIjkPlayer error: null");
+            if (null == mIjkPlayer) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("VideoIjkPlayer", "setVolume -> mIjkPlayer error: null");
+                }
+                return;
+            }
             float volume = Math.max(v1, v2);
-            if (volume < 0)
-                throw new Exception("error: volume < 0");
+            if (volume < 0) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("VideoIjkPlayer", "setVolume -> error: volume < 0");
+                }
+                return;
+            }
             mIjkPlayer.setVolume(volume, volume);
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
@@ -641,8 +781,12 @@ public final class VideoIjkPlayer extends VideoBasePlayer {
     @Override
     public float getVolume() {
         try {
-            if (null == mIjkPlayer)
-                throw new Exception("mIjkPlayer error: null");
+            if (null == mIjkPlayer) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("VideoIjkPlayer", "getVolume -> mIjkPlayer error: null");
+                }
+                return 0f;
+            }
             return 0f;
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
@@ -674,34 +818,35 @@ public final class VideoIjkPlayer extends VideoBasePlayer {
                 }
                 // 缓冲开始
                 else if (what == IMediaPlayer.MEDIA_INFO_BUFFERING_START) {
-                    if (!isPrepared)
-                        throw new Exception("warning: prepared false");
+                    if (!isPrepared) {
+                        if (LogUtil.DEBUG) {
+                            LogUtil.log("VideoIjkPlayer", "onInfo -> warning: prepared false");
+                        }
+                        return true;
+                    }
                     isBuffering = true;
                     onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.MEDIA_INFO_BUFFERING_START);
                 }
                 // 缓冲结束
                 else if (what == IMediaPlayer.MEDIA_INFO_BUFFERING_END) {
-                    if (!isPrepared)
-                        throw new Exception("warning: prepared false");
+                    if (!isPrepared) {
+                        if (LogUtil.DEBUG) {
+                            LogUtil.log("VideoIjkPlayer", "onInfo -> warning: prepared false");
+                        }
+                        return true;
+                    }
                     isBuffering = false;
                     onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.MEDIA_INFO_BUFFERING_STOP);
                 }
                 // 开始播放
                 else if (what == IMediaPlayer.MEDIA_INFO_VIDEO_RENDERING_START) {
 
-//                    // 出画面 -> 快进起播
-//                    case IMediaPlayer.MEDIA_INFO_VIDEO_SEEK_RENDERING_START:
-//                        try {
-//                            if (!mPrepared)
-//                                throw new Exception("error: mPrepared false");
-//                            onEvent(kernelType, PlayerType.EventType.VIDEO_START_SEEK);
-//                        } catch (Exception e) {
-//                            MPLogUtil.log("VideoIjkPlayer -> onInfo -> " + e.getMessage());
-//                        }
-//                        break;
-
-                    if (isPrepared)
-                        throw new Exception("warning: isPrepared true");
+                    if (isPrepared) {
+                        if (LogUtil.DEBUG) {
+                            LogUtil.log("VideoIjkPlayer", "onInfo -> warning: isPrepared true");
+                        }
+                        return true;
+                    }
                     isPrepared = true;
                     onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.MEDIA_INFO_UPDATE_PLAYBACLK_SPEED);
                     long seek = getPlayWhenReadySeekToPosition();
@@ -728,7 +873,9 @@ public final class VideoIjkPlayer extends VideoBasePlayer {
                 }
                 // not find
                 else {
-                    throw new Exception("warning: not find");
+                    if (LogUtil.DEBUG) {
+                        LogUtil.log("VideoIjkPlayer", "onInfo -> warning: not find what = " + what);
+                    }
                 }
             } catch (Exception e) {
                 if (LogUtil.DEBUG) {
@@ -757,8 +904,12 @@ public final class VideoIjkPlayer extends VideoBasePlayer {
                     boolean playWhenReady = isPlayWhenReady();
                     if (playWhenReady) {
                         boolean playing = isPlaying();
-                        if (playing)
-                            throw new Exception("warning: isPlaying true");
+                        if (playing) {
+                            if (LogUtil.DEBUG) {
+                                LogUtil.log("VideoIjkPlayer", "onSeekComplete -> warning: isPlaying true");
+                            }
+                            return;
+                        }
                         start();
                     } else {
                         onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.MEDIA_INFO_PLAY_WHEN_READY_PAUSE);
@@ -792,19 +943,39 @@ public final class VideoIjkPlayer extends VideoBasePlayer {
         @Override
         public void onVideoSizeChanged(IMediaPlayer iMediaPlayer, int width, int height, int sar_num, int sar_den) {
             try {
-                if (null == iMediaPlayer)
-                    throw new Exception("error: iMediaPlayer null");
+                if (null == iMediaPlayer) {
+                    if (LogUtil.DEBUG) {
+                        LogUtil.log("VideoIjkPlayer", "onVideoSizeChanged -> error: iMediaPlayer null");
+                    }
+                    return;
+                }
                 int videoWidth = iMediaPlayer.getVideoWidth();
-                if (videoWidth <= 0)
-                    throw new Exception("error: videoWidth <=0");
+                if (videoWidth <= 0) {
+                    if (LogUtil.DEBUG) {
+                        LogUtil.log("VideoIjkPlayer", "onVideoSizeChanged -> error: videoWidth <= 0");
+                    }
+                    return;
+                }
                 int videoHeight = iMediaPlayer.getVideoHeight();
-                if (videoHeight <= 0)
-                    throw new Exception("error: videoHeight <=0");
-                if (isVideoSizeChanged)
-                    throw new Exception("warning: videoSizeChanged = true");
+                if (videoHeight <= 0) {
+                    if (LogUtil.DEBUG) {
+                        LogUtil.log("VideoIjkPlayer", "onVideoSizeChanged -> error: videoHeight <= 0");
+                    }
+                    return;
+                }
+                if (isVideoSizeChanged) {
+                    if (LogUtil.DEBUG) {
+                        LogUtil.log("VideoIjkPlayer", "onVideoSizeChanged -> warning: videoSizeChanged = true");
+                    }
+                    return;
+                }
                 StartArgs args = getStartArgs();
-                if (null == args)
-                    throw new Exception("error: args null");
+                if (null == args) {
+                    if (LogUtil.DEBUG) {
+                        LogUtil.log("VideoIjkPlayer", "onVideoSizeChanged -> error: args null");
+                    }
+                    return;
+                }
                 isVideoSizeChanged = true;
                 @PlayerType.ScaleType.Value
                 int scaleType = args.getscaleType();
@@ -885,8 +1056,12 @@ public final class VideoIjkPlayer extends VideoBasePlayer {
     @Override
     public boolean toggleTrack(TrackInfo trackInfo) {
         try {
-            if (null == mIjkPlayer)
-                throw new Exception("error: null");
+            if (null == mIjkPlayer) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("VideoIjkPlayer", "toggleTrack -> error: null");
+                }
+                return false;
+            }
 //            mIjkPlayer.selectTrack(trackId);
             return true;
         } catch (Exception e) {
@@ -900,13 +1075,25 @@ public final class VideoIjkPlayer extends VideoBasePlayer {
     @Override
     public List<TrackInfo> getTrackInfo(int type) {
         try {
-            if (null == mIjkPlayer)
-                throw new Exception("error: mIjkPlayer null");
+            if (null == mIjkPlayer) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("VideoIjkPlayer", "getTrackInfo -> error: mIjkPlayer null");
+                }
+                return null;
+            }
             IjkTrackInfo[] ijkTrackInfos = mIjkPlayer.getTrackInfo();
-            if (null == ijkTrackInfos)
-                throw new Exception("error: ijkTrackInfos null");
-            if (ijkTrackInfos.length == 0)
-                throw new Exception("warning: ijkTrackInfos.length == 0");
+            if (null == ijkTrackInfos) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("VideoIjkPlayer", "getTrackInfo -> error: ijkTrackInfos null");
+                }
+                return null;
+            }
+            if (ijkTrackInfos.length == 0) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("VideoIjkPlayer", "getTrackInfo -> warning: ijkTrackInfos.length == 0");
+                }
+                return null;
+            }
             for (IjkTrackInfo ijkTrackInfo : ijkTrackInfos) {
                 if (null == ijkTrackInfo)
                     continue;

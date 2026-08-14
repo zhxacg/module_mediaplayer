@@ -47,13 +47,19 @@ public class ComponentMenu extends RelativeLayout implements ComponentApi {
             setTag(millis);
         } else if (!isFromUser) {
             try {
-                long timeMillis = (long) getTag();
-                if (timeMillis <= 0L)
-                    throw new Exception();
+                Object tag = getTag();
+                if (!(tag instanceof Long)) {
+                    return;
+                }
+                long timeMillis = (long) tag;
+                if (timeMillis <= 0L) {
+                    return;
+                }
                 long currentTimeMillis = System.currentTimeMillis();
                 long cast = currentTimeMillis - timeMillis;
-                if (cast <= 4000L)
-                    throw new Exception();
+                if (cast <= 4000L) {
+                    return;
+                }
                 hide();
             } catch (Exception e) {
             }
@@ -71,14 +77,26 @@ public class ComponentMenu extends RelativeLayout implements ComponentApi {
         if (event.getAction() == KeyEvent.ACTION_DOWN && (event.getKeyCode() == KeyEvent.KEYCODE_DPAD_CENTER || event.getKeyCode() == KeyEvent.KEYCODE_ENTER)) {
             try {
                 View focus = findFocus();
-                if (null == focus)
-                    throw new Exception("warning: focus null");
+                if (null == focus) {
+                    if (LogUtil.DEBUG) {
+                        LogUtil.log("ComponentMenu", "keycodeCenter -> warning: focus null");
+                    }
+                    return true;
+                }
                 int focusId = focus.getId();
-                if (focusId != R.id.module_mediaplayer_component_menu_item_content_txt)
-                    throw new Exception("warning: focusId != R.id.module_mediaplayer_component_menu_item_content_txt");
+                if (focusId != R.id.module_mediaplayer_component_menu_item_content_txt) {
+                    if (LogUtil.DEBUG) {
+                        LogUtil.log("ComponentMenu", "keycodeCenter -> warning: focusId != R.id.module_mediaplayer_component_menu_item_content_txt");
+                    }
+                    return true;
+                }
                 Object _tag = focus.getTag();
-                if (null == _tag)
-                    throw new Exception("warning: _tag null");
+                if (null == _tag) {
+                    if (LogUtil.DEBUG) {
+                        LogUtil.log("ComponentMenu", "keycodeCenter -> warning: _tag null");
+                    }
+                    return true;
+                }
                 int _type = ((int[]) _tag)[0];
 
                 // 倍速
@@ -203,11 +221,19 @@ public class ComponentMenu extends RelativeLayout implements ComponentApi {
         else if (event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == KeyEvent.KEYCODE_DPAD_UP) {
             try {
                 View focus = findFocus();
-                if (null == focus)
-                    throw new Exception("warning: focus null");
+                if (null == focus) {
+                    if (LogUtil.DEBUG) {
+                        LogUtil.log("ComponentMenu", "keycodeUp -> warning: focus null");
+                    }
+                    return true;
+                }
                 int focusId = focus.getId();
-                if (focusId != R.id.module_mediaplayer_component_menu_tab_group_item)
-                    throw new Exception("warning: focusId != R.id.module_mediaplayer_component_menu_tab_group_item");
+                if (focusId != R.id.module_mediaplayer_component_menu_tab_group_item) {
+                    if (LogUtil.DEBUG) {
+                        LogUtil.log("ComponentMenu", "keycodeUp -> warning: focusId != R.id.module_mediaplayer_component_menu_tab_group_item");
+                    }
+                    return true;
+                }
                 ViewGroup viewGroup = findViewById(R.id.module_mediaplayer_component_menu_tab_content);
                 int childCount = viewGroup.getChildCount();
                 for (int i = 0; i < childCount; i++) {
@@ -235,8 +261,12 @@ public class ComponentMenu extends RelativeLayout implements ComponentApi {
             try {
 
                 View focus = findFocus();
-                if (null == focus)
-                    throw new Exception("warning: focus null");
+                if (null == focus) {
+                    if (LogUtil.DEBUG) {
+                        LogUtil.log("ComponentMenu", "keycodeLeft -> warning: focus null");
+                    }
+                    return true;
+                }
                 int focusId = focus.getId();
                 // 菜单
                 if (focusId == R.id.module_mediaplayer_component_menu_tab_group_item) {
@@ -273,17 +303,29 @@ public class ComponentMenu extends RelativeLayout implements ComponentApi {
                     if (indexOfChild <= 0) {
                         try {
                             Object _tag = focus.getTag();
-                            if (!(_tag instanceof int[]))
-                                throw new Exception("warning: _tag not instanceof int[]");
+                            if (!(_tag instanceof int[])) {
+                                if (LogUtil.DEBUG) {
+                                    LogUtil.log("ComponentMenu", "keycodeLeft -> warning: _tag not instanceof int[]");
+                                }
+                                return true;
+                            }
                             int type = ((int[]) _tag)[0];
-                            if (type != TYPE_EPISODE)
-                                throw new Exception("warning: type != TYPE_EPISODE");
+                            if (type != TYPE_EPISODE) {
+                                if (LogUtil.DEBUG) {
+                                    LogUtil.log("ComponentMenu", "keycodeLeft -> warning: type != TYPE_EPISODE");
+                                }
+                                return true;
+                            }
                             int _cur = ((int[]) _tag)[2];
                             if (LogUtil.DEBUG) {
                                 LogUtil.log("ComponentMenu -> keycodeUp -> _cur = " + _cur);
                             }
-                            if (_cur <= 0)
-                                throw new Exception("warning: _cur <= 0");
+                            if (_cur <= 0) {
+                                if (LogUtil.DEBUG) {
+                                    LogUtil.log("ComponentMenu", "keycodeLeft -> warning: _cur <= 0");
+                                }
+                                return true;
+                            }
                             for (int i = 0; i < 10; i++) {
                                 //
                                 View childAt = viewGroup.getChildAt(i);
@@ -324,8 +366,12 @@ public class ComponentMenu extends RelativeLayout implements ComponentApi {
             try {
 
                 View focus = findFocus();
-                if (null == focus)
-                    throw new Exception("warning: focus null");
+                if (null == focus) {
+                    if (LogUtil.DEBUG) {
+                        LogUtil.log("ComponentMenu", "keycodeRight -> warning: focus null");
+                    }
+                    return true;
+                }
                 int focusId = focus.getId();
                 // 菜单
                 if (focusId == R.id.module_mediaplayer_component_menu_tab_group_item) {
@@ -362,11 +408,19 @@ public class ComponentMenu extends RelativeLayout implements ComponentApi {
 
                         try {
                             Object _tag = focus.getTag();
-                            if (!(_tag instanceof int[]))
-                                throw new Exception("warning: _tag not instanceof int[]");
+                            if (!(_tag instanceof int[])) {
+                                if (LogUtil.DEBUG) {
+                                    LogUtil.log("ComponentMenu", "keycodeRight -> warning: _tag not instanceof int[]");
+                                }
+                                return true;
+                            }
                             int type = ((int[]) _tag)[0];
-                            if (type != TYPE_EPISODE)
-                                throw new Exception("warning: type != TYPE_EPISODE");
+                            if (type != TYPE_EPISODE) {
+                                if (LogUtil.DEBUG) {
+                                    LogUtil.log("ComponentMenu", "keycodeRight -> warning: type != TYPE_EPISODE");
+                                }
+                                return true;
+                            }
                             int _cur = ((int[]) _tag)[2];
                             if (LogUtil.DEBUG) {
                                 LogUtil.log("ComponentMenu -> keycodeUp -> _cur = " + _cur);
@@ -375,8 +429,12 @@ public class ComponentMenu extends RelativeLayout implements ComponentApi {
                             if (LogUtil.DEBUG) {
                                 LogUtil.log("ComponentMenu -> keycodeUp -> _length = " + _length);
                             }
-                            if (_cur + 1 >= _length)
-                                throw new Exception("warning: _cur + 1 > _length");
+                            if (_cur + 1 >= _length) {
+                                if (LogUtil.DEBUG) {
+                                    LogUtil.log("ComponentMenu", "keycodeRight -> warning: _cur + 1 >= _length");
+                                }
+                                return true;
+                            }
                             for (int i = 0; i < 10; i++) {
                                 //
                                 View childAt = viewGroup.getChildAt(i);
@@ -423,30 +481,50 @@ public class ComponentMenu extends RelativeLayout implements ComponentApi {
         return false;
     }
 
-    private void addTabMenu(int index) throws Exception {
+    private void addTabMenu(int index) {
 
         try {
-            if (index < 0)
-                throw new Exception("warning: index < 0");
+            if (index < 0) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("ComponentMenu", "addTabMenu -> warning: index < 0");
+                }
+                return;
+            }
 
             StartArgs startArgs = getStartArgs();
-            if (null == startArgs)
-                throw new Exception("warning: startArgs null");
+            if (null == startArgs) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("ComponentMenu", "addTabMenu -> warning: startArgs null");
+                }
+                return;
+            }
 
             Menu argsMenu = startArgs.getMenu();
-            if (null == argsMenu)
-                throw new Exception("warning: argsMenu null");
+            if (null == argsMenu) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("ComponentMenu", "addTabMenu -> warning: argsMenu null");
+                }
+                return;
+            }
 
             List<? extends Menu.Item> list = praseData();
-            if (null == list)
-                throw new Exception("error: list null");
+            if (null == list) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("ComponentMenu", "addTabMenu -> error: list null");
+                }
+                return;
+            }
 
             int size = list.size();
             if (LogUtil.DEBUG) {
-                LogUtil.log("ComponentMenu -> addTabMenu -> size =  " + size);
+                LogUtil.log("ComponentMenu", "addTabMenu -> size =  " + size);
             }
-            if (index >= size)
-                throw new Exception("error: index >= size");
+            if (index >= size) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("ComponentMenu", "addTabMenu -> error: index >= size");
+                }
+                return;
+            }
 
             ViewGroup viewGroup = findViewById(R.id.module_mediaplayer_component_menu_tab_group);
             int childCount = viewGroup.getChildCount();
@@ -466,7 +544,6 @@ public class ComponentMenu extends RelativeLayout implements ComponentApi {
             if (LogUtil.DEBUG) {
                 LogUtil.log("ComponentMenu -> addTabMenu -> Exception " + e.getMessage());
             }
-            throw e;
         }
     }
 
@@ -474,8 +551,12 @@ public class ComponentMenu extends RelativeLayout implements ComponentApi {
         try {
             ViewGroup viewGroup = findViewById(R.id.module_mediaplayer_component_menu_tab_group);
             int childCount = viewGroup.getChildCount();
-            if (childCount <= 0)
-                throw new Exception("warning: childCount <= 0");
+            if (childCount <= 0) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("ComponentMenu", "requestTabMenu -> warning: childCount <= 0");
+                }
+                return;
+            }
             for (int i = 0; i < childCount; i++) {
                 View childAt = viewGroup.getChildAt(i);
                 boolean selected = childAt.isSelected();
@@ -490,19 +571,31 @@ public class ComponentMenu extends RelativeLayout implements ComponentApi {
         }
     }
 
-    private void selectedTabMenu(int index) throws Exception {
+    private void selectedTabMenu(int index) {
 
         try {
-            if (index < 0)
-                throw new Exception("warning: index < 0");
+            if (index < 0) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("ComponentMenu", "selectedTabMenu -> warning: index < 0");
+                }
+                return;
+            }
 
             List<? extends Menu.Item> list = praseData();
-            if (null == list)
-                throw new Exception("error: list null");
+            if (null == list) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("ComponentMenu", "selectedTabMenu -> error: list null");
+                }
+                return;
+            }
 
             int size = list.size();
-            if (index >= size)
-                throw new Exception("error: index >= size");
+            if (index >= size) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("ComponentMenu", "selectedTabMenu -> error: index >= size");
+                }
+                return;
+            }
 
             // 选中
             ViewGroup viewGroup = findViewById(R.id.module_mediaplayer_component_menu_tab_group);
@@ -516,23 +609,34 @@ public class ComponentMenu extends RelativeLayout implements ComponentApi {
             if (LogUtil.DEBUG) {
                 LogUtil.log("ComponentMenu -> selectedTabMenu -> Exception " + e.getMessage());
             }
-            throw e;
         }
     }
 
-    private void updateTabContent(int index) throws Exception {
+    private void updateTabContent(int index) {
         try {
             ViewGroup viewGroup = findViewById(R.id.module_mediaplayer_component_menu_tab_content);
             viewGroup.removeAllViews();
             //
-            if (index < 0)
-                throw new Exception("error: index <0");
+            if (index < 0) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("ComponentMenu", "updateTabContent -> error: index < 0");
+                }
+                return;
+            }
             List<? extends Menu.Item> list = praseData();
-            if (null == list)
-                throw new Exception("error: list null");
+            if (null == list) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("ComponentMenu", "updateTabContent -> error: list null");
+                }
+                return;
+            }
             int size = list.size();
-            if (index >= size)
-                throw new Exception("error: index >= size");
+            if (index >= size) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("ComponentMenu", "updateTabContent -> error: index >= size");
+                }
+                return;
+            }
 
             Menu.Item item = list.get(index);
 
@@ -581,10 +685,18 @@ public class ComponentMenu extends RelativeLayout implements ComponentApi {
             // 其他
             else if (item instanceof Menu.Default) {
                 int[] contentData = ((Menu.Default) item).getData();
-                if (null == contentData)
-                    throw new Exception("error: contentData null");
-                if (contentData.length == 0)
-                    throw new Exception("error: contentData.length == 0");
+                if (null == contentData) {
+                    if (LogUtil.DEBUG) {
+                        LogUtil.log("ComponentMenu", "updateTabContent -> error: contentData null");
+                    }
+                    return;
+                }
+                if (contentData.length == 0) {
+                    if (LogUtil.DEBUG) {
+                        LogUtil.log("ComponentMenu", "updateTabContent -> error: contentData.length == 0");
+                    }
+                    return;
+                }
 
                 int scaleType = getVideoScale();
                 float speedType = getPlaybackSpeed();
@@ -673,7 +785,6 @@ public class ComponentMenu extends RelativeLayout implements ComponentApi {
             if (LogUtil.DEBUG) {
                 LogUtil.log("ComponentMenu -> updateTabContent -> Exception " + e.getMessage());
             }
-            throw e;
         }
     }
 
@@ -681,16 +792,32 @@ public class ComponentMenu extends RelativeLayout implements ComponentApi {
 
         try {
             StartArgs startArgs = getStartArgs();
-            if (null == startArgs)
-                throw new Exception("warning: startArgs null");
+            if (null == startArgs) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("ComponentMenu", "praseData -> warning: startArgs null");
+                }
+                return null;
+            }
             Menu menu = startArgs.getMenu();
-            if (null == menu)
-                throw new Exception("warning: menu null");
+            if (null == menu) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("ComponentMenu", "praseData -> warning: menu null");
+                }
+                return null;
+            }
             List<? extends Menu.Item> data = menu.getData();
-            if (null == data)
-                throw new Exception("warning: data null");
-            if (data.isEmpty())
-                throw new Exception("warning: data isEmpty");
+            if (null == data) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("ComponentMenu", "praseData -> warning: data null");
+                }
+                return null;
+            }
+            if (data.isEmpty()) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("ComponentMenu", "praseData -> warning: data isEmpty");
+                }
+                return null;
+            }
             return data;
         } catch (Exception e) {
             return null;

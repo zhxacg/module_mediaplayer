@@ -244,7 +244,12 @@ public final class GradientView extends View {
 
     private void close() {
         try {
-            if (null == mValueAnimator) throw new Exception("Warning: mValueAnimator null");
+            if (null == mValueAnimator) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("GradientView -> close -> warning: mValueAnimator null");
+                }
+                return;
+            }
             mValueAnimator.end();
             mValueAnimator.cancel();
             mValueAnimator = null;

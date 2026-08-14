@@ -30,8 +30,12 @@ interface VideoKernelApiStartArgs extends VideoKernelApiBase {
     default long getTrySeeDuration() {
         try {
             StartArgs args = getStartArgs();
-            if (null == args)
-                throw new Exception("error: args null");
+            if (null == args) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("VideoKernelApiBase -> getTrySeeDuration -> error: args null");
+                }
+                return 0L;
+            }
             return args.getTrySeeDuration();
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
@@ -44,8 +48,12 @@ interface VideoKernelApiStartArgs extends VideoKernelApiBase {
     default boolean isLiveStream() {
         try {
             StartArgs startArgs = getStartArgs();
-            if (null == startArgs)
-                throw new Exception("error: startArgs null");
+            if (null == startArgs) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("VideoKernelApiBase -> isLiveStream -> error: startArgs null");
+                }
+                return false;
+            }
             return startArgs.isLiveStream();
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
@@ -58,8 +66,12 @@ interface VideoKernelApiStartArgs extends VideoKernelApiBase {
     default boolean isPlayWhenReady() {
         try {
             StartArgs args = getStartArgs();
-            if (null == args)
-                throw new Exception("error: args null");
+            if (null == args) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("VideoKernelApiBase -> isPlayWhenReady -> error: args null");
+                }
+                return false;
+            }
             return args.isPlayWhenReady();
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
@@ -72,8 +84,12 @@ interface VideoKernelApiStartArgs extends VideoKernelApiBase {
     default long getPlayWhenReadyDelayedTime() {
         try {
             StartArgs args = getStartArgs();
-            if (null == args)
-                throw new Exception("error: args null");
+            if (null == args) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("VideoKernelApiBase -> getPlayWhenReadyDelayedTime -> error: args null");
+                }
+                return 0L;
+            }
             return args.getPlayWhenReadyDelayedTime();
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
@@ -89,8 +105,12 @@ interface VideoKernelApiStartArgs extends VideoKernelApiBase {
             if (LogUtil.DEBUG) {
                 LogUtil.log("VideoKernelApiBase -> getPlayWhenReadySeekToPosition -> args = " + args);
             }
-            if (null == args)
-                throw new Exception("error: args null");
+            if (null == args) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("VideoKernelApiBase -> getPlayWhenReadySeekToPosition -> error: args null");
+                }
+                return 0L;
+            }
             return args.getPlayWhenReadySeekToPosition();
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
@@ -111,8 +131,12 @@ interface VideoKernelApiStartArgs extends VideoKernelApiBase {
     default boolean isDoWindowing() {
         try {
             Boolean aBoolean = mDoWindowing.get(this);
-            if (null == aBoolean)
-                throw new Exception("warning: aBoolean null");
+            if (null == aBoolean) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("VideoKernelApiStartArgs -> isDoWindowing -> warning: aBoolean null");
+                }
+                return false;
+            }
             return aBoolean;
         } catch (Exception e) {
             if (LogUtil.DEBUG) {

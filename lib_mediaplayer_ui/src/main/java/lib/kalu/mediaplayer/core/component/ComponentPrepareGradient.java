@@ -69,8 +69,12 @@ public class ComponentPrepareGradient extends RelativeLayout implements Componen
     public void show() {
         try {
             boolean componentShowing = isComponentShowing();
-            if (componentShowing)
-                throw new Exception("warning: componentShowing true");
+            if (componentShowing) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("ComponentPrepareGradient -> show -> warning: componentShowing true");
+                }
+                return;
+            }
             // 1
             ComponentApi.super.show();
             // 2
@@ -93,8 +97,12 @@ public class ComponentPrepareGradient extends RelativeLayout implements Componen
     public void hide() {
         try {
             boolean componentShowing = isComponentShowing();
-            if (!componentShowing)
-                throw new Exception("warning: componentShowing false");
+            if (!componentShowing) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("ComponentPrepareGradient -> hide -> warning: componentShowing false");
+                }
+                return;
+            }
             // 1
             ComponentApi.super.hide();
             // 2

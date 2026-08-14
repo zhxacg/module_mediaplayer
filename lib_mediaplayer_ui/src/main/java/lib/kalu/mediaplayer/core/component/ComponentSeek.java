@@ -56,8 +56,12 @@ public class ComponentSeek extends RelativeLayout implements ComponentApi {
         try {
             // 试看
             long trySeeDuration = getTrySeeDuration();
-            if (trySeeDuration > 0L)
-                throw new Exception("warning: trySeeDuration > 0L");
+            if (trySeeDuration > 0L) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("ComponentSeek -> dispatchKeyEvent -> warning: trySeeDuration > 0L");
+                }
+                return false;
+            }
             // seekForward -> start
             if (event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == KeyEvent.KEYCODE_DPAD_RIGHT && event.getRepeatCount() == 0) {
                 onUpdateProgress(true, -2, -2, -2);
@@ -68,8 +72,12 @@ public class ComponentSeek extends RelativeLayout implements ComponentApi {
                 lib.kalu.mediaplayer.widget.seek.SeekBar seekBar = findViewById(R.id.module_mediaplayer_component_seek_sb);
                 int progress = seekBar.getProgress();
                 int duration = seekBar.getMax();
-                if (progress >= duration)
-                    throw new Exception("warning: progress >= duration");
+                if (progress >= duration) {
+                    if (LogUtil.DEBUG) {
+                        LogUtil.log("ComponentSeek -> dispatchKeyEvent -> warning: progress >= duration");
+                    }
+                    return true;
+                }
                 // >=2H 2 * 60 * 60 * 1000
                 if (duration >= 7200000) {
                     progress += 8000;
@@ -103,8 +111,12 @@ public class ComponentSeek extends RelativeLayout implements ComponentApi {
                 lib.kalu.mediaplayer.widget.seek.SeekBar seekBar = findViewById(R.id.module_mediaplayer_component_seek_sb);
                 int progress = seekBar.getProgress();
                 int duration = seekBar.getMax();
-                if (progress >= duration)
-                    throw new Exception("warning: progress > duration");
+                if (progress >= duration) {
+                    if (LogUtil.DEBUG) {
+                        LogUtil.log("ComponentSeek -> dispatchKeyEvent -> warning: progress > duration");
+                    }
+                    return true;
+                }
                 // >=2H 2 * 60 * 60 * 1000
                 if (duration >= 7200000) {
                     progress += 60000;
@@ -152,8 +164,12 @@ public class ComponentSeek extends RelativeLayout implements ComponentApi {
                 //
                 lib.kalu.mediaplayer.widget.seek.SeekBar seekBar = findViewById(R.id.module_mediaplayer_component_seek_sb);
                 int progress = seekBar.getProgress();
-                if (progress <= 0)
-                    throw new Exception("warning: progress <=0");
+                if (progress <= 0) {
+                    if (LogUtil.DEBUG) {
+                        LogUtil.log("ComponentSeek -> dispatchKeyEvent -> warning: progress <= 0");
+                    }
+                    return true;
+                }
                 int duration = seekBar.getMax();
                 // >=2H 2 * 60 * 60 * 1000
                 if (duration >= 7200000) {
@@ -188,8 +204,12 @@ public class ComponentSeek extends RelativeLayout implements ComponentApi {
                 //
                 lib.kalu.mediaplayer.widget.seek.SeekBar seekBar = findViewById(R.id.module_mediaplayer_component_seek_sb);
                 int progress = seekBar.getProgress();
-                if (progress <= 0)
-                    throw new Exception("warning: progress <=0");
+                if (progress <= 0) {
+                    if (LogUtil.DEBUG) {
+                        LogUtil.log("ComponentSeek -> dispatchKeyEvent -> warning: progress <= 0");
+                    }
+                    return true;
+                }
                 int duration = seekBar.getMax();
                 // >=2H 2 * 60 * 60 * 1000
                 if (duration >= 7200000) {
@@ -230,7 +250,10 @@ public class ComponentSeek extends RelativeLayout implements ComponentApi {
                 return true;
             }
 
-            throw new Exception("warning: not find");
+            if (LogUtil.DEBUG) {
+                LogUtil.log("ComponentSeek -> dispatchKeyEvent -> warning: not find");
+            }
+            return false;
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
                 LogUtil.log("ComponentSeek -> dispatchKeyEvent -> Exception " + e.getMessage());

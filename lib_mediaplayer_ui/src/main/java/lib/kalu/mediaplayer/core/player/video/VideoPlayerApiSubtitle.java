@@ -8,11 +8,19 @@ public interface VideoPlayerApiSubtitle extends VideoPlayerApiBase, VideoPlayerA
     default boolean subtitleOffsetMs(int offset) {
         try {
             VideoKernelApi kernel = getVideoKernel();
-            if (null == kernel)
-                throw new Exception("warning: kernel null");
+            if (null == kernel) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("VideoPlayerApiSubtitle", "subtitleOffsetMs -> warning: kernel null");
+                }
+                return false;
+            }
             boolean playing = kernel.isPlaying();
-            if (!playing)
-                throw new Exception("warning: playing false");
+            if (!playing) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("VideoPlayerApiSubtitle", "subtitleOffsetMs -> warning: playing false");
+                }
+                return false;
+            }
             boolean result = kernel.subtitleOffsetMs(offset);
             if (result) {
                 onBuriedSubtitleOffsetMs(offset);
@@ -29,11 +37,19 @@ public interface VideoPlayerApiSubtitle extends VideoPlayerApiBase, VideoPlayerA
     default boolean addSubtitleTrack(String url) {
         try {
             VideoKernelApi kernel = getVideoKernel();
-            if (null == kernel)
-                throw new Exception("warning: kernel null");
+            if (null == kernel) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("VideoPlayerApiSubtitle", "addSubtitleTrack -> warning: kernel null");
+                }
+                return false;
+            }
             boolean playing = kernel.isPlaying();
-            if (!playing)
-                throw new Exception("warning: playing false");
+            if (!playing) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("VideoPlayerApiSubtitle", "addSubtitleTrack -> warning: playing false");
+                }
+                return false;
+            }
             return kernel.addSubtitleTrack(url);
         } catch (Exception e) {
             if (LogUtil.DEBUG) {

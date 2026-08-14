@@ -49,8 +49,9 @@ public final class CusHlsLoadErrorHandlingPolicy extends DefaultLoadErrorHandlin
                 LogUtil.log(TAG, "getRetryDelayMsFor -> loadErrorInfo.errorCount = " + loadErrorInfo.errorCount + ", loadErrorInfo.loadEventInfo.dataSpec.uri = " + dataUrl);
             }
 
-            if (!dataUrl.contains(PlayerType.SchemeType._M3U8))
-                throw new Exception();
+            if (!dataUrl.contains(PlayerType.SchemeType._M3U8)) {
+                return super.getRetryDelayMsFor(loadErrorInfo);
+            }
             return C.TIME_UNSET;
         } catch (Exception e) {
             return super.getRetryDelayMsFor(loadErrorInfo);

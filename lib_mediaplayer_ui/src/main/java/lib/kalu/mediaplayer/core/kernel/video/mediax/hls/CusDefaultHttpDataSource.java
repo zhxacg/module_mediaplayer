@@ -1044,8 +1044,12 @@ public final class CusDefaultHttpDataSource extends BaseDataSource implements Ht
         }
 
         try {
-            if (null == proxyUrl)
-                throw new Exception("waring: proxyUrl null");
+            if (null == proxyUrl) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log(TAG, "formatOpenInit -> waring: proxyUrl null");
+                }
+                return;
+            }
 
             if (LogUtil.DEBUG) {
                 LogUtil.log(TAG, "formatOpenInit -> dataSpec.customData =  " + dataSpec.customData);
@@ -1066,8 +1070,12 @@ public final class CusDefaultHttpDataSource extends BaseDataSource implements Ht
 
     private DataSpec formatOpenUrl(DataSpec dataSpec) {
         try {
-            if (null == proxyUrl)
-                throw new Exception("waring: proxyUrl null");
+            if (null == proxyUrl) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log(TAG, "formatOpenUrl -> waring: proxyUrl null");
+                }
+                return dataSpec;
+            }
             String openUrl = dataSpec.uri.toString();
             if (LogUtil.DEBUG) {
                 LogUtil.log(TAG, "formatOpenUrl -> openUrl =  " + openUrl);
@@ -1114,8 +1122,12 @@ public final class CusDefaultHttpDataSource extends BaseDataSource implements Ht
             if (LogUtil.DEBUG) {
                 LogUtil.log(TAG, "formatOpenUrl -> formatUrl =  " + formatOpenUrl);
             }
-            if (null == formatOpenUrl || formatOpenUrl.isEmpty())
-                throw new Exception("waring: formatOpenUrl null");
+            if (null == formatOpenUrl || formatOpenUrl.isEmpty()) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log(TAG, "formatOpenUrl -> waring: formatOpenUrl null");
+                }
+                return dataSpec;
+            }
 
             if (LogUtil.DEBUG) {
                 LogUtil.log(TAG, "formatOpenUrl -> reset completed");
@@ -1139,8 +1151,12 @@ public final class CusDefaultHttpDataSource extends BaseDataSource implements Ht
         }
 
         try {
-            if (null == proxyUrl)
-                throw new Exception("waring: proxyUrl null");
+            if (null == proxyUrl) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log(TAG, "formatOpenSubtitleUrl -> waring: proxyUrl null");
+                }
+                return url;
+            }
             return proxyUrl.formatSubtitleUrl(url);
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
@@ -1157,8 +1173,12 @@ public final class CusDefaultHttpDataSource extends BaseDataSource implements Ht
         }
 
         try {
-            if (null == proxyUrl)
-                throw new Exception("waring: proxyUrl null");
+            if (null == proxyUrl) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log(TAG, "formatOpenM3u8Url -> waring: proxyUrl null");
+                }
+                return url;
+            }
             return proxyUrl.formatM3u8Url(url);
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
@@ -1175,8 +1195,12 @@ public final class CusDefaultHttpDataSource extends BaseDataSource implements Ht
         }
 
         try {
-            if (null == proxyUrl)
-                throw new Exception("waring: proxyUrl null");
+            if (null == proxyUrl) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log(TAG, "formatOpenSegmentUrl -> waring: proxyUrl null");
+                }
+                return url;
+            }
             return proxyUrl.formatSegmentUrl(url);
         } catch (Exception e) {
             if (LogUtil.DEBUG) {

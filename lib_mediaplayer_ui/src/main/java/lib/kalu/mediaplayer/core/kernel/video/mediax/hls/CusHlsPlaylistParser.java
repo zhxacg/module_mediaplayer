@@ -2029,8 +2029,12 @@ public final class CusHlsPlaylistParser implements ParsingLoadable.Parser<HlsPla
 
     private static String formatMultivariantM3u8Url(ProxyUrl proxyUrl, String baseUrl, String referencePath) {
         try {
-            if (null == proxyUrl)
-                throw new Exception("waring: proxyUrl null");
+            if (null == proxyUrl) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("CustomHlsPlaylistParser -> formatMultivariantM3u8Url -> waring: proxyUrl null");
+                }
+                return referencePath;
+            }
             if (LogUtil.DEBUG) {
                 LogUtil.log("CustomHlsPlaylistParser -> formatMultivariantM3u8Url -> baseUrl = " + baseUrl + ", referencePath = " + referencePath);
             }
@@ -2038,8 +2042,12 @@ public final class CusHlsPlaylistParser implements ParsingLoadable.Parser<HlsPla
             if (LogUtil.DEBUG) {
                 LogUtil.log("CustomHlsPlaylistParser -> formatMultivariantM3u8Url -> formatSegmentPath = " + formatSegmentPath);
             }
-            if (null == formatSegmentPath || formatSegmentPath.isEmpty())
-                throw new Exception("waring: formatSegmentPath null");
+            if (null == formatSegmentPath || formatSegmentPath.isEmpty()) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("CustomHlsPlaylistParser -> formatMultivariantM3u8Url -> waring: formatSegmentPath null");
+                }
+                return referencePath;
+            }
             return formatSegmentPath;
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
@@ -2051,8 +2059,12 @@ public final class CusHlsPlaylistParser implements ParsingLoadable.Parser<HlsPla
 
     private static String formatSegmentPath(ProxyUrl proxyUrl, String baseUrl, String segmentPath) {
         try {
-            if (null == proxyUrl)
-                throw new Exception("waring: proxyUrl null");
+            if (null == proxyUrl) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("CustomHlsPlaylistParser -> formatSegmentPath -> waring: proxyUrl null");
+                }
+                return segmentPath;
+            }
             if (LogUtil.DEBUG) {
                 LogUtil.log("CustomHlsPlaylistParser -> formatSegmentPath -> baseUrl = " + baseUrl + ", segmentPath = " + segmentPath);
             }
@@ -2060,8 +2072,12 @@ public final class CusHlsPlaylistParser implements ParsingLoadable.Parser<HlsPla
             if (LogUtil.DEBUG) {
                 LogUtil.log("CustomHlsPlaylistParser -> formatSegmentPath -> formatSegmentPath = " + formatSegmentPath);
             }
-            if (null == formatSegmentPath || formatSegmentPath.isEmpty())
-                throw new Exception("waring: formatSegmentPath null");
+            if (null == formatSegmentPath || formatSegmentPath.isEmpty()) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("CustomHlsPlaylistParser -> formatSegmentPath -> waring: formatSegmentPath null");
+                }
+                return segmentPath;
+            }
             return formatSegmentPath;
         } catch (Exception e) {
             if (LogUtil.DEBUG) {

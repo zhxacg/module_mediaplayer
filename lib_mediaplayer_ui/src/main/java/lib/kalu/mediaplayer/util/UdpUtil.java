@@ -19,8 +19,12 @@ public final class UdpUtil {
             InetAddress address = InetAddress.getByName(host);
             InetSocketAddress socketAddress = new InetSocketAddress(address, port);
             boolean multicastAddress = address.isMulticastAddress();
-            if (!multicastAddress)
-                throw new Exception(s + "not MulticastAddress");
+            if (!multicastAddress) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("UdpUtil", "checkUdpJoinGroup -> " + s + " not MulticastAddress");
+                }
+                return false;
+            }
             // 3
             MulticastSocket socket = new MulticastSocket(socketAddress);
             socket.setSoTimeout(200);
@@ -33,8 +37,12 @@ public final class UdpUtil {
             // 5
             socket.leaveGroup(address);
             socket.close();
-            if (null == msg || msg.length() <= 0)
-                throw new Exception("receive message is null : " + msg);
+            if (null == msg || msg.length() <= 0) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("UdpUtil", "checkUdpJoinGroup -> receive message is null : " + msg);
+                }
+                return false;
+            }
             return true;
         } catch (Exception e) {
             return false;

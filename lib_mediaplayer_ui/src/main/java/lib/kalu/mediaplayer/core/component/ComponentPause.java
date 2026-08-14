@@ -29,14 +29,26 @@ public class ComponentPause extends RelativeLayout implements ComponentApi {
         if (event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == KeyEvent.KEYCODE_BACK) {
             try {
                 boolean componentShowing = isComponentShowing();
-                if (!componentShowing)
-                    throw new Exception("warning: componentShowing false");
+                if (!componentShowing) {
+                    if (LogUtil.DEBUG) {
+                        LogUtil.log("ComponentPause -> dispatchKeyEvent -> warning: componentShowing false");
+                    }
+                    return false;
+                }
                 boolean prepared = isPrepared();
-                if (!prepared)
-                    throw new Exception("warning: prepared false");
+                if (!prepared) {
+                    if (LogUtil.DEBUG) {
+                        LogUtil.log("ComponentPause -> dispatchKeyEvent -> warning: prepared false");
+                    }
+                    return false;
+                }
                 boolean playing = isPlaying();
-                if (playing)
-                    throw new Exception("warning: playing true");
+                if (playing) {
+                    if (LogUtil.DEBUG) {
+                        LogUtil.log("ComponentPause -> dispatchKeyEvent -> warning: playing true");
+                    }
+                    return false;
+                }
                 resume();
                 return true;
             } catch (Exception e) {
@@ -79,8 +91,12 @@ public class ComponentPause extends RelativeLayout implements ComponentApi {
                 }
                 try {
                     boolean componentShowing = isComponentShowing();
-                    if (!componentShowing)
-                        throw new Exception("warning: componentShowing false");
+                    if (!componentShowing) {
+                        if (LogUtil.DEBUG) {
+                            LogUtil.log("ComponentPause -> onUpdateEvent -> COMPONENT_SEEK_SHOW -> warning: componentShowing false");
+                        }
+                        return;
+                    }
                     setActivated(true);
                     hide();
                 } catch (Exception e) {
@@ -97,8 +113,12 @@ public class ComponentPause extends RelativeLayout implements ComponentApi {
                 }
                 try {
                     boolean activated = isActivated();
-                    if (!activated)
-                        throw new Exception("warning: activated false");
+                    if (!activated) {
+                        if (LogUtil.DEBUG) {
+                            LogUtil.log("ComponentPause -> onUpdateEvent -> SEEK_FINISH -> warning: activated false");
+                        }
+                        return;
+                    }
                     setActivated(false);
 //                    show();
                 } catch (Exception e) {
@@ -110,8 +130,12 @@ public class ComponentPause extends RelativeLayout implements ComponentApi {
                 }
                 try {
                     boolean componentShowing = isComponentShowing();
-                    if (!componentShowing)
-                        throw new Exception("warning: componentShowing false");
+                    if (!componentShowing) {
+                        if (LogUtil.DEBUG) {
+                            LogUtil.log("ComponentPause -> onUpdateEvent -> COMPONENT_MENU_SHOW -> warning: componentShowing false");
+                        }
+                        return;
+                    }
                     setActivated(true);
                     hide();
                 } catch (Exception e) {
@@ -126,8 +150,12 @@ public class ComponentPause extends RelativeLayout implements ComponentApi {
                 }
                 try {
                     boolean activated = isActivated();
-                    if (!activated)
-                        throw new Exception("warning: activated false");
+                    if (!activated) {
+                        if (LogUtil.DEBUG) {
+                            LogUtil.log("ComponentPause -> onUpdateEvent -> COMPONENT_MENU_HIDE -> warning: activated false");
+                        }
+                        return;
+                    }
                     long trySeeDuration = getTrySeeDuration();
                     long position = getPosition();
                     long duration = getDuration();
@@ -158,11 +186,19 @@ public class ComponentPause extends RelativeLayout implements ComponentApi {
 
         try {
             long trySeeDuration = getTrySeeDuration();
-            if (trySeeDuration > 0L)
-                throw new Exception("warning: trySee true");
+            if (trySeeDuration > 0L) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("ComponentPause -> hide -> warning: trySee true");
+                }
+                return;
+            }
             boolean componentShowing = isComponentShowing();
-            if (!componentShowing)
-                throw new Exception("warning: componentShowing false");
+            if (!componentShowing) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("ComponentPause -> hide -> warning: componentShowing false");
+                }
+                return;
+            }
             ComponentApi.super.hide();
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
@@ -209,11 +245,19 @@ public class ComponentPause extends RelativeLayout implements ComponentApi {
 
         try {
             long trySeeDuration = getTrySeeDuration();
-            if (trySeeDuration > 0L)
-                throw new Exception("warning: trySee true");
+            if (trySeeDuration > 0L) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("ComponentPause -> show -> warning: trySee true");
+                }
+                return;
+            }
             boolean componentShowing = isComponentShowing();
-            if (componentShowing)
-                throw new Exception("warning: componentShowing true");
+            if (componentShowing) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("ComponentPause -> show -> warning: componentShowing true");
+                }
+                return;
+            }
             ComponentApi.super.show();
         } catch (Exception e) {
             if (LogUtil.DEBUG) {

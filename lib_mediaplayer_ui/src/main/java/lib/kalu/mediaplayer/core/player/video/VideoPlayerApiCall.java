@@ -41,11 +41,17 @@ public interface VideoPlayerApiCall extends VideoPlayerApiBase, VideoPlayerApiLi
     }
 
     default void callComponentScreenOrientation(@PlayerType.ScreenOrientation.Value int value) {
+
         try {
+
             ViewGroup viewGroup = getBaseComponentViewGroup();
             int childCount = viewGroup.getChildCount();
+            if (LogUtil.DEBUG) {
+                LogUtil.log(TAG, "callComponentScreenOrientation -> childCount = " + childCount);
+            }
             if (childCount <= 0)
-                throw new Exception("not find component");
+                return;
+
             for (int i = 0; i < childCount; i++) {
                 View childAt = viewGroup.getChildAt(i);
                 if (null == childAt)
@@ -62,15 +68,21 @@ public interface VideoPlayerApiCall extends VideoPlayerApiBase, VideoPlayerApiLi
     }
 
     default void callPlayerScreenOrientation(@PlayerType.ScreenOrientation.Value int value) {
+
         try {
-            OnPlayerScreenOrientationChangeListener onPlayerScreenOrientationChangeListener = getPlayerScreenOrientationChangeListener();
-            if (null == onPlayerScreenOrientationChangeListener)
-                throw new Exception("warning: onPlayerScreenOrientationChangeListener null");
-            if (value == PlayerType.ScreenOrientation.PORTRAIT) {
-                onPlayerScreenOrientationChangeListener.onPortrait();
-            } else if (value == PlayerType.ScreenOrientation.LANDSPACE) {
-                onPlayerScreenOrientationChangeListener.onLandspace();
+            OnPlayerScreenOrientationChangeListener listener = getPlayerScreenOrientationChangeListener();
+            if (LogUtil.DEBUG) {
+                LogUtil.log(TAG, "callPlayerScreenOrientation -> value = " + value + ", listener = " + listener);
             }
+
+            if (null == listener)
+                return;
+            if (value == PlayerType.ScreenOrientation.PORTRAIT) {
+                listener.onPortrait();
+            } else if (value == PlayerType.ScreenOrientation.LANDSPACE) {
+                listener.onLandspace();
+            }
+
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
                 LogUtil.log(TAG, "callPlayerScreenOrientation -> " + e.getMessage());
@@ -90,11 +102,16 @@ public interface VideoPlayerApiCall extends VideoPlayerApiBase, VideoPlayerApiLi
     }
 
     default void callComponentVolume(float volume) {
+
         try {
+
             ViewGroup viewGroup = getBaseComponentViewGroup();
             int childCount = viewGroup.getChildCount();
+            if (LogUtil.DEBUG) {
+                LogUtil.log(TAG, "callComponentVolume -> childCount = " + childCount);
+            }
             if (childCount <= 0)
-                throw new Exception("not find component");
+                return;
             for (int i = 0; i < childCount; i++) {
                 View childAt = viewGroup.getChildAt(i);
                 if (null == childAt)
@@ -103,6 +120,7 @@ public interface VideoPlayerApiCall extends VideoPlayerApiBase, VideoPlayerApiLi
                     continue;
                 ((ComponentApi) childAt).onUpdateVolume(volume);
             }
+
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
                 LogUtil.log(TAG, "callComponentVolume -> " + e.getMessage());
@@ -188,8 +206,12 @@ public interface VideoPlayerApiCall extends VideoPlayerApiBase, VideoPlayerApiLi
         try {
             ViewGroup viewGroup = getBaseComponentViewGroup();
             int childCount = viewGroup.getChildCount();
-            if (childCount <= 0)
-                throw new Exception("not find component");
+            if (childCount <= 0) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log(TAG, "callComponentSubtitle -> not find component");
+                }
+                return;
+            }
             for (int i = 0; i < childCount; i++) {
                 View childAt = viewGroup.getChildAt(i);
                 if (null == childAt)
@@ -210,8 +232,12 @@ public interface VideoPlayerApiCall extends VideoPlayerApiBase, VideoPlayerApiLi
         try {
             ViewGroup viewGroup = getBaseComponentViewGroup();
             int childCount = viewGroup.getChildCount();
-            if (childCount <= 0)
-                throw new Exception("not find component");
+            if (childCount <= 0) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log(TAG, "callComponentSubtitle -> not find component");
+                }
+                return;
+            }
             for (int i = 0; i < childCount; i++) {
                 View childAt = viewGroup.getChildAt(i);
                 if (null == childAt)
@@ -248,8 +274,12 @@ public interface VideoPlayerApiCall extends VideoPlayerApiBase, VideoPlayerApiLi
         try {
             ViewGroup viewGroup = getBaseComponentViewGroup();
             int childCount = viewGroup.getChildCount();
-            if (childCount <= 0)
-                throw new Exception("not find component");
+            if (childCount <= 0) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log(TAG, "callComponentProgress -> not find component");
+                }
+                return;
+            }
             for (int i = 0; i < childCount; i++) {
                 View childAt = viewGroup.getChildAt(i);
                 if (null == childAt)
@@ -277,8 +307,12 @@ public interface VideoPlayerApiCall extends VideoPlayerApiBase, VideoPlayerApiLi
 //            if (LogUtil.DEBUG) {
 //                LogUtil.log(TAG, "callComponentEvent -> playState = " + playState + ", childCount = " + childCount);
 //            }
-            if (childCount <= 0)
-                throw new Exception("not find component");
+            if (childCount <= 0) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log(TAG, "callComponentEvent -> not find component");
+                }
+                return;
+            }
             for (int i = 0; i < childCount; i++) {
                 View childAt = viewGroup.getChildAt(i);
                 if (null == childAt)
@@ -301,8 +335,12 @@ public interface VideoPlayerApiCall extends VideoPlayerApiBase, VideoPlayerApiLi
         try {
             ViewGroup viewGroup = getBaseComponentViewGroup();
             int childCount = viewGroup.getChildCount();
-            if (childCount <= 0)
-                throw new Exception("not find component");
+            if (childCount <= 0) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log(TAG, "callComponentWindowState -> not find component");
+                }
+                return;
+            }
             for (int i = 0; i < childCount; i++) {
                 View childAt = viewGroup.getChildAt(i);
                 if (null == childAt)
@@ -321,8 +359,12 @@ public interface VideoPlayerApiCall extends VideoPlayerApiBase, VideoPlayerApiLi
     default void callPlayerEvent(@PlayerType.EventType.Value int playState) {
         try {
             OnPlayerEventListener onPlayerEventListener = getPlayerEventListener();
-            if (null == onPlayerEventListener)
-                throw new Exception("warning: eventListener null");
+            if (null == onPlayerEventListener) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log(TAG, "callPlayerEvent -> warning: eventListener null");
+                }
+                return;
+            }
             onPlayerEventListener.onEvent(playState);
 
             boolean error = PlayStateUtil.isError(playState);
@@ -353,8 +395,12 @@ public interface VideoPlayerApiCall extends VideoPlayerApiBase, VideoPlayerApiLi
     default void callPlayerWindowStateChanged(@PlayerType.WindowType.Value int state) {
         try {
             OnPlayerWindowStateChangeListener onPlayerWindowStateChangeListener = getPlayerWindowStateChangeListener();
-            if (null == onPlayerWindowStateChangeListener)
-                throw new Exception("warning: onPlayerWindowStateChangeListener null");
+            if (null == onPlayerWindowStateChangeListener) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log(TAG, "callPlayerWindowStateChanged -> warning: onPlayerWindowStateChangeListener null");
+                }
+                return;
+            }
             onPlayerWindowStateChangeListener.onState(state);
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
@@ -365,11 +411,19 @@ public interface VideoPlayerApiCall extends VideoPlayerApiBase, VideoPlayerApiLi
 
     default void callPlayerPlaybackSpeed(float value) {
         try {
-            if (value <= 0)
-                throw new Exception("error: value <= 0, value = " + value);
+            if (value <= 0) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log(TAG, "callPlayerPlaybackSpeed -> error: value <= 0, value = " + value);
+                }
+                return;
+            }
             OnPlayerPlaybackChangedListener onPlayerPlaybackChangedListener = getOnPlayerPlaybackChangedListener();
-            if (null == onPlayerPlaybackChangedListener)
-                throw new Exception("warning: onPlayerSpeedChangedListener null");
+            if (null == onPlayerPlaybackChangedListener) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log(TAG, "callPlayerPlaybackSpeed -> warning: onPlayerSpeedChangedListener null");
+                }
+                return;
+            }
             onPlayerPlaybackChangedListener.onSpeed(value);
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
@@ -381,8 +435,12 @@ public interface VideoPlayerApiCall extends VideoPlayerApiBase, VideoPlayerApiLi
     default void callPlayerProgress(long trySeeDuration, long position, long duration) {
         try {
             OnPlayerProgressListener onPlayerProgressListener = getPlayerProgressListener();
-            if (null == onPlayerProgressListener)
-                throw new Exception("warning: onPlayerProgressListener null");
+            if (null == onPlayerProgressListener) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log(TAG, "callPlayerProgress -> warning: onPlayerProgressListener null");
+                }
+                return;
+            }
             onPlayerProgressListener.onProgress(trySeeDuration, position, duration);
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
@@ -394,8 +452,12 @@ public interface VideoPlayerApiCall extends VideoPlayerApiBase, VideoPlayerApiLi
     default void callPlayerEpisode(int position, int count) {
         try {
             OnPlayerEpisodeListener onPlayerEpisodeListener = getPlayerEpisodeListener();
-            if (null == onPlayerEpisodeListener)
-                throw new Exception("warning: onPlayerEpisodeListener null");
+            if (null == onPlayerEpisodeListener) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log(TAG, "callPlayerEpisode -> warning: onPlayerEpisodeListener null");
+                }
+                return;
+            }
             onPlayerEpisodeListener.onEpisode(position, count);
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
@@ -407,8 +469,12 @@ public interface VideoPlayerApiCall extends VideoPlayerApiBase, VideoPlayerApiLi
     default void callPlayerVisibilityChanged(int visibility) {
         try {
             OnPlayerVisibilityChangedListener onPlayerVisibilityChangedListener = getPlayerVisibilityChangedListener();
-            if (null == onPlayerVisibilityChangedListener)
-                throw new Exception("warning: onPlayerVisibilityChangedListener null");
+            if (null == onPlayerVisibilityChangedListener) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log(TAG, "callPlayerVisibilityChanged -> warning: onPlayerVisibilityChangedListener null");
+                }
+                return;
+            }
             onPlayerVisibilityChangedListener.onVisibilityChanged(visibility);
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
@@ -420,8 +486,12 @@ public interface VideoPlayerApiCall extends VideoPlayerApiBase, VideoPlayerApiLi
     default void callPlayerWindowVisibilityChanged(int visibility) {
         try {
             OnPlayerWindowVisibilityChangedListener onPlayerWindowVisibilityChangedListener = getPlayerWindowVisibilityChangedListener();
-            if (null == onPlayerWindowVisibilityChangedListener)
-                throw new Exception("warning: onPlayerWindowVisibilityChangedListener null");
+            if (null == onPlayerWindowVisibilityChangedListener) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log(TAG, "callPlayerWindowVisibilityChanged -> warning: onPlayerWindowVisibilityChangedListener null");
+                }
+                return;
+            }
             onPlayerWindowVisibilityChangedListener.onWindowVisibilityChanged(visibility);
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
@@ -433,8 +503,12 @@ public interface VideoPlayerApiCall extends VideoPlayerApiBase, VideoPlayerApiLi
     default void callPlayerWindowAttachChanged(boolean isAttach) {
         try {
             OnPlayerWindowAttachChangedListener onPlayerWindowAttachChangedListener = getPlayerWindowAttachChangedListener();
-            if (null == onPlayerWindowAttachChangedListener)
-                throw new Exception("warning: onPlayerWindowAttachChangedListener null");
+            if (null == onPlayerWindowAttachChangedListener) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log(TAG, "callPlayerWindowAttachChanged -> warning: onPlayerWindowAttachChangedListener null");
+                }
+                return;
+            }
             if (isAttach) {
                 onPlayerWindowAttachChangedListener.onAttachedToWindow();
             } else {
@@ -524,12 +598,20 @@ public interface VideoPlayerApiCall extends VideoPlayerApiBase, VideoPlayerApiLi
         try {
 
             StartArgs startArgs = getStartArgs();
-            if (null == startArgs)
-                throw new Exception("error: startArgs null");
+            if (null == startArgs) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log(TAG, "callBuried -> error: startArgs null");
+                }
+                return;
+            }
 
             PlayBuried playBuried = PlayerSDK.playBuried;
-            if (null == playBuried)
-                throw new Exception("error: playBuried null");
+            if (null == playBuried) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log(TAG, "callBuried -> error: playBuried null");
+                }
+                return;
+            }
 
             long position = ((VideoPlayerApi) this).getPosition();
             if (position < 0L) {

@@ -50,8 +50,12 @@ public class VideoSurfaceView extends SurfaceView implements VideoRenderApi {
     public void registListener() {
         try {
             SurfaceHolder surfaceHolder = getHolder();
-            if (null == surfaceHolder)
-                throw new Exception("surfaceHolder error: null");
+            if (null == surfaceHolder) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("VideoSurfaceView", "registListener -> surfaceHolder error: null");
+                }
+                return;
+            }
             surfaceHolder.addCallback(mCallback);
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
@@ -64,8 +68,12 @@ public class VideoSurfaceView extends SurfaceView implements VideoRenderApi {
     public void unRegistListener() {
         try {
             SurfaceHolder surfaceHolder = getHolder();
-            if (null == surfaceHolder)
-                throw new Exception("surfaceHolder error: null");
+            if (null == surfaceHolder) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("VideoSurfaceView", "unRegistListener -> surfaceHolder error: null");
+                }
+                return;
+            }
             surfaceHolder.removeCallback(mCallback);
             if (LogUtil.DEBUG) {
                 LogUtil.log("VideoSurfaceView -> release -> unRegistListener -> succ");
@@ -80,8 +88,12 @@ public class VideoSurfaceView extends SurfaceView implements VideoRenderApi {
     @Override
     public void setSurface(boolean release) {
         try {
-            if (null == mKernel)
-                throw new Exception("mKernel warning: null");
+            if (null == mKernel) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("VideoSurfaceView", "setSurface -> mKernel warning: null");
+                }
+                return;
+            }
             if (release) {
 //                mKernel.setDisplay(null);
                 mKernel.setSurface(null, 0, 0);
@@ -109,11 +121,19 @@ public class VideoSurfaceView extends SurfaceView implements VideoRenderApi {
         // step1
         try {
             SurfaceHolder surfaceHolder = getHolder();
-            if (null == surfaceHolder)
-                throw new Exception("surfaceHolder error: null");
+            if (null == surfaceHolder) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("VideoSurfaceView", "release -> surfaceHolder error: null");
+                }
+                return;
+            }
             Surface surface = surfaceHolder.getSurface();
-            if (null == surface)
-                throw new Exception("surface error: null");
+            if (null == surface) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("VideoSurfaceView", "release -> surface error: null");
+                }
+                return;
+            }
 //            clearSurface(surface);
             surface.release();
             if (LogUtil.DEBUG) {
@@ -226,8 +246,12 @@ public class VideoSurfaceView extends SurfaceView implements VideoRenderApi {
             int screenWidth = MeasureSpec.getSize(widthMeasureSpec);
             int screenHeight = MeasureSpec.getSize(heightMeasureSpec);
             int[] measureSpec = doMeasureSpec(screenWidth, screenHeight);
-            if (null == measureSpec)
-                throw new Exception("warning: measureSpec null");
+            if (null == measureSpec) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("VideoSurfaceView", "onMeasure -> warning: measureSpec null");
+                }
+                return;
+            }
             int width = measureSpec[0];
             int height = measureSpec[1];
 //            LogUtil.log("VideoSurfaceView -> onMeasure -> width = " + width + ", height = " + height + ",screenWidth = " + screenWidth + ", screenHeight = " + screenHeight);

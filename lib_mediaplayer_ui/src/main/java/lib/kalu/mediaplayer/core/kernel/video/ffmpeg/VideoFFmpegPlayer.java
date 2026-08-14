@@ -36,8 +36,12 @@ public final class VideoFFmpegPlayer extends VideoBasePlayer {
     @Override
     public void releaseDecoder() {
         try {
-            if (null == mFFmpegPlayer)
-                throw new Exception("mFFmpegPlayerCollects error: null");
+            if (null == mFFmpegPlayer) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("VideoFFmpegPlayer -> releaseDecoder -> mFFmpegPlayer error: null");
+                }
+                return;
+            }
             setEvent(null);
             unRegistListener();
             release();
@@ -51,8 +55,12 @@ public final class VideoFFmpegPlayer extends VideoBasePlayer {
     @Override
     public void checkDecoder(Context context, StartArgs args) {
         try {
-            if (null != mFFmpegPlayer)
-                throw new Exception("warning: null != mFFmpegPlayer");
+            if (null != mFFmpegPlayer) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("VideoFFmpegPlayer -> checkDecoder -> warning: null != mFFmpegPlayer");
+                }
+                return;
+            }
             mFFmpegPlayer = new FFmpegPlayer();
             registListener();
         } catch (Exception e) {
@@ -66,13 +74,25 @@ public final class VideoFFmpegPlayer extends VideoBasePlayer {
     @Override
     public void startDecoder(Context context, StartArgs args) {
         try {
-            if (null == mFFmpegPlayer)
-                throw new Exception("error: mFFmpegPlayer null");
-            if (null == args)
-                throw new Exception("error: args null");
+            if (null == mFFmpegPlayer) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("VideoFFmpegPlayer -> startDecoder -> error: mFFmpegPlayer null");
+                }
+                return;
+            }
+            if (null == args) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("VideoFFmpegPlayer -> startDecoder -> error: args null");
+                }
+                return;
+            }
             boolean containsMainUrl = args.containsMainUrl();
-            if (!containsMainUrl)
-                throw new Exception("error: containsMainUrl false");
+            if (!containsMainUrl) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("VideoFFmpegPlayer -> startDecoder -> error: containsMainUrl false");
+                }
+                return;
+            }
             onEvent(PlayerType.KernelType.FFPLAYER, PlayerType.EventType.READY);
             mFFmpegPlayer.setDataSource(context, Uri.parse(args.getUrl()), null);
             mFFmpegPlayer.prepare();
@@ -89,8 +109,12 @@ public final class VideoFFmpegPlayer extends VideoBasePlayer {
     @Override
     public void initOptions(Context context, StartArgs args) {
         try {
-            if (null == mFFmpegPlayer)
-                throw new Exception("error: mFFmpegPlayer null");
+            if (null == mFFmpegPlayer) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("VideoFFmpegPlayer -> initOptions -> error: mFFmpegPlayer null");
+                }
+                return;
+            }
             boolean mute = args.isMute();
             if (mute) {
                 mFFmpegPlayer.setVolume(0f, 0f);
@@ -109,8 +133,12 @@ public final class VideoFFmpegPlayer extends VideoBasePlayer {
     @Override
     public void registListener() {
         try {
-            if (null == mFFmpegPlayer)
-                throw new Exception("error: mFFmpegPlayer null");
+            if (null == mFFmpegPlayer) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("VideoFFmpegPlayer -> registListener -> error: mFFmpegPlayer null");
+                }
+                return;
+            }
             mFFmpegPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
             mFFmpegPlayer.setOnErrorListener(onErrorListener);
             mFFmpegPlayer.setOnCompletionListener(onCompletionListener);
@@ -129,8 +157,12 @@ public final class VideoFFmpegPlayer extends VideoBasePlayer {
     @Override
     public void unRegistListener() {
         try {
-            if (null == mFFmpegPlayer)
-                throw new Exception("mFFmpegPlayer error: null");
+            if (null == mFFmpegPlayer) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("VideoFFmpegPlayer -> unRegistListener -> mFFmpegPlayer error: null");
+                }
+                return;
+            }
             mFFmpegPlayer.setOnErrorListener(null);
             mFFmpegPlayer.setOnCompletionListener(null);
             mFFmpegPlayer.setOnInfoListener(null);
@@ -161,8 +193,12 @@ public final class VideoFFmpegPlayer extends VideoBasePlayer {
     @Override
     public void release() {
         try {
-            if (null == mFFmpegPlayer)
-                throw new Exception("mFFmpegPlayer error: null");
+            if (null == mFFmpegPlayer) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("VideoFFmpegPlayer -> release -> mFFmpegPlayer error: null");
+                }
+                return;
+            }
             mFFmpegPlayer.setSurface(null);
             mFFmpegPlayer.release();
             mFFmpegPlayer = null;
@@ -184,8 +220,12 @@ public final class VideoFFmpegPlayer extends VideoBasePlayer {
     @Override
     public void start() {
         try {
-            if (null == mFFmpegPlayer)
-                throw new Exception("mFFmpegPlayer error: null");
+            if (null == mFFmpegPlayer) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("VideoFFmpegPlayer -> start -> mFFmpegPlayer error: null");
+                }
+                return;
+            }
             mFFmpegPlayer.start();
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
@@ -200,10 +240,18 @@ public final class VideoFFmpegPlayer extends VideoBasePlayer {
     @Override
     public void pause() {
         try {
-            if (!isPrepared)
-                throw new Exception("mPrepared warning: false");
-            if (null == mFFmpegPlayer)
-                throw new Exception("mFFmpegPlayer error: null");
+            if (!isPrepared) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("VideoFFmpegPlayer -> pause -> mPrepared warning: false");
+                }
+                return;
+            }
+            if (null == mFFmpegPlayer) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("VideoFFmpegPlayer -> pause -> mFFmpegPlayer error: null");
+                }
+                return;
+            }
             mFFmpegPlayer.pause();
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
@@ -218,8 +266,12 @@ public final class VideoFFmpegPlayer extends VideoBasePlayer {
     @Override
     public void stop() {
         try {
-            if (null == mFFmpegPlayer)
-                throw new Exception("mFFmpegPlayer error: null");
+            if (null == mFFmpegPlayer) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("VideoFFmpegPlayer -> stop -> mFFmpegPlayer error: null");
+                }
+                return;
+            }
             mFFmpegPlayer.stop();
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
@@ -234,14 +286,22 @@ public final class VideoFFmpegPlayer extends VideoBasePlayer {
     @Override
     public boolean isPlaying() {
         try {
-            if (!isPrepared)
-                throw new Exception("mPrepared warning: false");
-            if (null == mFFmpegPlayer)
-                throw new Exception("mFFmpegPlayer error: null");
+            if (!isPrepared) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("VideoFFmpegPlayer -> isPlaying -> mPrepared warning: false");
+                }
+                return false;
+            }
+            if (null == mFFmpegPlayer) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("VideoFFmpegPlayer -> isPlaying -> mFFmpegPlayer error: null");
+                }
+                return false;
+            }
             return mFFmpegPlayer.isPlaying();
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
-                LogUtil.log("VideoFFmpegPlayer -> stop -> " + e.getMessage());
+                LogUtil.log("VideoFFmpegPlayer -> isPlaying -> " + e.getMessage());
             }
             return false;
         }
@@ -258,13 +318,25 @@ public final class VideoFFmpegPlayer extends VideoBasePlayer {
     @Override
     public void seekTo(long seek) {
         try {
-            if (seek < 0L)
-                throw new Exception("error: seek<0");
-            if (null == mFFmpegPlayer)
-                throw new Exception("error: mFFmpegPlayer null");
+            if (seek < 0L) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("VideoFFmpegPlayer -> seekTo -> error: seek<0");
+                }
+                return;
+            }
+            if (null == mFFmpegPlayer) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("VideoFFmpegPlayer -> seekTo -> error: mFFmpegPlayer null");
+                }
+                return;
+            }
             StartArgs args = getStartArgs();
-            if (null == args)
-                throw new Exception("error: args null");
+            if (null == args) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("VideoFFmpegPlayer -> seekTo -> error: args null");
+                }
+                return;
+            }
 
             long duration = getDuration();
             if (duration > 0 && seek > duration) {
@@ -294,13 +366,25 @@ public final class VideoFFmpegPlayer extends VideoBasePlayer {
     @Override
     public long getPosition() {
         try {
-            if (!isPrepared)
-                throw new Exception("mPrepared warning: false");
-            if (null == mFFmpegPlayer)
-                throw new Exception("mFFmpegPlayer error: null");
+            if (!isPrepared) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("VideoFFmpegPlayer -> getPosition -> mPrepared warning: false");
+                }
+                return 0L;
+            }
+            if (null == mFFmpegPlayer) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("VideoFFmpegPlayer -> getPosition -> mFFmpegPlayer error: null");
+                }
+                return 0L;
+            }
             long currentPosition = mFFmpegPlayer.getCurrentPosition();
-            if (currentPosition < 0)
-                throw new Exception("currentPosition warning: " + currentPosition);
+            if (currentPosition < 0) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("VideoFFmpegPlayer -> getPosition -> currentPosition warning: " + currentPosition);
+                }
+                return 0L;
+            }
             return currentPosition;
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
@@ -316,13 +400,25 @@ public final class VideoFFmpegPlayer extends VideoBasePlayer {
     @Override
     public long getDuration() {
         try {
-            if (!isPrepared)
-                throw new Exception("mPrepared warning: false");
-            if (null == mFFmpegPlayer)
-                throw new Exception("mFFmpegPlayer error: null");
+            if (!isPrepared) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("VideoFFmpegPlayer -> getDuration -> mPrepared warning: false");
+                }
+                return 0L;
+            }
+            if (null == mFFmpegPlayer) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("VideoFFmpegPlayer -> getDuration -> mFFmpegPlayer error: null");
+                }
+                return 0L;
+            }
             int duration = mFFmpegPlayer.getDuration();
-            if (duration <= 0)
-                throw new Exception("duration warning: " + duration);
+            if (duration <= 0) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("VideoFFmpegPlayer -> getDuration -> duration warning: " + duration);
+                }
+                return 0L;
+            }
             return duration;
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
@@ -340,10 +436,18 @@ public final class VideoFFmpegPlayer extends VideoBasePlayer {
     @Override
     public void setSurface(Surface surface, int w, int h) {
         try {
-            if (null == mFFmpegPlayer)
-                throw new Exception("mFFmpegPlayer error: null");
-            if (null == surface)
-                throw new Exception("surface error: null");
+            if (null == mFFmpegPlayer) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("VideoFFmpegPlayer -> setSurface -> mFFmpegPlayer error: null");
+                }
+                return;
+            }
+            if (null == surface) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("VideoFFmpegPlayer -> setSurface -> surface error: null");
+                }
+                return;
+            }
             mFFmpegPlayer.setSurface(surface);
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
@@ -355,8 +459,12 @@ public final class VideoFFmpegPlayer extends VideoBasePlayer {
     @Override
     public void setSpeed(float speed) {
         try {
-            if (null == mFFmpegPlayer)
-                throw new Exception("mFFmpegPlayer error: null");
+            if (null == mFFmpegPlayer) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("VideoFFmpegPlayer -> setSpeed -> mFFmpegPlayer error: null");
+                }
+                return;
+            }
             onEvent(PlayerType.KernelType.FFPLAYER, PlayerType.EventType.MEDIA_INFO_UPDATE_PLAYBACLK_SPEED);
 //            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M)
 //                throw new Exception("only support above Android M");
@@ -403,8 +511,12 @@ public final class VideoFFmpegPlayer extends VideoBasePlayer {
             // 开始播放
             else if (what == MediaPlayer.MEDIA_INFO_VIDEO_RENDERING_START) {
                 try {
-                    if (isPrepared)
-                        throw new Exception("warning: mPrepared true");
+                    if (isPrepared) {
+                        if (LogUtil.DEBUG) {
+                            LogUtil.log("VideoFFmpegPlayer -> onInfo -> MediaPlayer.MEDIA_INFO_VIDEO_RENDERING_START -> warning: isPrepared true");
+                        }
+                        return true;
+                    }
                     isPrepared = true;
                     onEvent(PlayerType.KernelType.FFPLAYER, PlayerType.EventType.MEDIA_INFO_UPDATE_PLAYBACLK_SPEED);
                     long seek = getPlayWhenReadySeekToPosition();
@@ -448,8 +560,12 @@ public final class VideoFFmpegPlayer extends VideoBasePlayer {
                     boolean playWhenReady = isPlayWhenReady();
                     if (playWhenReady) {
                         boolean playing = isPlaying();
-                        if (playing)
-                            throw new Exception("warning: isPlaying true");
+                        if (playing) {
+                            if (LogUtil.DEBUG) {
+                                LogUtil.log("VideoFFmpegPlayer -> onSeekComplete -> warning: isPlaying true");
+                            }
+                            return;
+                        }
                         start();
                     } else {
                         onEvent(PlayerType.KernelType.FFPLAYER, PlayerType.EventType.MEDIA_INFO_PLAY_WHEN_READY_PAUSE);
@@ -524,19 +640,39 @@ public final class VideoFFmpegPlayer extends VideoBasePlayer {
         @Override
         public void onVideoSizeChanged(FFmpegPlayer mp, int width, int height) {
             try {
-                if (null == mp)
-                    throw new Exception("error: MediaPlayer null");
+                if (null == mp) {
+                    if (LogUtil.DEBUG) {
+                        LogUtil.log("VideoFFmpegPlayer -> onVideoSizeChanged -> error: MediaPlayer null");
+                    }
+                    return;
+                }
                 int videoWidth = mp.getVideoWidth();
-                if (videoWidth <= 0)
-                    throw new Exception("error: videoWidth <=0");
+                if (videoWidth <= 0) {
+                    if (LogUtil.DEBUG) {
+                        LogUtil.log("VideoFFmpegPlayer -> onVideoSizeChanged -> error: videoWidth <= 0");
+                    }
+                    return;
+                }
                 int videoHeight = mp.getVideoHeight();
-                if (videoHeight <= 0)
-                    throw new Exception("error: videoHeight <=0");
-                if (isVideoSizeChanged)
-                    throw new Exception("warning: videoSizeChanged = true");
+                if (videoHeight <= 0) {
+                    if (LogUtil.DEBUG) {
+                        LogUtil.log("VideoFFmpegPlayer -> onVideoSizeChanged -> error: videoHeight <= 0");
+                    }
+                    return;
+                }
+                if (isVideoSizeChanged) {
+                    if (LogUtil.DEBUG) {
+                        LogUtil.log("VideoFFmpegPlayer -> onVideoSizeChanged -> warning: isVideoSizeChanged true");
+                    }
+                    return;
+                }
                 StartArgs args = getStartArgs();
-                if (null == args)
-                    throw new Exception("error: args null");
+                if (null == args) {
+                    if (LogUtil.DEBUG) {
+                        LogUtil.log("VideoFFmpegPlayer -> onVideoSizeChanged -> error: args null");
+                    }
+                    return;
+                }
                 isVideoSizeChanged = true;
                 @PlayerType.ScaleType.Value
                 int scaleType = args.getscaleType();
@@ -555,11 +691,19 @@ public final class VideoFFmpegPlayer extends VideoBasePlayer {
     @Override
     public void setVolume(float v1, float v2) {
         try {
-            if (null == mFFmpegPlayer)
-                throw new Exception("mFFmpegPlayer error: null");
+            if (null == mFFmpegPlayer) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("VideoFFmpegPlayer -> setVolume -> mFFmpegPlayer error: null");
+                }
+                return;
+            }
             float volume = Math.max(v1, v2);
-            if (volume < 0)
-                throw new Exception("error: volume < 0");
+            if (volume < 0) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("VideoFFmpegPlayer -> setVolume -> error: volume < 0");
+                }
+                return;
+            }
             mFFmpegPlayer.setVolume(volume, volume);
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
@@ -571,8 +715,12 @@ public final class VideoFFmpegPlayer extends VideoBasePlayer {
     @Override
     public float getVolume() {
         try {
-            if (null == mFFmpegPlayer)
-                throw new Exception("mFFmpegPlayer error: null");
+            if (null == mFFmpegPlayer) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("VideoFFmpegPlayer -> getVolume -> mFFmpegPlayer error: null");
+                }
+                return 0f;
+            }
             return 0f;
         } catch (Exception e) {
             if (LogUtil.DEBUG) {

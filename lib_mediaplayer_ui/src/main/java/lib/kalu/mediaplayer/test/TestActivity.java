@@ -238,8 +238,12 @@ public final class TestActivity extends Activity {
 
         try {
             StartArgs args = (StartArgs) getIntent().getSerializableExtra(INTENT_ARGS);
-            if (null == args)
-                throw new Exception("error: args null");
+            if (null == args) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("TestActivity -> startPlayer -> error: args null");
+                }
+                return;
+            }
             PlayerLayout playerLayout = findViewById(R.id.module_mediaplayer_test_video);
             playerLayout.setOnPlayerEventListener(new OnPlayerEventListener() {
                 @Override

@@ -49,11 +49,14 @@ public class ComponentSubtitle extends RelativeLayout implements ComponentApi {
         }
 
         try {
-            if (null == result)
-                throw new Exception("warning: result null");
-            int length = result.length();
-            if (length == 0)
-                throw new Exception("warning: result.length() == 0");
+            if (null == result || result.length() == 0) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("ComponentSubtitle -> onUpdateSubtitle -> warning: result null or empty");
+                }
+                TextView textView = findViewById(R.id.module_mediaplayer_component_subtitle_text);
+                textView.setText("");
+                return;
+            }
             TextView textView = findViewById(R.id.module_mediaplayer_component_subtitle_text);
             textView.setText(result);
         } catch (Exception e) {

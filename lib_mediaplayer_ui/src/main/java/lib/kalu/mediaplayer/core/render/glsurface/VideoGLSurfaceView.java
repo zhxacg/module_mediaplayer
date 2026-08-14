@@ -57,15 +57,19 @@ public class VideoGLSurfaceView extends GLSurfaceView implements VideoRenderApi 
     public void registListener() {
         try {
             SurfaceHolder surfaceHolder = getHolder();
-            if (null == surfaceHolder)
-                throw new Exception("surfaceHolder error: null");
+            if (null == surfaceHolder) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("VideoGLSurfaceView", "registListener -> surfaceHolder error: null");
+                }
+                return;
+            }
             surfaceHolder.addCallback(mCallback);
             if (LogUtil.DEBUG) {
-                LogUtil.log("VideoGLSurfaceView -> unRegistListener ->");
+                LogUtil.log("VideoGLSurfaceView -> registListener ->");
             }
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
-                LogUtil.log("VideoGLSurfaceView -> unRegistListener -> Exception " + e.getMessage());
+                LogUtil.log("VideoGLSurfaceView -> registListener -> Exception " + e.getMessage());
             }
         }
     }
@@ -74,8 +78,12 @@ public class VideoGLSurfaceView extends GLSurfaceView implements VideoRenderApi 
     public void unRegistListener() {
         try {
             SurfaceHolder surfaceHolder = getHolder();
-            if (null == surfaceHolder)
-                throw new Exception("surfaceHolder error: null");
+            if (null == surfaceHolder) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("VideoGLSurfaceView", "unRegistListener -> surfaceHolder error: null");
+                }
+                return;
+            }
             surfaceHolder.removeCallback(mCallback);
             if (LogUtil.DEBUG) {
                 LogUtil.log("VideoGLSurfaceView -> unRegistListener ->");
@@ -90,8 +98,12 @@ public class VideoGLSurfaceView extends GLSurfaceView implements VideoRenderApi 
     @Override
     public void setSurface(boolean release) {
         try {
-            if (null == mKernel)
-                throw new Exception("mKernel warning: null");
+            if (null == mKernel) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("VideoGLSurfaceView", "setSurface -> mKernel warning: null");
+                }
+                return;
+            }
             if (release) {
 //                mKernel.setDisplay(null);
                 mKernel.setSurface(null, 0, 0);
@@ -118,20 +130,20 @@ public class VideoGLSurfaceView extends GLSurfaceView implements VideoRenderApi 
         unRegistListener();
 
         try {
-            if (null == mRender)
-                throw new Exception("warning: mRender null");
-            mRender = null;
+            if (null != mRender) {
+                mRender = null;
+            }
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
-                LogUtil.log("VideoGLSurfaceView -> release -> Exception2 " + e.getMessage());
+                LogUtil.log("VideoGLSurfaceView -> release -> Exception1 " + e.getMessage());
             }
         }
 
         try {
-            if (null == mDrawer)
-                throw new Exception("warning: mDrawer null");
-            mDrawer.release();
-            mDrawer = null;
+            if (null != mDrawer) {
+                mDrawer.release();
+                mDrawer = null;
+            }
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
                 LogUtil.log("VideoGLSurfaceView -> release -> Exception2 " + e.getMessage());
@@ -140,11 +152,19 @@ public class VideoGLSurfaceView extends GLSurfaceView implements VideoRenderApi 
 
         try {
             SurfaceHolder surfaceHolder = getHolder();
-            if (null == surfaceHolder)
-                throw new Exception("surfaceHolder error: null");
+            if (null == surfaceHolder) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("VideoGLSurfaceView", "release -> surfaceHolder error: null");
+                }
+                return;
+            }
             Surface surface = surfaceHolder.getSurface();
-            if (null == surface)
-                throw new Exception("surface error: null");
+            if (null == surface) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("VideoGLSurfaceView", "release -> surface error: null");
+                }
+                return;
+            }
 //            clearSurface(surface);
             surface.release();
             if (LogUtil.DEBUG) {
@@ -240,8 +260,12 @@ public class VideoGLSurfaceView extends GLSurfaceView implements VideoRenderApi 
     public void setRotation(float rotation) {
         try {
             float v = getRotation();
-            if (v == rotation)
-                throw new Exception("rotation warning: " + rotation);
+            if (v == rotation) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("VideoGLSurfaceView", "setRotation -> rotation warning: " + rotation);
+                }
+                return;
+            }
             super.setRotation(rotation);
             requestLayout();
         } catch (Exception e) {
@@ -292,8 +316,12 @@ public class VideoGLSurfaceView extends GLSurfaceView implements VideoRenderApi 
             int screenWidth = MeasureSpec.getSize(widthMeasureSpec);
             int screenHeight = MeasureSpec.getSize(heightMeasureSpec);
             int[] measureSpec = doMeasureSpec(screenWidth, screenHeight);
-            if (null == measureSpec)
-                throw new Exception("warning: measureSpec null");
+            if (null == measureSpec) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("VideoGLSurfaceView", "onMeasure -> warning: measureSpec null");
+                }
+                return;
+            }
             int width = measureSpec[0];
             int height = measureSpec[1];
             int specW = MeasureSpec.makeMeasureSpec(width, MeasureSpec.EXACTLY);

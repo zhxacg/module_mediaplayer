@@ -47,7 +47,7 @@ public final class UrlArgs implements Serializable {
                     return true;
                 }
             }
-            throw new Exception();
+            return false;
         } catch (Exception e) {
             return false;
         }
@@ -62,7 +62,7 @@ public final class UrlArgs implements Serializable {
                     return item.url;
                 }
             }
-            throw new Exception();
+            return "";
         } catch (Exception e) {
             return "";
         }
@@ -75,7 +75,7 @@ public final class UrlArgs implements Serializable {
                     return item;
                 }
             }
-            throw new Exception();
+            return null;
         } catch (Exception e) {
             return null;
         }

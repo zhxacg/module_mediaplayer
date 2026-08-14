@@ -180,8 +180,12 @@ public class VideoTextureView extends TextureView implements VideoRenderApi {
             int screenWidth = MeasureSpec.getSize(widthMeasureSpec);
             int screenHeight = MeasureSpec.getSize(heightMeasureSpec);
             int[] measureSpec = doMeasureSpec(screenWidth, screenHeight);
-            if (null == measureSpec)
-                throw new Exception("warning: measureSpec null");
+            if (null == measureSpec) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("VideoTextureView", "onMeasure -> warning: measureSpec null");
+                }
+                return;
+            }
             int width = measureSpec[0];
             int height = measureSpec[1];
             int specW = MeasureSpec.makeMeasureSpec(width, MeasureSpec.EXACTLY);

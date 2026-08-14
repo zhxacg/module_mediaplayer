@@ -56,20 +56,23 @@ public class ComponentWarningPlayInfo extends RelativeLayout implements Componen
         // 自动隐藏
         try {
             boolean componentShowing = isComponentShowing();
-            if (!componentShowing)
-                throw new Exception("warning: componentShowing false");
+            if (!componentShowing) {
+                return;
+            }
             long seek = getPlayWhenReadySeekToPosition();
             long cast = position - seek;
-            if (cast < 2000L)
-                throw new Exception("warning: cast < 2000");
+            if (cast < 2000L) {
+                return;
+            }
             hide();
         } catch (Exception e) {
         }
 
         try {
             boolean componentShowing = isComponentShowing();
-            if (!componentShowing)
-                throw new Exception("warning: componentShowing false");
+            if (!componentShowing) {
+                return;
+            }
             if (position < 0) {
                 position = 0;
             }
@@ -89,11 +92,19 @@ public class ComponentWarningPlayInfo extends RelativeLayout implements Componen
 
         try {
             boolean componentShowing = isComponentShowing();
-            if (componentShowing)
-                throw new Exception("warning: componentShowing true");
+            if (componentShowing) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("ComponentWarningPlayInfo -> show -> warning: componentShowing true");
+                }
+                return;
+            }
             long trySeeDuration = getTrySeeDuration();
-            if (trySeeDuration > 0L)
-                throw new Exception("warning: trySee true");
+            if (trySeeDuration > 0L) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("ComponentWarningPlayInfo -> show -> warning: trySee true");
+                }
+                return;
+            }
             // 1
             ComponentApi.super.show();
             // 2. 标题
@@ -112,8 +123,12 @@ public class ComponentWarningPlayInfo extends RelativeLayout implements Componen
 
         try {
             long duration = getDuration();
-            if (duration <= 0)
-                throw new Exception("warning: duration<=0");
+            if (duration <= 0) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("ComponentWarningPlayInfo -> show -> warning: duration <= 0");
+                }
+                return;
+            }
             long position = getPosition();
             long trySeeDuration = getTrySeeDuration();
             SeekBar seekBar = findViewById(R.id.module_mediaplayer_component_warning_play_info_seekbar);

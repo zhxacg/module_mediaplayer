@@ -20,8 +20,9 @@ public final class TimeUtil {
 
     private static String formatTimeMillis1(long v) {
         try {
-            if (v < 1000)
-                throw new Exception();
+            if (v < 1000) {
+                return "00:00";
+            }
             StringBuilder builder = new StringBuilder();
             // min
             long min = v / 60000;
@@ -44,8 +45,9 @@ public final class TimeUtil {
 
     private static String formatTimeMillis2(long v) {
         try {
-            if (v < 1000)
-                throw new Exception();
+            if (v < 1000) {
+                return "00:00:00";
+            }
             StringBuilder builder = new StringBuilder();
             // hour
             long hour = v / 3600000;

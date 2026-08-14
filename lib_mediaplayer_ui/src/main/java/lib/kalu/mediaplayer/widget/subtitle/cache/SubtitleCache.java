@@ -65,8 +65,12 @@ public class SubtitleCache {
 
     private static String getMD5(String str) {
         try {
-            if (null == str || str.length()==0)
-                throw new Exception("str error: "+str);
+            if (null == str || str.isEmpty()) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("SubtitleCache -> getMD5 -> error: str null or empty");
+                }
+                return null;
+            }
             MessageDigest md = MessageDigest.getInstance("MD5");
             md.update(str.getBytes());
             return new BigInteger(1, md.digest()).toString(16);

@@ -109,8 +109,12 @@ public interface ComponentApi {
     default void setComponentVisibility(@IdRes int id, int visibility) {
         try {
             View viewById = ((View) this).findViewById(id);
-            if (null == viewById)
-                throw new Exception("error: viewById null");
+            if (null == viewById) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("ComponentApi -> setComponentVisibility -> error: viewById null");
+                }
+                return;
+            }
             viewById.setVisibility(visibility);
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
@@ -123,8 +127,12 @@ public interface ComponentApi {
         try {
             int rootId = initViewIdRoot();
             View viewById = ((View) this).findViewById(rootId);
-            if (null == viewById)
-                throw new Exception("error: viewById null");
+            if (null == viewById) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("ComponentApi -> isComponentShowing -> error: viewById null");
+                }
+                return false;
+            }
             return viewById.getVisibility() == View.VISIBLE;
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
@@ -139,8 +147,12 @@ public interface ComponentApi {
     default void setComponentBackgroundColorInt(@ColorInt int v) {
         try {
             int layoutId = initViewIdBackground();
-            if (layoutId == -1)
-                throw new Exception("error: layoutId = -1");
+            if (layoutId == -1) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("ComponentApi -> setComponentBackgroundColorInt -> error: layoutId = -1");
+                }
+                return;
+            }
             View view = ((View) this).findViewById(layoutId);
             view.setBackgroundColor(v);
         } catch (Exception e) {
@@ -153,8 +165,12 @@ public interface ComponentApi {
     default void setComponentBackgroundColorRes(@ColorRes int v) {
         try {
             int layoutId = initViewIdBackground();
-            if (layoutId == -1)
-                throw new Exception("error: layoutId = -1");
+            if (layoutId == -1) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("ComponentApi -> setComponentBackgroundColorRes -> error: layoutId = -1");
+                }
+                return;
+            }
             View view = ((View) this).findViewById(layoutId);
             int color = ((View) this).getResources().getColor(v);
             view.setBackgroundColor(color);
@@ -168,8 +184,12 @@ public interface ComponentApi {
     default void setComponentBackgroundDrawableRes(@DrawableRes int v) {
         try {
             int layoutId = initViewIdBackground();
-            if (layoutId == -1)
-                throw new Exception("error: layoutId = -1");
+            if (layoutId == -1) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("ComponentApi -> setComponentBackgroundDrawableRes -> error: layoutId = -1");
+                }
+                return;
+            }
             View view = ((View) this).findViewById(layoutId);
             view.setBackgroundResource(v);
         } catch (Exception e) {
@@ -184,8 +204,12 @@ public interface ComponentApi {
     default void setComponentImageDrawableRes(@DrawableRes int v) {
         try {
             int layoutId = initViewIdImage();
-            if (layoutId == -1)
-                throw new Exception("error: layoutId = -1");
+            if (layoutId == -1) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("ComponentApi -> setComponentImageDrawableRes -> error: layoutId = -1");
+                }
+                return;
+            }
             ImageView imageView = ((View) this).findViewById(layoutId);
             imageView.setImageResource(v);
         } catch (Exception e) {
@@ -198,8 +222,12 @@ public interface ComponentApi {
     default void setComponentImageDrawable(Drawable drawable) {
         try {
             int layoutId = initViewIdImage();
-            if (layoutId == -1)
-                throw new Exception("error: layoutId = -1");
+            if (layoutId == -1) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("ComponentApi -> setComponentImageDrawable -> error: layoutId = -1");
+                }
+                return;
+            }
             ImageView imageView = ((View) this).findViewById(layoutId);
             imageView.setImageDrawable(drawable);
         } catch (Exception e) {
@@ -212,8 +240,12 @@ public interface ComponentApi {
     default void setComponentImageBitmap(Bitmap bitmap) {
         try {
             int layoutId = initViewIdImage();
-            if (layoutId == -1)
-                throw new Exception("error: layoutId = -1");
+            if (layoutId == -1) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("ComponentApi -> setComponentImageBitmap -> error: layoutId = -1");
+                }
+                return;
+            }
             ImageView imageView = ((View) this).findViewById(layoutId);
             imageView.setImageBitmap(bitmap);
         } catch (Exception e) {
@@ -225,11 +257,19 @@ public interface ComponentApi {
 
     default void setComponentImageUrl(@NonNull String imgUrl) {
         try {
-            if (null == imgUrl || imgUrl.length() <= 0)
-                throw new Exception("error: imgUrl null");
+            if (null == imgUrl || imgUrl.length() <= 0) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("ComponentApi -> setComponentImageUrl -> error: imgUrl null");
+                }
+                return;
+            }
             int layoutId = initViewIdImage();
-            if (layoutId == -1)
-                throw new Exception("error: layoutId = -1");
+            if (layoutId == -1) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("ComponentApi -> setComponentImageUrl -> error: layoutId = -1");
+                }
+                return;
+            }
             ImageView imageView = ((View) this).findViewById(layoutId);
             imageView.setImageURI(Uri.parse(imgUrl));
         } catch (Exception e) {
@@ -244,8 +284,12 @@ public interface ComponentApi {
     default void setComponentText(String v) {
         try {
             int layoutId = initViewIdText();
-            if (layoutId == -1)
-                throw new Exception("error: layoutId = -1");
+            if (layoutId == -1) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("ComponentApi -> setComponentText -> error: layoutId = -1");
+                }
+                return;
+            }
             TextView textView = ((View) this).findViewById(layoutId);
             textView.setText(v);
         } catch (Exception e) {
@@ -258,8 +302,12 @@ public interface ComponentApi {
     default void setComponentText(@StringRes int v) {
         try {
             int layoutId = initViewIdText();
-            if (layoutId == -1)
-                throw new Exception("error: layoutId = -1");
+            if (layoutId == -1) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("ComponentApi -> setComponentText -> error: layoutId = -1");
+                }
+                return;
+            }
             TextView textView = ((View) this).findViewById(layoutId);
             textView.setText(v);
         } catch (Exception e) {
@@ -272,8 +320,12 @@ public interface ComponentApi {
     default void setComponentTextSize(@DimenRes int v) {
         try {
             int layoutId = initViewIdText();
-            if (layoutId == -1)
-                throw new Exception("error: layoutId = -1");
+            if (layoutId == -1) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("ComponentApi -> setComponentTextSize -> error: layoutId = -1");
+                }
+                return;
+            }
             TextView textView = ((View) this).findViewById(layoutId);
             int offset = ((View) this).getResources().getDimensionPixelOffset(v);
             textView.setTextSize(offset);
@@ -287,8 +339,12 @@ public interface ComponentApi {
     default void setComponentTextSize(float v) {
         try {
             int layoutId = initViewIdText();
-            if (layoutId == -1)
-                throw new Exception("error: layoutId = -1");
+            if (layoutId == -1) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("ComponentApi -> setComponentTextSize -> error: layoutId = -1");
+                }
+                return;
+            }
             TextView textView = ((View) this).findViewById(layoutId);
             textView.setTextSize(v);
         } catch (Exception e) {
@@ -301,8 +357,12 @@ public interface ComponentApi {
     default void setComponentTextColorInt(@ColorInt int v) {
         try {
             int layoutId = initViewIdText();
-            if (layoutId == -1)
-                throw new Exception("error: layoutId = -1");
+            if (layoutId == -1) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("ComponentApi -> setComponentTextColorInt -> error: layoutId = -1");
+                }
+                return;
+            }
             TextView textView = ((View) this).findViewById(layoutId);
             textView.setTextColor(v);
         } catch (Exception e) {
@@ -315,8 +375,12 @@ public interface ComponentApi {
     default void setComponentTextColorRes(@ColorRes int v) {
         try {
             int layoutId = initViewIdText();
-            if (layoutId == -1)
-                throw new Exception("error: layoutId = -1");
+            if (layoutId == -1) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("ComponentApi -> setComponentTextColorRes -> error: layoutId = -1");
+                }
+                return;
+            }
             TextView textView = ((View) this).findViewById(layoutId);
             int color = ((View) this).getResources().getColor(v);
             textView.setTextColor(color);
@@ -330,8 +394,12 @@ public interface ComponentApi {
     default void show() {
         try {
             boolean componentShowing = isComponentShowing();
-            if (componentShowing)
-                throw new Exception("warning: componentShowing true");
+            if (componentShowing) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("ComponentApi -> show -> warning: componentShowing true");
+                }
+                return;
+            }
             int rootId = initViewIdRoot();
             setComponentVisibility(rootId, View.VISIBLE);
         } catch (Exception e) {
@@ -344,8 +412,12 @@ public interface ComponentApi {
     default void hide() {
         try {
             boolean componentShowing = isComponentShowing();
-            if (!componentShowing)
-                throw new Exception("warning: componentShowing false");
+            if (!componentShowing) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("ComponentApi -> hide -> warning: componentShowing false");
+                }
+                return;
+            }
             int rootId = initViewIdRoot();
             setComponentVisibility(rootId, View.GONE);
         } catch (Exception e) {
@@ -386,11 +458,19 @@ public interface ComponentApi {
     default <T extends ComponentApi> T findComponent(java.lang.Class<?> cls) {
         try {
             PlayerView playerView = getPlayerView();
-            if (null == playerView)
-                throw new Exception("playerView error: null");
+            if (null == playerView) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("ComponentApi -> findComponent -> playerView error: null");
+                }
+                return null;
+            }
             ComponentApi component = playerView.findComponent(cls);
-            if (null == component)
-                throw new Exception("warning: component null");
+            if (null == component) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("ComponentApi -> findComponent -> warning: component null");
+                }
+                return null;
+            }
             return (T) component;
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
@@ -403,8 +483,12 @@ public interface ComponentApi {
     default void superCallEvent(boolean callPlayer, boolean callComponent, @PlayerType.EventType.Value int state) {
         try {
             PlayerView playerView = getPlayerView();
-            if (null == playerView)
-                throw new Exception("error: playerView null");
+            if (null == playerView) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("ComponentApi -> superCallEvent -> error: playerView null");
+                }
+                return;
+            }
             playerView.callEvent(callPlayer, callComponent, state);
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
@@ -416,8 +500,12 @@ public interface ComponentApi {
     default boolean isFull() {
         try {
             PlayerView playerView = getPlayerView();
-            if (null == playerView)
-                throw new Exception("playerView error: null");
+            if (null == playerView) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("ComponentApi -> isFull -> playerView error: null");
+                }
+                return false;
+            }
             return playerView.isFull();
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
@@ -430,8 +518,12 @@ public interface ComponentApi {
     default boolean isFloat() {
         try {
             PlayerView playerView = getPlayerView();
-            if (null == playerView)
-                throw new Exception("playerView error: null");
+            if (null == playerView) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("ComponentApi -> isFloat -> playerView error: null");
+                }
+                return false;
+            }
             return playerView.isFloat();
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
@@ -444,8 +536,12 @@ public interface ComponentApi {
     default boolean isPlaying() {
         try {
             PlayerView playerView = getPlayerView();
-            if (null == playerView)
-                throw new Exception("playerView error: null");
+            if (null == playerView) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("ComponentApi -> isPlaying -> playerView error: null");
+                }
+                return false;
+            }
             return playerView.isPlaying();
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
@@ -458,8 +554,12 @@ public interface ComponentApi {
     default boolean isPrepared() {
         try {
             PlayerView playerView = getPlayerView();
-            if (null == playerView)
-                throw new Exception("playerView error: null");
+            if (null == playerView) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("ComponentApi -> isPrepared -> playerView error: null");
+                }
+                return false;
+            }
             return playerView.isPrepared();
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
@@ -472,8 +572,12 @@ public interface ComponentApi {
     default void seekTo(long position) {
         try {
             PlayerView playerView = getPlayerView();
-            if (null == playerView)
-                throw new Exception("playerView error: null");
+            if (null == playerView) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("ComponentApi -> seekTo -> playerView error: null");
+                }
+                return;
+            }
             playerView.seekTo(position);
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
@@ -485,8 +589,12 @@ public interface ComponentApi {
     default void fastRewind(long step) {
         try {
             PlayerView playerView = getPlayerView();
-            if (null == playerView)
-                throw new Exception("playerView error: null");
+            if (null == playerView) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("ComponentApi -> fastRewind -> playerView error: null");
+                }
+                return;
+            }
             playerView.fastRewind(step);
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
@@ -498,8 +606,12 @@ public interface ComponentApi {
     default void fastForward(long step) {
         try {
             PlayerView playerView = getPlayerView();
-            if (null == playerView)
-                throw new Exception("playerView error: null");
+            if (null == playerView) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("ComponentApi -> fastForward -> playerView error: null");
+                }
+                return;
+            }
             playerView.fastForward(step);
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
@@ -515,8 +627,12 @@ public interface ComponentApi {
     default void resume(boolean callEvent) {
         try {
             PlayerView playerView = getPlayerView();
-            if (null == playerView)
-                throw new Exception("playerView error: null");
+            if (null == playerView) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("ComponentApi -> resume -> playerView error: null");
+                }
+                return;
+            }
             playerView.resume(callEvent);
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
@@ -532,8 +648,12 @@ public interface ComponentApi {
     default void pause(boolean callEvent) {
         try {
             PlayerView playerView = getPlayerView();
-            if (null == playerView)
-                throw new Exception("playerView error: null");
+            if (null == playerView) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("ComponentApi -> pause -> playerView error: null");
+                }
+                return;
+            }
             playerView.pause(callEvent);
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
@@ -552,8 +672,12 @@ public interface ComponentApi {
     default void toggle(boolean callEvent) {
         try {
             PlayerView playerView = getPlayerView();
-            if (null == playerView)
-                throw new Exception("playerView error: null");
+            if (null == playerView) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("ComponentApi -> toggle -> playerView error: null");
+                }
+                return;
+            }
             playerView.toggle(callEvent);
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
@@ -569,8 +693,12 @@ public interface ComponentApi {
     default void stop(boolean callEvent) {
         try {
             PlayerView playerView = getPlayerView();
-            if (null == playerView)
-                throw new Exception("playerView error: null");
+            if (null == playerView) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("ComponentApi -> stop -> playerView error: null");
+                }
+                return;
+            }
             playerView.stop(callEvent);
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
@@ -586,8 +714,12 @@ public interface ComponentApi {
     default void release(boolean callEvent) {
         try {
             PlayerView playerView = getPlayerView();
-            if (null == playerView)
-                throw new Exception("playerView error: null");
+            if (null == playerView) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("ComponentApi -> release -> playerView error: null");
+                }
+                return;
+            }
             playerView.release(callEvent, false);
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
@@ -599,8 +731,12 @@ public interface ComponentApi {
     default void start(StartArgs startArgs) {
         try {
             PlayerView playerView = getPlayerView();
-            if (null == playerView)
-                throw new Exception("playerView error: null");
+            if (null == playerView) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("ComponentApi -> start -> playerView error: null");
+                }
+                return;
+            }
             playerView.start(startArgs);
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
@@ -612,11 +748,19 @@ public interface ComponentApi {
     default long getDuration() {
         try {
             PlayerView playerView = getPlayerView();
-            if (null == playerView)
-                throw new Exception("playerView error: null");
+            if (null == playerView) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("ComponentApi -> getDuration -> playerView error: null");
+                }
+                return 0L;
+            }
             long duration = playerView.getDuration();
-            if (duration < 0)
-                throw new Exception("warning: duration<0");
+            if (duration < 0) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("ComponentApi -> getDuration -> warning: duration<0");
+                }
+                return 0L;
+            }
             return duration;
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
@@ -629,11 +773,19 @@ public interface ComponentApi {
     default long getPosition() {
         try {
             PlayerView playerView = getPlayerView();
-            if (null == playerView)
-                throw new Exception("playerView error: null");
+            if (null == playerView) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("ComponentApi -> getPosition -> playerView error: null");
+                }
+                return 0L;
+            }
             long position = playerView.getPosition();
-            if (position < 0)
-                throw new Exception("warning: position<0");
+            if (position < 0) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("ComponentApi -> getPosition -> warning: position<0");
+                }
+                return 0L;
+            }
             return position;
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
@@ -646,8 +798,12 @@ public interface ComponentApi {
     default void setPlaybackSpeed(float speed) {
         try {
             PlayerView playerView = getPlayerView();
-            if (null == playerView)
-                throw new Exception("playerView error: null");
+            if (null == playerView) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("ComponentApi -> setPlaybackSpeed -> playerView error: null");
+                }
+                return;
+            }
             playerView.setSpeed(speed);
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
@@ -659,8 +815,12 @@ public interface ComponentApi {
     default float getPlaybackSpeed() {
         try {
             PlayerView playerView = getPlayerView();
-            if (null == playerView)
-                throw new Exception("playerView error: null");
+            if (null == playerView) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("ComponentApi -> getPlaybackSpeed -> playerView error: null");
+                }
+                return 1.0f;
+            }
             return playerView.getSpeed();
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
@@ -673,8 +833,12 @@ public interface ComponentApi {
     default void setVideoScaleType(@PlayerType.ScaleType.Value int scaleType) {
         try {
             PlayerView playerView = getPlayerView();
-            if (null == playerView)
-                throw new Exception("playerView error: null");
+            if (null == playerView) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("ComponentApi -> setVideoScaleType -> playerView error: null");
+                }
+                return;
+            }
             playerView.setVideoScaleType(scaleType);
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
@@ -687,8 +851,12 @@ public interface ComponentApi {
     default int getVideoScale() {
         try {
             PlayerView playerView = getPlayerView();
-            if (null == playerView)
-                throw new Exception("playerView error: null");
+            if (null == playerView) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("ComponentApi -> getVideoScale -> playerView error: null");
+                }
+                return PlayerType.ScaleType.DEFAULT;
+            }
             return playerView.getVideoScale();
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
@@ -701,11 +869,19 @@ public interface ComponentApi {
     default StartArgs getStartArgs() {
         try {
             PlayerView playerView = getPlayerView();
-            if (null == playerView)
-                throw new Exception("error: playerView null");
+            if (null == playerView) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("ComponentApi -> getStartArgs -> error: playerView null");
+                }
+                return null;
+            }
             StartArgs args = playerView.getStartArgs();
-            if (null == args)
-                throw new Exception("error: args null");
+            if (null == args) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("ComponentApi -> getStartArgs -> error: args null");
+                }
+                return null;
+            }
             return args;
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
@@ -718,11 +894,19 @@ public interface ComponentApi {
     default int getPlayPos() {
         try {
             StartArgs args = getStartArgs();
-            if (null == args)
-                throw new Exception("error: args null");
+            if (null == args) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("ComponentApi -> getPlayPos -> error: args null");
+                }
+                return -1;
+            }
             Menu menu = args.getMenu();
-            if (null == menu)
-                throw new Exception("error: menu null");
+            if (null == menu) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("ComponentApi -> getPlayPos -> error: menu null");
+                }
+                return -1;
+            }
             return menu.getPlayPos();
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
@@ -735,11 +919,19 @@ public interface ComponentApi {
     default int getPlayCount() {
         try {
             StartArgs args = getStartArgs();
-            if (null == args)
-                throw new Exception("error: args null");
+            if (null == args) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("ComponentApi -> getPlayCount -> error: args null");
+                }
+                return -1;
+            }
             Menu menu = args.getMenu();
-            if (null == menu)
-                throw new Exception("error: menu null");
+            if (null == menu) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("ComponentApi -> getPlayCount -> error: menu null");
+                }
+                return -1;
+            }
             return menu.getPlayCount();
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
@@ -752,8 +944,12 @@ public interface ComponentApi {
     default String getTitle() {
         try {
             StartArgs args = getStartArgs();
-            if (null == args)
-                throw new Exception("error: args null");
+            if (null == args) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("ComponentApi -> getTitle -> error: args null");
+                }
+                return null;
+            }
             return args.getTitle();
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
@@ -766,8 +962,12 @@ public interface ComponentApi {
     default long getTrySeeDuration() {
         try {
             StartArgs args = getStartArgs();
-            if (null == args)
-                throw new Exception("error: args null");
+            if (null == args) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("ComponentApi -> getTrySeeDuration -> error: args null");
+                }
+                return 0L;
+            }
             return args.getTrySeeDuration();
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
@@ -780,8 +980,12 @@ public interface ComponentApi {
     default boolean isPlayWhenReady() {
         try {
             StartArgs args = getStartArgs();
-            if (null == args)
-                throw new Exception("error: args null");
+            if (null == args) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("ComponentApi -> isPlayWhenReady -> error: args null");
+                }
+                return true;
+            }
             return args.isPlayWhenReady();
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
@@ -794,8 +998,12 @@ public interface ComponentApi {
     default long getPlayWhenReadyDelayedTime() {
         try {
             StartArgs args = getStartArgs();
-            if (null == args)
-                throw new Exception("error: args null");
+            if (null == args) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("ComponentApi -> getPlayWhenReadyDelayedTime -> error: args null");
+                }
+                return 0L;
+            }
             return args.getPlayWhenReadyDelayedTime();
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
@@ -808,8 +1016,12 @@ public interface ComponentApi {
     default long getPlayWhenReadySeekToPosition() {
         try {
             StartArgs args = getStartArgs();
-            if (null == args)
-                throw new Exception("error: args null");
+            if (null == args) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("ComponentApi -> getPlayWhenReadySeekToPosition -> error: args null");
+                }
+                return 0L;
+            }
             return args.getPlayWhenReadySeekToPosition();
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
@@ -822,8 +1034,12 @@ public interface ComponentApi {
     default void closeVolume() {
         try {
             PlayerView playerView = getPlayerView();
-            if (null == playerView)
-                throw new Exception("playerView error: null");
+            if (null == playerView) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("ComponentApi -> closeVolume -> playerView error: null");
+                }
+                return;
+            }
             playerView.closeVolume();
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
@@ -835,8 +1051,12 @@ public interface ComponentApi {
     default void openVolume() {
         try {
             PlayerView playerView = getPlayerView();
-            if (null == playerView)
-                throw new Exception("playerView error: null");
+            if (null == playerView) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("ComponentApi -> openVolume -> playerView error: null");
+                }
+                return;
+            }
             playerView.openVolume();
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
@@ -848,8 +1068,12 @@ public interface ComponentApi {
     default void setVolume(@FloatRange(from = 0f, to = 1f) float left, @FloatRange(from = 0f, to = 1f) float right) {
         try {
             PlayerView playerView = getPlayerView();
-            if (null == playerView)
-                throw new Exception("playerView error: null");
+            if (null == playerView) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("ComponentApi -> setVolume -> playerView error: null");
+                }
+                return;
+            }
             playerView.setVolume(left, right);
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
@@ -861,8 +1085,12 @@ public interface ComponentApi {
     default float getVolume() {
         try {
             PlayerView playerView = getPlayerView();
-            if (null == playerView)
-                throw new Exception("playerView error: null");
+            if (null == playerView) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("ComponentApi -> getVolume -> playerView error: null");
+                }
+                return 0f;
+            }
             return playerView.getVolume();
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
@@ -875,8 +1103,12 @@ public interface ComponentApi {
     default boolean canBackPress(Context context) {
         try {
             PlayerView playerView = getPlayerView();
-            if (null == playerView)
-                throw new Exception("playerView error: null");
+            if (null == playerView) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("ComponentApi -> canBackPress -> playerView error: null");
+                }
+                return false;
+            }
             return playerView.canBackPress(context);
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
@@ -918,8 +1150,12 @@ public interface ComponentApi {
     default int getStatusBarHeight() {
         try {
             PlayerView playerView = getPlayerView();
-            if (null == playerView)
-                throw new Exception("playerView error: null");
+            if (null == playerView) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("ComponentApi -> getStatusBarHeight -> playerView error: null");
+                }
+                return 0;
+            }
             return playerView.getStatusBarHeight(((View) this).getContext());
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
@@ -932,8 +1168,12 @@ public interface ComponentApi {
     default int getNavigationBarHeight() {
         try {
             PlayerView playerView = getPlayerView();
-            if (null == playerView)
-                throw new Exception("playerView error: null");
+            if (null == playerView) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("ComponentApi -> getNavigationBarHeight -> playerView error: null");
+                }
+                return 0;
+            }
             return playerView.getNavigationBarHeight(((View) this).getContext());
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
@@ -953,8 +1193,12 @@ public interface ComponentApi {
             boolean formatScreen) {
         try {
             PlayerView playerView = getPlayerView();
-            if (null == playerView)
-                throw new Exception("playerView error: null");
+            if (null == playerView) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("ComponentApi -> requestScreenOrientation -> playerView error: null");
+                }
+                return false;
+            }
             return playerView.requestScreenOrientation(((View) this).getContext(), value, formatScreen);
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
@@ -967,8 +1211,12 @@ public interface ComponentApi {
     default boolean setPlaybackSubtitleOffsetMs(int offsetMs) {
         try {
             PlayerView playerView = getPlayerView();
-            if (null == playerView)
-                throw new Exception("playerView error: null");
+            if (null == playerView) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("ComponentApi -> setPlaybackSubtitleOffsetMs -> playerView error: null");
+                }
+                return false;
+            }
             return playerView.subtitleOffsetMs(offsetMs);
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
@@ -981,8 +1229,12 @@ public interface ComponentApi {
     default void restart() {
         try {
             PlayerView playerView = getPlayerView();
-            if (null == playerView)
-                throw new Exception("playerView error: null");
+            if (null == playerView) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("ComponentApi -> restart -> playerView error: null");
+                }
+                return;
+            }
             playerView.restart();
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
@@ -994,8 +1246,12 @@ public interface ComponentApi {
     default void restartSeekToPosition() {
         try {
             PlayerView playerView = getPlayerView();
-            if (null == playerView)
-                throw new Exception("playerView error: null");
+            if (null == playerView) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("ComponentApi -> restartSeekToPosition -> playerView error: null");
+                }
+                return;
+            }
             playerView.restartSeekToPosition();
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
@@ -1007,8 +1263,12 @@ public interface ComponentApi {
     default void callPlayerEpisode(int position, int count) {
         try {
             PlayerView playerView = getPlayerView();
-            if (null == playerView)
-                throw new Exception("playerView error: null");
+            if (null == playerView) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("ComponentApi -> callPlayerEpisode -> playerView error: null");
+                }
+                return;
+            }
             playerView.callPlayerEpisode(position, count);
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
@@ -1020,8 +1280,12 @@ public interface ComponentApi {
     default boolean showOnlyComponent(java.lang.Class<?> cls) {
         try {
             PlayerView playerView = getPlayerView();
-            if (null == playerView)
-                throw new Exception("playerView error: null");
+            if (null == playerView) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("ComponentApi -> showOnlyComponent -> playerView error: null");
+                }
+                return false;
+            }
             return playerView.showOnlyComponent(cls);
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
@@ -1034,8 +1298,12 @@ public interface ComponentApi {
     default void clickAllComponent() {
         try {
             PlayerView playerView = getPlayerView();
-            if (null == playerView)
-                throw new Exception("playerView error: null");
+            if (null == playerView) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("ComponentApi -> clickAllComponent -> playerView error: null");
+                }
+                return;
+            }
             playerView.clickAllComponentCount();
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
@@ -1047,8 +1315,12 @@ public interface ComponentApi {
     default boolean isLiveStream() {
         try {
             PlayerView playerView = getPlayerView();
-            if (null == playerView)
-                throw new Exception("playerView error: null");
+            if (null == playerView) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("ComponentApi -> isLiveStream -> playerView error: null");
+                }
+                return false;
+            }
             return playerView.isLiveStream();
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
