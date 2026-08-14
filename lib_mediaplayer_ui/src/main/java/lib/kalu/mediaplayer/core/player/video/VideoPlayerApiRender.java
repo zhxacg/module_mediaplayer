@@ -226,25 +226,25 @@ public interface VideoPlayerApiRender extends VideoPlayerApiBase, VideoPlayerApi
 
     default void initRenderView() {
         try {
-            StartArgs args = getStartArgs();
-            if (null == args) {
+            StartArgs startArgs = getStartArgs();
+            if (null == startArgs) {
                 if (LogUtil.DEBUG) {
-                    LogUtil.log("VideoPlayerApiRender", "initRenderView -> error: args null");
+                    LogUtil.log("VideoPlayerApiRender", "initRenderView -> error: startArgs null");
                 }
                 return;
             }
 
             @PlayerType.DecoderType.Value
-            int decoderType = args.getDecoderType();
+            int decoderType = startArgs.getDecoderType();
             @PlayerType.KernelType.Value
-            int kernelType = args.getKernelType();
+            int kernelType = startArgs.getKernelType();
             @PlayerType.RenderType.Value
-            int renderType = args.getRenderType();
+            int renderType = startArgs.getRenderType();
 
             if (decoderType == PlayerType.DecoderType.ONLY_CODEC && kernelType == PlayerType.KernelType.IJK && renderType == PlayerType.RenderType.SURFACE_VIEW) {
                 releaseRender();
-                StartArgs startArgs = new StartArgs.Builder().setRenderType(PlayerType.RenderType.SURFACE_VIEW).build();
-                initRender(startArgs);
+                StartArgs newArgs = startArgs.newBuilderFromThis().setRenderType(PlayerType.RenderType.SURFACE_VIEW).build();
+                initRender(newArgs);
                 attachRenderKernel();
             } else if (decoderType == PlayerType.DecoderType.ONLY_CODEC && kernelType == PlayerType.KernelType.IJK) {
                 VideoRenderApi videoRender = getVideoRender();

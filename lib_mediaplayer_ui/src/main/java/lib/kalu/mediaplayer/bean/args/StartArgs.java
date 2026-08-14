@@ -291,7 +291,7 @@ public class StartArgs implements Serializable {
                 '}';
     }
 
-    public StartArgs(Builder builder) {
+    private StartArgs(Builder builder) {
         this.decoderType = builder.decoderType;
         this.seekType = builder.seekType;
         this.renderType = builder.renderType;
@@ -363,18 +363,46 @@ public class StartArgs implements Serializable {
 
         // 解码器类型
         private int decoderType = PlayerSDK.decoderType;
+
+        public Builder setDecoderType(@PlayerType.DecoderType.Value int v) {
+            this.decoderType = v;
+            return this;
+        }
+
         // 播放器类型
         @PlayerType.KernelType.Value
         private int kernelType = PlayerSDK.kernelType;
+
+        public Builder setKernelType(@PlayerType.KernelType.Value int v) {
+            this.kernelType = v;
+            return this;
+        }
+
         // 画面缩放类型
         @PlayerType.ScaleType.Value
         private int scaleType = PlayerSDK.scaleType;
+
+        public Builder setScaleType(@PlayerType.ScaleType.Value int v) {
+            this.scaleType = v;
+            return this;
+        }
+
         // 旋转角度
         @PlayerType.RotationType.Value
         private int rotation = PlayerSDK.rotation;
 
+        public Builder setRotation(@PlayerType.RotationType.Value int v) {
+            this.rotation = v;
+            return this;
+        }
+
         @PlayerType.SeekType.Value
         private int seekType = PlayerSDK.seekType;
+
+        public Builder setSeekType(@PlayerType.SeekType.Value int v) {
+            this.seekType = v;
+            return this;
+        }
 
         @PlayerType.SeekType.Value
         public int getSeekType() {

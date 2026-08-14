@@ -293,7 +293,7 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
                 }
                 return;
             }
-            StartArgs newArgs = startArgs.newBuilder()
+            StartArgs newArgs = startArgs.newBuilderFromThis()
                     .setPlayWhenReadySeekToPosition(0L)
                     .setRetryType(PlayerType.EventType.RETRY_RELOAD)
                     .build();
@@ -327,7 +327,7 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
             if (!live) {
                 position = getPosition();
             }
-            StartArgs newArgs = startArgs.newBuilder()
+            StartArgs newArgs = startArgs.newBuilderFromThis()
                     .setRetryType(PlayerType.EventType.RETRY_RELOAD)
                     .setPlayWhenReadySeekToPosition(position)
                     .build();

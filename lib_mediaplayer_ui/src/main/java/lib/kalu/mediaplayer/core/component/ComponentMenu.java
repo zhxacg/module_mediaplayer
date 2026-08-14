@@ -166,7 +166,7 @@ public class ComponentMenu extends RelativeLayout implements ComponentApi {
                                 }
                             }
                             //
-                            StartArgs newArgs = startArgs.newBuilder()
+                            StartArgs newArgs = startArgs.newBuilderFromThis()
                                     .setUrl(url)
                                     .setMenu(new Menu.Builder()
                                             .setData(list).build()).build();

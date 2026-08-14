@@ -18,33 +18,46 @@ public final class LogUtil {
     }
 
     private static void setMediaxV3Logger(boolean v) {
-        try {
-            lib.kalu.mediax.util.MediaLogUtil.setDebug(v);
-        } catch (Exception e) {
-        }
+        boolean classExists = isClassExists("lib.kalu.mediax.util.MediaLogUtil");
+        if (!classExists)
+            return;
+        lib.kalu.mediax.util.MediaLogUtil.setDebug(v);
     }
 
     private static void setExoV2Logger(boolean v) {
-        try {
-            lib.kalu.exoplayer2.util.ExoLogUtil.setDebug(v);
-        } catch (Exception e) {
-        }
+        boolean classExists = isClassExists("lib.kalu.exoplayer2.util.ExoLogUtil");
+        if (!classExists)
+            return;
+        lib.kalu.exoplayer2.util.ExoLogUtil.setDebug(v);
     }
 
     private static void setVlcLogger(boolean v) {
-        try {
-            lib.kalu.vlc.util.VlcLogUtil.setLogger(v);
-        } catch (Exception e) {
-        }
+        boolean classExists = isClassExists("lib.kalu.vlc.util.VlcLogUtil");
+        if (!classExists)
+            return;
+        lib.kalu.vlc.util.VlcLogUtil.setLogger(v);
     }
 
     private static void setIJkLogger(boolean v) {
+        boolean classExists = isClassExists("lib.kalu.ijkplayer.util.IjkLogUtil");
+        if (!classExists)
+            return;
+        lib.kalu.ijkplayer.util.IjkLogUtil.setLogger(v);
+    }
+
+    /**
+     * 检查类是否存在，不初始化类（不执行static静态代码块）
+     *
+     * @param className 全限定类名 例：androidx.media3.exoplayer.ExoPlayer
+     * @return true存在
+     */
+    private static boolean isClassExists(String className) {
         try {
-            lib.kalu.ijkplayer.util.IjkLogUtil.setLogger(v);
-        } catch (Exception e) {
-            if (LogUtil.DEBUG) {
-                LogUtil.log("VideoIjkPlayer -> initOptions -> step2 Exception " + e.getMessage());
-            }
+            // 第二个参数 false：不执行类初始化(static块不会跑)
+            Class<?> clazz = Class.forName(className, false, ClassLoader.getSystemClassLoader());
+            return clazz != null;
+        } catch (ClassNotFoundException e) {
+            return false;
         }
     }
 

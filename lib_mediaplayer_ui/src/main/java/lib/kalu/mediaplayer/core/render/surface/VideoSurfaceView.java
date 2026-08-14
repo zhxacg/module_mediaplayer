@@ -297,7 +297,6 @@ public class VideoSurfaceView extends SurfaceView implements VideoRenderApi {
 
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
 
         try {
             int screenWidth = MeasureSpec.getSize(widthMeasureSpec);
@@ -307,6 +306,7 @@ public class VideoSurfaceView extends SurfaceView implements VideoRenderApi {
                 if (LogUtil.DEBUG) {
                     LogUtil.log("VideoSurfaceView", "onMeasure -> warning: measureSpec null");
                 }
+                super.onMeasure(widthMeasureSpec, heightMeasureSpec);
                 return;
             }
             int width = measureSpec[0];
@@ -315,11 +315,12 @@ public class VideoSurfaceView extends SurfaceView implements VideoRenderApi {
             int specW = MeasureSpec.makeMeasureSpec(width, MeasureSpec.EXACTLY);
             int specH = MeasureSpec.makeMeasureSpec(height, MeasureSpec.EXACTLY);
             super.onMeasure(specW, specH);
-            getHolder().setFixedSize(specW, specH);
+           // getHolder().setFixedSize(specW, specH);
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
                 LogUtil.log("VideoSurfaceView -> onMeasure -> Exception " + e.getMessage());
             }
+            super.onMeasure(widthMeasureSpec, heightMeasureSpec);
         }
     }
 

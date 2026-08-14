@@ -18,43 +18,43 @@
 #-keepattributes Exceptions
 #-keepattributes Exceptions,SourceFile,LineNumberTable
 
-# 移除所有log
--dontwarn lib.kalu.mediaplayer.util.LogUtil
--dontwarn lib.kalu.mediax.util.MediaLogUtil
--dontwarn lib.kalu.exoplayer2.util.ExoLogUtil
--dontwarn lib.kalu.vlc.util.VlcLogUtil
--dontwarn lib.kalu.ijkplayer.util.IjkLogUtil
--assumenosideeffects class lib.kalu.mediaplayer.util.LogUtil {
-    public final void log(java.lang.String);
-    public final void log(java.lang.String, java.lang.String);
-    public final void log(java.lang.String, java.lang.Throwable);
-    public final void log(java.lang.String, java.lang.String, java.lang.Throwable);
-}
--assumenosideeffects class lib.kalu.mediax.util.MediaLogUtil {
-    public final void log(java.lang.String);
-    public final void log(java.lang.String, java.lang.Throwable);
-}
--assumenosideeffects class lib.kalu.exoplayer2.util.ExoLogUtil {
-    public final void log(java.lang.String);
-    public final void log(java.lang.String, java.lang.Throwable);
-}
--assumenosideeffects class lib.kalu.vlc.util.VlcLogUtil {
-    public final void log(java.lang.String);
-    public final void log(java.lang.String, java.lang.Throwable);
-}
--assumenosideeffects class lib.kalu.ijkplayer.util.IjkLogUtil {
-    public final void log(java.lang.String);
-    public final void log(java.lang.String, java.lang.Throwable);
-}
-
--assumenosideeffects class android.util.Log {
-    public static int d(...);
-    public static int v(...);
-    public static int i(...);
-    public static int w(...);
-    public static int e(...);
-    public static int wtf(...);
-}
+## 移除所有log
+#-dontwarn lib.kalu.mediaplayer.util.LogUtil
+#-dontwarn lib.kalu.mediax.util.MediaLogUtil
+#-dontwarn lib.kalu.exoplayer2.util.ExoLogUtil
+#-dontwarn lib.kalu.vlc.util.VlcLogUtil
+#-dontwarn lib.kalu.ijkplayer.util.IjkLogUtil
+#-assumenosideeffects class lib.kalu.mediaplayer.util.LogUtil {
+#    public final void log(java.lang.String);
+#    public final void log(java.lang.String, java.lang.String);
+#    public final void log(java.lang.String, java.lang.Throwable);
+#    public final void log(java.lang.String, java.lang.String, java.lang.Throwable);
+#}
+#-assumenosideeffects class lib.kalu.mediax.util.MediaLogUtil {
+#    public final void log(java.lang.String);
+#    public final void log(java.lang.String, java.lang.Throwable);
+#}
+#-assumenosideeffects class lib.kalu.exoplayer2.util.ExoLogUtil {
+#    public final void log(java.lang.String);
+#    public final void log(java.lang.String, java.lang.Throwable);
+#}
+#-assumenosideeffects class lib.kalu.vlc.util.VlcLogUtil {
+#    public final void log(java.lang.String);
+#    public final void log(java.lang.String, java.lang.Throwable);
+#}
+#-assumenosideeffects class lib.kalu.ijkplayer.util.IjkLogUtil {
+#    public final void log(java.lang.String);
+#    public final void log(java.lang.String, java.lang.Throwable);
+#}
+#
+#-assumenosideeffects class android.util.Log {
+#    public static int d(...);
+#    public static int v(...);
+#    public static int i(...);
+#    public static int w(...);
+#    public static int e(...);
+#    public static int wtf(...);
+#}
 
 # 保护泛型
 -keepattributes Signature

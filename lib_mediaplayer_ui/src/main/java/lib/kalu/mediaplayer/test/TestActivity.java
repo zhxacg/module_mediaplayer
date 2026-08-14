@@ -3,6 +3,7 @@ package lib.kalu.mediaplayer.test;
 import android.app.Activity;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Toast;
@@ -12,7 +13,6 @@ import java.util.List;
 import lib.kalu.mediaplayer.PlayerLayout;
 import lib.kalu.mediaplayer.R;
 import lib.kalu.mediaplayer.bean.args.StartArgs;
-import lib.kalu.mediaplayer.bean.args.UrlArgs;
 import lib.kalu.mediaplayer.bean.info.TrackInfo;
 import lib.kalu.mediaplayer.bean.type.PlayerType;
 import lib.kalu.mediaplayer.core.component.ComponentBuffering;
@@ -244,6 +244,9 @@ public final class TestActivity extends Activity {
                 }
                 return;
             }
+
+            Log.e("VideoPlayerApiKernel22", "start -> args = " + args);
+
             PlayerLayout playerLayout = findViewById(R.id.module_mediaplayer_test_video);
             playerLayout.setOnPlayerEventListener(new OnPlayerEventListener() {
                 @Override
@@ -266,7 +269,7 @@ public final class TestActivity extends Activity {
                 }
             });
 
-            playerLayout.start(args.newBuilder()
+            playerLayout.start(args.newBuilderFromThis()
                     .setProxy(new Proxy.Builder()
                             .setProxyUrl(new ProxyUrl() {
 

@@ -3,6 +3,7 @@ package com.kalu.mediaplayer;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -33,6 +34,8 @@ import lib.kalu.mediaplayer.test.TestActivity;
  * created by kalu on 2021/11/23
  */
 public class MainActivity extends Activity {
+
+    private static final String TAG = "MainActivity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,6 +78,8 @@ public class MainActivity extends Activity {
                         .setEnable(isAdaptiveEnable())
                         .build())
                 .build();
+
+        Log.e("VideoPlayerApiKernel22", "start -> args = " + args);
 
         Intent intent = new Intent(getApplicationContext(), TestActivity.class);
         intent.putExtra(TestActivity.INTENT_ARGS, args);
