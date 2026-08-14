@@ -54,7 +54,7 @@ public class MainActivity extends Activity {
 
     private void next() {
 
-        StartArgs args = new StartArgs.Builder()
+        StartArgs args = StartArgs.newBuilder()
                 .setUrl(getUrl())
                 .setTitle("测试视频")
                 .setLiveStream(isLive())
