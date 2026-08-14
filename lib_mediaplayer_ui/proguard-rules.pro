@@ -11,11 +11,16 @@
 }
 
 
-# sdk
+# PlayerSDK
 -keep class lib.kalu.mediaplayer.PlayerSDK {
+    # 保护所有静态变量名
+    static <fields>;
+    # 保护所有方法
     <methods>;
 }
--keep class lib.kalu.mediaplayer.PlayerSDK$Builder {
+
+-keep class lib.kalu.mediaplayer.PlayerSDK$* {
+    # 保护内部类的所有方法
     <methods>;
 }
 
