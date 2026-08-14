@@ -506,7 +506,7 @@ public @interface PlayerType {
     @interface StreamType {
         int DEFAULT = 1;
         int MERGE_ALL = 2;
-        int FORMAT_MULTI_VARIANT_PLAYLIST = 4;
+        int FORMAT_MULTI_VARIANT_PLAYLIST = 3;
 
         @Documented
         @Retention(CLASS)
