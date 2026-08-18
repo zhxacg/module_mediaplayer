@@ -76,7 +76,7 @@ public class StartArgs implements Serializable {
         if (null == urlArgs) {
             return null;
         } else {
-            return urlArgs.getDefaultUrl();
+            return urlArgs.getDefaultStreamUrl();
         }
     }
 

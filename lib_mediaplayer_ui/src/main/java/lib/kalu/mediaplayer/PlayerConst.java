@@ -256,7 +256,7 @@ public class PlayerConst {
         /**
          * 直播时间线偏移下限：-15秒
          */
-        public static final long BOX_MIN_LIVE_PLAYBACK_TIMELINE_OFFSET_MS = -15_000L;
+        public static final long BOX_MIN_LIVE_PLAYBACK_TIMELINE_OFFSET_MS = 15_000L;
         /**
          * 最小缓冲区大小：20秒（盒子内存小，限制最大驻留缓存）
          */
@@ -288,7 +288,7 @@ public class PlayerConst {
         /**
          * 直播时间线偏移下限：-10秒
          */
-        public static final long PHONE_MIN_LIVE_PLAYBACK_TIMELINE_OFFSET_MS = -10_000L;
+        public static final long PHONE_MIN_LIVE_PLAYBACK_TIMELINE_OFFSET_MS = 10_000L;
         /**
          * 最小缓冲区大小：30秒
          */

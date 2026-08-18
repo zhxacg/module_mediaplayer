@@ -59,6 +59,7 @@ import androidx.media3.exoplayer.source.SingleSampleMediaSource;
 import androidx.media3.exoplayer.text.TextOutput;
 import androidx.media3.exoplayer.text.TextRenderer;
 import androidx.media3.exoplayer.trackselection.TrackSelector;
+import androidx.media3.exoplayer.upstream.BandwidthMeter;
 import androidx.media3.exoplayer.upstream.DefaultBandwidthMeter;
 import androidx.media3.extractor.ts.DefaultTsPayloadReaderFactory;
 
@@ -185,6 +186,28 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
             StuckConfiguration stuckConfiguration = startArgs.getStuckConfiguration();
             BufferConfiguration bufferConfiguration = startArgs.getBufferConfiguration();
 
+            DefaultBandwidthMeter defaultBandwidthMeter = VideoMediaxConfig.createDefaultBandwidthMeter(context);
+            defaultBandwidthMeter.addEventListener(new Handler(android.os.Looper.getMainLooper()), new BandwidthMeter.EventListener() {
+                /**
+                 * 带宽采样回调：当网络数据传输完成一个采样周期并更新带宽估算值时调用。
+                 *
+                 * @param elapsedMs 本次采样统计的实际网络传输耗时（单位：毫秒）。
+                 * @param bytesTransferred 本次采样期间实际传输（下载）的数据量大小（单位：字节 Byte）。
+                 * @param bitrateEstimate 播放器当前根据历史采样滑动窗口计算出的【估算可用带宽】（单位：比特每秒 bps，即 bits/s）。
+                 *                        注意：转换成常见的 kbps 需要除以 1000（或 1024），转成 Mbps 除以 1,000,000。
+                 */
+                @Override
+                public void onBandwidthSample(int elapsedMs, long bytesTransferred, long bitrateEstimate) {
+
+                    // 1. 获取当前估算网速 (转换为 kbps)
+                    long bitrateKbps = bitrateEstimate / 1000;
+
+                    // 2. 计算本次单次请求的即时瞬时速率 (bps)
+                    long instantBitrateBps = elapsedMs > 0 ? (bytesTransferred * 8 * 1000L) / elapsedMs : 0;
+
+                }
+            });
+
             ExoPlayer.Builder builder = new ExoPlayer.Builder(context)
                     // 核心：配置缓冲卡死超时（解决你最初的 StuckPlayerException）
                     .setStuckBufferingDetectionTimeoutMs(stuckConfiguration.getBufferingDetectionTimeoutMs())
@@ -218,9 +241,7 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
                     // 自适应码率
                     .setTrackSelector(VideoMediaxConfig.createTrackSelector(context, adaptiveConfiguration))
                     // 配置带宽测量器
-                    .setBandwidthMeter(new DefaultBandwidthMeter.Builder(context)
-                            // 初始带宽估算为100Mbps
-                            .setInitialBitrateEstimate(100_000_000).build())
+                    .setBandwidthMeter(defaultBandwidthMeter)
                     // 增大内存缓存（默认 2MB，按需调整）
                     .setLoadControl(VideoMediaxConfig.createLoadControl(bufferConfiguration))
                     // 直播场景
@@ -393,9 +414,7 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
                     LogUtil.log(TAG, "startDecoder -> 外挂轨道 有 MERGE_ALL");
                 }
 
-
                 ArrayList<MediaSource> listMediaSource = new ArrayList<MediaSource>();
-
 
                 List<UrlArgs.Item> allStreams = urlArgs.getAllStreams();
                 if (LogUtil.DEBUG) {
@@ -428,6 +447,9 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
                     if (LogUtil.DEBUG) {
                         LogUtil.log(TAG, "startDecoder -> error: listMediaSource isEmpty");
                     }
+
+                    onEvent(PlayerType.KernelType.MEDIA_V3, PlayerType.EventType.ERROR_DECODE);
+                    stop();
                     return;
                 }
 
@@ -456,6 +478,9 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
                     if (LogUtil.DEBUG) {
                         LogUtil.log(TAG, "startDecoder -> error: multivariantMediaSource null");
                     }
+
+                    onEvent(PlayerType.KernelType.MEDIA_V3, PlayerType.EventType.ERROR_DECODE);
+                    stop();
                     return;
                 }
                 mExoPlayer.setMediaSource(multivariantMediaSource);
@@ -466,19 +491,25 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
                     LogUtil.log(TAG, "startDecoder -> 外挂轨道 无");
                 }
 
-                UrlArgs.Item masterItem = urlArgs.getMasterItem();
-                if (null == masterItem) {
+                UrlArgs.Item defaultItem = urlArgs.getDefaultStreamItem();
+                if (null == defaultItem) {
                     if (LogUtil.DEBUG) {
-                        LogUtil.log(TAG, "startDecoder -> error: masterItem null");
+                        LogUtil.log(TAG, "startDecoder -> error: defaultItem null");
                     }
+
+                    onEvent(PlayerType.KernelType.MEDIA_V3, PlayerType.EventType.ERROR_DECODE);
+                    stop();
                     return;
                 }
 
-                MediaSource onlyMainMediaSource = buildMediaSource(context, httpFactory, startArgs, PlayerType.UrlType.VIDEO, masterItem);
+                MediaSource onlyMainMediaSource = buildMediaSource(context, httpFactory, startArgs, PlayerType.UrlType.VIDEO, defaultItem);
                 if (null == onlyMainMediaSource) {
                     if (LogUtil.DEBUG) {
                         LogUtil.log(TAG, "startDecoder -> error: onlyMainMediaSource null");
                     }
+
+                    onEvent(PlayerType.KernelType.MEDIA_V3, PlayerType.EventType.ERROR_DECODE);
+                    stop();
                     return;
                 }
 
@@ -1411,6 +1442,59 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
             }
 
             onUpdateBandwidth(PlayerType.KernelType.MEDIA_V3, totalLoadTimeMs, estimateKBs, realAvgKBs);
+
+            // 检测 网络卡顿
+            if (mExoPlayer != null) {
+                // 1. 获取码率（多重尝试）
+                Format format = mExoPlayer.getVideoFormat();
+                long videoBitrate = Format.NO_VALUE;
+                if (format != null) {
+                    if (format.bitrate != Format.NO_VALUE) {
+                        videoBitrate = format.bitrate;
+                    } else if (format.averageBitrate != Format.NO_VALUE) {
+                        videoBitrate = format.averageBitrate;
+                    } else if (format.peakBitrate != Format.NO_VALUE) {
+                        videoBitrate = format.peakBitrate;
+                    }
+                }
+
+                if (LogUtil.DEBUG) {
+                    LogUtil.log(TAG, "onBandwidthEstimate -> videoBitrate = " + videoBitrate + ", bitrateEstimate = " + bitrateEstimate);
+                }
+
+                // 2. 如果能取到码率：走码率比对逻辑
+                if (videoBitrate > 0) {
+                    if (bitrateEstimate > 0 && bitrateEstimate < videoBitrate * 0.75f) {
+                        onUpdateStuckNet(PlayerType.KernelType.MEDIA_V3, videoBitrate, bitrateEstimate);
+                    }
+                } else {
+                    // 3. 兜底方案：无法获取码率时，结合当前可用缓冲时长判定
+                    long bufferedDurationMs = mExoPlayer.getTotalBufferedDuration(); // 当前已缓存时长
+                    boolean isLoading = mExoPlayer.isLoading(); // 是否正在下载数据
+
+                    // 若正在下载，但可用缓冲已不足 1.5 秒，且估算带宽偏低（例如低于 800 kbps），判定为网络紧张
+                    if (isLoading && bufferedDurationMs < 1500 && bitrateEstimate < 800_000) {
+                        onUpdateStuckNet(PlayerType.KernelType.MEDIA_V3, -1, bitrateEstimate);
+                    }
+                }
+            }
+
+//            if (null != mExoPlayer) {
+//                Format format = mExoPlayer.getVideoFormat();
+//                if (LogUtil.DEBUG) {
+//                    LogUtil.log(TAG, "onBandwidthEstimate -> format = " + format);
+//                }
+//                if (format != null && format.bitrate != Format.NO_VALUE) {
+//                    long videoBitrate = format.bitrate;
+//                    if (LogUtil.DEBUG) {
+//                        LogUtil.log(TAG, "onBandwidthEstimate -> videoBitrate = " + videoBitrate + ", bitrateEstimate = " + bitrateEstimate);
+//                    }
+//                    // 规则：估算下行带宽低于当前码率的 75%，判定为网络卡顿/弱网
+//                    if (bitrateEstimate > 0 && bitrateEstimate < videoBitrate * 0.75f) {
+//                        onUpdateStuckNet(PlayerType.KernelType.MEDIA_V3, videoBitrate, bitrateEstimate);
+//                    }
+//                }
+//            }
         }
 
 
@@ -1445,6 +1529,106 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
 
             if (LogUtil.DEBUG) {
                 LogUtil.log(TAG, "onVideoFrameProcessingOffset -> l = " + l + ", i = " + i);
+            }
+        }
+
+        @Override
+        public void onLoadCanceled(EventTime eventTime, LoadEventInfo loadEventInfo, MediaLoadData mediaLoadData) {
+
+            if (LogUtil.DEBUG) {
+                LogUtil.log(TAG, "onLoadCanceled -> loadEventInfo.loadDurationMs = " + loadEventInfo.loadDurationMs + ", loadEventInfo.elapsedRealtimeMs = " + loadEventInfo.elapsedRealtimeMs);
+            }
+        }
+
+        @Override
+        public void onLoadStarted(EventTime eventTime, LoadEventInfo loadEventInfo, MediaLoadData mediaLoadData, int i) {
+
+            if (LogUtil.DEBUG) {
+                LogUtil.log(TAG, "onLoadStarted -> loadEventInfo.loadDurationMs = " + loadEventInfo.loadDurationMs + ", loadEventInfo.elapsedRealtimeMs = " + loadEventInfo.elapsedRealtimeMs + ", i = " + i);
+            }
+        }
+
+        @Override
+        public void onLoadCompleted(EventTime eventTime, LoadEventInfo loadEventInfo, MediaLoadData mediaLoadData) {
+
+            if (LogUtil.DEBUG) {
+                LogUtil.log(TAG, "onLoadCompleted -> loadEventInfo.loadDurationMs = " + loadEventInfo.loadDurationMs + ", loadEventInfo.elapsedRealtimeMs = " + loadEventInfo.elapsedRealtimeMs);
+            }
+
+            if (LogUtil.DEBUG) {
+                LogUtil.log(TAG, "onLoadCompleted -> loadEventInfo.dataSpec.uri = " + loadEventInfo.dataSpec.uri + ", eventTime.currentPlaybackPositionMs = " + eventTime.currentPlaybackPositionMs);
+
+                int dataType = mediaLoadData.dataType;
+                if (dataType == C.DATA_TYPE_MANIFEST) {
+                    LogUtil.log(TAG, "onLoadCompleted -> current dataType DATA_TYPE_MANIFEST");
+                } else if (dataType == C.DATA_TYPE_MEDIA) {
+                    LogUtil.log(TAG, "onLoadCompleted -> current dataType DATA_TYPE_MEDIA");
+                }
+
+                int trackType = mediaLoadData.trackType;
+                if (trackType == C.TRACK_TYPE_DEFAULT) {
+                    LogUtil.log(TAG, "onLoadCompleted -> current trackType TRACK_TYPE_DEFAULT");
+                } else if (trackType == C.TRACK_TYPE_VIDEO) {
+                    LogUtil.log(TAG, "onLoadCompleted -> current trackType TRACK_TYPE_VIDEO");
+                } else if (trackType == C.TRACK_TYPE_AUDIO) {
+                    LogUtil.log(TAG, "onLoadCompleted -> current trackType TRACK_TYPE_AUDIO");
+                } else if (trackType == C.TRACK_TYPE_TEXT) {
+                    LogUtil.log(TAG, "onLoadCompleted -> current trackType TRACK_TYPE_TEXT");
+                }
+
+                if (trackType == C.TRACK_TYPE_DEFAULT || trackType == C.TRACK_TYPE_VIDEO) {
+                    long mediaStartTimeMs = mediaLoadData.mediaStartTimeMs;
+                    long mediaEndTimeMs = mediaLoadData.mediaEndTimeMs;
+                    long mediaDuration = mediaEndTimeMs - mediaStartTimeMs;
+                    LogUtil.log(TAG, "onLoadCompleted -> mediaStartTimeMs = " + mediaStartTimeMs + ", mediaEndTimeMs = " + mediaEndTimeMs + ", mediaDuration = " + mediaDuration);
+                }
+            }
+
+
+            try {
+                boolean live = isLiveStream();
+                if (live) {
+                    if (LogUtil.DEBUG) {
+                        LogUtil.log(TAG, "onLoadCompleted -> warning: current is live");
+                    }
+                    return;
+                }
+                loadHlsSpanInfo(loadEventInfo, mediaLoadData);
+            } catch (Exception e) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log(TAG, "onLoadCompleted -> Exception: " + e.getMessage());
+                }
+            }
+        }
+
+        @Override
+        public void onIsLoadingChanged(EventTime eventTime, boolean b) {
+            if (LogUtil.DEBUG) {
+                LogUtil.log(TAG, "onIsLoadingChanged -> b = " + b);
+            }
+        }
+
+        /**
+         * 主要用途：用于精细化排查音视频播放卡顿、埋点统计各轨道渲染器的首帧耗时与缓冲状态。
+         * 渲染器就绪状态发生变化时的回调
+         * （常用于 ExoPlayer / Media3 的 AnalyticsListener 监听器中）
+         *
+         * @param eventTime 包含当前事件发生时的时间戳、媒体周期等播放上下文信息的事件对象
+         * @param rendererIndex 触发该事件的渲染器索引（Renderer Index，例如视频渲染器或音频渲染器）
+         *                      对应播放器内部的具体渲染组件（例如 0 通常为视频渲染器，1 通常为音频渲染器，具体视轨道配置而定）。
+         * @param rendererTrackGroupIndex 渲染器所选轨道组（TrackGroup）在当前时间线/清单中的索引
+         * @param isReady 渲染器是否已处于就绪状态（true 表示已就绪/可继续渲染数据，false 表示尚未就绪/正在缓冲）
+         *                当网络波动或解码缓冲不足时会变为 false；缓冲完成可继续渲染画面/声音时恢复为 true。
+         */
+        @Override
+        public void onRendererReadyChanged(
+                AnalyticsListener.EventTime eventTime,
+                int rendererIndex,
+                int rendererTrackGroupIndex,
+                boolean isReady) {
+
+            if (LogUtil.DEBUG) {
+                LogUtil.log(TAG, "onRendererReadyChanged -> rendererIndex = " + rendererIndex + ", isReady = " + isReady);
             }
         }
 
@@ -1493,17 +1677,18 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
 
             // 缓存
             try {
-                if (null == mSimpleCache) {
-                    if (LogUtil.DEBUG) {
-                        LogUtil.log(TAG, "onTimelineChanged2 -> warning: mSimpleCache null");
-                    }
-                    return;
-                }
 
                 boolean live = isLiveStream();
                 if (live) {
                     if (LogUtil.DEBUG) {
                         LogUtil.log(TAG, "onTimelineChanged2 -> warning: current is live");
+                    }
+                    return;
+                }
+
+                if (null == mSimpleCache) {
+                    if (LogUtil.DEBUG) {
+                        LogUtil.log(TAG, "onTimelineChanged2 -> warning: mSimpleCache null");
                     }
                     return;
                 }
@@ -1651,54 +1836,6 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
         public void onIsPlayingChanged(AnalyticsListener.EventTime eventTime, boolean isPlaying) {
             if (LogUtil.DEBUG) {
                 LogUtil.log(TAG, "onIsPlayingChanged -> isPlaying = " + isPlaying);
-            }
-        }
-
-        @Override
-        public void onLoadCompleted(EventTime eventTime, LoadEventInfo loadEventInfo, MediaLoadData mediaLoadData) {
-            if (LogUtil.DEBUG) {
-                LogUtil.log(TAG, "onLoadCompleted -> loadEventInfo.dataSpec.uri = " + loadEventInfo.dataSpec.uri + ", eventTime.currentPlaybackPositionMs = " + eventTime.currentPlaybackPositionMs);
-
-                int dataType = mediaLoadData.dataType;
-                if (dataType == C.DATA_TYPE_MANIFEST) {
-                    LogUtil.log(TAG, "onLoadCompleted -> current dataType DATA_TYPE_MANIFEST");
-                } else if (dataType == C.DATA_TYPE_MEDIA) {
-                    LogUtil.log(TAG, "onLoadCompleted -> current dataType DATA_TYPE_MEDIA");
-                }
-
-                int trackType = mediaLoadData.trackType;
-                if (trackType == C.TRACK_TYPE_DEFAULT) {
-                    LogUtil.log(TAG, "onLoadCompleted -> current trackType TRACK_TYPE_DEFAULT");
-                } else if (trackType == C.TRACK_TYPE_VIDEO) {
-                    LogUtil.log(TAG, "onLoadCompleted -> current trackType TRACK_TYPE_VIDEO");
-                } else if (trackType == C.TRACK_TYPE_AUDIO) {
-                    LogUtil.log(TAG, "onLoadCompleted -> current trackType TRACK_TYPE_AUDIO");
-                } else if (trackType == C.TRACK_TYPE_TEXT) {
-                    LogUtil.log(TAG, "onLoadCompleted -> current trackType TRACK_TYPE_TEXT");
-                }
-
-                if (trackType == C.TRACK_TYPE_DEFAULT || trackType == C.TRACK_TYPE_VIDEO) {
-                    long mediaStartTimeMs = mediaLoadData.mediaStartTimeMs;
-                    long mediaEndTimeMs = mediaLoadData.mediaEndTimeMs;
-                    long mediaDuration = mediaEndTimeMs - mediaStartTimeMs;
-                    LogUtil.log(TAG, "onLoadCompleted -> mediaStartTimeMs = " + mediaStartTimeMs + ", mediaEndTimeMs = " + mediaEndTimeMs + ", mediaDuration = " + mediaDuration);
-                }
-            }
-
-
-            try {
-                boolean live = isLiveStream();
-                if (live) {
-                    if (LogUtil.DEBUG) {
-                        LogUtil.log(TAG, "onLoadCompleted -> warning: current is live");
-                    }
-                    return;
-                }
-                loadHlsSpanInfo(loadEventInfo, mediaLoadData);
-            } catch (Exception e) {
-                if (LogUtil.DEBUG) {
-                    LogUtil.log(TAG, "onLoadCompleted -> Exception: " + e.getMessage());
-                }
             }
         }
 

@@ -757,6 +757,11 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
                 }
 
                 @Override
+                public void onUpdateStuckNet(int kernel, long videoBitrate, long netBitrate) {
+                    callStuckNet(kernel, videoBitrate, netBitrate);
+                }
+
+                @Override
                 public void onEvent(@PlayerType.KernelType.Value int kernel, @PlayerType.EventType.Value int playState) {
 
                     if (LogUtil.DEBUG) {

@@ -23,6 +23,7 @@ import lib.kalu.mediaplayer.listener.OnPlayerBandwidthListener;
 import lib.kalu.mediaplayer.listener.OnPlayerEpisodeListener;
 import lib.kalu.mediaplayer.listener.OnPlayerEventListener;
 import lib.kalu.mediaplayer.listener.OnPlayerProgressListener;
+import lib.kalu.mediaplayer.listener.OnPlayerStuckListener;
 import lib.kalu.mediaplayer.listener.OnPlayerVisibilityChangedListener;
 import lib.kalu.mediaplayer.listener.OnPlayerWindowAttachChangedListener;
 import lib.kalu.mediaplayer.listener.OnPlayerWindowStateChangeListener;
@@ -1267,6 +1268,23 @@ public class PlayerLayout extends RelativeLayout {
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
                 LogUtil.log("PlayerLayout -> setOnPlayerBandwidthListener -> " + e.getMessage());
+            }
+        }
+    }
+
+    public final void setOnPlayerStuckListener(OnPlayerStuckListener l) {
+        try {
+            PlayerView playerView = getPlayerView();
+            if (null == playerView) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("PlayerLayout", "setOnPlayerStuckListener -> playerView error: null");
+                }
+                return;
+            }
+            playerView.setOnPlayerStuckListener(l);
+        } catch (Exception e) {
+            if (LogUtil.DEBUG) {
+                LogUtil.log("PlayerLayout -> setOnPlayerStuckListener -> " + e.getMessage());
             }
         }
     }

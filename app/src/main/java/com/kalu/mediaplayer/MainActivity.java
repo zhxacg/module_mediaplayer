@@ -685,6 +685,7 @@ public class MainActivity extends Activity {
         }
 
         PlayerSDK.newBuilder()
+                .setDeviceType(PlayerType.DeviceType.PHONE)
                 // 日志开关
                 .setLogEnable(isLogEnable())
                 // 播放器类型（MediaPlayer Media3Player ExoPlayer IjkPLayer）

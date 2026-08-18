@@ -7,6 +7,7 @@ import lib.kalu.mediaplayer.listener.OnPlayerEventListener;
 import lib.kalu.mediaplayer.listener.OnPlayerProgressListener;
 import lib.kalu.mediaplayer.listener.OnPlayerScreenOrientationChangeListener;
 import lib.kalu.mediaplayer.listener.OnPlayerPlaybackChangedListener;
+import lib.kalu.mediaplayer.listener.OnPlayerStuckListener;
 import lib.kalu.mediaplayer.listener.OnPlayerVisibilityChangedListener;
 import lib.kalu.mediaplayer.listener.OnPlayerWindowAttachChangedListener;
 import lib.kalu.mediaplayer.listener.OnPlayerWindowStateChangeListener;
@@ -67,31 +68,42 @@ public interface VideoPlayerApiListener extends VideoPlayerApiBase {
     default void setOnPlayerVisibilityChangedListener(OnPlayerVisibilityChangedListener l) {
     }
 
-    default OnPlayerPlaybackChangedListener getOnPlayerPlaybackChangedListener(){
+    default OnPlayerPlaybackChangedListener getOnPlayerPlaybackChangedListener() {
         return null;
     }
 
-    default void setOnPlayerPlaybackChangedListener(OnPlayerPlaybackChangedListener l){
+    default void setOnPlayerPlaybackChangedListener(OnPlayerPlaybackChangedListener l) {
     }
 
-    default OnPlayerScreenOrientationChangeListener getPlayerScreenOrientationChangeListener(){
+    default OnPlayerScreenOrientationChangeListener getPlayerScreenOrientationChangeListener() {
         return null;
     }
 
-    default void setOnPlayerScreenOrientationChangeListener(OnPlayerScreenOrientationChangeListener l){
+    default void setOnPlayerScreenOrientationChangeListener(OnPlayerScreenOrientationChangeListener l) {
     }
 
-    default OnPlayerWindowAttachChangedListener getPlayerWindowAttachChangedListener(){
+    default OnPlayerWindowAttachChangedListener getPlayerWindowAttachChangedListener() {
         return null;
     }
 
-    default void setOnPlayerWindowAttachChangedListener(OnPlayerWindowAttachChangedListener l){
+    default void setOnPlayerWindowAttachChangedListener(OnPlayerWindowAttachChangedListener l) {
     }
 
-    default OnPlayerBandwidthListener getOnPlayerBandwidthListener(){
+    /**************/
+
+    default OnPlayerBandwidthListener getOnPlayerBandwidthListener() {
         return null;
     }
 
-    default void setOnPlayerBandwidthListener(OnPlayerBandwidthListener l){
+    default void setOnPlayerBandwidthListener(OnPlayerBandwidthListener l) {
+    }
+
+    /**************/
+
+    default OnPlayerStuckListener getOnPlayerStuckListener() {
+        return null;
+    }
+
+    default void setOnPlayerStuckListener(OnPlayerStuckListener l) {
     }
 }

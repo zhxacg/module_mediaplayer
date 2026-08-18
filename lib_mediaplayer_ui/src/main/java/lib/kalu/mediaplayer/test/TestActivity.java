@@ -30,6 +30,7 @@ import lib.kalu.mediaplayer.listener.OnPlayerBandwidthListener;
 import lib.kalu.mediaplayer.listener.OnPlayerEpisodeListener;
 import lib.kalu.mediaplayer.listener.OnPlayerEventListener;
 import lib.kalu.mediaplayer.listener.OnPlayerProgressListener;
+import lib.kalu.mediaplayer.listener.OnPlayerStuckListener;
 import lib.kalu.mediaplayer.listener.OnPlayerWindowStateChangeListener;
 import lib.kalu.mediaplayer.proxy.Proxy;
 import lib.kalu.mediaplayer.proxy.ProxyTrack;
@@ -188,6 +189,19 @@ public final class TestActivity extends Activity {
     private void initListener() {
         // playerLayout
         PlayerLayout playerLayout = findViewById(R.id.module_mediaplayer_test_video);
+        playerLayout.setOnPlayerStuckListener(new OnPlayerStuckListener() {
+            @Override
+            public void onStuckPlay(int kernel, int position, int count) {
+
+            }
+
+            @Override
+            public void onStuckNet(int kernel, long videoBitrate, long netBitrate) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("TestActivity -> onStuckNet -> kernel = " + kernel + ", videoBitrate = " + videoBitrate + ", netBitrate = " + netBitrate + ", thread = " + Thread.currentThread().getName());
+                }
+            }
+        });
         playerLayout.setOnPlayerBandwidthListener(new OnPlayerBandwidthListener() {
             @Override
             public void onBandwidth(int kernel, long totalLoadTimeMs, long estimateKBs, long realAvgKBs) {

@@ -16,6 +16,7 @@ import lib.kalu.mediaplayer.listener.OnPlayerEventListener;
 import lib.kalu.mediaplayer.listener.OnPlayerPlaybackChangedListener;
 import lib.kalu.mediaplayer.listener.OnPlayerProgressListener;
 import lib.kalu.mediaplayer.listener.OnPlayerScreenOrientationChangeListener;
+import lib.kalu.mediaplayer.listener.OnPlayerStuckListener;
 import lib.kalu.mediaplayer.listener.OnPlayerVisibilityChangedListener;
 import lib.kalu.mediaplayer.listener.OnPlayerWindowAttachChangedListener;
 import lib.kalu.mediaplayer.listener.OnPlayerWindowStateChangeListener;
@@ -31,61 +32,51 @@ public interface VideoPlayerApiCall extends VideoPlayerApiBase, VideoPlayerApiLi
 
         // component
         if (callComponent) {
-            callComponentScreenOrientation(value);
+            try {
+
+                ViewGroup viewGroup = getBaseComponentViewGroup();
+                int childCount = viewGroup.getChildCount();
+                if (LogUtil.DEBUG) {
+                    LogUtil.log(TAG, "callComponentScreenOrientation -> childCount = " + childCount);
+                }
+                if (childCount <= 0)
+                    return;
+
+                for (int i = 0; i < childCount; i++) {
+                    View childAt = viewGroup.getChildAt(i);
+                    if (null == childAt)
+                        continue;
+                    if (!(childAt instanceof ComponentApi))
+                        continue;
+                    ((ComponentApi) childAt).onUpdateScreenOrientation(value);
+                }
+            } catch (Exception e) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log(TAG, "callComponentScreenOrientation -> " + e.getMessage());
+                }
+            }
         }
 
         // listener
         if (callPlayer) {
-            callPlayerScreenOrientation(value);
-        }
-    }
+            try {
+                OnPlayerScreenOrientationChangeListener listener = getPlayerScreenOrientationChangeListener();
+                if (LogUtil.DEBUG) {
+                    LogUtil.log(TAG, "callPlayerScreenOrientation -> value = " + value + ", listener = " + listener);
+                }
 
-    default void callComponentScreenOrientation(@PlayerType.ScreenOrientation.Value int value) {
+                if (null == listener)
+                    return;
+                if (value == PlayerType.ScreenOrientation.PORTRAIT) {
+                    listener.onPortrait();
+                } else if (value == PlayerType.ScreenOrientation.LANDSPACE) {
+                    listener.onLandspace();
+                }
 
-        try {
-
-            ViewGroup viewGroup = getBaseComponentViewGroup();
-            int childCount = viewGroup.getChildCount();
-            if (LogUtil.DEBUG) {
-                LogUtil.log(TAG, "callComponentScreenOrientation -> childCount = " + childCount);
-            }
-            if (childCount <= 0)
-                return;
-
-            for (int i = 0; i < childCount; i++) {
-                View childAt = viewGroup.getChildAt(i);
-                if (null == childAt)
-                    continue;
-                if (!(childAt instanceof ComponentApi))
-                    continue;
-                ((ComponentApi) childAt).onUpdateScreenOrientation(value);
-            }
-        } catch (Exception e) {
-            if (LogUtil.DEBUG) {
-                LogUtil.log(TAG, "callComponentScreenOrientation -> " + e.getMessage());
-            }
-        }
-    }
-
-    default void callPlayerScreenOrientation(@PlayerType.ScreenOrientation.Value int value) {
-
-        try {
-            OnPlayerScreenOrientationChangeListener listener = getPlayerScreenOrientationChangeListener();
-            if (LogUtil.DEBUG) {
-                LogUtil.log(TAG, "callPlayerScreenOrientation -> value = " + value + ", listener = " + listener);
-            }
-
-            if (null == listener)
-                return;
-            if (value == PlayerType.ScreenOrientation.PORTRAIT) {
-                listener.onPortrait();
-            } else if (value == PlayerType.ScreenOrientation.LANDSPACE) {
-                listener.onLandspace();
-            }
-
-        } catch (Exception e) {
-            if (LogUtil.DEBUG) {
-                LogUtil.log(TAG, "callPlayerScreenOrientation -> " + e.getMessage());
+            } catch (Exception e) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log(TAG, "callPlayerScreenOrientation -> " + e.getMessage());
+                }
             }
         }
     }
@@ -93,245 +84,38 @@ public interface VideoPlayerApiCall extends VideoPlayerApiBase, VideoPlayerApiLi
     default void callVolume(boolean callPlayer, boolean callComponent, float volume) {
 
         if (callComponent) {
-            callComponentVolume(volume);
+            try {
+
+                ViewGroup viewGroup = getBaseComponentViewGroup();
+                int childCount = viewGroup.getChildCount();
+                if (LogUtil.DEBUG) {
+                    LogUtil.log(TAG, "callComponentVolume -> childCount = " + childCount);
+                }
+                if (childCount <= 0)
+                    return;
+                for (int i = 0; i < childCount; i++) {
+                    View childAt = viewGroup.getChildAt(i);
+                    if (null == childAt)
+                        continue;
+                    if (!(childAt instanceof ComponentApi))
+                        continue;
+                    ((ComponentApi) childAt).onUpdateVolume(volume);
+                }
+
+            } catch (Exception e) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log(TAG, "callComponentVolume -> " + e.getMessage());
+                }
+            }
         }
 
         if (callPlayer) {
-            callPlayerVolume(volume);
         }
-    }
-
-    default void callComponentVolume(float volume) {
-
-        try {
-
-            ViewGroup viewGroup = getBaseComponentViewGroup();
-            int childCount = viewGroup.getChildCount();
-            if (LogUtil.DEBUG) {
-                LogUtil.log(TAG, "callComponentVolume -> childCount = " + childCount);
-            }
-            if (childCount <= 0)
-                return;
-            for (int i = 0; i < childCount; i++) {
-                View childAt = viewGroup.getChildAt(i);
-                if (null == childAt)
-                    continue;
-                if (!(childAt instanceof ComponentApi))
-                    continue;
-                ((ComponentApi) childAt).onUpdateVolume(volume);
-            }
-
-        } catch (Exception e) {
-            if (LogUtil.DEBUG) {
-                LogUtil.log(TAG, "callComponentVolume -> " + e.getMessage());
-            }
-        }
-    }
-
-    default void callPlayerVolume(float volume) {
-
     }
 
     default void callWindow(@PlayerType.WindowType.Value int state) {
 
         // component
-        callComponentWindowState(state);
-
-        // listener
-        callPlayerWindowStateChanged(state);
-
-        // 埋点
-        onBuriedWindow(state);
-    }
-
-
-    default void callEvent(@PlayerType.EventType.Value int playState) {
-        callEvent(true, true, playState);
-    }
-
-    default void callEvent(boolean callPlayer, boolean callComponent, @PlayerType.EventType.Value int playState) {
-
-        if (LogUtil.DEBUG) {
-            LogUtil.log(TAG, "callEvent -> callPlayer = " + callPlayer + ", callComponent = " + callComponent + ", playState = " + playState);
-        }
-
-        // component
-        if (callComponent) {
-            callComponentEvent(playState);
-        }
-
-        // listener
-        if (callPlayer) {
-            callPlayerEvent(playState);
-        }
-    }
-
-    default void callProgress(long trySeeDuration, long position, long duration) {
-
-//        if (LogUtil.DEBUG) {
-//            LogUtil.log(TAG, "callProgress -> trySeeDuration = " + trySeeDuration + ", position = " + position + ", duration = " + duration);
-//        }
-
-        // component
-        callComponentProgress(trySeeDuration, position, duration);
-
-        // listener
-        callPlayerProgress(trySeeDuration, position, duration);
-    }
-
-    default void callSubtitle(int kernel, CharSequence value) {
-
-        // component
-        callComponentSubtitle(kernel, value);
-
-        // listener
-    }
-
-    default void callBandwidth(int kernel, long totalLoadTimeMs, long estimateKBs, long realAvgKBs) {
-
-        // component
-        callComponentBandwidth(kernel, totalLoadTimeMs, estimateKBs, realAvgKBs);
-
-        // listener
-        callPlayerBandwidth(kernel, totalLoadTimeMs, estimateKBs, realAvgKBs);
-    }
-
-    default void callPlaybackSpeed(int kernel, float value) {
-
-        // listener
-        callPlayerPlaybackSpeed(value);
-    }
-
-    default void callComponentSubtitle(int kernel, CharSequence value) {
-        try {
-            ViewGroup viewGroup = getBaseComponentViewGroup();
-            int childCount = viewGroup.getChildCount();
-            if (childCount <= 0) {
-                if (LogUtil.DEBUG) {
-                    LogUtil.log(TAG, "callComponentSubtitle -> not find component");
-                }
-                return;
-            }
-            for (int i = 0; i < childCount; i++) {
-                View childAt = viewGroup.getChildAt(i);
-                if (null == childAt)
-                    continue;
-                if (!(childAt instanceof ComponentApi))
-                    continue;
-                ((ComponentApi) childAt).onUpdateSubtitle(kernel, value);
-            }
-        } catch (Exception e) {
-            if (LogUtil.DEBUG) {
-                LogUtil.log(TAG, "callComponentSubtitle -> " + e.getMessage());
-            }
-        }
-    }
-
-
-    default void callComponentBandwidth(int kernel, long totalLoadTimeMs, long estimateKBs, long realAvgKBs) {
-        try {
-            ViewGroup viewGroup = getBaseComponentViewGroup();
-            int childCount = viewGroup.getChildCount();
-            if (childCount <= 0) {
-                if (LogUtil.DEBUG) {
-                    LogUtil.log(TAG, "callComponentSubtitle -> not find component");
-                }
-                return;
-            }
-            for (int i = 0; i < childCount; i++) {
-                View childAt = viewGroup.getChildAt(i);
-                if (null == childAt)
-                    continue;
-                if (!(childAt instanceof ComponentApi))
-                    continue;
-                ((ComponentApi) childAt).onUpdateBandwidth(kernel, totalLoadTimeMs, estimateKBs, realAvgKBs);
-            }
-        } catch (Exception e) {
-            if (LogUtil.DEBUG) {
-                LogUtil.log(TAG, "callComponentBandwidth -> " + e.getMessage());
-            }
-        }
-    }
-
-    default void callPlayerBandwidth(int kernel, long totalLoadTimeMs, long estimateKBs, long realAvgKBs) {
-
-        OnPlayerBandwidthListener listener = getOnPlayerBandwidthListener();
-        if (LogUtil.DEBUG) {
-            LogUtil.log(TAG, "callPlayerBandwidth -> kernel = " + kernel + ", totalLoadTimeMs = " + totalLoadTimeMs + ", estimateKBs = " + estimateKBs + ", realAvgKBs = " + realAvgKBs + ", listener = " + listener);
-        }
-        if (null == listener)
-            return;
-        listener.onBandwidth(kernel, totalLoadTimeMs, estimateKBs, realAvgKBs);
-    }
-
-
-    default void callComponentProgress(long trySeeDuration, long position, long duration) {
-
-//        if (LogUtil.DEBUG) {
-//            LogUtil.log(TAG, "callComponentProgress -> trySeeDuration = " + trySeeDuration + ", position = " + position + ", duration = " + duration);
-//        }
-
-        try {
-            ViewGroup viewGroup = getBaseComponentViewGroup();
-            int childCount = viewGroup.getChildCount();
-            if (childCount <= 0) {
-                if (LogUtil.DEBUG) {
-                    LogUtil.log(TAG, "callComponentProgress -> not find component");
-                }
-                return;
-            }
-            for (int i = 0; i < childCount; i++) {
-                View childAt = viewGroup.getChildAt(i);
-                if (null == childAt)
-                    continue;
-                if (!(childAt instanceof ComponentApi))
-                    continue;
-                ((ComponentApi) childAt).onUpdateProgress(false, trySeeDuration, position, duration);
-            }
-        } catch (Exception e) {
-            if (LogUtil.DEBUG) {
-                LogUtil.log(TAG, "callComponentProgress -> " + e.getMessage());
-            }
-        }
-    }
-
-    default void callComponentEvent(@PlayerType.EventType.Value int playState) {
-
-//        if (LogUtil.DEBUG) {
-//            LogUtil.log(TAG, "callComponentEvent -> playState = " + playState);
-//        }
-
-        try {
-            ViewGroup viewGroup = getBaseComponentViewGroup();
-            int childCount = viewGroup.getChildCount();
-//            if (LogUtil.DEBUG) {
-//                LogUtil.log(TAG, "callComponentEvent -> playState = " + playState + ", childCount = " + childCount);
-//            }
-            if (childCount <= 0) {
-                if (LogUtil.DEBUG) {
-                    LogUtil.log(TAG, "callComponentEvent -> not find component");
-                }
-                return;
-            }
-            for (int i = 0; i < childCount; i++) {
-                View childAt = viewGroup.getChildAt(i);
-                if (null == childAt)
-                    continue;
-//                if (LogUtil.DEBUG) {
-//                    LogUtil.log(TAG, "callComponentEvent -> playState = " + playState + ", childCount = " + childCount + ", index = " + i + ", childAt = " + childAt);
-//                }
-                if (!(childAt instanceof ComponentApi))
-                    continue;
-                ((ComponentApi) childAt).onUpdateEvent(playState);
-            }
-        } catch (Exception e) {
-            if (LogUtil.DEBUG) {
-                LogUtil.log(TAG, "callComponentEvent -> " + e.getMessage());
-            }
-        }
-    }
-
-    default void callComponentWindowState(@PlayerType.WindowType.Value int state) {
         try {
             ViewGroup viewGroup = getBaseComponentViewGroup();
             int childCount = viewGroup.getChildCount();
@@ -354,45 +138,8 @@ public interface VideoPlayerApiCall extends VideoPlayerApiBase, VideoPlayerApiLi
                 LogUtil.log(TAG, "callComponentWindowState -> " + e.getMessage());
             }
         }
-    }
 
-    default void callPlayerEvent(@PlayerType.EventType.Value int playState) {
-        try {
-            OnPlayerEventListener onPlayerEventListener = getPlayerEventListener();
-            if (null == onPlayerEventListener) {
-                if (LogUtil.DEBUG) {
-                    LogUtil.log(TAG, "callPlayerEvent -> warning: eventListener null");
-                }
-                return;
-            }
-            onPlayerEventListener.onEvent(playState);
-
-            boolean error = PlayStateUtil.isError(playState);
-            if (error) {
-                onPlayerEventListener.onError(playState);
-            } else if (playState == PlayerType.EventType.START) {
-                onPlayerEventListener.onStart();
-            } else if (playState == PlayerType.EventType.END) {
-                onPlayerEventListener.onComplete();
-            } else if (playState == PlayerType.EventType.PAUSE) {
-                onPlayerEventListener.onPause();
-            } else if (playState == PlayerType.EventType.RESUME) {
-                onPlayerEventListener.onResume();
-            } else if (playState == PlayerType.EventType.MEDIA_INFO_BUFFERING_START) {
-                onPlayerEventListener.onBufferingStart();
-            } else if (playState == PlayerType.EventType.MEDIA_INFO_BUFFERING_STOP) {
-                onPlayerEventListener.onBufferingStop();
-            } else if (playState == PlayerType.EventType.MEDIA_INFO_PREPARE) {
-                onPlayerEventListener.onPrepare();
-            }
-        } catch (Exception e) {
-            if (LogUtil.DEBUG) {
-                LogUtil.log(TAG, "callPlayerEvent -> " + e.getMessage());
-            }
-        }
-    }
-
-    default void callPlayerWindowStateChanged(@PlayerType.WindowType.Value int state) {
+        // listener
         try {
             OnPlayerWindowStateChangeListener onPlayerWindowStateChangeListener = getPlayerWindowStateChangeListener();
             if (null == onPlayerWindowStateChangeListener) {
@@ -407,9 +154,247 @@ public interface VideoPlayerApiCall extends VideoPlayerApiBase, VideoPlayerApiLi
                 LogUtil.log(TAG, "callPlayerWindowStateChanged -> " + e.getMessage());
             }
         }
+
+        // 埋点
+        onBuriedWindow(state);
     }
 
-    default void callPlayerPlaybackSpeed(float value) {
+
+    default void callEvent(@PlayerType.EventType.Value int playState) {
+        callEvent(true, true, playState);
+    }
+
+    default void callEvent(boolean callPlayer, boolean callComponent, @PlayerType.EventType.Value int playState) {
+
+        if (LogUtil.DEBUG) {
+            LogUtil.log(TAG, "callEvent -> callPlayer = " + callPlayer + ", callComponent = " + callComponent + ", playState = " + playState);
+        }
+
+        // component
+        if (callComponent) {
+            try {
+                ViewGroup viewGroup = getBaseComponentViewGroup();
+                int childCount = viewGroup.getChildCount();
+//            if (LogUtil.DEBUG) {
+//                LogUtil.log(TAG, "callComponentEvent -> playState = " + playState + ", childCount = " + childCount);
+//            }
+                if (childCount <= 0) {
+                    if (LogUtil.DEBUG) {
+                        LogUtil.log(TAG, "callComponentEvent -> not find component");
+                    }
+                    return;
+                }
+                for (int i = 0; i < childCount; i++) {
+                    View childAt = viewGroup.getChildAt(i);
+                    if (null == childAt)
+                        continue;
+//                if (LogUtil.DEBUG) {
+//                    LogUtil.log(TAG, "callComponentEvent -> playState = " + playState + ", childCount = " + childCount + ", index = " + i + ", childAt = " + childAt);
+//                }
+                    if (!(childAt instanceof ComponentApi))
+                        continue;
+                    ((ComponentApi) childAt).onUpdateEvent(playState);
+                }
+            } catch (Exception e) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log(TAG, "callComponentEvent -> " + e.getMessage());
+                }
+            }
+        }
+
+        // listener
+        if (callPlayer) {
+            try {
+                OnPlayerEventListener onPlayerEventListener = getPlayerEventListener();
+                if (null == onPlayerEventListener) {
+                    if (LogUtil.DEBUG) {
+                        LogUtil.log(TAG, "callPlayerEvent -> warning: eventListener null");
+                    }
+                    return;
+                }
+                onPlayerEventListener.onEvent(playState);
+
+                boolean error = PlayStateUtil.isError(playState);
+                if (error) {
+                    onPlayerEventListener.onError(playState);
+                } else if (playState == PlayerType.EventType.START) {
+                    onPlayerEventListener.onStart();
+                } else if (playState == PlayerType.EventType.END) {
+                    onPlayerEventListener.onComplete();
+                } else if (playState == PlayerType.EventType.PAUSE) {
+                    onPlayerEventListener.onPause();
+                } else if (playState == PlayerType.EventType.RESUME) {
+                    onPlayerEventListener.onResume();
+                } else if (playState == PlayerType.EventType.MEDIA_INFO_BUFFERING_START) {
+                    onPlayerEventListener.onBufferingStart();
+                } else if (playState == PlayerType.EventType.MEDIA_INFO_BUFFERING_STOP) {
+                    onPlayerEventListener.onBufferingStop();
+                } else if (playState == PlayerType.EventType.MEDIA_INFO_PREPARE) {
+                    onPlayerEventListener.onPrepare();
+                }
+            } catch (Exception e) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log(TAG, "callPlayerEvent -> " + e.getMessage());
+                }
+            }
+        }
+    }
+
+    default void callProgress(long trySeeDuration, long position, long duration) {
+
+//        if (LogUtil.DEBUG) {
+//            LogUtil.log(TAG, "callProgress -> trySeeDuration = " + trySeeDuration + ", position = " + position + ", duration = " + duration);
+//        }
+
+        // component
+        try {
+            ViewGroup viewGroup = getBaseComponentViewGroup();
+            int childCount = viewGroup.getChildCount();
+            if (childCount <= 0) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log(TAG, "callComponentProgress -> not find component");
+                }
+                return;
+            }
+            for (int i = 0; i < childCount; i++) {
+                View childAt = viewGroup.getChildAt(i);
+                if (null == childAt)
+                    continue;
+                if (!(childAt instanceof ComponentApi))
+                    continue;
+                ((ComponentApi) childAt).onUpdateProgress(false, trySeeDuration, position, duration);
+            }
+        } catch (Exception e) {
+            if (LogUtil.DEBUG) {
+                LogUtil.log(TAG, "callComponentProgress -> " + e.getMessage());
+            }
+        }
+
+        // listener
+        try {
+            OnPlayerProgressListener onPlayerProgressListener = getPlayerProgressListener();
+            if (null == onPlayerProgressListener) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log(TAG, "callPlayerProgress -> warning: onPlayerProgressListener null");
+                }
+                return;
+            }
+            onPlayerProgressListener.onProgress(trySeeDuration, position, duration);
+        } catch (Exception e) {
+            if (LogUtil.DEBUG) {
+                LogUtil.log(TAG, "callPlayerProgress -> " + e.getMessage());
+            }
+        }
+    }
+
+    default void callSubtitle(int kernel, CharSequence value) {
+
+        // component
+        try {
+            ViewGroup viewGroup = getBaseComponentViewGroup();
+            int childCount = viewGroup.getChildCount();
+            if (childCount <= 0) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log(TAG, "callComponentSubtitle -> not find component");
+                }
+                return;
+            }
+            for (int i = 0; i < childCount; i++) {
+                View childAt = viewGroup.getChildAt(i);
+                if (null == childAt)
+                    continue;
+                if (!(childAt instanceof ComponentApi))
+                    continue;
+                ((ComponentApi) childAt).onUpdateSubtitle(kernel, value);
+            }
+        } catch (Exception e) {
+            if (LogUtil.DEBUG) {
+                LogUtil.log(TAG, "callComponentSubtitle -> " + e.getMessage());
+            }
+        }
+
+        // listener
+    }
+
+    default void callBandwidth(int kernel, long totalLoadTimeMs, long estimateKBs, long realAvgKBs) {
+
+        // component
+        try {
+            ViewGroup viewGroup = getBaseComponentViewGroup();
+            int childCount = viewGroup.getChildCount();
+            if (childCount <= 0) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log(TAG, "callComponentSubtitle -> not find component");
+                }
+                return;
+            }
+            for (int i = 0; i < childCount; i++) {
+                View childAt = viewGroup.getChildAt(i);
+                if (null == childAt)
+                    continue;
+                if (!(childAt instanceof ComponentApi))
+                    continue;
+                ((ComponentApi) childAt).onUpdateBandwidth(kernel, totalLoadTimeMs, estimateKBs, realAvgKBs);
+            }
+        } catch (Exception e) {
+            if (LogUtil.DEBUG) {
+                LogUtil.log(TAG, "callComponentBandwidth -> " + e.getMessage());
+            }
+        }
+
+        // listener
+        OnPlayerBandwidthListener listener = getOnPlayerBandwidthListener();
+        if (LogUtil.DEBUG) {
+            LogUtil.log(TAG, "callPlayerBandwidth -> kernel = " + kernel + ", totalLoadTimeMs = " + totalLoadTimeMs + ", estimateKBs = " + estimateKBs + ", realAvgKBs = " + realAvgKBs + ", listener = " + listener);
+        }
+        if (null != listener) {
+            listener.onBandwidth(kernel, totalLoadTimeMs, estimateKBs, realAvgKBs);
+        }
+    }
+
+    default void callStuckNet(int kernel, long videoBitrate, long netBitrate) {
+
+        if (LogUtil.DEBUG) {
+            LogUtil.log(TAG, "callStuckNet -> kernel = " + kernel + ", videoBitrate = " + videoBitrate + ", netBitrate = " + netBitrate);
+        }
+
+        // component
+        try {
+            ViewGroup viewGroup = getBaseComponentViewGroup();
+            int childCount = viewGroup.getChildCount();
+            if (childCount <= 0) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log(TAG, "callComponentSubtitle -> not find component");
+                }
+                return;
+            }
+            for (int i = 0; i < childCount; i++) {
+                View childAt = viewGroup.getChildAt(i);
+                if (null == childAt)
+                    continue;
+                if (!(childAt instanceof ComponentApi))
+                    continue;
+                ((ComponentApi) childAt).onUpdateStuckNet(kernel, videoBitrate, netBitrate);
+            }
+        } catch (Exception e) {
+            if (LogUtil.DEBUG) {
+                LogUtil.log(TAG, "callComponentBandwidth -> " + e.getMessage());
+            }
+        }
+
+        // listener
+        OnPlayerStuckListener listener = getOnPlayerStuckListener();
+        if (LogUtil.DEBUG) {
+            LogUtil.log(TAG, "callStuckNet -> listener = " + listener);
+        }
+        if (null != listener) {
+            listener.onStuckNet(kernel, videoBitrate, netBitrate);
+        }
+    }
+
+    default void callPlaybackSpeed(int kernel, float value) {
+
+        // listener
         try {
             if (value <= 0) {
                 if (LogUtil.DEBUG) {
@@ -428,23 +413,6 @@ public interface VideoPlayerApiCall extends VideoPlayerApiBase, VideoPlayerApiLi
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
                 LogUtil.log(TAG, "callPlayerPlaybackSpeed -> " + e.getMessage());
-            }
-        }
-    }
-
-    default void callPlayerProgress(long trySeeDuration, long position, long duration) {
-        try {
-            OnPlayerProgressListener onPlayerProgressListener = getPlayerProgressListener();
-            if (null == onPlayerProgressListener) {
-                if (LogUtil.DEBUG) {
-                    LogUtil.log(TAG, "callPlayerProgress -> warning: onPlayerProgressListener null");
-                }
-                return;
-            }
-            onPlayerProgressListener.onProgress(trySeeDuration, position, duration);
-        } catch (Exception e) {
-            if (LogUtil.DEBUG) {
-                LogUtil.log(TAG, "callPlayerProgress -> " + e.getMessage());
             }
         }
     }

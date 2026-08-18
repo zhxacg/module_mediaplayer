@@ -80,6 +80,23 @@ public abstract class VideoBasePlayer implements VideoKernelApi {
     }
 
     @Override
+    public void onUpdateStuckNet(int kernel, long videoBitrate, long netBitrate) {
+        try {
+            if (null == eventApi) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log("VideoBasePlayer -> onUpdateStuckNet -> eventApi error: null");
+                }
+                return;
+            }
+            eventApi.onUpdateStuckNet(kernel, videoBitrate, videoBitrate);
+        } catch (Exception e) {
+            if (LogUtil.DEBUG) {
+                LogUtil.log("VideoBasePlayer -> onUpdateStuckNet -> " + e.getMessage());
+            }
+        }
+    }
+
+    @Override
     public void onEvent(int kernel, int event) {
         try {
             if (null == eventApi) {

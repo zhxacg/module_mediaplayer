@@ -53,6 +53,9 @@ public interface ComponentApi {
     default void onUpdateBandwidth(int kernel, long totalLoadTimeMs, long estimateKBs, long realAvgKBs) {
     }
 
+    default void onUpdateStuckNet(int kernel, long videoBitrate, long netBitrate) {
+    }
+
     /******************/
 
     @LayoutRes

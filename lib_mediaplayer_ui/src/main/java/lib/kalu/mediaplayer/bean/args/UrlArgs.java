@@ -57,31 +57,35 @@ public final class UrlArgs implements Serializable {
         }
     }
 
-    public String getDefaultUrl() {
+    public Item getDefaultStreamItem() {
         try {
-            for (Item item : defaultStreams) {
-                if (item.parser == PlayerType.ParserType.VIDEO) {
-                    return item.url;
-                } else if (item.parser == PlayerType.ParserType.DEFAULT) {
-                    return item.url;
+            if (null == defaultStreams) {
+                return null;
+            } else if (defaultStreams.size() == 1) {
+                return defaultStreams.get(0);
+            } else {
+                for (Item item : defaultStreams) {
+                    if (item.parser == PlayerType.ParserType.VIDEO) {
+                        return item;
+                    } else if (item.parser == PlayerType.ParserType.VIDEO_AUDIO) {
+                        return item;
+                    } else if (item.parser == PlayerType.ParserType.VIDEO_AUDIO_SUBTITLE) {
+                        return item;
+                    }
                 }
             }
-            return "";
+            return null;
         } catch (Exception e) {
-            return "";
+            return null;
         }
     }
 
-    public Item getMasterItem() {
-        try {
-            for (Item item : defaultStreams) {
-                if (item.parser == PlayerType.ParserType.VIDEO) {
-                    return item;
-                }
-            }
-            return null;
-        } catch (Exception e) {
-            return null;
+    public String getDefaultStreamUrl() {
+        Item item = getDefaultStreamItem();
+        if (null != item && !item.url.trim().isEmpty()) {
+            return item.url;
+        } else {
+            return "";
         }
     }
 

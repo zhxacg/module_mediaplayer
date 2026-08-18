@@ -22,6 +22,7 @@ import lib.kalu.mediaplayer.listener.OnPlayerEventListener;
 import lib.kalu.mediaplayer.listener.OnPlayerPlaybackChangedListener;
 import lib.kalu.mediaplayer.listener.OnPlayerProgressListener;
 import lib.kalu.mediaplayer.listener.OnPlayerScreenOrientationChangeListener;
+import lib.kalu.mediaplayer.listener.OnPlayerStuckListener;
 import lib.kalu.mediaplayer.listener.OnPlayerVisibilityChangedListener;
 import lib.kalu.mediaplayer.listener.OnPlayerWindowStateChangeListener;
 import lib.kalu.mediaplayer.listener.OnPlayerWindowVisibilityChangedListener;
@@ -407,5 +408,19 @@ public final class PlayerView extends FrameLayout implements VideoPlayerApi {
     @Override
     public OnPlayerBandwidthListener getOnPlayerBandwidthListener() {
         return mOnPlayerBandwidthListener;
+    }
+
+    /**************/
+
+    private OnPlayerStuckListener mOnPlayerStuckListener = null;
+
+    @Override
+    public void setOnPlayerStuckListener(OnPlayerStuckListener l) {
+        this.mOnPlayerStuckListener = l;
+    }
+
+    @Override
+    public OnPlayerStuckListener getOnPlayerStuckListener() {
+        return mOnPlayerStuckListener;
     }
 }

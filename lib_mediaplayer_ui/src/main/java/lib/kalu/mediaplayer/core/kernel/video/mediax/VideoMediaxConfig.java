@@ -12,6 +12,7 @@ import androidx.media3.exoplayer.trackselection.AdaptiveTrackSelection;
 import androidx.media3.exoplayer.trackselection.DefaultTrackSelector;
 import androidx.media3.exoplayer.trackselection.TrackSelector;
 import androidx.media3.exoplayer.upstream.DefaultAllocator;
+import androidx.media3.exoplayer.upstream.DefaultBandwidthMeter;
 
 import lib.kalu.mediaplayer.bean.configuration.AdaptiveConfiguration;
 import lib.kalu.mediaplayer.bean.configuration.BufferConfiguration;
@@ -23,7 +24,12 @@ public class VideoMediaxConfig {
 
     private static final String TAG = "CusTrackSelector";
 
-    public static final LivePlaybackSpeedControl createLivePlaybackSpeedControl(LiveConfiguration config){
+    public static final DefaultBandwidthMeter createDefaultBandwidthMeter(Context context) {
+        return new DefaultBandwidthMeter.Builder(context)
+                .build();
+    }
+
+    public static final LivePlaybackSpeedControl createLivePlaybackSpeedControl(LiveConfiguration config) {
 
         if (LogUtil.DEBUG) {
             LogUtil.log(TAG, "createLivePlaybackSpeedControl -> config = " + config);
