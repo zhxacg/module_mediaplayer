@@ -7,8 +7,8 @@ public class PlayerConst {
     // log 日志 默认关闭
     public static boolean DEFAULT_LOG_ENABLE = false;
 
-    // 默认超时 20s
-    public static int DEFAULT_CONNECT_TIMEOUT = 20_000;
+    // 默认超时 6s
+    public static int DEFAULT_CONNECT_TIMEOUT = 6_000;
 
     // 默认 设备类型盒子
     @PlayerType.DeviceType.Value
@@ -120,9 +120,9 @@ public class PlayerConst {
          */
         public static final int PHONE_MAX_HEIGHT_TO_DISCARD = 1080;
         /**
-         * 带宽利用率折扣：0.75 (预留 25% 安全余量，积极匹配高质量画质)
+         * 带宽利用率折扣：0.70 (预留 30% 安全余量，兼顾画质与弱网稳定性)
          */
-        public static final float PHONE_BANDWIDTH_FRACTION = 0.75F;
+        public static final float PHONE_BANDWIDTH_FRACTION = 0.70F;
         /**
          * 直播升码率阈值：0.70 (缓存达到 70% 即可升码率，追帧和高清兼顾)
          */
@@ -151,7 +151,7 @@ public class PlayerConst {
         public static final long BOX_TARGET_LIVE_OFFSET_INCREMENT_ON_REBUFFER_US = 500_000L; // 卡顿后延迟增加 500ms
         public static final long BOX_TARGET_OFFSET_MS = 4000L;                                // 期望目标延迟 4 秒（长延迟防卡）
         public static final long BOX_MIN_OFFSET_MS = 2000L;                                   // 最小延迟 2 秒
-        public static final long BOX_MAX_OFFSET_MS = 12_000L;                                 // 最大容忍延迟 12 秒
+        public static final long BOX_MAX_OFFSET_MS = 25_000L;                                 // 最大容忍延迟 25 秒
         public static final float BOX_MIN_PLAYBACK_SPEED = 0.98F;                             // 最慢 0.98x 慢放
         public static final float BOX_MAX_PLAYBACK_SPEED = 1.03F;                             // 最高 1.03x 快放（无感追帧）
 
@@ -161,7 +161,7 @@ public class PlayerConst {
         public static final long PHONE_TARGET_LIVE_OFFSET_INCREMENT_ON_REBUFFER_US = 300_000L; // 卡顿后延迟增加 300ms
         public static final long PHONE_TARGET_OFFSET_MS = 2500L;                               // 期望目标延迟 2.5 秒
         public static final long PHONE_MIN_OFFSET_MS = 1000L;                                  // 最小延迟 1.0 秒
-        public static final long PHONE_MAX_OFFSET_MS = 8000L;                                  // 最大容忍延迟 8 秒
+        public static final long PHONE_MAX_OFFSET_MS = 35_000L;                                // 最大容忍延迟 35 秒
         public static final float PHONE_MIN_PLAYBACK_SPEED = 0.95F;                            // 最慢 0.95x 慢放
         public static final float PHONE_MAX_PLAYBACK_SPEED = 1.08F;                            // 最高 1.08x 快放
 
@@ -211,9 +211,9 @@ public class PlayerConst {
         // 2. 智能手机 / 平板 (PHONE) —— 严格门限，快速感知卡死并触发重试
         // =================================================================
         /**
-         * 缓冲卡死超时：8秒（手机网络与性能强，超过 8s 无进度即可判定卡死）
+         * 缓冲卡死超时：12秒（手机网络与性能强，超过 12s 无进度即可判定卡死）
          */
-        public static final int PHONE_BUFFERING_DETECTION_TIMEOUT_MS = 8_000;
+        public static final int PHONE_BUFFERING_DETECTION_TIMEOUT_MS = 12_000;
         /**
          * 播放卡死超时：6秒
          */
@@ -298,9 +298,9 @@ public class PlayerConst {
          */
         public static final int PHONE_MAX_BUFFER_MS = 50_000;
         /**
-         * 启播最小缓冲：1秒（追求秒开体验）
+         * 启播最小缓冲：1.5秒（兼顾秒开体验与弱网抗抖动）
          */
-        public static final int PHONE_BUFFER_FOR_PLAYBACK_MS = 1000;
+        public static final int PHONE_BUFFER_FOR_PLAYBACK_MS = 1500;
         /**
          * 二次缓冲（卡顿恢复）最小缓冲：2秒（快速恢复播放）
          */
