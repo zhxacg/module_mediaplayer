@@ -1060,7 +1060,7 @@ public final class CusDefaultHttpDataSource extends BaseDataSource implements Ht
                 LogUtil.log(TAG, "formatOpenInit -> openUrl =  " + openUrl);
             }
 
-            proxyUrl.formatOpenUrl(CusTag.MASTER_PLAY_URL_VIDEO == dataSpec.customData, openUrl);
+            proxyUrl.formatOpenUrl(openUrl);
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
                 LogUtil.log(TAG, "formatOpenInit -> Exception: " + e.getMessage());

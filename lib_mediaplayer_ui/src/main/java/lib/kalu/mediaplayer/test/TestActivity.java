@@ -288,9 +288,9 @@ public final class TestActivity extends Activity {
                             .setProxyUrl(new ProxyUrl() {
 
                                 @Override
-                                public void formatOpenUrl(boolean isFirst, String url) {
+                                public void formatOpenUrl(String url) {
                                     if (LogUtil.DEBUG) {
-                                        LogUtil.log("TestActivity -> formatOpenUrl -> isFirst = " + isFirst + ", url = " + url + ", thread = " + Thread.currentThread().getName());
+                                        LogUtil.log("TestActivity -> formatOpenUrl -> url = " + url + ", thread = " + Thread.currentThread().getName());
                                     }
                                 }
 
@@ -324,7 +324,7 @@ public final class TestActivity extends Activity {
                                 }
 
                                 @Override
-                                public String formatMultivariantM3u8Url(String mainUrl, String multivariantPath) {
+                                public String formatChildM3u8Url(String mainUrl, String multivariantPath) {
                                     if (LogUtil.DEBUG) {
                                         LogUtil.log("TestActivity -> formatReferenceM3u8Url -> mainUrl = " + mainUrl + ", multivariantPath = " + multivariantPath + ", thread = " + Thread.currentThread().getName());
                                     }
