@@ -386,11 +386,12 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
                         @Override
                         public DataSpec resolveDataSpec(DataSpec dataSpec) {
 
+                            if (LogUtil.DEBUG) {
+                                LogUtil.log(TAG, "startDecoder -> resolveDataSpec, dataSpec.uri = " + dataSpec.uri);
+                            }
+
 //                            boolean isPrepared = isPrepared();
 //                            String dataUrl = dataSpec.uri.toString();
-//                            if (LogUtil.DEBUG) {
-//                                LogUtil.log(TAG, "startDecoder -> resolveDataSpec, isPrepared = " + isPrepared + ", dataSpec.uri = " + dataUrl + ", masterUrl = " + masterUrl);
-//                            }
 //
 //                            // 将自定义数据（如 Token、请求头）追加到新的 DataSpec 中
 //                            if (!isPrepared && dataUrl.equals(masterUrl)) {
@@ -1779,14 +1780,14 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
             if (LogUtil.DEBUG) {
                 int errorCode = null == e ? -9 : e.errorCode;
                 String errorMessage = null == e ? "null" : e.getMessage();
-                LogUtil.log(TAG, "onPlayerErrorChanged -> errorCode = " + errorCode + ", errorMessage = " + errorMessage);
+                LogUtil.log(TAG, "onPlayerErrorChanged -> errorCode = " + errorCode + ", errorMessage = " + errorMessage, e.getCause());
             }
         }
 
         @Override
         public void onPlayerError(AnalyticsListener.EventTime eventTime, PlaybackException error) {
             if (LogUtil.DEBUG) {
-                LogUtil.log(TAG, "onPlayerError -> errorCode = " + error.errorCode + ", errMessage" + error.getMessage());
+                LogUtil.log(TAG, "onPlayerError -> errorCode = " + error.errorCode + ", errMessage" + error.getMessage(), error);
             }
 
             try {

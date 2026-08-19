@@ -193,15 +193,15 @@ public class PlayerConst {
         /**
          * 缓冲卡死超时：15秒（盒子解码/网络响应较慢，多给一点缓冲时间）
          */
-        public static final int BOX_BUFFERING_DETECTION_TIMEOUT_MS = 15_000;
+        public static final int BOX_BUFFERING_DETECTION_TIMEOUT_MS = 30_000;
         /**
-         * 播放卡死超时：10秒（STATE_READY/PLAYING 下画面/音频无更新）
+         * 播放卡死超时：15秒（STATE_READY/PLAYING 下画面/音频无更新）
          */
-        public static final int BOX_PLAYING_DETECTION_TIMEOUT_MS = 10_000;
+        public static final int BOX_PLAYING_DETECTION_TIMEOUT_MS = 15_000;
         /**
          * 播放未结束卡死超时：30秒（本应结束但长时间无 onPlaybackEnded 触发）
          */
-        public static final int BOX_PLAYING_NOT_ENDING_TIMEOUT_MS = 30_000;
+        public static final int BOX_PLAYING_NOT_ENDING_TIMEOUT_MS = 60_000;
         /**
          * 播放被抑制超时：15秒（如焦点丢失或后台限制后长时间未恢复）
          */
@@ -213,15 +213,15 @@ public class PlayerConst {
         /**
          * 缓冲卡死超时：12秒（手机网络与性能强，超过 12s 无进度即可判定卡死）
          */
-        public static final int PHONE_BUFFERING_DETECTION_TIMEOUT_MS = 12_000;
+        public static final int PHONE_BUFFERING_DETECTION_TIMEOUT_MS = 30_000;
         /**
          * 播放卡死超时：6秒
          */
-        public static final int PHONE_PLAYING_DETECTION_TIMEOUT_MS = 6_000;
+        public static final int PHONE_PLAYING_DETECTION_TIMEOUT_MS = 10_000;
         /**
          * 播放未结束卡死超时：15秒
          */
-        public static final int PHONE_PLAYING_NOT_ENDING_TIMEOUT_MS = 15_000;
+        public static final int PHONE_PLAYING_NOT_ENDING_TIMEOUT_MS = 60_000;
         /**
          * 播放被抑制超时：10秒
          */
