@@ -322,7 +322,7 @@ public class StartArgs implements Serializable {
         this.retryConfiguration = builder.retryConfiguration;
     }
 
-    public Builder newBuilderFromThis() {
+    public Builder newBuilderCopy() {
         Builder builder = new Builder();
         builder.seekType = seekType;
         builder.decoderType = decoderType;

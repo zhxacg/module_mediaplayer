@@ -2030,22 +2030,22 @@ public final class CusHlsPlaylistParser implements ParsingLoadable.Parser<HlsPla
     private static String formatChildM3u8Url(ProxyUrl proxyUrl, String baseUrl, String referencePath) {
         try {
             if (null == proxyUrl) {
-                if (LogUtil.DEBUG) {
-                    LogUtil.log("CustomHlsPlaylistParser -> formatChildM3u8Url -> waring: proxyUrl null");
-                }
+//                if (LogUtil.DEBUG) {
+//                    LogUtil.log("CustomHlsPlaylistParser -> formatChildM3u8Url -> waring: proxyUrl null");
+//                }
                 return referencePath;
             }
-            if (LogUtil.DEBUG) {
-                LogUtil.log("CustomHlsPlaylistParser -> formatChildM3u8Url -> baseUrl = " + baseUrl + ", referencePath = " + referencePath);
-            }
+//            if (LogUtil.DEBUG) {
+//                LogUtil.log("CustomHlsPlaylistParser -> formatChildM3u8Url -> baseUrl = " + baseUrl + ", referencePath = " + referencePath);
+//            }
             String formatSegmentPath = proxyUrl.formatChildM3u8Url(baseUrl, referencePath);
-            if (LogUtil.DEBUG) {
-                LogUtil.log("CustomHlsPlaylistParser -> formatChildM3u8Url -> formatSegmentPath = " + formatSegmentPath);
-            }
+//            if (LogUtil.DEBUG) {
+//                LogUtil.log("CustomHlsPlaylistParser -> formatChildM3u8Url -> formatSegmentPath = " + formatSegmentPath);
+//            }
             if (null == formatSegmentPath || formatSegmentPath.isEmpty()) {
-                if (LogUtil.DEBUG) {
-                    LogUtil.log("CustomHlsPlaylistParser -> formatChildM3u8Url -> waring: formatSegmentPath null");
-                }
+//                if (LogUtil.DEBUG) {
+//                    LogUtil.log("CustomHlsPlaylistParser -> formatChildM3u8Url -> waring: formatSegmentPath null");
+//                }
                 return referencePath;
             }
             return formatSegmentPath;
@@ -2060,22 +2060,22 @@ public final class CusHlsPlaylistParser implements ParsingLoadable.Parser<HlsPla
     private static String formatSegmentPath(ProxyUrl proxyUrl, String baseUrl, String segmentPath) {
         try {
             if (null == proxyUrl) {
-                if (LogUtil.DEBUG) {
-                    LogUtil.log("CustomHlsPlaylistParser -> formatSegmentPath -> waring: proxyUrl null");
-                }
+//                if (LogUtil.DEBUG) {
+//                    LogUtil.log("CustomHlsPlaylistParser -> formatSegmentPath -> waring: proxyUrl null");
+//                }
                 return segmentPath;
             }
-            if (LogUtil.DEBUG) {
-                LogUtil.log("CustomHlsPlaylistParser -> formatSegmentPath -> baseUrl = " + baseUrl + ", segmentPath = " + segmentPath);
-            }
+//            if (LogUtil.DEBUG) {
+//                LogUtil.log("CustomHlsPlaylistParser -> formatSegmentPath -> baseUrl = " + baseUrl + ", segmentPath = " + segmentPath);
+//            }
             String formatSegmentPath = proxyUrl.formatSegmentPath(baseUrl, segmentPath);
-            if (LogUtil.DEBUG) {
-                LogUtil.log("CustomHlsPlaylistParser -> formatSegmentPath -> formatSegmentPath = " + formatSegmentPath);
-            }
+//            if (LogUtil.DEBUG) {
+//                LogUtil.log("CustomHlsPlaylistParser -> formatSegmentPath -> formatSegmentPath = " + formatSegmentPath);
+//            }
             if (null == formatSegmentPath || formatSegmentPath.isEmpty()) {
-                if (LogUtil.DEBUG) {
-                    LogUtil.log("CustomHlsPlaylistParser -> formatSegmentPath -> waring: formatSegmentPath null");
-                }
+//                if (LogUtil.DEBUG) {
+//                    LogUtil.log("CustomHlsPlaylistParser -> formatSegmentPath -> waring: formatSegmentPath null");
+//                }
                 return segmentPath;
             }
             return formatSegmentPath;

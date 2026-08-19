@@ -293,7 +293,7 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
                 }
                 return;
             }
-            StartArgs newArgs = startArgs.newBuilderFromThis()
+            StartArgs newArgs = startArgs.newBuilderCopy()
                     .setPlayWhenReadySeekToPosition(0L)
                     .setRetryType(PlayerType.EventType.RETRY_RELOAD)
                     .build();
@@ -327,7 +327,7 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
             if (!live) {
                 position = getPosition();
             }
-            StartArgs newArgs = startArgs.newBuilderFromThis()
+            StartArgs newArgs = startArgs.newBuilderCopy()
                     .setRetryType(PlayerType.EventType.RETRY_RELOAD)
                     .setPlayWhenReadySeekToPosition(position)
                     .build();
@@ -822,7 +822,7 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
                                 RetryConfiguration newRetryConfiguration = oldRetryConfiguration.newBuilder()
                                         .setRetryIndex(retryIndex + 1)
                                         .build();
-                                StartArgs newStartArgs = args.newBuilder()
+                                StartArgs newStartArgs = args.newBuilderCopy()
                                         .setUrl(retryUrl)
                                         .setRetryType(PlayerType.EventType.RETRY_OTHER_URL)
                                         .setRetryConfiguration(newRetryConfiguration)
@@ -860,7 +860,7 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
                                 RetryConfiguration newRetryConfiguration = oldRetryConfiguration.newBuilder()
                                         .setRetryIndex(retryIndex + 1)
                                         .build();
-                                StartArgs newStartArgs = args.newBuilder()
+                                StartArgs newStartArgs = args.newBuilderCopy()
                                         .setRetryType(PlayerType.EventType.RETRY_CUR_URL)
                                         .setRetryConfiguration(newRetryConfiguration)
                                         .build();

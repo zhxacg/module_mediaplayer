@@ -109,7 +109,7 @@ public final class BufferConfiguration implements Serializable {
         return new Builder();
     }
 
-    public BufferConfiguration.Builder newBuilderFromThis() {
+    public BufferConfiguration.Builder newBuilderCopy() {
         BufferConfiguration.Builder builder = new BufferConfiguration.Builder();
         builder.availableCount = availableCount;
         builder.maxBufferingTimeoutMs = maxBufferingTimeoutMs;

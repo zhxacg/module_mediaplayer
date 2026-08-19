@@ -283,7 +283,7 @@ public final class TestActivity extends Activity {
                 }
             });
 
-            playerLayout.start(args.newBuilderFromThis()
+            playerLayout.start(args.newBuilderCopy()
                     .setProxy(new Proxy.Builder()
                             .setProxyUrl(new ProxyUrl() {
 

@@ -121,16 +121,16 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
     @Override
     public void setStartArgs(StartArgs args) {
         this.mStartArgs = args;
-//        if (LogUtil.DEBUG) {
-//            LogUtil.log(TAG, "setStartArgs -> mStartArgs = " + mStartArgs);
-//        }
+        if (LogUtil.DEBUG) {
+            LogUtil.log(TAG, "setStartArgs -> mStartArgs = " + mStartArgs);
+        }
     }
 
     @Override
     public StartArgs getStartArgs() {
-//        if (LogUtil.DEBUG) {
-//            LogUtil.log(TAG, "getStartArgs -> mStartArgs = " + mStartArgs);
-//        }
+        if (LogUtil.DEBUG) {
+            LogUtil.log(TAG, "getStartArgs -> mStartArgs = " + mStartArgs);
+        }
         return mStartArgs;
     }
 

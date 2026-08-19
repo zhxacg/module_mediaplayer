@@ -19,7 +19,7 @@ public final class TimeoutConfiguration implements Serializable {
         this.connectTimeoutMs = builder.connectTimeoutMs;
     }
 
-    public Builder newBuilderFromThis() {
+    public Builder newBuilderCopy() {
         Builder builder = new Builder();
         builder.connectTimeoutMs = connectTimeoutMs;
         return builder;
