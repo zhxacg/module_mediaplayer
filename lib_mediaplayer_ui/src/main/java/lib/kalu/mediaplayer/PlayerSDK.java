@@ -12,7 +12,7 @@ public final class PlayerSDK {
     public static boolean logEnable = PlayerConst.DEFAULT_LOG_ENABLE;
     public static boolean initRelease = true;
     public static boolean supportAutoRelease = true;
-    public static int connectTimeoutMs = PlayerConst.DEFAULT_CONNECT_TIMEOUT;
+    public static int connectTimeoutMs = PlayerConst.DEFAULT_CONNECT_TIMEOUT_MS;
     public static boolean bufferingTimeoutRetry = false; // 缓冲失败重试
     @PlayerType.DeviceType.Value
     public static int deviceType = PlayerConst.DEFAULT_TYPE_DEVICE;
@@ -50,7 +50,7 @@ public final class PlayerSDK {
         private boolean logEnable = PlayerConst.DEFAULT_LOG_ENABLE;
         private boolean initRelease = true;
         private boolean supportAutoRelease = true;
-        private int connectTimeoutMs = PlayerConst.DEFAULT_CONNECT_TIMEOUT;
+        private int connectTimeoutMs = PlayerConst.DEFAULT_CONNECT_TIMEOUT_MS;
         private boolean bufferingTimeoutRetry = false;
         @PlayerType.KernelType.Value
         private int externalAudioKernel = PlayerConst.DEFAULT_TYPE_KERNEL_EXTERNAL_AUDIO;

@@ -117,7 +117,7 @@ public final class LiveConfiguration implements Serializable {
         // =================================================================
         private long minUpdateIntervalMs = PlayerConst.LiveConfiguration.DEFAULT_MIN_UPDATE_INTERVAL_MS;
         private float proportionalControlFactorUs = PlayerConst.LiveConfiguration.DEFAULT_PROPORTIONAL_CONTROL_FACTOR_US;
-        private long maxLiveOffsetErrorUsForUnitSpeed = PlayerConst.LiveConfiguration.DEFAULT_MAX_LIVE_OFFSET_ERROR_US_FOR_UNITSPEED;
+        private long maxLiveOffsetErrorUsForUnitSpeed = PlayerConst.LiveConfiguration.DEFAULT_MAX_LIVE_OFFSET_ERROR_US_FOR_UNIT_SPEED;
         private long targetLiveOffsetIncrementOnRebufferUs = PlayerConst.LiveConfiguration.DEFAULT_TARGET_LIVE_OFFSET_INCREMENT_ON_REBUFFER_US;
         private float minPossibleLiveOffsetSmoothingFactor = PlayerConst.LiveConfiguration.DEFAULT_MIN_POSSIBLE_LIVE_OFFSET_SMOOTHING_FACTOR;
 

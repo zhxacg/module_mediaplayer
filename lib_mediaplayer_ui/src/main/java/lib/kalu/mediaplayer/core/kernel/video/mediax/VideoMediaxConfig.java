@@ -60,7 +60,7 @@ public class VideoMediaxConfig {
 
         return new DefaultLoadControl.Builder()
                 // 盒子内存较小，分配粒度设为 32KB，减少内存碎片和峰值占用；手机内存充足，设为 64KB
-                .setAllocator(new DefaultAllocator(true, config.getAvailableCount()))
+                .setAllocator(new DefaultAllocator(true, config.getIndividualAllocationSize()))
 
                 // 设置缓冲区门限：[minBufferMs, maxBufferMs, bufferForPlaybackMs, bufferForPlaybackAfterRebufferMs]
                 // 1) minBufferMs: 最小缓冲区。已缓存时长低于此值时，触发网络重新加载数据。

@@ -1,7 +1,5 @@
 package lib.kalu.mediaplayer.bean.configuration;
 
-import android.content.Context;
-
 import java.io.Serializable;
 
 import lib.kalu.mediaplayer.PlayerConst;
@@ -17,18 +15,11 @@ import lib.kalu.mediaplayer.bean.type.PlayerType;
  */
 public final class BufferConfiguration implements Serializable {
 
-    private int availableCount;
-
     /**
-     * 缓冲超时时间（毫秒）
-     * <p>当处于 buffering 状态且连续超时未加载到有效数据时触发超时通知。</p>
+     * 内存池中单个缓冲区 (Allocation) 的字节大小**。
      */
-    private long maxBufferingTimeoutMs;
+    private int individualAllocationSize;
 
-    /**
-     * 直播播放时间线最小偏移量（毫秒）
-     */
-    private long minLivePlaybackTimelineOffsetMs;
 
     /**
      * 最小缓冲区大小（毫秒）
@@ -54,8 +45,8 @@ public final class BufferConfiguration implements Serializable {
      */
     private int bufferForPlaybackAfterRebufferMs;
 
-    public int getAvailableCount() {
-        return availableCount;
+    public int getIndividualAllocationSize() {
+        return individualAllocationSize;
     }
 
     public int getMinBufferMs() {
@@ -74,20 +65,11 @@ public final class BufferConfiguration implements Serializable {
         return bufferForPlaybackAfterRebufferMs;
     }
 
-    public long getMaxBufferingTimeoutMs() {
-        return maxBufferingTimeoutMs;
-    }
-
-    public long getMinLivePlaybackTimelineOffsetMs() {
-        return minLivePlaybackTimelineOffsetMs;
-    }
 
     @Override
     public String toString() {
         return "BufferConfiguration{" +
-                "availableCount=" + availableCount +
-                ", maxBufferingTimeoutMs=" + maxBufferingTimeoutMs +
-                ", minLivePlaybackTimelineOffsetMs=" + minLivePlaybackTimelineOffsetMs +
+                "individualAllocationSize=" + individualAllocationSize +
                 ", minBufferMs=" + minBufferMs +
                 ", maxBufferMs=" + maxBufferMs +
                 ", bufferForPlaybackMs=" + bufferForPlaybackMs +
@@ -96,9 +78,7 @@ public final class BufferConfiguration implements Serializable {
     }
 
     public BufferConfiguration(BufferConfiguration.Builder builder) {
-        this.availableCount = builder.availableCount;
-        this.maxBufferingTimeoutMs = builder.maxBufferingTimeoutMs;
-        this.minLivePlaybackTimelineOffsetMs = builder.minLivePlaybackTimelineOffsetMs;
+        this.individualAllocationSize = builder.individualAllocationSize;
         this.minBufferMs = builder.minBufferMs;
         this.maxBufferMs = builder.maxBufferMs;
         this.bufferForPlaybackMs = builder.bufferForPlaybackMs;
@@ -111,9 +91,7 @@ public final class BufferConfiguration implements Serializable {
 
     public BufferConfiguration.Builder newBuilderCopy() {
         BufferConfiguration.Builder builder = new BufferConfiguration.Builder();
-        builder.availableCount = availableCount;
-        builder.maxBufferingTimeoutMs = maxBufferingTimeoutMs;
-        builder.minLivePlaybackTimelineOffsetMs = minLivePlaybackTimelineOffsetMs;
+        builder.individualAllocationSize = individualAllocationSize;
         builder.minBufferMs = minBufferMs;
         builder.maxBufferMs = maxBufferMs;
         builder.bufferForPlaybackMs = bufferForPlaybackMs;
@@ -131,19 +109,8 @@ public final class BufferConfiguration implements Serializable {
         // =================================================================
 
 
-        private int availableCount = PlayerConst.BufferConfiguration.DEFAULT_AVAILABLE_COUNT;
+        private int individualAllocationSize = PlayerConst.BufferConfiguration.DEFAULT_INDIVIDUAL_ALLOCATION_SIZE;
 
-        /**
-         * 缓冲超时时间（毫秒）
-         * <p>默认读取 {@link PlayerConst.BufferConfiguration#DEFAULT_MAX_BUFFERING_TIMEOUT_MS}</p>
-         */
-        private long maxBufferingTimeoutMs = PlayerConst.BufferConfiguration.DEFAULT_MAX_BUFFERING_TIMEOUT_MS;
-
-        /**
-         * 直播时间线最小偏移量（毫秒）
-         * <p>默认读取 {@link PlayerConst.BufferConfiguration#DEFAULT_MIN_LIVE_PLAYBACK_TIMELINE_OFFSET_MS}</p>
-         */
-        private long minLivePlaybackTimelineOffsetMs = PlayerConst.BufferConfiguration.DEFAULT_MIN_LIVE_PLAYBACK_TIMELINE_OFFSET_MS;
 
         /**
          * 最小缓冲区大小（毫秒）
@@ -192,9 +159,7 @@ public final class BufferConfiguration implements Serializable {
          * @return {@link Builder}
          */
         private Builder applyBoxDefaults() {
-            this.availableCount = PlayerConst.BufferConfiguration.BOX_AVAILABLE_COUNT;
-            this.maxBufferingTimeoutMs = PlayerConst.BufferConfiguration.BOX_MAX_BUFFERING_TIMEOUT_MS;
-            this.minLivePlaybackTimelineOffsetMs = PlayerConst.BufferConfiguration.BOX_MIN_LIVE_PLAYBACK_TIMELINE_OFFSET_MS;
+            this.individualAllocationSize = PlayerConst.BufferConfiguration.BOX_INDIVIDUAL_ALLOCATION_SIZE;
             this.minBufferMs = PlayerConst.BufferConfiguration.BOX_MIN_BUFFER_MS;
             this.maxBufferMs = PlayerConst.BufferConfiguration.BOX_MAX_BUFFER_MS;
             this.bufferForPlaybackMs = PlayerConst.BufferConfiguration.BOX_BUFFER_FOR_PLAYBACK_MS;
@@ -213,9 +178,7 @@ public final class BufferConfiguration implements Serializable {
          * @return {@link Builder}
          */
         private Builder applyPhoneDefaults() {
-            this.availableCount = PlayerConst.BufferConfiguration.PHONE_AVAILABLE_COUNT;
-            this.maxBufferingTimeoutMs = PlayerConst.BufferConfiguration.PHONE_MAX_BUFFERING_TIMEOUT_MS;
-            this.minLivePlaybackTimelineOffsetMs = PlayerConst.BufferConfiguration.PHONE_MIN_LIVE_PLAYBACK_TIMELINE_OFFSET_MS;
+            this.individualAllocationSize = PlayerConst.BufferConfiguration.PHONE_INDIVIDUAL_ALLOCATION_SIZE;
             this.minBufferMs = PlayerConst.BufferConfiguration.PHONE_MIN_BUFFER_MS;
             this.maxBufferMs = PlayerConst.BufferConfiguration.PHONE_MAX_BUFFER_MS;
             this.bufferForPlaybackMs = PlayerConst.BufferConfiguration.PHONE_BUFFER_FOR_PLAYBACK_MS;
@@ -252,22 +215,6 @@ public final class BufferConfiguration implements Serializable {
          */
         public Builder setBufferForPlaybackAfterRebufferMs(int v) {
             this.bufferForPlaybackAfterRebufferMs = v;
-            return this;
-        }
-
-        /**
-         * 设置缓冲超时时间（ms）
-         */
-        public Builder setMaxBufferingTimeoutMs(long v) {
-            this.maxBufferingTimeoutMs = v;
-            return this;
-        }
-
-        /**
-         * 设置直播时间线最小偏移量（ms）
-         */
-        public Builder setMinLivePlaybackTimelineOffsetMs(long v) {
-            this.minLivePlaybackTimelineOffsetMs = v;
             return this;
         }
 

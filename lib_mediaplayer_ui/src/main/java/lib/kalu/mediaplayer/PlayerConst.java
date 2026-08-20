@@ -1,5 +1,7 @@
 package lib.kalu.mediaplayer;
 
+import androidx.media3.common.util.Util;
+
 import lib.kalu.mediaplayer.bean.type.PlayerType;
 
 public class PlayerConst {
@@ -7,8 +9,8 @@ public class PlayerConst {
     // log 日志 默认关闭
     public static boolean DEFAULT_LOG_ENABLE = false;
 
-    // 默认超时 6s
-    public static int DEFAULT_CONNECT_TIMEOUT = 6_000;
+    // 默认超时 60s
+    public static int DEFAULT_CONNECT_TIMEOUT_MS = 60_000;
 
     // 默认 设备类型盒子
     @PlayerType.DeviceType.Value
@@ -148,31 +150,57 @@ public class PlayerConst {
         // =================================================================
         // 1. 低端 TV 盒子 (BOX) —— 降低追帧频率与倍速幅度，防止音频变声/画面卡帧
         // =================================================================
-        public static final long BOX_TARGET_LIVE_OFFSET_INCREMENT_ON_REBUFFER_US = 500_000L; // 卡顿后延迟增加 500ms
+
+        // // 卡顿后延迟增加 500ms
+        // private long targetLiveOffsetIncrementOnRebufferUs = Util.msToUs(500L);
+        public static final long BOX_TARGET_LIVE_OFFSET_INCREMENT_ON_REBUFFER_US = Util.msToUs(500L);
+        // private float minPossibleLiveOffsetSmoothingFactor = 0.999F;
+        public static final float BOX_MIN_POSSIBLE_LIVE_OFFSET_SMOOTHING_FACTOR = 0.999F;
+        // private long maxLiveOffsetErrorUsForUnitSpeed = Util.msToUs(20L);
+        public static final long BOX_MAX_LIVE_OFFSET_ERROR_US_FOR_UNIT_SPEED = Util.msToUs(20L);
+        //  private long minUpdateIntervalMs = 1000L;
+        public static final long BOX_MIN_UPDATE_INTERVAL_MS = 1000L;
+        // private float proportionalControlFactorUs = 1.0E-7F;
+        public static final float BOX_PROPORTIONAL_CONTROL_FACTOR_US = 1.0E-7F;
+
+        // // 最慢 0.98x 慢放
+        // private float fallbackMinPlaybackSpeed = 0.97F;
+        public static final float BOX_MIN_PLAYBACK_SPEED = 0.97F;
+        // 最高 1.03x 快放（无感追帧）
+        // private float fallbackMaxPlaybackSpeed = 1.03F;
+        public static final float BOX_MAX_PLAYBACK_SPEED = 1.03F;
+
+
         public static final long BOX_TARGET_OFFSET_MS = 4000L;                                // 期望目标延迟 4 秒（长延迟防卡）
         public static final long BOX_MIN_OFFSET_MS = 2000L;                                   // 最小延迟 2 秒
         public static final long BOX_MAX_OFFSET_MS = 25_000L;                                 // 最大容忍延迟 25 秒
-        public static final float BOX_MIN_PLAYBACK_SPEED = 0.98F;                             // 最慢 0.98x 慢放
-        public static final float BOX_MAX_PLAYBACK_SPEED = 1.03F;                             // 最高 1.03x 快放（无感追帧）
 
         // =================================================================
         // 2. 智能手机 (PHONE) —— 强追帧低延迟模式
         // =================================================================
-        public static final long PHONE_TARGET_LIVE_OFFSET_INCREMENT_ON_REBUFFER_US = 300_000L; // 卡顿后延迟增加 300ms
+
+        public static final long PHONE_TARGET_LIVE_OFFSET_INCREMENT_ON_REBUFFER_US = Util.msToUs(500L); // 卡顿后延迟增加 300ms private long targetLiveOffsetIncrementOnRebufferUs = Util.msToUs(500L);
+        public static final float PHONE_MIN_POSSIBLE_LIVE_OFFSET_SMOOTHING_FACTOR = 0.999F; // private float minPossibleLiveOffsetSmoothingFactor = 0.999F;
+        public static final long PHONE_MAX_LIVE_OFFSET_ERROR_US_FOR_UNIT_SPEED = Util.msToUs(20L); // private long maxLiveOffsetErrorUsForUnitSpeed = Util.msToUs(20L);
+        public static final float PHONE_PROPORTIONAL_CONTROL_FACTOR_US = 1.0E-7F; // private float proportionalControlFactorUs = 1.0E-7F;
+
+        // private long minUpdateIntervalMs = 1000L;
+        public static final long PHONE_MIN_UPDATE_INTERVAL_MS = 1000L;
+        public static final float PHONE_MIN_PLAYBACK_SPEED = 0.97F;                            // 最慢 0.95x 慢放 private float fallbackMaxPlaybackSpeed = 1.03F;
+        public static final float PHONE_MAX_PLAYBACK_SPEED = 1.03F;                            // 最高 1.08x 快放 private float fallbackMinPlaybackSpeed = 0.97F;
+
         public static final long PHONE_TARGET_OFFSET_MS = 2500L;                               // 期望目标延迟 2.5 秒
         public static final long PHONE_MIN_OFFSET_MS = 1000L;                                  // 最小延迟 1.0 秒
         public static final long PHONE_MAX_OFFSET_MS = 35_000L;                                // 最大容忍延迟 35 秒
-        public static final float PHONE_MIN_PLAYBACK_SPEED = 0.95F;                            // 最慢 0.95x 慢放
-        public static final float PHONE_MAX_PLAYBACK_SPEED = 1.08F;                            // 最高 1.08x 快放
 
         // =================================================================
         // 3. 全局默认兼容参数 (写在 Cons 中，默认取 BOX 策略保证稳定性)
         // =================================================================
         public static final long DEFAULT_TARGET_LIVE_OFFSET_INCREMENT_ON_REBUFFER_US = BOX_TARGET_LIVE_OFFSET_INCREMENT_ON_REBUFFER_US;
-        public static final float DEFAULT_MIN_POSSIBLE_LIVE_OFFSET_SMOOTHING_FACTOR = 0.999F;
-        public static final long DEFAULT_MAX_LIVE_OFFSET_ERROR_US_FOR_UNITSPEED = 20_000L;
-        public static final float DEFAULT_PROPORTIONAL_CONTROL_FACTOR_US = 1.0E-7F;
-        public static final long DEFAULT_MIN_UPDATE_INTERVAL_MS = 1000L;
+        public static final float DEFAULT_MIN_POSSIBLE_LIVE_OFFSET_SMOOTHING_FACTOR = BOX_MIN_POSSIBLE_LIVE_OFFSET_SMOOTHING_FACTOR;
+        public static final long DEFAULT_MAX_LIVE_OFFSET_ERROR_US_FOR_UNIT_SPEED = BOX_MAX_LIVE_OFFSET_ERROR_US_FOR_UNIT_SPEED;
+        public static final float DEFAULT_PROPORTIONAL_CONTROL_FACTOR_US = BOX_PROPORTIONAL_CONTROL_FACTOR_US;
+        public static final long DEFAULT_MIN_UPDATE_INTERVAL_MS = BOX_MIN_UPDATE_INTERVAL_MS;
 
         public static final long DEFAULT_TARGET_OFFSET_MS = BOX_TARGET_OFFSET_MS;
         public static final long DEFAULT_MIN_OFFSET_MS = BOX_MIN_OFFSET_MS;
@@ -190,42 +218,27 @@ public class PlayerConst {
         // =================================================================
         // 1. 低端 TV 盒子 (BOX) —— 宽松门限，容忍硬件响应慢与网络抖动，防止误判
         // =================================================================
-        /**
-         * 缓冲卡死超时：15秒（盒子解码/网络响应较慢，多给一点缓冲时间）
-         */
-        public static final int BOX_BUFFERING_DETECTION_TIMEOUT_MS = 30_000;
-        /**
-         * 播放卡死超时：15秒（STATE_READY/PLAYING 下画面/音频无更新）
-         */
-        public static final int BOX_PLAYING_DETECTION_TIMEOUT_MS = 15_000;
-        /**
-         * 播放未结束卡死超时：30秒（本应结束但长时间无 onPlaybackEnded 触发）
-         */
+        // 缓冲卡死超时：15秒（盒子解码/网络响应较慢，多给一点缓冲时间）
+        //  this.stuckBufferingDetectionTimeoutMs = 600000;
+        public static final int BOX_BUFFERING_DETECTION_TIMEOUT_MS = 600_000;
+        // 播放卡死超时：15秒（STATE_READY/PLAYING 下画面/音频无更新）
+        public static final int BOX_PLAYING_DETECTION_TIMEOUT_MS = 30_000;
+        // 播放未结束卡死超时：30秒（本应结束但长时间无 onPlaybackEnded 触发）
         public static final int BOX_PLAYING_NOT_ENDING_TIMEOUT_MS = 60_000;
-        /**
-         * 播放被抑制超时：15秒（如焦点丢失或后台限制后长时间未恢复）
-         */
-        public static final int BOX_SUPPRESSED_DETECTION_TIMEOUT_MS = 15_000;
+        // 播放被抑制超时：15秒（如焦点丢失或后台限制后长时间未恢复）
+        public static final int BOX_SUPPRESSED_DETECTION_TIMEOUT_MS = 600_000;
 
         // =================================================================
         // 2. 智能手机 / 平板 (PHONE) —— 严格门限，快速感知卡死并触发重试
         // =================================================================
-        /**
-         * 缓冲卡死超时：12秒（手机网络与性能强，超过 12s 无进度即可判定卡死）
-         */
-        public static final int PHONE_BUFFERING_DETECTION_TIMEOUT_MS = 30_000;
-        /**
-         * 播放卡死超时：6秒
-         */
-        public static final int PHONE_PLAYING_DETECTION_TIMEOUT_MS = 10_000;
-        /**
-         * 播放未结束卡死超时：15秒
-         */
+        // 缓冲卡死超时：12秒（手机网络与性能强，超过 12s 无进度即可判定卡死）
+        public static final int PHONE_BUFFERING_DETECTION_TIMEOUT_MS = 600_000;
+        // 播放卡死超时：6秒
+        public static final int PHONE_PLAYING_DETECTION_TIMEOUT_MS = 30_000;
+        // 播放未结束卡死超时：15秒
         public static final int PHONE_PLAYING_NOT_ENDING_TIMEOUT_MS = 60_000;
-        /**
-         * 播放被抑制超时：10秒
-         */
-        public static final int PHONE_SUPPRESSED_DETECTION_TIMEOUT_MS = 10_000;
+        // 播放被抑制超时：10秒
+        public static final int PHONE_SUPPRESSED_DETECTION_TIMEOUT_MS = 600_000;
 
         // =================================================================
         // 3. 全局默认兼容参数 (默认偏向 BOX 策略，保障低端设备稳定)
@@ -245,73 +258,63 @@ public class PlayerConst {
         // =================================================================
         // 1. 低端 TV 盒子 (BOX) —— 内存安全、起播防卡顿、较长卡顿超时
         // =================================================================
-        /**
-         * // 盒子内存较小，分配粒度设为 32KB，减少内存碎片和峰值占用；手机内存充足，设为 64KB
-         */
-        public static final int BOX_AVAILABLE_COUNT = 32 * 1024;
-        /**
-         * 最大缓冲超时时间：15秒（盒子响应较慢，延长超时门限）
-         */
-        public static final long BOX_MAX_BUFFERING_TIMEOUT_MS = 15_000L;
-        /**
-         * 直播时间线偏移下限：-15秒
-         */
-        public static final long BOX_MIN_LIVE_PLAYBACK_TIMELINE_OFFSET_MS = 15_000L;
-        /**
-         * 最小缓冲区大小：20秒（盒子内存小，限制最大驻留缓存）
-         */
-        public static final int BOX_MIN_BUFFER_MS = 20_000;
-        /**
-         * 最大缓冲区大小：30秒（防止 1GB/2GB 内存盒子爆 OOM）
-         */
-        public static final int BOX_MAX_BUFFER_MS = 30_000;
-        /**
-         * 启播最小缓冲：2.5秒（盒子解码/渲染慢，多预留缓存确保起播顺畅）
-         */
-        public static final int BOX_BUFFER_FOR_PLAYBACK_MS = 2500;
-        /**
-         * 二次缓冲（卡顿恢复）最小缓冲：4秒（牺牲一点恢复速度，换取恢复后不再二次卡顿）
-         */
-        public static final int BOX_BUFFER_FOR_PLAYBACK_AFTER_REBUFFER_MS = 4000;
+
+        // 盒子内存较小，分配粒度设为 32KB，减少内存碎片和峰值占用；手机内存充足，设为 32K
+        public static final int BOX_INDIVIDUAL_ALLOCATION_SIZE = 32 * 1024;
+        // 最小缓冲区大小：20秒
+        // this.minBufferMs = 50000;
+        public static final int BOX_MIN_BUFFER_MS = 50_000;
+        // 最大缓冲区大小：50秒（手机内存充裕，多缓存提升拖动 seek 体验）
+        // this.maxBufferMs = 50000;
+        public static final int BOX_MAX_BUFFER_MS = 50_000;
+        // 启播最小缓冲：1.5秒（兼顾秒开体验与弱网抗抖动）
+        // this.bufferForPlaybackMs = 1000;
+        public static final int BOX_BUFFER_FOR_PLAYBACK_MS = 1_000;
+        // 二次缓冲（卡顿恢复）最小缓冲：2秒（快速恢复播放）
+        // this.bufferForPlaybackAfterRebufferMs = 2000;
+        public static final int BOX_BUFFER_FOR_PLAYBACK_AFTER_REBUFFER_MS = 2_000;
 
         // =================================================================
         // 2. 智能手机 / 平板 (PHONE) —— 追求秒开、激进恢复、充裕缓存
         // =================================================================
+
         /**
-         * // 盒子内存较小，分配粒度设为 32KB，减少内存碎片和峰值占用；手机内存充足，设为 64KB
+         *
+         * this.minBufferForLocalPlaybackMs = 1000;
+         * <p>
+         * this.maxBufferForLocalPlaybackMs = 50000;
+         * this.bufferForPlaybackMs = 1000;
+         * this.bufferForPlaybackForLocalPlaybackMs = 1000;
+         * this.bufferForPlaybackAfterRebufferMs = 2000;
+         * this.bufferForPlaybackAfterRebufferForLocalPlaybackMs = 1000;
+         * this.targetBufferBytes = -1;
+         * this.prioritizeTimeOverSizeThresholds = false;
+         * this.prioritizeTimeOverSizeThresholdsForLocalPlayback = true;
+         * this.backBufferDurationMs = 0;
+         * this.retainBackBufferFromKeyframe = false;
          */
-        public static final int PHONE_AVAILABLE_COUNT = 64 * 1024;
-        /**
-         * 最大缓冲超时时间：10秒
-         */
-        public static final long PHONE_MAX_BUFFERING_TIMEOUT_MS = 10_000L;
-        /**
-         * 直播时间线偏移下限：-10秒
-         */
-        public static final long PHONE_MIN_LIVE_PLAYBACK_TIMELINE_OFFSET_MS = 10_000L;
-        /**
-         * 最小缓冲区大小：30秒
-         */
-        public static final int PHONE_MIN_BUFFER_MS = 30_000;
-        /**
-         * 最大缓冲区大小：50秒（手机内存充裕，多缓存提升拖动 seek 体验）
-         */
+
+
+        // 盒子内存较小，分配粒度设为 32KB，减少内存碎片和峰值占用；手机内存充足，设为 16KB
+        public static final int PHONE_INDIVIDUAL_ALLOCATION_SIZE = 16 * 1024;
+
+        // 最小缓冲区大小：20秒
+        // this.minBufferMs = 50000;
+        public static final int PHONE_MIN_BUFFER_MS = 50_000;
+        // 最大缓冲区大小：50秒（手机内存充裕，多缓存提升拖动 seek 体验）
+        // this.maxBufferMs = 50000;
         public static final int PHONE_MAX_BUFFER_MS = 50_000;
-        /**
-         * 启播最小缓冲：1.5秒（兼顾秒开体验与弱网抗抖动）
-         */
-        public static final int PHONE_BUFFER_FOR_PLAYBACK_MS = 1500;
-        /**
-         * 二次缓冲（卡顿恢复）最小缓冲：2秒（快速恢复播放）
-         */
-        public static final int PHONE_BUFFER_FOR_PLAYBACK_AFTER_REBUFFER_MS = 2000;
+        // 启播最小缓冲：1.5秒（兼顾秒开体验与弱网抗抖动）
+        // this.bufferForPlaybackMs = 1000;
+        public static final int PHONE_BUFFER_FOR_PLAYBACK_MS = 1_000;
+        // 二次缓冲（卡顿恢复）最小缓冲：2秒（快速恢复播放）
+        // this.bufferForPlaybackAfterRebufferMs = 2000;
+        public static final int PHONE_BUFFER_FOR_PLAYBACK_AFTER_REBUFFER_MS = 2_000;
 
         // =================================================================
         // 3. 全局默认兼容参数 (默认偏向 BOX 策略保障低端设备稳定)
         // =================================================================
-        public static final int DEFAULT_AVAILABLE_COUNT = BOX_AVAILABLE_COUNT;
-        public static final long DEFAULT_MAX_BUFFERING_TIMEOUT_MS = BOX_MAX_BUFFERING_TIMEOUT_MS;
-        public static final long DEFAULT_MIN_LIVE_PLAYBACK_TIMELINE_OFFSET_MS = BOX_MIN_LIVE_PLAYBACK_TIMELINE_OFFSET_MS;
+        public static final int DEFAULT_INDIVIDUAL_ALLOCATION_SIZE = BOX_INDIVIDUAL_ALLOCATION_SIZE;
         public static final int DEFAULT_MIN_BUFFER_MS = BOX_MIN_BUFFER_MS;
         public static final int DEFAULT_MAX_BUFFER_MS = BOX_MAX_BUFFER_MS;
         public static final int DEFAULT_BUFFER_FOR_PLAYBACK_MS = BOX_BUFFER_FOR_PLAYBACK_MS;

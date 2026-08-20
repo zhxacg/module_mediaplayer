@@ -700,14 +700,21 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
 
     default void initKernel(StartArgs args) {
         try {
+
             if (null != getVideoKernel()) {
                 if (LogUtil.DEBUG) {
                     LogUtil.log(TAG, "initKernel -> warning: getVideoKernel not null");
                 }
                 return;
             }
+
             //
             int kernelType = args.getKernelType();
+            int connectTimeoutMs = args.getTimeoutConfiguration().getConnectTimeoutMs();
+            if (LogUtil.DEBUG) {
+                LogUtil.log(TAG, "initKernel -> kernelType = " + kernelType + ", connectTimeoutMs = " + connectTimeoutMs);
+            }
+
             //
             VideoKernelApi kernelApi = VideoKernelFactoryManager.getKernel(kernelType);
             setVideoKernel(kernelApi);
@@ -905,8 +912,6 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
 //                        case PlayerType.EventType.INIT:
                                 case PlayerType.EventType.READY:
                                     //
-                                    TimeoutConfiguration timeoutConfiguration = args.getTimeoutConfiguration();
-                                    int connectTimeout = timeoutConfiguration.getConnectTimeoutMs();
                                     @PlayerType.KernelType.Value
                                     int kernelType = args.getKernelType();
                                     long timeMillis = System.currentTimeMillis();
@@ -917,7 +922,7 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
 //                                    if (showSpeed) {
 //                                        kernelApi.sendMessageSpeedUpdate(kernel, false);
 //                                    }
-                                    kernelApi.sendMessageConnectTimeout(kernelType, timeMillis, connectTimeout, false);
+                                    kernelApi.sendMessageConnectTimeout(kernelType, timeMillis, connectTimeoutMs, false);
                                     break;
                                 // 轮训：视频进度条
                                 case PlayerType.EventType.MEDIA_INFO_PREPARE:
@@ -934,13 +939,7 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
                                     // 埋点
                                     onBuriedBufferingStart();
                                     // 检测：缓冲超时
-                                    BufferConfiguration bufferingConfiguration = args.getBufferConfiguration();
-                                    if (null != bufferingConfiguration) {
-                                        long maxBufferingTimeoutMs = bufferingConfiguration.getMaxBufferingTimeoutMs();
-                                        if (maxBufferingTimeoutMs > 0L) {
-                                            kernelApi.startMessageBufferingTimeout(kernel, maxBufferingTimeoutMs);
-                                        }
-                                    }
+                                    kernelApi.startMessageBufferingTimeout(kernel, connectTimeoutMs);
                                     break;
                                 // 缓冲结束
                                 case PlayerType.EventType.MEDIA_INFO_BUFFERING_STOP:

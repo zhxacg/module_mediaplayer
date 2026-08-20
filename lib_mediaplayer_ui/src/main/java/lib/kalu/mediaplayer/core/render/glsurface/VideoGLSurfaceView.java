@@ -368,6 +368,8 @@ public class VideoGLSurfaceView extends GLSurfaceView implements VideoRenderApi 
 
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+
         try {
             int screenWidth = MeasureSpec.getSize(widthMeasureSpec);
             int screenHeight = MeasureSpec.getSize(heightMeasureSpec);
@@ -376,7 +378,6 @@ public class VideoGLSurfaceView extends GLSurfaceView implements VideoRenderApi 
                 if (LogUtil.DEBUG) {
                     LogUtil.log("VideoGLSurfaceView", "onMeasure -> warning: measureSpec null");
                 }
-                super.onMeasure(widthMeasureSpec, heightMeasureSpec);
                 return;
             }
             int width = measureSpec[0];
@@ -389,7 +390,6 @@ public class VideoGLSurfaceView extends GLSurfaceView implements VideoRenderApi 
             if (LogUtil.DEBUG) {
                 LogUtil.log("VideoGLSurfaceView -> onMeasure -> Exception " + e.getMessage());
             }
-            super.onMeasure(widthMeasureSpec, heightMeasureSpec);
         }
     }
 

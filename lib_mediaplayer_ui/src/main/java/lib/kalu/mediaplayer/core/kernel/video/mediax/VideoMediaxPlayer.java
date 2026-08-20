@@ -1655,20 +1655,20 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
                     return;
                 }
 
-                StartArgs startArgs = getStartArgs();
-                BufferConfiguration bufferConfiguration = startArgs.getBufferConfiguration();
-                long minLivePlaybackTimelineOffsetMs = bufferConfiguration.getMinLivePlaybackTimelineOffsetMs();
-                long currentPlaybackPositionMs = eventTime.currentPlaybackPositionMs;
-                if (LogUtil.DEBUG) {
-                    LogUtil.log(TAG, "onTimelineChanged1 -> minLivePlaybackTimelineOffsetMs = " + minLivePlaybackTimelineOffsetMs + ", currentPlaybackPositionMs = " + currentPlaybackPositionMs);
-                }
-
-                if (currentPlaybackPositionMs < minLivePlaybackTimelineOffsetMs) {
-                    if (LogUtil.DEBUG) {
-                        LogUtil.log(TAG, "onTimelineChanged1 -> seekToDefaultPosition");
-                    }
-//                    onEvent(PlayerType.KernelType.MEDIA_V3, PlayerType.EventType.RETRY_BUFFERING_TIMEOUT);
-                }
+//                StartArgs startArgs = getStartArgs();
+//                BufferConfiguration bufferConfiguration = startArgs.getBufferConfiguration();
+////                long minLivePlaybackTimelineOffsetMs = bufferConfiguration.getMinLivePlaybackTimelineOffsetMs();
+//                long currentPlaybackPositionMs = eventTime.currentPlaybackPositionMs;
+//                if (LogUtil.DEBUG) {
+//                    LogUtil.log(TAG, "onTimelineChanged1 -> minLivePlaybackTimelineOffsetMs = " + minLivePlaybackTimelineOffsetMs + ", currentPlaybackPositionMs = " + currentPlaybackPositionMs);
+//                }
+//
+//                if (currentPlaybackPositionMs < minLivePlaybackTimelineOffsetMs) {
+//                    if (LogUtil.DEBUG) {
+//                        LogUtil.log(TAG, "onTimelineChanged1 -> seekToDefaultPosition");
+//                    }
+////                    onEvent(PlayerType.KernelType.MEDIA_V3, PlayerType.EventType.RETRY_BUFFERING_TIMEOUT);
+//                }
 
             } catch (Exception e) {
                 if (LogUtil.DEBUG) {

@@ -233,6 +233,8 @@ public class VideoTextureView extends TextureView implements VideoRenderApi {
 
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+
         try {
             int screenWidth = MeasureSpec.getSize(widthMeasureSpec);
             int screenHeight = MeasureSpec.getSize(heightMeasureSpec);
@@ -241,7 +243,6 @@ public class VideoTextureView extends TextureView implements VideoRenderApi {
                 if (LogUtil.DEBUG) {
                     LogUtil.log("VideoTextureView", "onMeasure -> warning: measureSpec null");
                 }
-                super.onMeasure(widthMeasureSpec, heightMeasureSpec);
                 return;
             }
             int width = measureSpec[0];
@@ -254,7 +255,6 @@ public class VideoTextureView extends TextureView implements VideoRenderApi {
             if (LogUtil.DEBUG) {
                 LogUtil.log("VideoTextureView -> onMeasure -> Exception " + e.getMessage());
             }
-            super.onMeasure(widthMeasureSpec, heightMeasureSpec);
         }
     }
 
