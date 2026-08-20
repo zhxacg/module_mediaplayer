@@ -2,15 +2,15 @@ package lib.kalu.mediaplayer.test;
 
 import android.app.Activity;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Toast;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+import java.util.Set;
 
 import lib.kalu.mediaplayer.PlayerLayout;
 import lib.kalu.mediaplayer.R;
@@ -297,6 +297,14 @@ public final class TestActivity extends Activity {
                                 }
 
                                 @Override
+                                public String formatChildM3u8Url(String mainUrl, String multivariantPath) {
+                                    if (LogUtil.DEBUG) {
+                                        LogUtil.log("TestActivity -> formatReferenceM3u8Url -> mainUrl = " + mainUrl + ", multivariantPath = " + multivariantPath + ", thread = " + Thread.currentThread().getName());
+                                    }
+                                    return multivariantPath;
+                                }
+
+                                @Override
                                 public String formatM3u8Url(String url) {
                                     if (LogUtil.DEBUG) {
                                         LogUtil.log("TestActivity -> formatM3u8Url -> url = " + url + ", thread = " + Thread.currentThread().getName());
@@ -313,20 +321,24 @@ public final class TestActivity extends Activity {
                                     if (LogUtil.DEBUG) {
                                         LogUtil.log("TestActivity -> formatSegmentUrl -> playlistUrl = " + playlistUrl + ", segmentUrl = " + segmentUrl + ", thread = " + Thread.currentThread().getName());
                                     }
-                                    return segmentUrl;
+
+                                    Uri.Builder builder = Uri.parse(segmentUrl).buildUpon();
+
+                                    Uri parse = Uri.parse(playlistUrl);
+                                    Set<String> queryParameterNames = parse.getQueryParameterNames();
+                                    if (null != queryParameterNames && !queryParameterNames.isEmpty()) {
+                                        for (String key : queryParameterNames) {
+                                            String value = parse.getQueryParameter(key);
+                                            builder.appendQueryParameter(key, value);
+                                        }
+                                    }
+
+                                    return builder.build().toString();
                                 }
 
                                 @Override
                                 public String formatSubtitleUrl(String url) {
                                     return url;
-                                }
-
-                                @Override
-                                public String formatChildM3u8Url(String mainUrl, String multivariantPath) {
-                                    if (LogUtil.DEBUG) {
-                                        LogUtil.log("TestActivity -> formatReferenceM3u8Url -> mainUrl = " + mainUrl + ", multivariantPath = " + multivariantPath + ", thread = " + Thread.currentThread().getName());
-                                    }
-                                    return multivariantPath;
                                 }
                             })
                             .setProxyTrack(new ProxyTrack() {

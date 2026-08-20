@@ -73,7 +73,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Queue;
-import java.util.Set;
 import java.util.TreeMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -1951,6 +1950,7 @@ public final class CusHlsPlaylistParser implements ParsingLoadable.Parser<HlsPla
         try {
             if (null != proxyUrl) {
                 Uri.Builder builder = Uri.parse(segmentPath).buildUpon();
+                builder.appendQueryParameter("childSegmentUrl", "1");
                 builder.appendQueryParameter("playlistUrl", playlistUrl);
                 return builder.build().toString();
             } else {
@@ -1964,33 +1964,21 @@ public final class CusHlsPlaylistParser implements ParsingLoadable.Parser<HlsPla
         }
     }
 
-    private static String formatChildM3u8Url(ProxyUrl proxyUrl, String baseUrl, String referencePath) {
+    private static String formatChildM3u8Url(ProxyUrl proxyUrl, String playlistUrl, String childUrl) {
         try {
-            if (null == proxyUrl) {
-//                if (LogUtil.DEBUG) {
-//                    LogUtil.log("CustomHlsPlaylistParser -> formatChildM3u8Url -> waring: proxyUrl null");
-//                }
-                return referencePath;
+            if (null != proxyUrl) {
+                Uri.Builder builder = Uri.parse(childUrl).buildUpon();
+                builder.appendQueryParameter("childPlaylistUrl", "1");
+                builder.appendQueryParameter("playlistUrl", playlistUrl);
+                return builder.build().toString();
+            } else {
+                return childUrl;
             }
-//            if (LogUtil.DEBUG) {
-//                LogUtil.log("CustomHlsPlaylistParser -> formatChildM3u8Url -> baseUrl = " + baseUrl + ", referencePath = " + referencePath);
-//            }
-            String formatSegmentPath = proxyUrl.formatChildM3u8Url(baseUrl, referencePath);
-//            if (LogUtil.DEBUG) {
-//                LogUtil.log("CustomHlsPlaylistParser -> formatChildM3u8Url -> formatSegmentPath = " + formatSegmentPath);
-//            }
-            if (null == formatSegmentPath || formatSegmentPath.isEmpty()) {
-//                if (LogUtil.DEBUG) {
-//                    LogUtil.log("CustomHlsPlaylistParser -> formatChildM3u8Url -> waring: formatSegmentPath null");
-//                }
-                return referencePath;
-            }
-            return formatSegmentPath;
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
                 LogUtil.log("CustomHlsPlaylistParser -> formatChildM3u8Url -> Exception: " + e.getMessage());
             }
-            return referencePath;
+            return childUrl;
         }
     }
 

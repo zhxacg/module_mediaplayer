@@ -402,13 +402,15 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
                                 proxyUrl.formatOpen(dataUrl);
 
                                 // ts
-                                if (dataUrl.contains(PlayerType.SchemeType._TS) || dataUrl.contains(PlayerType.SchemeType._TS_)) {
+                                if (dataUrl.contains("childSegmentUrl=1")) {
                                     Uri parse = Uri.parse(dataUrl);
                                     String playlistUrl = parse.getQueryParameter("playlistUrl");
                                     Set<String> queryParameterNames = parse.getQueryParameterNames();
                                     Uri.Builder builder = parse.buildUpon().clearQuery();
                                     if (null != queryParameterNames && !queryParameterNames.isEmpty()) {
                                         for (String key : queryParameterNames) {
+                                            if ("childSegmentUrl".equals(key))
+                                                continue;
                                             if ("playlistUrl".equals(key))
                                                 continue;
                                             String value = parse.getQueryParameter(key);
@@ -431,6 +433,30 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
                                 // ssa
                                 else if (dataUrl.contains(PlayerType.SchemeType._SSA) || dataUrl.contains(PlayerType.SchemeType._SSA_)) {
                                     String newUrl = proxyUrl.formatSubtitleUrl(dataUrl);
+                                    return dataSpec.buildUpon()
+                                            .setUri(newUrl)
+                                            .build();
+                                }
+                                // m3u8 child
+                                else if (dataUrl.contains("childPlaylistUrl=1")) {
+
+                                    Uri parse = Uri.parse(dataUrl);
+                                    String playlistUrl = parse.getQueryParameter("playlistUrl");
+
+                                    Set<String> queryParameterNames = parse.getQueryParameterNames();
+                                    Uri.Builder builder = parse.buildUpon().clearQuery();
+                                    if (null != queryParameterNames && !queryParameterNames.isEmpty()) {
+                                        for (String key : queryParameterNames) {
+                                            if ("childPlaylistUrl".equals(key))
+                                                continue;
+                                            if ("playlistUrl".equals(key))
+                                                continue;
+                                            String value = parse.getQueryParameter(key);
+                                            builder.appendQueryParameter(key, value);
+                                        }
+                                    }
+                                    String segmentUrl = builder.toString();
+                                    String newUrl = proxyUrl.formatChildM3u8Url(playlistUrl, segmentUrl);
                                     return dataSpec.buildUpon()
                                             .setUri(newUrl)
                                             .build();
