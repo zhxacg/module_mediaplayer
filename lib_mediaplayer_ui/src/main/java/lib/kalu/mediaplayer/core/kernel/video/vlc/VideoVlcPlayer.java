@@ -71,10 +71,10 @@ public final class VideoVlcPlayer extends VideoBasePlayer {
                 }
                 return;
             }
-            boolean containsMainUrl = args.containsMainUrl();
-            if (!containsMainUrl) {
+            boolean containsVideoUrl = args.containsVideoUrl();
+            if (!containsVideoUrl) {
                 if (LogUtil.DEBUG) {
-                    LogUtil.log("VideoVlcPlayer", "startDecoder -> error: containsMainUrl false");
+                    LogUtil.log("VideoVlcPlayer", "startDecoder -> error: containsVideoUrl false");
                 }
                 return;
             }

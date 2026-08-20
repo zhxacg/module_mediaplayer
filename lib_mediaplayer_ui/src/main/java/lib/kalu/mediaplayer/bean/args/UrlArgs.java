@@ -57,6 +57,23 @@ public final class UrlArgs implements Serializable {
         }
     }
 
+    public boolean containsVideoUrl() {
+        try {
+            for (Item item : defaultStreams) {
+                if (item.parser == PlayerType.ParserType.VIDEO && null != item.url && !item.url.isEmpty()) {
+                    return true;
+                } else if (item.parser == PlayerType.ParserType.VIDEO_AUDIO && null != item.url && !item.url.isEmpty()) {
+                    return true;
+                } else if (item.parser == PlayerType.ParserType.VIDEO_AUDIO_SUBTITLE && null != item.url && !item.url.isEmpty()) {
+                    return true;
+                }
+            }
+            return false;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
     public Item getDefaultStreamItem() {
         try {
             if (null == defaultStreams) {

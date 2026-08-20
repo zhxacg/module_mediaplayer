@@ -1034,10 +1034,10 @@ public final class VideoExo2Player extends VideoBasePlayer {
         }
 
         try {
-            boolean containsMainUrl = args.containsMainUrl();
-            if (!containsMainUrl) {
+            boolean containsVideoUrl = args.containsVideoUrl();
+            if (!containsVideoUrl) {
                 if (LogUtil.DEBUG) {
-                    LogUtil.log(TAG, "initSimpleCache -> error: containsMainUrl false");
+                    LogUtil.log(TAG, "initSimpleCache -> error: containsVideoUrl false");
                 }
                 return false;
             }

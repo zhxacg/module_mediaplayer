@@ -86,10 +86,10 @@ public final class VideoFFmpegPlayer extends VideoBasePlayer {
                 }
                 return;
             }
-            boolean containsMainUrl = args.containsMainUrl();
-            if (!containsMainUrl) {
+            boolean containsVideoUrl = args.containsVideoUrl();
+            if (!containsVideoUrl) {
                 if (LogUtil.DEBUG) {
-                    LogUtil.log("VideoFFmpegPlayer -> startDecoder -> error: containsMainUrl false");
+                    LogUtil.log("VideoFFmpegPlayer -> startDecoder -> error: containsVideoUrl false");
                 }
                 return;
             }

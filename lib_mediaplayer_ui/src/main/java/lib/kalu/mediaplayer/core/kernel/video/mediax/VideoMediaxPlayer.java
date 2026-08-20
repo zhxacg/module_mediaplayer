@@ -1186,10 +1186,10 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
                 return false;
             }
 
-            boolean containsMainUrl = args.containsMainUrl();
-            if (!containsMainUrl) {
+            boolean containsVideoUrl = args.containsVideoUrl();
+            if (!containsVideoUrl) {
                 if (LogUtil.DEBUG) {
-                    LogUtil.log(TAG, "initSimpleCache -> error: containsMainUrl false");
+                    LogUtil.log(TAG, "initSimpleCache -> error: containsVideoUrl false");
                 }
                 return false;
             }

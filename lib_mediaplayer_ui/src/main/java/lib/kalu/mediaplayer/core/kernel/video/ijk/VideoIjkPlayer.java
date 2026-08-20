@@ -104,10 +104,10 @@ public final class VideoIjkPlayer extends VideoBasePlayer {
             if (LogUtil.DEBUG) {
                 LogUtil.log("VideoIjkPlayer -> startDecoder ->");
             }
-            boolean containsMainUrl = args.containsMainUrl();
-            if (!containsMainUrl) {
+            boolean containsVideoUrl = args.containsVideoUrl();
+            if (!containsVideoUrl) {
                 if (LogUtil.DEBUG) {
-                    LogUtil.log("VideoIjkPlayer", "startDecoder -> error: containsMainUrl false");
+                    LogUtil.log("VideoIjkPlayer", "startDecoder -> error: containsVideoUrl false");
                 }
                 return;
             }

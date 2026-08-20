@@ -63,9 +63,8 @@ public class StartArgs implements Serializable {
     // 视频url
     private UrlArgs urlArgs;
 
-
-    public boolean containsMainUrl() {
-        return null != urlArgs && urlArgs.containsUrl();
+    public boolean containsVideoUrl() {
+        return null != urlArgs && urlArgs.containsVideoUrl();
     }
 
     public UrlArgs getUrlArgs() {

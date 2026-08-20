@@ -268,10 +268,10 @@ public class PlayerLayout extends RelativeLayout {
                 }
                 return;
             }
-            boolean containsMainUrl = args.containsMainUrl();
-            if (!containsMainUrl) {
+            boolean containsVideoUrl = args.containsVideoUrl();
+            if (!containsVideoUrl) {
                 if (LogUtil.DEBUG) {
-                    LogUtil.log("PlayerLayout", "startFull -> error: containsMainUrl false");
+                    LogUtil.log("PlayerLayout", "startFull -> error: containsVideoUrl false");
                 }
                 return;
             }
@@ -302,10 +302,10 @@ public class PlayerLayout extends RelativeLayout {
                 }
                 return;
             }
-            boolean containsMainUrl = args.containsMainUrl();
-            if (!containsMainUrl) {
+            boolean containsVideoUrl = args.containsVideoUrl();
+            if (!containsVideoUrl) {
                 if (LogUtil.DEBUG) {
-                    LogUtil.log("PlayerLayout", "stopFull -> error: containsMainUrl false");
+                    LogUtil.log("PlayerLayout", "stopFull -> error: containsVideoUrl false");
                 }
                 return;
             }
@@ -336,10 +336,10 @@ public class PlayerLayout extends RelativeLayout {
                 }
                 return;
             }
-            boolean containsMainUrl = args.containsMainUrl();
-            if (!containsMainUrl) {
+            boolean containsVideoUrl = args.containsVideoUrl();
+            if (!containsVideoUrl) {
                 if (LogUtil.DEBUG) {
-                    LogUtil.log("PlayerLayout", "startFloat -> error: containsMainUrl false");
+                    LogUtil.log("PlayerLayout", "startFloat -> error: containsVideoUrl false");
                 }
                 return;
             }
@@ -371,10 +371,10 @@ public class PlayerLayout extends RelativeLayout {
                 }
                 return;
             }
-            boolean containsMainUrl = args.containsMainUrl();
-            if (!containsMainUrl) {
+            boolean containsVideoUrl = args.containsVideoUrl();
+            if (!containsVideoUrl) {
                 if (LogUtil.DEBUG) {
-                    LogUtil.log("PlayerLayout", "stopFloat -> error: containsMainUrl false");
+                    LogUtil.log("PlayerLayout", "stopFloat -> error: containsVideoUrl false");
                 }
                 return;
             }

@@ -112,13 +112,13 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
 
             if (!connected)
                 throw new NetworkError();
-            boolean containsMainUrl = startArgs.containsMainUrl();
+            boolean containsVideoUrl = startArgs.containsVideoUrl();
             if (LogUtil.DEBUG) {
-                LogUtil.log(TAG, "start -> containsMainUrl = " + containsMainUrl);
+                LogUtil.log(TAG, "start -> containsVideoUrl = " + containsVideoUrl);
             }
 
-            if (!containsMainUrl)
-                throw new UrlEmptyError("error: containsMainUrl false");
+            if (!containsVideoUrl)
+                throw new UrlEmptyError("error: containsVideoUrl false");
 
             int retryType = startArgs.getRetryType();
             if (LogUtil.DEBUG) {
@@ -137,16 +137,19 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
             initDecoder();
         } catch (NetworkError e) {
             callEvent(PlayerType.EventType.ERROR_NETWORK);
+            stop(false);
             if (LogUtil.DEBUG) {
                 LogUtil.log(TAG, "start -> " + e.getMessage());
             }
         } catch (UrlEmptyError e) {
             callEvent(PlayerType.EventType.ERROR_URL_EMPTY);
+            stop(false);
             if (LogUtil.DEBUG) {
                 LogUtil.log(TAG, "start -> " + e.getMessage());
             }
         } catch (Exception e) {
             callEvent(PlayerType.EventType.ERROR_INIT);
+            stop(false);
             if (LogUtil.DEBUG) {
                 LogUtil.log(TAG, "start -> " + e.getMessage());
             }
@@ -286,10 +289,10 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
                 }
                 return;
             }
-            boolean containsMainUrl = startArgs.containsMainUrl();
-            if (!containsMainUrl) {
+            boolean containsVideoUrl = startArgs.containsVideoUrl();
+            if (!containsVideoUrl) {
                 if (LogUtil.DEBUG) {
-                    LogUtil.log(TAG, "restart -> error: containsMainUrl false");
+                    LogUtil.log(TAG, "restart -> error: containsVideoUrl false");
                 }
                 return;
             }
@@ -314,10 +317,10 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
                 }
                 return;
             }
-            boolean containsMainUrl = startArgs.containsMainUrl();
-            if (!containsMainUrl) {
+            boolean containsVideoUrl = startArgs.containsVideoUrl();
+            if (!containsVideoUrl) {
                 if (LogUtil.DEBUG) {
-                    LogUtil.log(TAG, "restart -> error: containsMainUrl false");
+                    LogUtil.log(TAG, "restart -> error: containsVideoUrl false");
                 }
                 return;
             }
