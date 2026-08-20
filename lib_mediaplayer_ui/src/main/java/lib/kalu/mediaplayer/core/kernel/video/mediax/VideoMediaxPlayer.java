@@ -1168,6 +1168,24 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
         }
 
         try {
+
+            boolean enableCache = args.isEnableCache();
+            if (!enableCache) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log(TAG, "initSimpleCache -> error: enableCache not open");
+                }
+                return false;
+            }
+
+
+            boolean liveStream = args.isLiveStream();
+            if (liveStream) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log(TAG, "initSimpleCache -> error: liveStream true");
+                }
+                return false;
+            }
+
             boolean containsMainUrl = args.containsMainUrl();
             if (!containsMainUrl) {
                 if (LogUtil.DEBUG) {
@@ -2552,7 +2570,7 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
                     LogUtil.log(TAG, "buildMediaSource -> track audio, type = def, url = " + url);
                 }
 
-                DataSource.Factory factory = buildDefaultDataSource(context, httpFactory);
+                DataSource.Factory factory = buildDefaultDataSource(context, startArgs, httpFactory);
                 MediaItem mediaItem = buildMediaItem(PlayerType.UrlType.AUDIO, startArgs, urlItem);
                 return new DefaultMediaSourceFactory(factory).createMediaSource(mediaItem);
             }
@@ -2567,7 +2585,7 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
                 if (null == subtitleConfiguration) {
                     return null;
                 } else {
-                    Object factory = buildDefaultDataSource(context, httpFactory);
+                    Object factory = buildDefaultDataSource(context, startArgs, httpFactory);
                     if (factory instanceof CacheDataSource.Factory) {
                         return new SingleSampleMediaSource.Factory((CacheDataSource.Factory) factory).createMediaSource(subtitleConfiguration, C.TIME_UNSET);
                     } else {
@@ -2596,7 +2614,7 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
                 Constructor<?> constructor = cls.getDeclaredConstructor(DataSource.Factory.class);
                 constructor.setAccessible(true);
 
-                DataSource.Factory obj = buildDefaultDataSource(context, httpFactory);
+                DataSource.Factory obj = buildDefaultDataSource(context, startArgs, httpFactory);
                 DataSource.Factory factory = (DataSource.Factory) constructor.newInstance(obj);
                 MediaItem mediaItem = buildMediaItem(PlayerType.UrlType.VIDEO, startArgs, urlItem);
                 return ((MediaSource.Factory) factory).createMediaSource(mediaItem);
@@ -2607,7 +2625,7 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
                     LogUtil.log(TAG, "buildMediaSource -> track video, type = dash, url = " + url);
                 }
 
-                DataSource.Factory obj = buildDefaultDataSource(context, httpFactory);
+                DataSource.Factory obj = buildDefaultDataSource(context, startArgs, httpFactory);
                 DashMediaSource.Factory factory = new DashMediaSource.Factory(obj);
                 MediaItem mediaItem = buildMediaItem(PlayerType.UrlType.VIDEO, startArgs, urlItem);
                 return ((MediaSource.Factory) factory).createMediaSource(mediaItem);
@@ -2628,7 +2646,7 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
                     LogUtil.log(TAG, "buildMediaSource -> track video, type = SmoothStreaming, url = " + url);
                 }
 
-                DataSource.Factory obj = buildDefaultDataSource(context, httpFactory);
+                DataSource.Factory obj = buildDefaultDataSource(context, startArgs, httpFactory);
                 SsMediaSource.Factory factory = new SsMediaSource.Factory(obj);
                 MediaItem mediaItem = buildMediaItem(PlayerType.UrlType.VIDEO, startArgs, urlItem);
                 return ((MediaSource.Factory) factory).createMediaSource(mediaItem);
@@ -2639,7 +2657,7 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
                     LogUtil.log(TAG, "buildMediaSource -> track video, type = mp4, url = " + url);
                 }
 
-                DataSource.Factory factory = buildDefaultDataSource(context, httpFactory);
+                DataSource.Factory factory = buildDefaultDataSource(context, startArgs, httpFactory);
                 MediaItem mediaItem = buildMediaItem(PlayerType.UrlType.VIDEO, startArgs, urlItem);
                 return new ProgressiveMediaSource.Factory(factory).createMediaSource(mediaItem);
             }
@@ -2659,7 +2677,7 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
                     LogUtil.log(TAG, "buildMediaSource -> track video, type = def, url = " + url);
                 }
 
-                DataSource.Factory factory = buildDefaultDataSource(context, httpFactory);
+                DataSource.Factory factory = buildDefaultDataSource(context, startArgs, httpFactory);
                 MediaItem mediaItem = buildMediaItem(PlayerType.UrlType.VIDEO, startArgs, urlItem);
                 return new DefaultMediaSourceFactory(factory).createMediaSource(mediaItem);
             }
@@ -3064,13 +3082,31 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
         }
     }
 
-    private DataSource.Factory buildDefaultDataSource(Context context, ResolvingDataSource.Factory httpFactory) {
+    private DataSource.Factory buildDefaultDataSource(Context context,
+                                                      StartArgs startArgs,
+                                                      ResolvingDataSource.Factory httpFactory) {
 
         if (LogUtil.DEBUG) {
             LogUtil.log(TAG, "buildDefaultDataSource -> mSimpleCache = " + mSimpleCache);
         }
 
         try {
+
+            boolean enableCache = startArgs.isEnableCache();
+            if (!enableCache) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log(TAG, "buildDefaultDataSource -> error: enableCache not open");
+                }
+                return new DefaultDataSource.Factory(context, httpFactory);
+            }
+
+            boolean liveStream = startArgs.isLiveStream();
+            if (liveStream) {
+                if (LogUtil.DEBUG) {
+                    LogUtil.log(TAG, "buildDefaultDataSource -> error: liveStream true");
+                }
+                return new DefaultDataSource.Factory(context, httpFactory);
+            }
 
             if (null == mSimpleCache) {
                 if (LogUtil.DEBUG) {
@@ -3097,7 +3133,7 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
 
     private HlsMediaSource.Factory buildHlsMediaSourceFactory(Context context, ResolvingDataSource.Factory httpFactory, StartArgs args, @PlayerType.UrlType.Value int urlType, UrlArgs.Item item) {
 
-        DataSource.Factory factory = buildDefaultDataSource(context, httpFactory);
+        DataSource.Factory factory = buildDefaultDataSource(context, args, httpFactory);
 
         HlsMediaSource.Factory hlsMediaSource = new HlsMediaSource.Factory(factory)
                 // 播放器可以跳过「预加载切片」的步骤，仅解析 M3U8 元数据就完成准备，从而加快播放启动速度，但可能牺牲首帧加载的稳定性。

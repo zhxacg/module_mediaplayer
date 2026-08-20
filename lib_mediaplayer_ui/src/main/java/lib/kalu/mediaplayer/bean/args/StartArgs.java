@@ -119,6 +119,13 @@ public class StartArgs implements Serializable {
         return liveStream;
     }
 
+    // 是否 边播边缓存
+    private boolean enableCache;
+
+    public boolean isEnableCache() {
+        return enableCache;
+    }
+
     // 循环播放
     private boolean looping;
 
@@ -270,6 +277,7 @@ public class StartArgs implements Serializable {
                 ", trySeeDuration=" + trySeeDuration +
                 ", playWhenReadySeekToPosition=" + playWhenReadySeekToPosition +
                 ", liveStream=" + liveStream +
+                ", enableCache=" + enableCache +
                 ", looping=" + looping +
                 ", mute=" + mute +
                 ", playWhenReady=" + playWhenReady +
@@ -292,6 +300,8 @@ public class StartArgs implements Serializable {
     }
 
     private StartArgs(Builder builder) {
+        this.liveStream = builder.liveStream;
+        this.enableCache = builder.enableCache;
         this.decoderType = builder.decoderType;
         this.seekType = builder.seekType;
         this.renderType = builder.renderType;
@@ -300,7 +310,6 @@ public class StartArgs implements Serializable {
         this.urlArgs = builder.urlArgs;
         this.title = builder.title;
         this.trySeeDuration = builder.trySeeDuration;
-        this.liveStream = builder.liveStream;
         this.looping = builder.looping;
         this.mute = builder.mute;
         this.playWhenReady = builder.playWhenReady;
@@ -324,6 +333,8 @@ public class StartArgs implements Serializable {
 
     public Builder newBuilderCopy() {
         Builder builder = new Builder();
+        builder.liveStream = liveStream;
+        builder.enableCache = enableCache;
         builder.seekType = seekType;
         builder.decoderType = decoderType;
         builder.renderType = renderType;
@@ -332,7 +343,6 @@ public class StartArgs implements Serializable {
         builder.urlArgs = urlArgs;
         builder.title = title;
         builder.trySeeDuration = trySeeDuration;
-        builder.liveStream = liveStream;
         builder.looping = looping;
         builder.mute = mute;
         builder.playWhenReady = playWhenReady;
@@ -436,14 +446,6 @@ public class StartArgs implements Serializable {
 
         public Builder setTitle(String v) {
             this.title = v;
-            return this;
-        }
-
-        // 字幕url
-        private String subtitleUrl;
-
-        public Builder setSubtitleUrl(String subtitleUrl) {
-            this.subtitleUrl = subtitleUrl;
             return this;
         }
 
@@ -604,6 +606,14 @@ public class StartArgs implements Serializable {
 
         public Builder setRetryConfiguration(RetryConfiguration v) {
             this.retryConfiguration = v;
+            return this;
+        }
+
+        // 是否 边播边缓存
+        private boolean enableCache;
+
+        public Builder setEnableCache(boolean v) {
+            this.enableCache = v;
             return this;
         }
 
