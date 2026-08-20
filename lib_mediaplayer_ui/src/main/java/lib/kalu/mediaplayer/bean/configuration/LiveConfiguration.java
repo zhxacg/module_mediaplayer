@@ -124,10 +124,11 @@ public final class LiveConfiguration implements Serializable {
         private long targetOffsetMs = PlayerConst.LiveConfiguration.DEFAULT_TARGET_OFFSET_MS;
         private long minOffsetMs = PlayerConst.LiveConfiguration.DEFAULT_MIN_OFFSET_MS;
         private long maxOffsetMs = PlayerConst.LiveConfiguration.DEFAULT_MAX_OFFSET_MS;
+
         private float minPlaybackSpeed = PlayerConst.LiveConfiguration.DEFAULT_MIN_PLAYBACK_SPEED;
-        private float fallbackMinPlaybackSpeed = PlayerConst.LiveConfiguration.DEFAULT_MIN_PLAYBACK_SPEED;
         private float maxPlaybackSpeed = PlayerConst.LiveConfiguration.DEFAULT_MAX_PLAYBACK_SPEED;
-        private float fallbackMaxPlaybackSpeed = PlayerConst.LiveConfiguration.DEFAULT_MAX_PLAYBACK_SPEED;
+        private float fallbackMinPlaybackSpeed = PlayerConst.LiveConfiguration.DEFAULT_FAILBACK_MIN_PLAYBACK_SPEED;
+        private float fallbackMaxPlaybackSpeed = PlayerConst.LiveConfiguration.DEFAULT_FAILBACK_MAX_PLAYBACK_SPEED;
 
         private Builder() {
         }
@@ -145,14 +146,16 @@ public final class LiveConfiguration implements Serializable {
          * 应用【低端 TV 盒子/电视】参数（取自 Cons 中的 BOX 属性）
          */
         private Builder applyBoxDefaults() {
+            this.minUpdateIntervalMs = PlayerConst.LiveConfiguration.BOX_MIN_UPDATE_INTERVAL_MS;
+            this.proportionalControlFactorUs = PlayerConst.LiveConfiguration.BOX_PROPORTIONAL_CONTROL_FACTOR_US;
+            this.maxLiveOffsetErrorUsForUnitSpeed = PlayerConst.LiveConfiguration.BOX_MAX_LIVE_OFFSET_ERROR_US_FOR_UNIT_SPEED;
             this.targetLiveOffsetIncrementOnRebufferUs = PlayerConst.LiveConfiguration.BOX_TARGET_LIVE_OFFSET_INCREMENT_ON_REBUFFER_US;
+            this.minPossibleLiveOffsetSmoothingFactor = PlayerConst.LiveConfiguration.BOX_MIN_POSSIBLE_LIVE_OFFSET_SMOOTHING_FACTOR;
             this.targetOffsetMs = PlayerConst.LiveConfiguration.BOX_TARGET_OFFSET_MS;
             this.minOffsetMs = PlayerConst.LiveConfiguration.BOX_MIN_OFFSET_MS;
             this.maxOffsetMs = PlayerConst.LiveConfiguration.BOX_MAX_OFFSET_MS;
-
             this.minPlaybackSpeed = PlayerConst.LiveConfiguration.BOX_MIN_PLAYBACK_SPEED;
             this.fallbackMinPlaybackSpeed = PlayerConst.LiveConfiguration.BOX_MIN_PLAYBACK_SPEED;
-
             this.maxPlaybackSpeed = PlayerConst.LiveConfiguration.BOX_MAX_PLAYBACK_SPEED;
             this.fallbackMaxPlaybackSpeed = PlayerConst.LiveConfiguration.BOX_MAX_PLAYBACK_SPEED;
             return this;
@@ -162,14 +165,16 @@ public final class LiveConfiguration implements Serializable {
          * 应用【智能手机/平板】参数（取自 Cons 中的 PHONE 属性）
          */
         private Builder applyPhoneDefaults() {
+            this.minUpdateIntervalMs = PlayerConst.LiveConfiguration.PHONE_MIN_UPDATE_INTERVAL_MS;
+            this.proportionalControlFactorUs = PlayerConst.LiveConfiguration.PHONE_PROPORTIONAL_CONTROL_FACTOR_US;
+            this.maxLiveOffsetErrorUsForUnitSpeed = PlayerConst.LiveConfiguration.PHONE_MAX_LIVE_OFFSET_ERROR_US_FOR_UNIT_SPEED;
             this.targetLiveOffsetIncrementOnRebufferUs = PlayerConst.LiveConfiguration.PHONE_TARGET_LIVE_OFFSET_INCREMENT_ON_REBUFFER_US;
+            this.minPossibleLiveOffsetSmoothingFactor = PlayerConst.LiveConfiguration.PHONE_MIN_POSSIBLE_LIVE_OFFSET_SMOOTHING_FACTOR;
             this.targetOffsetMs = PlayerConst.LiveConfiguration.PHONE_TARGET_OFFSET_MS;
             this.minOffsetMs = PlayerConst.LiveConfiguration.PHONE_MIN_OFFSET_MS;
             this.maxOffsetMs = PlayerConst.LiveConfiguration.PHONE_MAX_OFFSET_MS;
-
             this.minPlaybackSpeed = PlayerConst.LiveConfiguration.PHONE_MIN_PLAYBACK_SPEED;
             this.fallbackMinPlaybackSpeed = PlayerConst.LiveConfiguration.PHONE_MIN_PLAYBACK_SPEED;
-
             this.maxPlaybackSpeed = PlayerConst.LiveConfiguration.PHONE_MAX_PLAYBACK_SPEED;
             this.fallbackMaxPlaybackSpeed = PlayerConst.LiveConfiguration.PHONE_MAX_PLAYBACK_SPEED;
             return this;

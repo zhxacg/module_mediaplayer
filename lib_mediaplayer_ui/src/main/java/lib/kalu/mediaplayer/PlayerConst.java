@@ -1,5 +1,6 @@
 package lib.kalu.mediaplayer;
 
+import androidx.media3.common.C;
 import androidx.media3.common.util.Util;
 
 import lib.kalu.mediaplayer.bean.type.PlayerType;
@@ -68,67 +69,55 @@ public class PlayerConst {
         // =================================================================
         // 1. 低端 TV 盒子 / 低配设备 (BOX) —— 核心理念：极度保守、稳定优先、减少卡顿与解码器抖动
         // =================================================================
-        /**
-         * 升码率所需最小缓存：15秒（盒子网络/性能弱，储备足够多的缓存才敢切高画质）
-         */
-        public static final int BOX_MIN_DURATION_FOR_QUALITY_INCREASE_MS = 15_000;
-        /**
-         * 降码率门限：15秒（降低降档灵敏度，避免因瞬间网络抖动频繁切流导致老旧硬解崩溃）
-         */
-        public static final int BOX_MAX_DURATION_FOR_QUALITY_DECREASE_MS = 15_000;
-        /**
-         * 丢弃缓存保留底线：20秒（盒子下载慢，废弃低画质时必须保留更多已缓存数据防断流）
-         */
-        public static final int BOX_MIN_DURATION_TO_RETAIN_AFTER_DISCARD_MS = 20_000;
-        /**
-         * 允许废弃最大宽度：720p (仅允许 480p/720p 废弃，1080p及以上决不废弃重下)
-         */
-        public static final int BOX_MAX_WIDTH_TO_DISCARD = 1280;
-        /**
-         * 允许废弃最大高度：720p
-         */
-        public static final int BOX_MAX_HEIGHT_TO_DISCARD = 720;
-        /**
-         * 带宽利用率折扣：0.6 (预留 40% 估算安全余量，极度保守防止估算偏高导致卡顿)
-         */
-        public static final float BOX_BANDWIDTH_FRACTION = 0.60F;
-        /**
-         * 直播升码率阈值：0.85 (已缓存长度占 Live Edge 比例达 85% 才可以升清晰度)
-         */
-        public static final float BOX_BUFFERED_FRACTION_TO_LIVE_EDGE_FOR_QUALITY_INCREASE = 0.85F;
+
+        // 升码率所需最小缓存：15秒（盒子网络/性能弱，储备足够多的缓存才敢切高画质）
+        // 10000, 25000, 25000
+        public static final int BOX_MIN_DURATION_FOR_QUALITY_INCREASE_MS = 10_000;
+        // 降码率门限：15秒（降低降档灵敏度，避免因瞬间网络抖动频繁切流导致老旧硬解崩溃）
+        // 25000
+        public static final int BOX_MAX_DURATION_FOR_QUALITY_DECREASE_MS = 25_000;
+        // 丢弃缓存保留底线：20秒（盒子下载慢，废弃低画质时必须保留更多已缓存数据防断流）
+        // 25000
+        public static final int BOX_MIN_DURATION_TO_RETAIN_AFTER_DISCARD_MS = 25_000;
+        // 允许废弃最大宽度：720p (仅允许 480p/720p 废弃，1080p及以上决不废弃重下)
+        // 1279
+        public static final int BOX_MAX_WIDTH_TO_DISCARD = 1279;
+        // 允许废弃最大高度：720p
+        // 719
+        public static final int BOX_MAX_HEIGHT_TO_DISCARD = 719;
+        // 带宽利用率折扣：0.6 (预留 40% 估算安全余量，极度保守防止估算偏高导致卡顿)
+        // 0.7F
+        public static final float BOX_BANDWIDTH_FRACTION = 0.7F;
+        // 直播升码率阈值：0.75F (已缓存长度占 Live Edge 比例达 85% 才可以升清晰度)
+        // 0.75F
+        public static final float BOX_BUFFERED_FRACTION_TO_LIVE_EDGE_FOR_QUALITY_INCREASE = 0.75F;
 
 
         // =================================================================
         // 2. 智能手机 / 平板 (PHONE) —— 核心理念：快速响应网络波动、积极提画质、高带宽利用
         // =================================================================
-        /**
-         * 升码率所需最小缓存：8秒（手机性能强、下载快，有 8s 缓存即可以快速提画质）
-         */
-        public static final int PHONE_MIN_DURATION_FOR_QUALITY_INCREASE_MS = 8_000;
-        /**
-         * 降码率门限：25秒（移动网络波动大，缓存充足时多撑一会儿不降档）
-         */
+
+        // 升码率所需最小缓存：15秒（盒子网络/性能弱，储备足够多的缓存才敢切高画质）
+        // 10000, 25000, 25000
+        public static final int PHONE_MIN_DURATION_FOR_QUALITY_INCREASE_MS = 10_000;
+        // 降码率门限：15秒（降低降档灵敏度，避免因瞬间网络抖动频繁切流导致老旧硬解崩溃）
+        // 25000
         public static final int PHONE_MAX_DURATION_FOR_QUALITY_DECREASE_MS = 25_000;
-        /**
-         * 丢弃缓存保留底线：15秒（手机下载速率高，保留 15s 足够平滑过渡到新清晰度）
-         */
-        public static final int PHONE_MIN_DURATION_TO_RETAIN_AFTER_DISCARD_MS = 15_000;
-        /**
-         * 允许废弃最大宽度：1080p (允许 1080p 及以下缓存废弃重下更高码率/4K)
-         */
-        public static final int PHONE_MAX_WIDTH_TO_DISCARD = 1920;
-        /**
-         * 允许废弃最大高度：1080p
-         */
-        public static final int PHONE_MAX_HEIGHT_TO_DISCARD = 1080;
-        /**
-         * 带宽利用率折扣：0.70 (预留 30% 安全余量，兼顾画质与弱网稳定性)
-         */
-        public static final float PHONE_BANDWIDTH_FRACTION = 0.70F;
-        /**
-         * 直播升码率阈值：0.70 (缓存达到 70% 即可升码率，追帧和高清兼顾)
-         */
-        public static final float PHONE_BUFFERED_FRACTION_TO_LIVE_EDGE_FOR_QUALITY_INCREASE = 0.70F;
+        // 丢弃缓存保留底线：20秒（盒子下载慢，废弃低画质时必须保留更多已缓存数据防断流）
+        // 25000
+        public static final int PHONE_MIN_DURATION_TO_RETAIN_AFTER_DISCARD_MS = 25_000;
+        // 允许废弃最大宽度：720p (仅允许 480p/720p 废弃，1080p及以上决不废弃重下)
+        // 1279
+        public static final int PHONE_MAX_WIDTH_TO_DISCARD = 1279;
+        // 允许废弃最大高度：720p
+        // 719
+        public static final int PHONE_MAX_HEIGHT_TO_DISCARD = 719;
+        // 带宽利用率折扣：0.6 (预留 40% 估算安全余量，极度保守防止估算偏高导致卡顿)
+        // 0.7F
+        public static final float PHONE_BANDWIDTH_FRACTION = 0.7F;
+        // 直播升码率阈值：0.75F (已缓存长度占 Live Edge 比例达 85% 才可以升清晰度)
+        // 0.75F
+        public static final float PHONE_BUFFERED_FRACTION_TO_LIVE_EDGE_FOR_QUALITY_INCREASE = 0.75F;
 
 
         // 兼容默认值（默认使用 BOX 方案，确保低性能设备开箱可用不卡顿）
@@ -165,33 +154,69 @@ public class PlayerConst {
 
         // // 最慢 0.98x 慢放
         // private float fallbackMinPlaybackSpeed = 0.97F;
-        public static final float BOX_MIN_PLAYBACK_SPEED = 0.97F;
+        public static final float BOX_FAILBACK_MIN_PLAYBACK_SPEED = 0.97F;
         // 最高 1.03x 快放（无感追帧）
         // private float fallbackMaxPlaybackSpeed = 1.03F;
-        public static final float BOX_MAX_PLAYBACK_SPEED = 1.03F;
+        public static final float BOX_FAILBACK_MAX_PLAYBACK_SPEED = 1.03F;
 
 
-        public static final long BOX_TARGET_OFFSET_MS = 4000L;                                // 期望目标延迟 4 秒（长延迟防卡）
-        public static final long BOX_MIN_OFFSET_MS = 2000L;                                   // 最小延迟 2 秒
-        public static final long BOX_MAX_OFFSET_MS = 25_000L;                                 // 最大容忍延迟 25 秒
+        // 期望目标延迟 4 秒（长延迟防卡）
+        // this.targetOffsetMs = -9223372036854775807L;
+        public static final long BOX_TARGET_OFFSET_MS = C.TIME_UNSET;
+
+        // 最小延迟 2 秒
+        //  this.minOffsetMs =-9223372036854775807L;
+        public static final long BOX_MIN_OFFSET_MS = C.TIME_UNSET;
+        // // 最大容忍延迟 25 秒
+        // this.maxOffsetMs =-9223372036854775807L;
+        public static final long BOX_MAX_OFFSET_MS = C.TIME_UNSET;
+        //  最慢 0.98x 慢放
+        // this.minPlaybackSpeed =-Float.MAX_VALUE;
+        public static final float BOX_MIN_PLAYBACK_SPEED = -Float.MAX_VALUE;
+        // 最高 1.03x 快放（无感追帧）
+        // this.maxPlaybackSpeed =-Float.MAX_VALUE;
+        public static final float BOX_MAX_PLAYBACK_SPEED = -Float.MAX_VALUE;
 
         // =================================================================
         // 2. 智能手机 (PHONE) —— 强追帧低延迟模式
         // =================================================================
 
-        public static final long PHONE_TARGET_LIVE_OFFSET_INCREMENT_ON_REBUFFER_US = Util.msToUs(500L); // 卡顿后延迟增加 300ms private long targetLiveOffsetIncrementOnRebufferUs = Util.msToUs(500L);
-        public static final float PHONE_MIN_POSSIBLE_LIVE_OFFSET_SMOOTHING_FACTOR = 0.999F; // private float minPossibleLiveOffsetSmoothingFactor = 0.999F;
-        public static final long PHONE_MAX_LIVE_OFFSET_ERROR_US_FOR_UNIT_SPEED = Util.msToUs(20L); // private long maxLiveOffsetErrorUsForUnitSpeed = Util.msToUs(20L);
-        public static final float PHONE_PROPORTIONAL_CONTROL_FACTOR_US = 1.0E-7F; // private float proportionalControlFactorUs = 1.0E-7F;
-
-        // private long minUpdateIntervalMs = 1000L;
+        // // 卡顿后延迟增加 500ms
+        // private long targetLiveOffsetIncrementOnRebufferUs = Util.msToUs(500L);
+        public static final long PHONE_TARGET_LIVE_OFFSET_INCREMENT_ON_REBUFFER_US = Util.msToUs(500L);
+        // private float minPossibleLiveOffsetSmoothingFactor = 0.999F;
+        public static final float PHONE_MIN_POSSIBLE_LIVE_OFFSET_SMOOTHING_FACTOR = 0.999F;
+        // private long maxLiveOffsetErrorUsForUnitSpeed = Util.msToUs(20L);
+        public static final long PHONE_MAX_LIVE_OFFSET_ERROR_US_FOR_UNIT_SPEED = Util.msToUs(20L);
+        //  private long minUpdateIntervalMs = 1000L;
         public static final long PHONE_MIN_UPDATE_INTERVAL_MS = 1000L;
-        public static final float PHONE_MIN_PLAYBACK_SPEED = 0.97F;                            // 最慢 0.95x 慢放 private float fallbackMaxPlaybackSpeed = 1.03F;
-        public static final float PHONE_MAX_PLAYBACK_SPEED = 1.03F;                            // 最高 1.08x 快放 private float fallbackMinPlaybackSpeed = 0.97F;
+        // private float proportionalControlFactorUs = 1.0E-7F;
+        public static final float PHONE_PROPORTIONAL_CONTROL_FACTOR_US = 1.0E-7F;
 
-        public static final long PHONE_TARGET_OFFSET_MS = 2500L;                               // 期望目标延迟 2.5 秒
-        public static final long PHONE_MIN_OFFSET_MS = 1000L;                                  // 最小延迟 1.0 秒
-        public static final long PHONE_MAX_OFFSET_MS = 35_000L;                                // 最大容忍延迟 35 秒
+        // // 最慢 0.98x 慢放
+        // private float fallbackMinPlaybackSpeed = 0.97F;
+        public static final float PHONE_FAILBACK_MIN_PLAYBACK_SPEED = 0.97F;
+        // 最高 1.03x 快放（无感追帧）
+        // private float fallbackMaxPlaybackSpeed = 1.03F;
+        public static final float PHONE_FAILBACK_MAX_PLAYBACK_SPEED = 1.03F;
+
+
+        // 期望目标延迟 4 秒（长延迟防卡）
+        // this.targetOffsetMs = -9223372036854775807L;
+        public static final long PHONE_TARGET_OFFSET_MS = C.TIME_UNSET;
+
+        // 最小延迟 2 秒
+        //  this.minOffsetMs =-9223372036854775807L;
+        public static final long PHONE_MIN_OFFSET_MS = C.TIME_UNSET;
+        // // 最大容忍延迟 25 秒
+        // this.maxOffsetMs =-9223372036854775807L;
+        public static final long PHONE_MAX_OFFSET_MS = C.TIME_UNSET;
+        //  最慢 0.98x 慢放
+        // this.minPlaybackSpeed =-Float.MAX_VALUE;
+        public static final float PHONE_MIN_PLAYBACK_SPEED = -Float.MAX_VALUE;
+        // 最高 1.03x 快放（无感追帧）
+        // this.maxPlaybackSpeed =-Float.MAX_VALUE;
+        public static final float PHONE_MAX_PLAYBACK_SPEED = -Float.MAX_VALUE;
 
         // =================================================================
         // 3. 全局默认兼容参数 (写在 Cons 中，默认取 BOX 策略保证稳定性)
@@ -201,6 +226,8 @@ public class PlayerConst {
         public static final long DEFAULT_MAX_LIVE_OFFSET_ERROR_US_FOR_UNIT_SPEED = BOX_MAX_LIVE_OFFSET_ERROR_US_FOR_UNIT_SPEED;
         public static final float DEFAULT_PROPORTIONAL_CONTROL_FACTOR_US = BOX_PROPORTIONAL_CONTROL_FACTOR_US;
         public static final long DEFAULT_MIN_UPDATE_INTERVAL_MS = BOX_MIN_UPDATE_INTERVAL_MS;
+        public static final float DEFAULT_FAILBACK_MIN_PLAYBACK_SPEED = BOX_FAILBACK_MIN_PLAYBACK_SPEED;
+        public static final float DEFAULT_FAILBACK_MAX_PLAYBACK_SPEED = BOX_FAILBACK_MAX_PLAYBACK_SPEED;
 
         public static final long DEFAULT_TARGET_OFFSET_MS = BOX_TARGET_OFFSET_MS;
         public static final long DEFAULT_MIN_OFFSET_MS = BOX_MIN_OFFSET_MS;
