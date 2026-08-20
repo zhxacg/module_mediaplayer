@@ -327,7 +327,7 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
             // all
             else {
                 if (LogUtil.DEBUG) {
-                    LogUtil.log(TAG, "checkDecoder -> only_video_codec");
+                    LogUtil.log(TAG, "checkDecoder -> default all");
                 }
                 Class<?> clazz = Class.forName("lib.kalu.mediax.renderers.BaseRenderersFactory");
                 Object newInstance = clazz.getDeclaredConstructor(Context.class).newInstance(context);
@@ -350,7 +350,7 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
             }
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
-                LogUtil.log(TAG, "checkDecoder -> " + e.getMessage());
+                LogUtil.log(TAG, "checkDecoder -> " + e.getMessage(), e);
             }
         }
     }
