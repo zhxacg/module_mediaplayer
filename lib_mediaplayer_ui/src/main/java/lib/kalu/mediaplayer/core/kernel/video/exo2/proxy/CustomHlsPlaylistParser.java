@@ -1413,32 +1413,6 @@ public class CustomHlsPlaylistParser implements ParsingLoadable.Parser<HlsPlayli
     }
 
     private static String formatSegmentPath(ProxyUrl proxyUrl, String baseUrl, String segmentPath) {
-        try {
-            if (null == proxyUrl) {
-                if (LogUtil.DEBUG) {
-                    LogUtil.log("CustomHlsPlaylistParser -> formatSegmentPath -> waring: proxyUrl null");
-                }
-                return segmentPath;
-            }
-            if (LogUtil.DEBUG) {
-                LogUtil.log("CustomHlsPlaylistParser -> formatSegmentPath -> baseUrl = " + baseUrl + ", segmentPath = " + segmentPath);
-            }
-            String formatSegmentPath = proxyUrl.formatSegmentPath(baseUrl, segmentPath);
-            if (LogUtil.DEBUG) {
-                LogUtil.log("CustomHlsPlaylistParser -> formatSegmentPath -> formatSegmentPath = " + formatSegmentPath);
-            }
-            if (null == formatSegmentPath || formatSegmentPath.isEmpty()) {
-                if (LogUtil.DEBUG) {
-                    LogUtil.log("CustomHlsPlaylistParser -> formatSegmentPath -> waring: formatSegmentPath null");
-                }
-                return segmentPath;
-            }
-            return formatSegmentPath;
-        } catch (Exception e) {
-            if (LogUtil.DEBUG) {
-                LogUtil.log("CustomHlsPlaylistParser -> formatSegmentPath -> Exception: " + e.getMessage());
-            }
-            return segmentPath;
-        }
+        return segmentPath;
     }
 }

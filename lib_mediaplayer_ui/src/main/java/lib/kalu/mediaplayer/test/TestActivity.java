@@ -8,7 +8,9 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.Toast;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import lib.kalu.mediaplayer.PlayerLayout;
 import lib.kalu.mediaplayer.R;
@@ -288,9 +290,9 @@ public final class TestActivity extends Activity {
                             .setProxyUrl(new ProxyUrl() {
 
                                 @Override
-                                public void formatOpenUrl(String url) {
+                                public void formatOpen(String url) {
                                     if (LogUtil.DEBUG) {
-                                        LogUtil.log("TestActivity -> formatOpenUrl -> url = " + url + ", thread = " + Thread.currentThread().getName());
+                                        LogUtil.log("TestActivity -> formatOpen -> url = " + url + ", thread = " + Thread.currentThread().getName());
                                     }
                                 }
 
@@ -299,28 +301,24 @@ public final class TestActivity extends Activity {
                                     if (LogUtil.DEBUG) {
                                         LogUtil.log("TestActivity -> formatM3u8Url -> url = " + url + ", thread = " + Thread.currentThread().getName());
                                     }
-                                    return url;
+                                    if (url.contains("?")) {
+                                        return url + "&key1=value1&key2=value2";
+                                    } else {
+                                        return url + "?key1=value1&key2=value2";
+                                    }
+                                }
+
+                                @Override
+                                public String formatSegmentUrl(String playlistUrl, String segmentUrl) {
+                                    if (LogUtil.DEBUG) {
+                                        LogUtil.log("TestActivity -> formatSegmentUrl -> playlistUrl = " + playlistUrl + ", segmentUrl = " + segmentUrl + ", thread = " + Thread.currentThread().getName());
+                                    }
+                                    return segmentUrl;
                                 }
 
                                 @Override
                                 public String formatSubtitleUrl(String url) {
                                     return url;
-                                }
-
-                                @Override
-                                public String formatSegmentUrl(String url) {
-                                    if (LogUtil.DEBUG) {
-                                        LogUtil.log("TestActivity -> formatSegmentUrl -> url = " + url + ", thread = " + Thread.currentThread().getName());
-                                    }
-                                    return url;
-                                }
-
-                                @Override
-                                public String formatSegmentPath(String baseUrl, String segmentUrl) {
-                                    if (LogUtil.DEBUG) {
-                                        LogUtil.log("TestActivity -> formatSegmentPath -> baseUrl = " + baseUrl + ", segmentUrl = " + segmentUrl + ", thread = " + Thread.currentThread().getName());
-                                    }
-                                    return segmentUrl;
                                 }
 
                                 @Override

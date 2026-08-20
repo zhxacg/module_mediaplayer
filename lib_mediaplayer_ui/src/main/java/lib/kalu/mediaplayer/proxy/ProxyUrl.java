@@ -4,7 +4,7 @@ import java.io.Serializable;
 
 public interface ProxyUrl extends Serializable {
 
-    default void formatOpenUrl(String url) {
+    default void formatOpen(String url) {
     }
 
     /**
@@ -21,15 +21,11 @@ public interface ProxyUrl extends Serializable {
         return childUrl;
     }
 
-    default String formatSegmentUrl(String url) {
-        return url;
+    default String formatSegmentUrl(String playlistUrl, String segmentUrl) {
+        return segmentUrl;
     }
 
-    default String formatSegmentPath(String baseUrl, String segmentPath) {
-        return segmentPath;
-    }
-
-    default String formatSubtitleUrl(String url) {
-        return url;
+    default String formatSubtitleUrl(String subtitleUrl) {
+        return subtitleUrl;
     }
 }

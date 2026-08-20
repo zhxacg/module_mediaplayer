@@ -73,6 +73,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Queue;
+import java.util.Set;
 import java.util.TreeMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -885,7 +886,9 @@ public final class CusHlsPlaylistParser implements ParsingLoadable.Parser<HlsPla
             Uri playlistUri,
             MatcherCache matcherCache)
             throws IOException {
-        String baseUri = playlistUri.toString();
+
+        String playlistUrl = playlistUri.toString();
+
         @HlsMediaPlaylist.PlaylistType int playlistType = HlsMediaPlaylist.PLAYLIST_TYPE_UNKNOWN;
         long startOffsetUs = C.TIME_UNSET;
         long mediaSequence = 0;
@@ -968,7 +971,7 @@ public final class CusHlsPlaylistParser implements ParsingLoadable.Parser<HlsPla
                         parseDoubleAttr(line, REGEX_PART_TARGET_DURATION, matcherCache);
                 partTargetDurationUs = (long) (partTargetDurationSeconds * C.MICROS_PER_SECOND);
             } else if (line.startsWith(TAG_INIT_SEGMENT)) {
-                String uri = parseStringAttr(line, REGEX_URI, variableDefinitions, matcherCache);
+                String segmentUri = parseStringAttr(line, REGEX_URI, variableDefinitions, matcherCache);
                 String byteRange =
                         parseOptionalStringAttr(line, REGEX_ATTR_BYTERANGE, variableDefinitions, matcherCache);
                 if (byteRange != null) {
@@ -991,7 +994,7 @@ public final class CusHlsPlaylistParser implements ParsingLoadable.Parser<HlsPla
                 }
                 initializationSegment =
                         new Segment(
-                                formatSegmentPath(proxyUrl, baseUri, uri),
+                                formatSegmentPath(proxyUrl, playlistUrl, segmentUri),
                                 segmentByteRangeOffset,
                                 segmentByteRangeLength,
                                 fullSegmentEncryptionKeyUri,
@@ -1144,7 +1147,7 @@ public final class CusHlsPlaylistParser implements ParsingLoadable.Parser<HlsPla
                 int lastPartIndex =
                         parseOptionalIntAttr(line, REGEX_LAST_PART, C.INDEX_UNSET, matcherCache);
                 String uri = parseStringAttr(line, REGEX_URI, variableDefinitions, matcherCache);
-                Uri renditionReportUri = Uri.parse(UriUtil.resolve(baseUri, uri));
+                Uri renditionReportUri = Uri.parse(UriUtil.resolve(playlistUrl, uri));
                 renditionReports.add(
                         new RenditionReport(renditionReportUri, lastMediaSequence, lastPartIndex));
             } else if (line.startsWith(TAG_PRELOAD_HINT)) {
@@ -1480,7 +1483,7 @@ public final class CusHlsPlaylistParser implements ParsingLoadable.Parser<HlsPla
                     // the playlist to provide an initialization vector for it.
                     inferredInitSegment =
                             new Segment(
-                                    formatSegmentPath(proxyUrl, baseUri, segmentUri),
+                                    formatSegmentPath(proxyUrl, playlistUrl, segmentUri),
                                     /* byteRangeOffset= */ 0,
                                     segmentByteRangeOffset,
                                     /* fullSegmentEncryptionKeyUri= */ null,
@@ -1498,7 +1501,7 @@ public final class CusHlsPlaylistParser implements ParsingLoadable.Parser<HlsPla
 
                 segments.add(
                         new Segment(
-                                formatSegmentPath(proxyUrl, baseUri, segmentUri),
+                                formatSegmentPath(proxyUrl, playlistUrl, segmentUri),
                                 initializationSegment != null ? initializationSegment : inferredInitSegment,
                                 segmentTitle,
                                 segmentDurationUs,
@@ -1944,6 +1947,55 @@ public final class CusHlsPlaylistParser implements ParsingLoadable.Parser<HlsPla
 
     /***********/
 
+    private static String formatSegmentPath(ProxyUrl proxyUrl, String playlistUrl, String segmentPath) {
+        try {
+            if (null != proxyUrl) {
+                Uri.Builder builder = Uri.parse(segmentPath).buildUpon();
+                builder.appendQueryParameter("playlistUrl", playlistUrl);
+                return builder.build().toString();
+            } else {
+                return segmentPath;
+            }
+        } catch (Exception e) {
+            if (LogUtil.DEBUG) {
+                LogUtil.log("CustomHlsPlaylistParser -> formatSegmentPath -> Exception: " + e.getMessage());
+            }
+            return segmentPath;
+        }
+    }
+
+    private static String formatChildM3u8Url(ProxyUrl proxyUrl, String baseUrl, String referencePath) {
+        try {
+            if (null == proxyUrl) {
+//                if (LogUtil.DEBUG) {
+//                    LogUtil.log("CustomHlsPlaylistParser -> formatChildM3u8Url -> waring: proxyUrl null");
+//                }
+                return referencePath;
+            }
+//            if (LogUtil.DEBUG) {
+//                LogUtil.log("CustomHlsPlaylistParser -> formatChildM3u8Url -> baseUrl = " + baseUrl + ", referencePath = " + referencePath);
+//            }
+            String formatSegmentPath = proxyUrl.formatChildM3u8Url(baseUrl, referencePath);
+//            if (LogUtil.DEBUG) {
+//                LogUtil.log("CustomHlsPlaylistParser -> formatChildM3u8Url -> formatSegmentPath = " + formatSegmentPath);
+//            }
+            if (null == formatSegmentPath || formatSegmentPath.isEmpty()) {
+//                if (LogUtil.DEBUG) {
+//                    LogUtil.log("CustomHlsPlaylistParser -> formatChildM3u8Url -> waring: formatSegmentPath null");
+//                }
+                return referencePath;
+            }
+            return formatSegmentPath;
+        } catch (Exception e) {
+            if (LogUtil.DEBUG) {
+                LogUtil.log("CustomHlsPlaylistParser -> formatChildM3u8Url -> Exception: " + e.getMessage());
+            }
+            return referencePath;
+        }
+    }
+
+    /******/
+
     private static Format formatHlsFormat(Format format) {
 
         if (LogUtil.DEBUG) {
@@ -2025,65 +2077,5 @@ public final class CusHlsPlaylistParser implements ParsingLoadable.Parser<HlsPla
 //        }
 
         return hlsMediaPlaylist;
-    }
-
-    private static String formatChildM3u8Url(ProxyUrl proxyUrl, String baseUrl, String referencePath) {
-        try {
-            if (null == proxyUrl) {
-//                if (LogUtil.DEBUG) {
-//                    LogUtil.log("CustomHlsPlaylistParser -> formatChildM3u8Url -> waring: proxyUrl null");
-//                }
-                return referencePath;
-            }
-//            if (LogUtil.DEBUG) {
-//                LogUtil.log("CustomHlsPlaylistParser -> formatChildM3u8Url -> baseUrl = " + baseUrl + ", referencePath = " + referencePath);
-//            }
-            String formatSegmentPath = proxyUrl.formatChildM3u8Url(baseUrl, referencePath);
-//            if (LogUtil.DEBUG) {
-//                LogUtil.log("CustomHlsPlaylistParser -> formatChildM3u8Url -> formatSegmentPath = " + formatSegmentPath);
-//            }
-            if (null == formatSegmentPath || formatSegmentPath.isEmpty()) {
-//                if (LogUtil.DEBUG) {
-//                    LogUtil.log("CustomHlsPlaylistParser -> formatChildM3u8Url -> waring: formatSegmentPath null");
-//                }
-                return referencePath;
-            }
-            return formatSegmentPath;
-        } catch (Exception e) {
-            if (LogUtil.DEBUG) {
-                LogUtil.log("CustomHlsPlaylistParser -> formatChildM3u8Url -> Exception: " + e.getMessage());
-            }
-            return referencePath;
-        }
-    }
-
-    private static String formatSegmentPath(ProxyUrl proxyUrl, String baseUrl, String segmentPath) {
-        try {
-            if (null == proxyUrl) {
-//                if (LogUtil.DEBUG) {
-//                    LogUtil.log("CustomHlsPlaylistParser -> formatSegmentPath -> waring: proxyUrl null");
-//                }
-                return segmentPath;
-            }
-//            if (LogUtil.DEBUG) {
-//                LogUtil.log("CustomHlsPlaylistParser -> formatSegmentPath -> baseUrl = " + baseUrl + ", segmentPath = " + segmentPath);
-//            }
-            String formatSegmentPath = proxyUrl.formatSegmentPath(baseUrl, segmentPath);
-//            if (LogUtil.DEBUG) {
-//                LogUtil.log("CustomHlsPlaylistParser -> formatSegmentPath -> formatSegmentPath = " + formatSegmentPath);
-//            }
-            if (null == formatSegmentPath || formatSegmentPath.isEmpty()) {
-//                if (LogUtil.DEBUG) {
-//                    LogUtil.log("CustomHlsPlaylistParser -> formatSegmentPath -> waring: formatSegmentPath null");
-//                }
-                return segmentPath;
-            }
-            return formatSegmentPath;
-        } catch (Exception e) {
-            if (LogUtil.DEBUG) {
-                LogUtil.log("CustomHlsPlaylistParser -> formatSegmentPath -> Exception: " + e.getMessage());
-            }
-            return segmentPath;
-        }
     }
 }

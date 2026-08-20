@@ -73,6 +73,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.NavigableSet;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -383,24 +384,65 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
             ResolvingDataSource.Factory httpFactory = new ResolvingDataSource.Factory(
                     baseHttpDataSourceFactory,
                     new ResolvingDataSource.Resolver() {
+
+                        final HashMap mapQueryParameter = new HashMap<String, String>();
+
                         @Override
                         public DataSpec resolveDataSpec(DataSpec dataSpec) {
 
+                            // 发起请求之前的Url
+                            String dataUrl = dataSpec.uri.toString();
                             if (LogUtil.DEBUG) {
-                                LogUtil.log(TAG, "startDecoder -> resolveDataSpec, dataSpec.uri = " + dataSpec.uri);
+                                LogUtil.log(TAG, "startDecoder -> resolveDataSpec, dataSpec.uri = " + dataUrl);
                             }
 
-//                            boolean isPrepared = isPrepared();
-//                            String dataUrl = dataSpec.uri.toString();
-//
-//                            // 将自定义数据（如 Token、请求头）追加到新的 DataSpec 中
-//                            if (!isPrepared && dataUrl.equals(masterUrl)) {
-//                                return dataSpec.buildUpon()
-//                                        .setCustomData(CusTag.MASTER_PLAY_URL_VIDEO) // 保留在 customData 中供下一个自定义 DataSource 使用
-//                                        .build();
-//                            } else {
-//                                return dataSpec;
-//                            }
+                            if (null != proxyUrl) {
+
+                                // 回调：每次发起请求
+                                proxyUrl.formatOpen(dataUrl);
+
+                                // ts
+                                if (dataUrl.contains(PlayerType.SchemeType._TS) || dataUrl.contains(PlayerType.SchemeType._TS_)) {
+                                    Uri parse = Uri.parse(dataUrl);
+                                    String playlistUrl = parse.getQueryParameter("playlistUrl");
+                                    Set<String> queryParameterNames = parse.getQueryParameterNames();
+                                    Uri.Builder builder = parse.buildUpon().clearQuery();
+                                    if (null != queryParameterNames && !queryParameterNames.isEmpty()) {
+                                        for (String key : queryParameterNames) {
+                                            if ("playlistUrl".equals(key))
+                                                continue;
+                                            String value = parse.getQueryParameter(key);
+                                            builder.appendQueryParameter(key, value);
+                                        }
+                                    }
+                                    String segmentUrl = builder.toString();
+                                    String newUrl = proxyUrl.formatSegmentUrl(playlistUrl, segmentUrl);
+                                    return dataSpec.buildUpon()
+                                            .setUri(newUrl)
+                                            .build();
+                                }
+                                // vtt
+                                else if (dataUrl.contains(PlayerType.SchemeType._VTT) || dataUrl.contains(PlayerType.SchemeType._VTT_)) {
+                                    String newUrl = proxyUrl.formatSubtitleUrl(dataUrl);
+                                    return dataSpec.buildUpon()
+                                            .setUri(newUrl)
+                                            .build();
+                                }
+                                // ssa
+                                else if (dataUrl.contains(PlayerType.SchemeType._SSA) || dataUrl.contains(PlayerType.SchemeType._SSA_)) {
+                                    String newUrl = proxyUrl.formatSubtitleUrl(dataUrl);
+                                    return dataSpec.buildUpon()
+                                            .setUri(newUrl)
+                                            .build();
+                                }
+                                // m3u8
+                                else if (dataUrl.contains(PlayerType.SchemeType._M3U8) || dataUrl.contains(PlayerType.SchemeType._M3U8_)) {
+                                    String newUrl = proxyUrl.formatM3u8Url(dataUrl);
+                                    return dataSpec.buildUpon()
+                                            .setUri(newUrl)
+                                            .build();
+                                }
+                            }
 
                             return dataSpec;
                         }

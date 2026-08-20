@@ -1062,23 +1062,6 @@ public final class CustomDefaultHttpDataSource extends BaseDataSource implements
 
     private String formatOpenSegmentUrl(String url) {
 
-        if (LogUtil.DEBUG) {
-            LogUtil.log(TAG, "formatOpenSegmentUrl -> url = " + url);
-        }
-
-        try {
-            if (null == proxyUrl) {
-                if (LogUtil.DEBUG) {
-                    LogUtil.log(TAG, "formatOpenSegmentUrl -> waring: proxyUrl null");
-                }
-                return url;
-            }
-            return proxyUrl.formatSegmentUrl(url);
-        } catch (Exception e) {
-            if (LogUtil.DEBUG) {
-                LogUtil.log(TAG, "formatOpenSegmentUrl -> Exception: " + e.getMessage());
-            }
-            return url;
-        }
+        return url;
     }
 }
