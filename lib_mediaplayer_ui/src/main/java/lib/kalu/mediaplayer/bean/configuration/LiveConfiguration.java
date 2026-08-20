@@ -155,9 +155,9 @@ public final class LiveConfiguration implements Serializable {
             this.minOffsetMs = PlayerConst.LiveConfiguration.BOX_MIN_OFFSET_MS;
             this.maxOffsetMs = PlayerConst.LiveConfiguration.BOX_MAX_OFFSET_MS;
             this.minPlaybackSpeed = PlayerConst.LiveConfiguration.BOX_MIN_PLAYBACK_SPEED;
-            this.fallbackMinPlaybackSpeed = PlayerConst.LiveConfiguration.BOX_MIN_PLAYBACK_SPEED;
             this.maxPlaybackSpeed = PlayerConst.LiveConfiguration.BOX_MAX_PLAYBACK_SPEED;
-            this.fallbackMaxPlaybackSpeed = PlayerConst.LiveConfiguration.BOX_MAX_PLAYBACK_SPEED;
+            this.fallbackMinPlaybackSpeed = PlayerConst.LiveConfiguration.BOX_FAILBACK_MIN_PLAYBACK_SPEED;
+            this.fallbackMaxPlaybackSpeed = PlayerConst.LiveConfiguration.BOX_FAILBACK_MAX_PLAYBACK_SPEED;
             return this;
         }
 
@@ -174,9 +174,9 @@ public final class LiveConfiguration implements Serializable {
             this.minOffsetMs = PlayerConst.LiveConfiguration.PHONE_MIN_OFFSET_MS;
             this.maxOffsetMs = PlayerConst.LiveConfiguration.PHONE_MAX_OFFSET_MS;
             this.minPlaybackSpeed = PlayerConst.LiveConfiguration.PHONE_MIN_PLAYBACK_SPEED;
-            this.fallbackMinPlaybackSpeed = PlayerConst.LiveConfiguration.PHONE_MIN_PLAYBACK_SPEED;
             this.maxPlaybackSpeed = PlayerConst.LiveConfiguration.PHONE_MAX_PLAYBACK_SPEED;
-            this.fallbackMaxPlaybackSpeed = PlayerConst.LiveConfiguration.PHONE_MAX_PLAYBACK_SPEED;
+            this.fallbackMinPlaybackSpeed = PlayerConst.LiveConfiguration.PHONE_FAILBACK_MIN_PLAYBACK_SPEED;
+            this.fallbackMaxPlaybackSpeed = PlayerConst.LiveConfiguration.PHONE_FAILBACK_MAX_PLAYBACK_SPEED;
             return this;
         }
 
