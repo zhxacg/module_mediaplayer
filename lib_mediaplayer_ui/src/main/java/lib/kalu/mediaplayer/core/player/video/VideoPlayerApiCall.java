@@ -4,6 +4,8 @@ package lib.kalu.mediaplayer.core.player.video;
 import android.view.View;
 import android.view.ViewGroup;
 
+import java.util.concurrent.ExecutionException;
+
 import lib.kalu.mediaplayer.PlayerSDK;
 import lib.kalu.mediaplayer.bean.args.StartArgs;
 import lib.kalu.mediaplayer.bean.info.PlayInfo;
@@ -39,16 +41,15 @@ public interface VideoPlayerApiCall extends VideoPlayerApiBase, VideoPlayerApiLi
                 if (LogUtil.DEBUG) {
                     LogUtil.log(TAG, "callComponentScreenOrientation -> childCount = " + childCount);
                 }
-                if (childCount <= 0)
-                    return;
-
-                for (int i = 0; i < childCount; i++) {
-                    View childAt = viewGroup.getChildAt(i);
-                    if (null == childAt)
-                        continue;
-                    if (!(childAt instanceof ComponentApi))
-                        continue;
-                    ((ComponentApi) childAt).onUpdateScreenOrientation(value);
+                if (childCount > 0) {
+                    for (int i = 0; i < childCount; i++) {
+                        View childAt = viewGroup.getChildAt(i);
+                        if (null == childAt)
+                            continue;
+                        if (!(childAt instanceof ComponentApi))
+                            continue;
+                        ((ComponentApi) childAt).onUpdateScreenOrientation(value);
+                    }
                 }
             } catch (Exception e) {
                 if (LogUtil.DEBUG) {
@@ -91,17 +92,16 @@ public interface VideoPlayerApiCall extends VideoPlayerApiBase, VideoPlayerApiLi
                 if (LogUtil.DEBUG) {
                     LogUtil.log(TAG, "callComponentVolume -> childCount = " + childCount);
                 }
-                if (childCount <= 0)
-                    return;
-                for (int i = 0; i < childCount; i++) {
-                    View childAt = viewGroup.getChildAt(i);
-                    if (null == childAt)
-                        continue;
-                    if (!(childAt instanceof ComponentApi))
-                        continue;
-                    ((ComponentApi) childAt).onUpdateVolume(volume);
+                if (childCount > 0) {
+                    for (int i = 0; i < childCount; i++) {
+                        View childAt = viewGroup.getChildAt(i);
+                        if (null == childAt)
+                            continue;
+                        if (!(childAt instanceof ComponentApi))
+                            continue;
+                        ((ComponentApi) childAt).onUpdateVolume(volume);
+                    }
                 }
-
             } catch (Exception e) {
                 if (LogUtil.DEBUG) {
                     LogUtil.log(TAG, "callComponentVolume -> " + e.getMessage());
@@ -119,19 +119,18 @@ public interface VideoPlayerApiCall extends VideoPlayerApiBase, VideoPlayerApiLi
         try {
             ViewGroup viewGroup = getBaseComponentViewGroup();
             int childCount = viewGroup.getChildCount();
-            if (childCount <= 0) {
-                if (LogUtil.DEBUG) {
-                    LogUtil.log(TAG, "callComponentWindowState -> not find component");
-                }
-                return;
+            if (LogUtil.DEBUG) {
+                LogUtil.log(TAG, "callWindow -> childCount = " + childCount);
             }
-            for (int i = 0; i < childCount; i++) {
-                View childAt = viewGroup.getChildAt(i);
-                if (null == childAt)
-                    continue;
-                if (!(childAt instanceof ComponentApi))
-                    continue;
-                ((ComponentApi) childAt).onUpdateWindow(state);
+            if (childCount > 0) {
+                for (int i = 0; i < childCount; i++) {
+                    View childAt = viewGroup.getChildAt(i);
+                    if (null == childAt)
+                        continue;
+                    if (!(childAt instanceof ComponentApi))
+                        continue;
+                    ((ComponentApi) childAt).onUpdateWindow(state);
+                }
             }
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
@@ -175,29 +174,26 @@ public interface VideoPlayerApiCall extends VideoPlayerApiBase, VideoPlayerApiLi
             try {
                 ViewGroup viewGroup = getBaseComponentViewGroup();
                 int childCount = viewGroup.getChildCount();
-//            if (LogUtil.DEBUG) {
-//                LogUtil.log(TAG, "callComponentEvent -> playState = " + playState + ", childCount = " + childCount);
-//            }
-                if (childCount <= 0) {
-                    if (LogUtil.DEBUG) {
-                        LogUtil.log(TAG, "callComponentEvent -> not find component");
-                    }
-                    return;
+
+                if (LogUtil.DEBUG) {
+                    LogUtil.log(TAG, "callEvent -> callComponentEvent -> childCount = " + childCount);
                 }
-                for (int i = 0; i < childCount; i++) {
-                    View childAt = viewGroup.getChildAt(i);
-                    if (null == childAt)
-                        continue;
+                if (childCount > 0) {
+                    for (int i = 0; i < childCount; i++) {
+                        View childAt = viewGroup.getChildAt(i);
+                        if (null == childAt)
+                            continue;
 //                if (LogUtil.DEBUG) {
-//                    LogUtil.log(TAG, "callComponentEvent -> playState = " + playState + ", childCount = " + childCount + ", index = " + i + ", childAt = " + childAt);
+//                    LogUtil.log(TAG, "callEvent -> callComponentEvent -> playState = " + playState + ", childCount = " + childCount + ", index = " + i + ", childAt = " + childAt);
 //                }
-                    if (!(childAt instanceof ComponentApi))
-                        continue;
-                    ((ComponentApi) childAt).onUpdateEvent(playState);
+                        if (!(childAt instanceof ComponentApi))
+                            continue;
+                        ((ComponentApi) childAt).onUpdateEvent(playState);
+                    }
                 }
             } catch (Exception e) {
                 if (LogUtil.DEBUG) {
-                    LogUtil.log(TAG, "callComponentEvent -> " + e.getMessage());
+                    LogUtil.log(TAG, "callEvent -> callComponentEvent -> " + e.getMessage());
                 }
             }
         }
@@ -206,12 +202,12 @@ public interface VideoPlayerApiCall extends VideoPlayerApiBase, VideoPlayerApiLi
         if (callPlayer) {
             try {
                 OnPlayerEventListener onPlayerEventListener = getPlayerEventListener();
-                if (null == onPlayerEventListener) {
-                    if (LogUtil.DEBUG) {
-                        LogUtil.log(TAG, "callPlayerEvent -> warning: eventListener null");
-                    }
-                    return;
+                if (LogUtil.DEBUG) {
+                    LogUtil.log(TAG, "callEvent -> callPlayerEvent -> onPlayerEventListener = " + onPlayerEventListener);
                 }
+                if (null == onPlayerEventListener)
+                    return;
+
                 onPlayerEventListener.onEvent(playState);
 
                 boolean error = PlayStateUtil.isError(playState);
@@ -234,7 +230,7 @@ public interface VideoPlayerApiCall extends VideoPlayerApiBase, VideoPlayerApiLi
                 }
             } catch (Exception e) {
                 if (LogUtil.DEBUG) {
-                    LogUtil.log(TAG, "callPlayerEvent -> " + e.getMessage());
+                    LogUtil.log(TAG, "callEvent -> callPlayerEvent -> " + e.getMessage());
                 }
             }
         }
@@ -250,19 +246,18 @@ public interface VideoPlayerApiCall extends VideoPlayerApiBase, VideoPlayerApiLi
         try {
             ViewGroup viewGroup = getBaseComponentViewGroup();
             int childCount = viewGroup.getChildCount();
-            if (childCount <= 0) {
-                if (LogUtil.DEBUG) {
-                    LogUtil.log(TAG, "callComponentProgress -> not find component");
-                }
-                return;
+            if (LogUtil.DEBUG) {
+                LogUtil.log(TAG, "callComponentProgress -> childCount = " + childCount);
             }
-            for (int i = 0; i < childCount; i++) {
-                View childAt = viewGroup.getChildAt(i);
-                if (null == childAt)
-                    continue;
-                if (!(childAt instanceof ComponentApi))
-                    continue;
-                ((ComponentApi) childAt).onUpdateProgress(false, trySeeDuration, position, duration);
+            if (childCount > 0) {
+                for (int i = 0; i < childCount; i++) {
+                    View childAt = viewGroup.getChildAt(i);
+                    if (null == childAt)
+                        continue;
+                    if (!(childAt instanceof ComponentApi))
+                        continue;
+                    ((ComponentApi) childAt).onUpdateProgress(false, trySeeDuration, position, duration);
+                }
             }
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
@@ -273,12 +268,11 @@ public interface VideoPlayerApiCall extends VideoPlayerApiBase, VideoPlayerApiLi
         // listener
         try {
             OnPlayerProgressListener onPlayerProgressListener = getPlayerProgressListener();
-            if (null == onPlayerProgressListener) {
-                if (LogUtil.DEBUG) {
-                    LogUtil.log(TAG, "callPlayerProgress -> warning: onPlayerProgressListener null");
-                }
-                return;
+            if (LogUtil.DEBUG) {
+                LogUtil.log(TAG, "callPlayerProgress -> warning: onPlayerProgressListener null");
             }
+            if (null == onPlayerProgressListener)
+                return;
             onPlayerProgressListener.onProgress(trySeeDuration, position, duration);
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
@@ -293,19 +287,18 @@ public interface VideoPlayerApiCall extends VideoPlayerApiBase, VideoPlayerApiLi
         try {
             ViewGroup viewGroup = getBaseComponentViewGroup();
             int childCount = viewGroup.getChildCount();
-            if (childCount <= 0) {
-                if (LogUtil.DEBUG) {
-                    LogUtil.log(TAG, "callComponentSubtitle -> not find component");
-                }
-                return;
+            if (LogUtil.DEBUG) {
+                LogUtil.log(TAG, "callComponentSubtitle -> childCount = " + childCount);
             }
-            for (int i = 0; i < childCount; i++) {
-                View childAt = viewGroup.getChildAt(i);
-                if (null == childAt)
-                    continue;
-                if (!(childAt instanceof ComponentApi))
-                    continue;
-                ((ComponentApi) childAt).onUpdateSubtitle(kernel, value);
+            if (childCount > 0) {
+                for (int i = 0; i < childCount; i++) {
+                    View childAt = viewGroup.getChildAt(i);
+                    if (null == childAt)
+                        continue;
+                    if (!(childAt instanceof ComponentApi))
+                        continue;
+                    ((ComponentApi) childAt).onUpdateSubtitle(kernel, value);
+                }
             }
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
@@ -322,19 +315,18 @@ public interface VideoPlayerApiCall extends VideoPlayerApiBase, VideoPlayerApiLi
         try {
             ViewGroup viewGroup = getBaseComponentViewGroup();
             int childCount = viewGroup.getChildCount();
-            if (childCount <= 0) {
-                if (LogUtil.DEBUG) {
-                    LogUtil.log(TAG, "callComponentSubtitle -> not find component");
-                }
-                return;
+            if (LogUtil.DEBUG) {
+                LogUtil.log(TAG, "callComponentSubtitle -> childCount = " + childCount);
             }
-            for (int i = 0; i < childCount; i++) {
-                View childAt = viewGroup.getChildAt(i);
-                if (null == childAt)
-                    continue;
-                if (!(childAt instanceof ComponentApi))
-                    continue;
-                ((ComponentApi) childAt).onUpdateBandwidth(kernel, totalLoadTimeMs, estimateKBs, realAvgKBs);
+            if (childCount > 0) {
+                for (int i = 0; i < childCount; i++) {
+                    View childAt = viewGroup.getChildAt(i);
+                    if (null == childAt)
+                        continue;
+                    if (!(childAt instanceof ComponentApi))
+                        continue;
+                    ((ComponentApi) childAt).onUpdateBandwidth(kernel, totalLoadTimeMs, estimateKBs, realAvgKBs);
+                }
             }
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
@@ -343,12 +335,18 @@ public interface VideoPlayerApiCall extends VideoPlayerApiBase, VideoPlayerApiLi
         }
 
         // listener
-        OnPlayerBandwidthListener listener = getOnPlayerBandwidthListener();
-        if (LogUtil.DEBUG) {
-            LogUtil.log(TAG, "callPlayerBandwidth -> kernel = " + kernel + ", totalLoadTimeMs = " + totalLoadTimeMs + ", estimateKBs = " + estimateKBs + ", realAvgKBs = " + realAvgKBs + ", listener = " + listener);
-        }
-        if (null != listener) {
-            listener.onBandwidth(kernel, totalLoadTimeMs, estimateKBs, realAvgKBs);
+        try {
+            OnPlayerBandwidthListener listener = getOnPlayerBandwidthListener();
+            if (LogUtil.DEBUG) {
+                LogUtil.log(TAG, "callPlayerBandwidth -> kernel = " + kernel + ", totalLoadTimeMs = " + totalLoadTimeMs + ", estimateKBs = " + estimateKBs + ", realAvgKBs = " + realAvgKBs + ", listener = " + listener);
+            }
+            if (null != listener) {
+                listener.onBandwidth(kernel, totalLoadTimeMs, estimateKBs, realAvgKBs);
+            }
+        } catch (Exception e) {
+            if (LogUtil.DEBUG) {
+                LogUtil.log(TAG, "callComponentBandwidth -> " + e.getMessage());
+            }
         }
     }
 
@@ -362,33 +360,38 @@ public interface VideoPlayerApiCall extends VideoPlayerApiBase, VideoPlayerApiLi
         try {
             ViewGroup viewGroup = getBaseComponentViewGroup();
             int childCount = viewGroup.getChildCount();
-            if (childCount <= 0) {
-                if (LogUtil.DEBUG) {
-                    LogUtil.log(TAG, "callComponentSubtitle -> not find component");
-                }
-                return;
+            if (LogUtil.DEBUG) {
+                LogUtil.log(TAG, "callStuckNet -> childCount = " + childCount);
             }
-            for (int i = 0; i < childCount; i++) {
-                View childAt = viewGroup.getChildAt(i);
-                if (null == childAt)
-                    continue;
-                if (!(childAt instanceof ComponentApi))
-                    continue;
-                ((ComponentApi) childAt).onUpdateStuckNet(kernel, videoBitrate, netBitrate);
+            if (childCount > 0) {
+                for (int i = 0; i < childCount; i++) {
+                    View childAt = viewGroup.getChildAt(i);
+                    if (null == childAt)
+                        continue;
+                    if (!(childAt instanceof ComponentApi))
+                        continue;
+                    ((ComponentApi) childAt).onUpdateStuckNet(kernel, videoBitrate, netBitrate);
+                }
             }
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
-                LogUtil.log(TAG, "callComponentBandwidth -> " + e.getMessage());
+                LogUtil.log(TAG, "callStuckNet -> " + e.getMessage());
             }
         }
 
         // listener
-        OnPlayerStuckListener listener = getOnPlayerStuckListener();
-        if (LogUtil.DEBUG) {
-            LogUtil.log(TAG, "callStuckNet -> listener = " + listener);
-        }
-        if (null != listener) {
+        try {
+            OnPlayerStuckListener listener = getOnPlayerStuckListener();
+            if (LogUtil.DEBUG) {
+                LogUtil.log(TAG, "callStuckNet -> listener = " + listener);
+            }
+            if (null == listener)
+                return;
             listener.onStuckNet(kernel, videoBitrate, netBitrate);
+        } catch (Exception e) {
+            if (LogUtil.DEBUG) {
+                LogUtil.log(TAG, "callStuckNet -> " + e.getMessage());
+            }
         }
     }
 
