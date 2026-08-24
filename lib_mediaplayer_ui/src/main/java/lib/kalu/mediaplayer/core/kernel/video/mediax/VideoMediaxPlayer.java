@@ -393,8 +393,6 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
                     baseHttpDataSourceFactory,
                     new ResolvingDataSource.Resolver() {
 
-                        final HashMap mapQueryParameter = new HashMap<String, String>();
-
                         @Override
                         public DataSpec resolveDataSpec(DataSpec dataSpec1) {
 
