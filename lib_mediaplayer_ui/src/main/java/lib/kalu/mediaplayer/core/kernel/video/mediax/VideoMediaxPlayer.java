@@ -396,7 +396,7 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
                         @Override
                         public DataSpec resolveDataSpec(DataSpec dataSpec1) {
 
-                            DataSpec dataSpec = dataSpec1.withAdditionalHeaders(mapHead);
+                             DataSpec dataSpec = dataSpec1.withAdditionalHeaders(mapHead);
 
                             // 发起请求之前的Url
                             String dataUrl = dataSpec.uri.toString();
