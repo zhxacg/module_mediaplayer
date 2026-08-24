@@ -385,7 +385,7 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
                     .setUserAgent(Util.getUserAgent(context, context.getApplicationInfo().packageName))
                     .setConnectTimeoutMs(connectTimoutMs)
                     .setReadTimeoutMs(connectTimoutMs)
-                    .setDefaultRequestProperties(mapHead)
+//                    .setDefaultRequestProperties(mapHead)
                     .setAllowCrossProtocolRedirects(true) //跨协议重定向务必打开
                     .setKeepPostFor302Redirects(true);
             // 2. 用 ResolvingDataSource 包装它
