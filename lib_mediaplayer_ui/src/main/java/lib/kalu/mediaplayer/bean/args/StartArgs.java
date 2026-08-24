@@ -4,6 +4,7 @@ package lib.kalu.mediaplayer.bean.args;
 import org.json.JSONObject;
 
 import java.io.Serializable;
+import java.util.Map;
 
 import lib.kalu.mediaplayer.PlayerSDK;
 import lib.kalu.mediaplayer.bean.configuration.AdaptiveConfiguration;

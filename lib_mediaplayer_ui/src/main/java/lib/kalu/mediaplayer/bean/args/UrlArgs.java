@@ -3,6 +3,7 @@ package lib.kalu.mediaplayer.bean.args;
 import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 import lib.kalu.mediaplayer.PlayerConst;
 import lib.kalu.mediaplayer.bean.type.PlayerType;
@@ -11,6 +12,7 @@ public final class UrlArgs implements Serializable {
 
     @PlayerType.StreamType.Value
     private int streamType;
+    private Map<String, String> streamHead;
     private List<Item> defaultStreams;
     private List<Item> extraStreams;
     private List<Item> extraSubtitles;
@@ -18,6 +20,11 @@ public final class UrlArgs implements Serializable {
     public int getStreamType() {
         return streamType;
     }
+
+    public Map<String, String> getStreamHead() {
+        return streamHead;
+    }
+
 
     public static Builder newBuilder() {
         return new Builder();
@@ -27,6 +34,7 @@ public final class UrlArgs implements Serializable {
     public String toString() {
         return "UrlArgs{" +
                 "streamType=" + streamType +
+                ", streamHead=" + streamHead +
                 ", defaultStreams=" + defaultStreams +
                 ", extraStreams=" + extraStreams +
                 ", extraSubtitles=" + extraSubtitles +
@@ -38,6 +46,7 @@ public final class UrlArgs implements Serializable {
         this.extraStreams = builder.extraStreams;
         this.extraSubtitles = builder.extraSubtitles;
         this.streamType = builder.streamType;
+        this.streamHead = builder.streamHead;
     }
 
     public boolean containsUrl() {
@@ -134,15 +143,20 @@ public final class UrlArgs implements Serializable {
 
     public static class Builder implements Serializable {
 
+        @PlayerType.StreamType.Value
+        private int streamType = PlayerConst.DEFAULT_STREAM_TYPE;
+        private Map<String, String> streamHead;
         private List<Item> defaultStreams = new LinkedList<>();
         private List<Item> extraStreams = new LinkedList<>();
         private List<Item> extraSubtitles = new LinkedList<>();
 
-        @PlayerType.StreamType.Value
-        private int streamType = PlayerConst.DEFAULT_STREAM_TYPE;
-
         public UrlArgs.Builder setStreamType(@PlayerType.StreamType.Value int v) {
             this.streamType = v;
+            return this;
+        }
+
+        public UrlArgs.Builder setStreamHead(Map<String, String> v) {
+            this.streamHead = v;
             return this;
         }
 

@@ -72,6 +72,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.NavigableSet;
 import java.util.Set;
 import java.util.regex.Matcher;
@@ -375,11 +376,18 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
             int connectTimoutMs = timeoutConfiguration.getConnectTimeoutMs();
             ProxyUrl proxyUrl = startArgs.getProxyUrl();
             boolean noProxy = startArgs.isNoProxy();
+            Map<String, String> mapHead = startArgs.getUrlArgs().getStreamHead();
             if (LogUtil.DEBUG) {
-                LogUtil.log(TAG, "startDecoder -> connectTimoutMs = " + connectTimoutMs + ", noProxy = " + noProxy + ", proxyUrl = " + proxyUrl);
+                LogUtil.log(TAG, "startDecoder -> connectTimoutMs = " + connectTimoutMs + ", noProxy = " + noProxy + ", proxyUrl = " + proxyUrl+", mapHead = "+mapHead);
             }
             // HttpClient
-            CusDefaultHttpDataSource.Factory baseHttpDataSourceFactory = new CusDefaultHttpDataSource.Factory(proxyUrl, noProxy).setUserAgent(Util.getUserAgent(context, context.getApplicationInfo().packageName)).setConnectTimeoutMs(connectTimoutMs).setReadTimeoutMs(connectTimoutMs).setDefaultRequestProperties(new HashMap<>()).setAllowCrossProtocolRedirects(true).setKeepPostFor302Redirects(true);
+            CusDefaultHttpDataSource.Factory baseHttpDataSourceFactory = new CusDefaultHttpDataSource.Factory(proxyUrl, noProxy)
+                    .setUserAgent(Util.getUserAgent(context, context.getApplicationInfo().packageName))
+                    .setConnectTimeoutMs(connectTimoutMs)
+                    .setReadTimeoutMs(connectTimoutMs)
+                    .setDefaultRequestProperties(mapHead)
+                    .setAllowCrossProtocolRedirects(true)
+                    .setKeepPostFor302Redirects(true);
             // 2. 用 ResolvingDataSource 包装它
             ResolvingDataSource.Factory httpFactory = new ResolvingDataSource.Factory(
                     baseHttpDataSourceFactory,

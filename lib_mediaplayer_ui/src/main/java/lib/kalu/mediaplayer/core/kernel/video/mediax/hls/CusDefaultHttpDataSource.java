@@ -96,7 +96,9 @@ public final class CusDefaultHttpDataSource extends BaseDataSource implements Ht
 
         @Override
         public final Factory setDefaultRequestProperties(Map<String, String> defaultRequestProperties) {
-            this.defaultRequestProperties.clearAndSet(defaultRequestProperties);
+            if (null != defaultRequestProperties && !defaultRequestProperties.isEmpty()) {
+                this.defaultRequestProperties.clearAndSet(defaultRequestProperties);
+            }
             return this;
         }
 
