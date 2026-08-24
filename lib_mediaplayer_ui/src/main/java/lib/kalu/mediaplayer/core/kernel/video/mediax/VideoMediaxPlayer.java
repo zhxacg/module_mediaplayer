@@ -378,7 +378,7 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
             boolean noProxy = startArgs.isNoProxy();
             Map<String, String> mapHead = startArgs.getUrlArgs().getStreamHead();
             if (LogUtil.DEBUG) {
-                LogUtil.log(TAG, "startDecoder -> connectTimoutMs = " + connectTimoutMs + ", noProxy = " + noProxy + ", proxyUrl = " + proxyUrl+", mapHead = "+mapHead);
+                LogUtil.log(TAG, "startDecoder -> connectTimoutMs = " + connectTimoutMs + ", noProxy = " + noProxy + ", proxyUrl = " + proxyUrl + ", mapHead = " + mapHead);
             }
             // HttpClient
             CusDefaultHttpDataSource.Factory baseHttpDataSourceFactory = new CusDefaultHttpDataSource.Factory(proxyUrl, noProxy)
@@ -386,7 +386,7 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
                     .setConnectTimeoutMs(connectTimoutMs)
                     .setReadTimeoutMs(connectTimoutMs)
                     .setDefaultRequestProperties(mapHead)
-                    .setAllowCrossProtocolRedirects(true)
+                    .setAllowCrossProtocolRedirects(true) //跨协议重定向务必打开
                     .setKeepPostFor302Redirects(true);
             // 2. 用 ResolvingDataSource 包装它
             ResolvingDataSource.Factory httpFactory = new ResolvingDataSource.Factory(
@@ -396,7 +396,9 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
                         final HashMap mapQueryParameter = new HashMap<String, String>();
 
                         @Override
-                        public DataSpec resolveDataSpec(DataSpec dataSpec) {
+                        public DataSpec resolveDataSpec(DataSpec dataSpec1) {
+
+                            DataSpec dataSpec = dataSpec1.withAdditionalHeaders(mapHead);
 
                             // 发起请求之前的Url
                             String dataUrl = dataSpec.uri.toString();
