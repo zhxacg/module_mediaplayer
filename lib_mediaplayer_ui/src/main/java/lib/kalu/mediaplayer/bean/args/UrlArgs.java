@@ -1,6 +1,7 @@
 package lib.kalu.mediaplayer.bean.args;
 
 import java.io.Serializable;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -28,6 +29,16 @@ public final class UrlArgs implements Serializable {
 
     public static Builder newBuilder() {
         return new Builder();
+    }
+
+    public Builder newBuilderSelf() {
+        Builder builder = new Builder();
+        builder.streamType = streamType;
+        builder.streamHead = streamHead;
+        builder.defaultStreams = defaultStreams;
+        builder.extraStreams = extraStreams;
+        builder.extraSubtitles = extraSubtitles;
+        return builder;
     }
 
     @Override
@@ -145,7 +156,7 @@ public final class UrlArgs implements Serializable {
 
         @PlayerType.StreamType.Value
         private int streamType = PlayerConst.DEFAULT_STREAM_TYPE;
-        private Map<String, String> streamHead;
+        private Map<String, String> streamHead = Collections.emptyMap();
         private List<Item> defaultStreams = new LinkedList<>();
         private List<Item> extraStreams = new LinkedList<>();
         private List<Item> extraSubtitles = new LinkedList<>();
@@ -156,7 +167,9 @@ public final class UrlArgs implements Serializable {
         }
 
         public UrlArgs.Builder setStreamHead(Map<String, String> v) {
-            this.streamHead = v;
+            if (null != v) {
+                this.streamHead = v;
+            }
             return this;
         }
 

@@ -712,4 +712,18 @@ public @interface PlayerType {
         @interface Value {
         }
     }
+
+    @Documented
+    @Retention(CLASS)
+    @Target({METHOD, PARAMETER, FIELD, LOCAL_VARIABLE, ANNOTATION_TYPE, PACKAGE})
+    @interface RetryType {
+        int SELF = 1;
+        int OTHER = 2;
+
+        @IntDef({SELF,
+                OTHER})
+        @Retention(RetentionPolicy.SOURCE)
+        @interface Value {
+        }
+    }
 }

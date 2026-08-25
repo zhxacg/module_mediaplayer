@@ -7,6 +7,7 @@ import androidx.annotation.FloatRange;
 import java.util.List;
 
 import lib.kalu.mediaplayer.bean.args.StartArgs;
+import lib.kalu.mediaplayer.bean.args.UrlArgs;
 import lib.kalu.mediaplayer.bean.configuration.RetryConfiguration;
 import lib.kalu.mediaplayer.bean.info.TrackInfo;
 import lib.kalu.mediaplayer.bean.type.PlayerType;
@@ -784,28 +785,45 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
                         //
                         try {
 
+                            UrlArgs oldUrlArgs = args.getUrlArgs();
                             RetryConfiguration oldRetryConfiguration = args.getRetryConfiguration();
 
-                            String[] retryUrls = oldRetryConfiguration.getRetryUrls();
+                            int retryType = oldRetryConfiguration.getRetryType();
                             int retryIndex = oldRetryConfiguration.getRetryIndex();
-                            int retryCount = oldRetryConfiguration.getRetryCount();
-                            int retryUrlsCount;
-                            if (null == retryUrls) {
-                                retryUrlsCount = 0;
-                            } else {
-                                retryUrlsCount = retryUrls.length;
+                            int retryMax = oldRetryConfiguration.getRetryMax();
+                            List<RetryConfiguration.RetryUrl> retryUrls = oldRetryConfiguration.getRetryUrls();
+
+                            if (LogUtil.DEBUG) {
+                                LogUtil.log(TAG, "initKernel, RetryConfiguration, retryIndex = " + retryIndex + ", retryMax = " + retryMax);
                             }
 
-                            if (retryUrlsCount > 0) {
+                            // 播放错误 重试其他url
+                            if (retryType == PlayerType.RetryType.OTHER && (null == retryUrls || retryUrls.isEmpty()))
+                                throw new Exception("error: PlayerType.RetryType.OTHER, retryUrls isEmpty");
 
+                            if (retryType == PlayerType.RetryType.SELF && retryIndex >= retryMax)
+                                throw new Exception("error: PlayerType.RetryType.SELF, retryIndex >= retryMax");
+
+                            // 播放错误 重试其他url
+                            if (retryType == PlayerType.RetryType.OTHER) {
+
+                                int retryUrlCount = retryUrls.size();
                                 if (LogUtil.DEBUG) {
-                                    LogUtil.log(TAG, "initKernel, RetryConfiguration, retryIndex = " + retryIndex + ", retryUrlsCount = " + retryUrlsCount);
+                                    LogUtil.log(TAG, "initKernel, RetryConfiguration, retryType == PlayerType.RetryType.OTHER, retryIndex = " + retryIndex + ", retryUrlCount = " + retryUrlCount);
                                 }
 
-                                if (retryIndex >= retryUrls.length) {
-                                    if (LogUtil.DEBUG) {
-                                        LogUtil.log(TAG, "initKernel -> warning: retryIndex = " + retryIndex + ", retryUrls.length = " + retryUrls.length);
-                                    }
+                                stop(false);
+                                release(false, false);
+
+                                RetryConfiguration.RetryUrl retryUrl = retryUrls.get(retryIndex);
+                                Proxy nextRetryProxy = retryUrl.getProxy();
+                                String nextRetryUrl = retryUrl.getUrl();
+                                int nextRetryIndex = retryIndex + 1;
+                                if (LogUtil.DEBUG) {
+                                    LogUtil.log(TAG, "initKernel, RetryConfiguration, retryType == PlayerType.RetryType.OTHER, nextRetryIndex = " + nextRetryIndex + ", nextRetryUrl = " + nextRetryUrl + ", nextRetryProxy = " + nextRetryProxy);
+                                }
+
+                                if (null == nextRetryUrl || nextRetryUrl.isEmpty()) {
                                     // 透传
                                     callEvent(playState);
                                     // 埋点
@@ -815,64 +833,45 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
                                     //
                                     stop(false);
                                     release(false, false);
-                                    return;
+                                } else {
+                                    RetryConfiguration newRetryConfiguration = oldRetryConfiguration.newBuilderSelf()
+                                            .setRetryIndex(nextRetryIndex)
+                                            .build();
+                                    UrlArgs newRetryUrlArgs = oldUrlArgs.newBuilderSelf().setUrl(nextRetryUrl).build();
+                                    StartArgs newStartArgs = args.newBuilderSelf()
+                                            .setUrl(newRetryUrlArgs)
+                                            .setProxy(nextRetryProxy)
+                                            .setRetryType(PlayerType.EventType.RETRY_OTHER_URL)
+                                            .setRetryConfiguration(newRetryConfiguration)
+                                            .build();
+                                    start(newStartArgs);
                                 }
-
-
-                                stop(false);
-                                release(false, false);
-
-                                String retryUrl = retryUrls[retryIndex];
-                                if (LogUtil.DEBUG) {
-                                    LogUtil.log(TAG, "initKernel, RetryConfiguration1, retryUrl = " + retryUrl);
-                                }
-
-                                RetryConfiguration newRetryConfiguration = oldRetryConfiguration.newBuilderSelf()
-                                        .setRetryIndex(retryIndex + 1)
-                                        .build();
-                                StartArgs newStartArgs = args.newBuilderSelf()
-                                        .setUrl(retryUrl)
-                                        .setRetryType(PlayerType.EventType.RETRY_OTHER_URL)
-                                        .setRetryConfiguration(newRetryConfiguration)
-                                        .build();
-                                start(newStartArgs);
-                            } else {
+                            }
+                            // 播放错误 重试自己url
+                            else if (retryType == PlayerType.RetryType.SELF) {
 
                                 if (LogUtil.DEBUG) {
-                                    LogUtil.log(TAG, "initKernel, RetryConfiguration, retryIndex = " + retryIndex + ", retryCount = " + retryCount);
-                                }
-
-                                if (retryIndex >= retryCount) {
-                                    if (LogUtil.DEBUG) {
-                                        LogUtil.log(TAG, "initKernel -> warning: retryIndex = " + retryIndex + ", retryCount = " + retryCount);
-                                    }
-                                    // 透传
-                                    callEvent(playState);
-                                    // 埋点
-                                    onBuriedError(playState);
-                                    // 执行
-                                    setScreenKeep(false);
-                                    //
-                                    stop(false);
-                                    release(false, false);
-                                    return;
+                                    LogUtil.log(TAG, "initKernel, RetryConfiguration, retryType == PlayerType.RetryType.SELF, retryIndex = " + retryIndex + ", retryMax = " + retryMax);
                                 }
 
                                 stop(false);
                                 release(false, false);
 
+                                int nextRetryIndex = retryIndex + 1;
                                 if (LogUtil.DEBUG) {
                                     LogUtil.log(TAG, "initKernel, RetryConfiguration2, retryUrl = " + args.getUrl());
                                 }
 
-                                RetryConfiguration newRetryConfiguration = oldRetryConfiguration.newBuilder()
-                                        .setRetryIndex(retryIndex + 1)
+                                RetryConfiguration newRetryConfiguration = oldRetryConfiguration.newBuilderSelf()
+                                        .setRetryIndex(nextRetryIndex)
                                         .build();
                                 StartArgs newStartArgs = args.newBuilderSelf()
                                         .setRetryType(PlayerType.EventType.RETRY_CUR_URL)
                                         .setRetryConfiguration(newRetryConfiguration)
                                         .build();
                                 start(newStartArgs);
+                            } else {
+                                throw new Exception();
                             }
 
                         } catch (Exception e) {
@@ -890,6 +889,7 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
                             setScreenKeep(false);
 
                             //
+                            kernelApi.removeAllMessages();
                             stop(false);
                             release(false, false);
                         }
@@ -912,6 +912,13 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
                                 // 检测：启播超时
 //                        case PlayerType.EventType.INIT:
                                 case PlayerType.EventType.READY:
+
+
+                                    if (LogUtil.DEBUG) {
+                                        String url = args.getUrl();
+                                        LogUtil.log(TAG, "initKernel, PlayerType.EventType.READY, url = " + url);
+                                    }
+
                                     //
                                     @PlayerType.KernelType.Value
                                     int kernelType = args.getKernelType();
