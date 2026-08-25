@@ -829,7 +829,7 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
                                     LogUtil.log(TAG, "initKernel, RetryConfiguration1, retryUrl = " + retryUrl);
                                 }
 
-                                RetryConfiguration newRetryConfiguration = oldRetryConfiguration.newBuilder()
+                                RetryConfiguration newRetryConfiguration = oldRetryConfiguration.newBuilderCopy()
                                         .setRetryIndex(retryIndex + 1)
                                         .build();
                                 StartArgs newStartArgs = args.newBuilderCopy()
