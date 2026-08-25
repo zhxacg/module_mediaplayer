@@ -331,7 +331,7 @@ public class StartArgs implements Serializable {
         this.retryConfiguration = builder.retryConfiguration;
     }
 
-    public Builder newBuilderCopy() {
+    public Builder newBuilderSelf() {
         Builder builder = new Builder();
         builder.liveStream = liveStream;
         builder.enableCache = enableCache;

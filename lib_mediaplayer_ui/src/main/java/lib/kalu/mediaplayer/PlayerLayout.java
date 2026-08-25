@@ -1475,26 +1475,26 @@ public class PlayerLayout extends RelativeLayout {
         }
     }
 
-    public final StartArgs.Builder newBuilderCopy() {
+    public final StartArgs.Builder newBuilderSelf() {
         try {
             PlayerView playerView = getPlayerView();
             if (null == playerView) {
                 if (LogUtil.DEBUG) {
-                    LogUtil.log("PlayerLayout", "newBuilderCopy -> error: playerView null");
+                    LogUtil.log("PlayerLayout", "newBuilderSelf -> error: playerView null");
                 }
                 return null;
             }
             StartArgs args = playerView.getStartArgs();
             if (null == args) {
                 if (LogUtil.DEBUG) {
-                    LogUtil.log("PlayerLayout", "newBuilderCopy -> error: args null");
+                    LogUtil.log("PlayerLayout", "newBuilderSelf -> error: args null");
                 }
                 return null;
             }
-            return args.newBuilderCopy();
+            return args.newBuilderSelf();
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
-                LogUtil.log("PlayerLayout -> newBuilderCopy -> " + e.getMessage());
+                LogUtil.log("PlayerLayout -> newBuilderSelf -> " + e.getMessage());
             }
             return null;
         }

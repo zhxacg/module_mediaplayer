@@ -30,7 +30,7 @@ public final class RetryConfiguration implements Serializable {
         this.retryUrls = builder.retryUrls;
         this.retryIndex = builder.retryIndex;
     }
-    public Builder newBuilderCopy() {
+    public Builder newBuilderSelf() {
         Builder builder = new Builder();
         builder.retryCount = retryCount;
         builder.retryUrls = retryUrls;

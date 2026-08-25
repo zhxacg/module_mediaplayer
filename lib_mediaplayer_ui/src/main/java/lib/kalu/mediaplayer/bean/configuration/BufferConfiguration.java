@@ -89,7 +89,7 @@ public final class BufferConfiguration implements Serializable {
         return new Builder();
     }
 
-    public BufferConfiguration.Builder newBuilderCopy() {
+    public BufferConfiguration.Builder newBuilderSelf() {
         BufferConfiguration.Builder builder = new BufferConfiguration.Builder();
         builder.individualAllocationSize = individualAllocationSize;
         builder.minBufferMs = minBufferMs;

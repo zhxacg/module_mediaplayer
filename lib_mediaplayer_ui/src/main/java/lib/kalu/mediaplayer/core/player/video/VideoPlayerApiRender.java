@@ -243,7 +243,7 @@ public interface VideoPlayerApiRender extends VideoPlayerApiBase, VideoPlayerApi
 
             if (decoderType == PlayerType.DecoderType.ONLY_CODEC && kernelType == PlayerType.KernelType.IJK && renderType == PlayerType.RenderType.SURFACE_VIEW) {
                 releaseRender();
-                StartArgs newArgs = startArgs.newBuilderCopy().setRenderType(PlayerType.RenderType.SURFACE_VIEW).build();
+                StartArgs newArgs = startArgs.newBuilderSelf().setRenderType(PlayerType.RenderType.SURFACE_VIEW).build();
                 initRender(newArgs);
                 attachRenderKernel();
             } else if (decoderType == PlayerType.DecoderType.ONLY_CODEC && kernelType == PlayerType.KernelType.IJK) {

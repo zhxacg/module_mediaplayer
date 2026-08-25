@@ -7,9 +7,7 @@ import androidx.annotation.FloatRange;
 import java.util.List;
 
 import lib.kalu.mediaplayer.bean.args.StartArgs;
-import lib.kalu.mediaplayer.bean.configuration.BufferConfiguration;
 import lib.kalu.mediaplayer.bean.configuration.RetryConfiguration;
-import lib.kalu.mediaplayer.bean.configuration.TimeoutConfiguration;
 import lib.kalu.mediaplayer.bean.info.TrackInfo;
 import lib.kalu.mediaplayer.bean.type.PlayerType;
 import lib.kalu.mediaplayer.collect.HlsSpanList;
@@ -296,7 +294,7 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
                 }
                 return;
             }
-            StartArgs newArgs = startArgs.newBuilderCopy()
+            StartArgs newArgs = startArgs.newBuilderSelf()
                     .setPlayWhenReadySeekToPosition(0L)
                     .setRetryType(PlayerType.EventType.RETRY_RELOAD)
                     .build();
@@ -330,7 +328,7 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
             if (!live) {
                 position = getPosition();
             }
-            StartArgs newArgs = startArgs.newBuilderCopy()
+            StartArgs newArgs = startArgs.newBuilderSelf()
                     .setRetryType(PlayerType.EventType.RETRY_RELOAD)
                     .setPlayWhenReadySeekToPosition(position)
                     .build();
@@ -829,10 +827,10 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
                                     LogUtil.log(TAG, "initKernel, RetryConfiguration1, retryUrl = " + retryUrl);
                                 }
 
-                                RetryConfiguration newRetryConfiguration = oldRetryConfiguration.newBuilderCopy()
+                                RetryConfiguration newRetryConfiguration = oldRetryConfiguration.newBuilderSelf()
                                         .setRetryIndex(retryIndex + 1)
                                         .build();
-                                StartArgs newStartArgs = args.newBuilderCopy()
+                                StartArgs newStartArgs = args.newBuilderSelf()
                                         .setUrl(retryUrl)
                                         .setRetryType(PlayerType.EventType.RETRY_OTHER_URL)
                                         .setRetryConfiguration(newRetryConfiguration)
@@ -870,7 +868,7 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
                                 RetryConfiguration newRetryConfiguration = oldRetryConfiguration.newBuilder()
                                         .setRetryIndex(retryIndex + 1)
                                         .build();
-                                StartArgs newStartArgs = args.newBuilderCopy()
+                                StartArgs newStartArgs = args.newBuilderSelf()
                                         .setRetryType(PlayerType.EventType.RETRY_CUR_URL)
                                         .setRetryConfiguration(newRetryConfiguration)
                                         .build();
