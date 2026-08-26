@@ -777,6 +777,11 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
                         LogUtil.log(TAG, "initKernel, onEvent = " + kernel + ", playState = " + playState);
                     }
 
+                    // 暂停外部轮训消息
+                    if (playState == PlayerType.EventType.STOP) {
+                        kernelApi.removeAllMessages();
+                    }
+
                     boolean errorNeedRetry = PlayStateUtil.isErrorNeedRetry(playState);
 
                     // 播放错误, 检查重试策略
@@ -812,8 +817,8 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
                                     LogUtil.log(TAG, "initKernel, RetryConfiguration, retryType == PlayerType.RetryType.OTHER, retryIndex = " + retryIndex + ", retryUrlCount = " + retryUrlCount);
                                 }
 
-                                stop(false);
-                                release(false, false);
+//                                stop(false);
+//                                release(false, false);
 
                                 RetryConfiguration.RetryUrl retryUrl = retryUrls.get(retryIndex);
                                 Proxy nextRetryProxy = retryUrl.getProxy();
@@ -854,8 +859,8 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
                                     LogUtil.log(TAG, "initKernel, RetryConfiguration, retryType == PlayerType.RetryType.SELF, retryIndex = " + retryIndex + ", retryMax = " + retryMax);
                                 }
 
-                                stop(false);
-                                release(false, false);
+//                                stop(false);
+//                                release(false, false);
 
                                 int nextRetryIndex = retryIndex + 1;
                                 if (LogUtil.DEBUG) {
@@ -877,21 +882,20 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
                         } catch (Exception e) {
 
                             if (LogUtil.DEBUG) {
-                                LogUtil.log(TAG, "initKernel, RetryConfiguration, not need");
+                                LogUtil.log(TAG, "initKernel, RetryConfiguration, not need, playState = " + playState);
                             }
 
                             // 透传
                             callEvent(playState);
-
                             // 埋点
                             onBuriedError(playState);
                             // 执行
                             setScreenKeep(false);
 
-                            //
-                            kernelApi.removeAllMessages();
-                            stop(false);
-                            release(false, false);
+//                            //
+//                            kernelApi.removeAllMessages();
+//                            stop(false);
+//                            release(false, false);
                         }
                     }
                     //
@@ -919,17 +923,13 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
                                         LogUtil.log(TAG, "initKernel, PlayerType.EventType.READY, url = " + url);
                                     }
 
-                                    //
-                                    @PlayerType.KernelType.Value
-                                    int kernelType = args.getKernelType();
-                                    long timeMillis = System.currentTimeMillis();
-                                    kernelApi.removeAllMessages();
-
                                     // TODO: 2026/8/14
 //                                    boolean showSpeed = args.isShowSpeed();
 //                                    if (showSpeed) {
 //                                        kernelApi.sendMessageSpeedUpdate(kernel, false);
 //                                    }
+                                    long timeMillis = System.currentTimeMillis();
+                                    kernelApi.removeAllMessages();
                                     kernelApi.sendMessageConnectTimeout(kernelType, timeMillis, connectTimeoutMs, false);
                                     break;
                                 // 轮训：视频进度条
