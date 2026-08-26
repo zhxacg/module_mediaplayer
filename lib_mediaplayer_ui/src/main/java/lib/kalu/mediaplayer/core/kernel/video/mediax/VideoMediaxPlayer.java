@@ -396,7 +396,7 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
                         @Override
                         public DataSpec resolveDataSpec(DataSpec dataSpec1) {
 
-                             DataSpec dataSpec = dataSpec1.withAdditionalHeaders(mapHead);
+                            DataSpec dataSpec = dataSpec1.withAdditionalHeaders(mapHead);
 
                             // 发起请求之前的Url
                             String dataUrl = dataSpec.uri.toString();
@@ -1874,7 +1874,8 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
             if (LogUtil.DEBUG) {
                 int errorCode = null == e ? -9 : e.errorCode;
                 String errorMessage = null == e ? "null" : e.getMessage();
-                LogUtil.log(TAG, "onPlayerErrorChanged -> errorCode = " + errorCode + ", errorMessage = " + errorMessage, e.getCause());
+                Throwable throwable = (null == e) ? null : e.getCause();
+                LogUtil.log(TAG, "onPlayerErrorChanged -> errorCode = " + errorCode + ", errorMessage = " + errorMessage, throwable);
             }
         }
 
