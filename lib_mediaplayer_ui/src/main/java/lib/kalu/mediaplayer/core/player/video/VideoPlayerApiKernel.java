@@ -700,7 +700,7 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
 
     /***************************/
 
-    default void initKernel(StartArgs args) {
+    default void initKernel(StartArgs startArgs) {
         try {
 
             if (null != getVideoKernel()) {
@@ -711,8 +711,8 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
             }
 
             //
-            int kernelType = args.getKernelType();
-            int connectTimeoutMs = args.getTimeoutConfiguration().getConnectTimeoutMs();
+            int kernelType = startArgs.getKernelType();
+            int connectTimeoutMs = startArgs.getTimeoutConfiguration().getConnectTimeoutMs();
             if (LogUtil.DEBUG) {
                 LogUtil.log(TAG, "initKernel -> kernelType = " + kernelType + ", connectTimeoutMs = " + connectTimeoutMs);
             }
@@ -790,8 +790,8 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
                         //
                         try {
 
-                            UrlArgs oldUrlArgs = args.getUrlArgs();
-                            RetryConfiguration oldRetryConfiguration = args.getRetryConfiguration();
+                            UrlArgs oldUrlArgs = getStartArgs().getUrlArgs();
+                            RetryConfiguration oldRetryConfiguration = getStartArgs().getRetryConfiguration();
 
                             int retryType = oldRetryConfiguration.getRetryType();
                             int retryIndex = oldRetryConfiguration.getRetryIndex();
@@ -843,7 +843,7 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
                                             .setRetryIndex(nextRetryIndex)
                                             .build();
                                     UrlArgs newRetryUrlArgs = oldUrlArgs.newBuilderSelf().setUrl(nextRetryUrl).build();
-                                    StartArgs newStartArgs = args.newBuilderSelf()
+                                    StartArgs newStartArgs = getStartArgs().newBuilderSelf()
                                             .setUrl(newRetryUrlArgs)
                                             .setProxy(nextRetryProxy)
                                             .setRetryType(PlayerType.EventType.RETRY_OTHER_URL)
@@ -862,18 +862,29 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
 //                                stop(false);
 //                                release(false, false);
 
+
+                                String nextRetryUrl = getStartArgs().getUrl();
                                 int nextRetryIndex = retryIndex + 1;
                                 if (LogUtil.DEBUG) {
-                                    LogUtil.log(TAG, "initKernel, RetryConfiguration2, retryUrl = " + args.getUrl());
+                                    LogUtil.log(TAG, "initKernel, RetryConfiguration2, nextRetryIndex = " + nextRetryIndex + ", retryMax = " + retryMax + ", nextRetryUrl = " + nextRetryUrl);
                                 }
 
                                 RetryConfiguration newRetryConfiguration = oldRetryConfiguration.newBuilderSelf()
                                         .setRetryIndex(nextRetryIndex)
                                         .build();
-                                StartArgs newStartArgs = args.newBuilderSelf()
+
+                                if (LogUtil.DEBUG) {
+                                    LogUtil.log(TAG, "initKernel, RetryConfiguration2, newRetryConfiguration = " + newRetryConfiguration);
+                                }
+
+                                StartArgs newStartArgs = getStartArgs().newBuilderSelf()
                                         .setRetryType(PlayerType.EventType.RETRY_CUR_URL)
                                         .setRetryConfiguration(newRetryConfiguration)
                                         .build();
+                                if (LogUtil.DEBUG) {
+                                    LogUtil.log(TAG, "initKernel, RetryConfiguration2, newStartArgs = " + newStartArgs);
+                                }
+
                                 start(newStartArgs);
                             } else {
                                 throw new Exception();
@@ -919,7 +930,7 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
 
 
                                     if (LogUtil.DEBUG) {
-                                        String url = args.getUrl();
+                                        String url = getStartArgs().getUrl();
                                         LogUtil.log(TAG, "initKernel, PlayerType.EventType.READY, url = " + url);
                                     }
 
@@ -997,7 +1008,7 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
                                     // 关闭屏幕常亮
                                     setScreenKeep(false);
                                     //
-                                    boolean looping = args.isLooping();
+                                    boolean looping = getStartArgs().isLooping();
                                     if (looping) {
                                         restart();
                                     }
