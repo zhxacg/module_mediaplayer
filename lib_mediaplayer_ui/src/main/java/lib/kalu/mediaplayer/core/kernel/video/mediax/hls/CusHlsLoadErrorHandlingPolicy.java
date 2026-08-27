@@ -1,8 +1,12 @@
 package lib.kalu.mediaplayer.core.kernel.video.mediax.hls;
 
 
+import android.net.Uri;
+
 import androidx.annotation.Nullable;
 import androidx.media3.common.C;
+import androidx.media3.common.util.UriUtil;
+import androidx.media3.common.util.Util;
 import androidx.media3.exoplayer.upstream.DefaultLoadErrorHandlingPolicy;
 
 import java.io.IOException;
@@ -41,18 +45,22 @@ public final class CusHlsLoadErrorHandlingPolicy extends DefaultLoadErrorHandlin
     // 决定是否重试 + 重试延迟
     @Override
     public long getRetryDelayMsFor(LoadErrorInfo loadErrorInfo) {
-
         try {
 
-            String dataUrl = loadErrorInfo.loadEventInfo.dataSpec.uri.toString();
-            if (LogUtil.DEBUG) {
-                LogUtil.log(TAG, "getRetryDelayMsFor -> loadErrorInfo.errorCount = " + loadErrorInfo.errorCount + ", loadErrorInfo.loadEventInfo.dataSpec.uri = " + dataUrl);
-            }
+//            String dataUrl = loadErrorInfo.loadEventInfo.dataSpec.uri.toString();
+//            if (LogUtil.DEBUG) {
+//                LogUtil.log(TAG, "getRetryDelayMsFor -> loadErrorInfo.errorCount = " + loadErrorInfo.errorCount + ", loadErrorInfo.loadEventInfo.dataSpec.uri = " + dataUrl);
+//            }
+//
+//            int inferContentType = Util.inferContentType(Uri.parse(dataUrl));
+//            if (LogUtil.DEBUG) {
+//                LogUtil.log(TAG, "getRetryDelayMsFor -> inferContentType = " + inferContentType);
+//            }
+//
+//            if (inferContentType == C.CONTENT_TYPE_HLS)
+//                return C.TIME_UNSET;
 
-            if (!dataUrl.contains(PlayerType.SchemeType._M3U8)) {
-                return super.getRetryDelayMsFor(loadErrorInfo);
-            }
-            return C.TIME_UNSET;
+            return super.getRetryDelayMsFor(loadErrorInfo);
         } catch (Exception e) {
             return super.getRetryDelayMsFor(loadErrorInfo);
         }
