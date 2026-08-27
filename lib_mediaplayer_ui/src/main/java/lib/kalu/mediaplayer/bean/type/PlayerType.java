@@ -109,7 +109,8 @@ public @interface PlayerType {
         int ERROR_TIMEOUT_BUFFER = 3_306; // 缓冲超时
         int ERROR_INIT = 3_307; // 初始化错误
         int ERROR_DECODE = 3_308; // 解码
-        int ERROR_RELOAD_RETRY = 3_309; // 重试
+        int ERROR_RELOAD_RETRY_URL = 3_309; // 重试其他url
+        int ERROR_RELOAD_SELF_URL = 3_310; // 重试其他url
 
         // 窗口模式
         int WINDOW_FULL_START = 3_401;
@@ -173,7 +174,8 @@ public @interface PlayerType {
                 ERROR_TIMEOUT_BUFFER, // 缓冲超时
                 ERROR_INIT, // 初始化错误
                 ERROR_DECODE, // 解码
-                ERROR_RELOAD_RETRY,
+                ERROR_RELOAD_RETRY_URL,
+                ERROR_RELOAD_SELF_URL
         })
         @interface Value {
         }

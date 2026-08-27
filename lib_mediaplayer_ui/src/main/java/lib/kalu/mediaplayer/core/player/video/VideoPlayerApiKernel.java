@@ -769,7 +769,6 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
                         if (null == retryStartArgs) {
                             nextEvent(kernel, playState);
                         } else {
-                            callEvent(PlayerType.EventType.ERROR_RELOAD_RETRY);
                             start(retryStartArgs);
                         }
                     } else {
@@ -993,7 +992,6 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
         // 透传
         callEvent(playState);
 
-
         // 播放错误
         if (PlayStateUtil.isError(playState)) {
             // 埋点
@@ -1145,6 +1143,9 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
 
             if (retryIndex + 1 >= retryUrlsCount)
                 return null;
+
+            // 透传
+            callEvent(PlayerType.EventType.ERROR_RELOAD_RETRY_URL);
 
             Proxy nextRetryProxy = getStartArgs().getRetryConfiguration().getRetryUrls().get(retryIndex).getProxy();
             String nextRetryUrl = getStartArgs().getRetryConfiguration().getRetryUrls().get(retryIndex).getUrl();
