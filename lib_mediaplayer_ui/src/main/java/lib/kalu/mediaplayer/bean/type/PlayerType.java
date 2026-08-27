@@ -84,10 +84,6 @@ public @interface PlayerType {
         int RESUME = 3_016; // 播放恢复
         int STOP = 3_017; // 播放停止
         int RELEASE = 3_018; // 播放销毁
-        int RETRY_RELOAD = 3_019; // 重试1
-        int RETRY_CUR_URL = 3_020; // 重试2
-        int RETRY_OTHER_URL = 3_021; // 重试3
-
 
         // 视频信息
         int MEDIA_INFO_PREPARE = 3_202;    // 起播加载
@@ -113,6 +109,7 @@ public @interface PlayerType {
         int ERROR_TIMEOUT_BUFFER = 3_306; // 缓冲超时
         int ERROR_INIT = 3_307; // 初始化错误
         int ERROR_DECODE = 3_308; // 解码
+        int ERROR_RELOAD_RETRY = 3_309; // 重试
 
         // 窗口模式
         int WINDOW_FULL_START = 3_401;
@@ -144,9 +141,6 @@ public @interface PlayerType {
                 RESUME,
                 STOP,
                 RELEASE,
-                RETRY_RELOAD,
-                RETRY_CUR_URL, // 重试
-                RETRY_OTHER_URL, // 重试
                 MEDIA_INFO_PREPARE, // 起播加载
                 MEDIA_INFO_UPDATE_PLAYBACLK_SPEED, // 切换倍速
                 MEDIA_INFO_VIDEO_RENDERING_START,    // 视频出画面
@@ -179,6 +173,7 @@ public @interface PlayerType {
                 ERROR_TIMEOUT_BUFFER, // 缓冲超时
                 ERROR_INIT, // 初始化错误
                 ERROR_DECODE, // 解码
+                ERROR_RELOAD_RETRY,
         })
         @interface Value {
         }
@@ -709,20 +704,6 @@ public @interface PlayerType {
                 BuriedType.UPDATE_SUBTITLE_OFFSET_MS,
                 BuriedType.TRY_SEE_END
         })
-        @interface Value {
-        }
-    }
-
-    @Documented
-    @Retention(CLASS)
-    @Target({METHOD, PARAMETER, FIELD, LOCAL_VARIABLE, ANNOTATION_TYPE, PACKAGE})
-    @interface RetryType {
-        int SELF = 1;
-        int OTHER = 2;
-
-        @IntDef({SELF,
-                OTHER})
-        @Retention(RetentionPolicy.SOURCE)
         @interface Value {
         }
     }

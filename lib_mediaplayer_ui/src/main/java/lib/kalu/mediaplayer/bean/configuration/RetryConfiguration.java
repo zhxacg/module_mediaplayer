@@ -12,24 +12,11 @@ import lib.kalu.mediaplayer.proxy.Proxy;
  */
 public final class RetryConfiguration implements Serializable {
 
-    @PlayerType.RetryType
-    private int retryType;
+    private int retryCount;
     private List<RetryUrl> retryUrls;
-    // 重试次数
-    private int retryMax;
-    private int retryIndex;
 
-    @PlayerType.RetryType.Value
-    public int getRetryType() {
-        return retryType;
-    }
-
-    public int getRetryIndex() {
-        return retryIndex;
-    }
-
-    public int getRetryMax() {
-        return retryMax;
+    public int getRetryCount() {
+        return retryCount;
     }
 
     public List<RetryUrl> getRetryUrls() {
@@ -37,18 +24,14 @@ public final class RetryConfiguration implements Serializable {
     }
 
     public RetryConfiguration(Builder builder) {
-        this.retryType = builder.retryType;
-        this.retryMax = builder.retryMax;
+        this.retryCount = builder.retryCount;
         this.retryUrls = builder.retryUrls;
-        this.retryIndex = builder.retryIndex;
     }
 
     public Builder newBuilderSelf() {
         Builder builder = new Builder();
-        builder.retryType = retryType;
-        builder.retryMax = retryMax;
+        builder.retryCount = retryCount;
         builder.retryUrls = retryUrls;
-        builder.retryIndex = retryIndex;
         return builder;
     }
 
@@ -59,38 +42,23 @@ public final class RetryConfiguration implements Serializable {
     @Override
     public String toString() {
         return "RetryConfiguration{" +
-                "retryType=" + retryType +
+                "retryCount=" + retryCount +
                 ", retryUrls=" + retryUrls +
-                ", retryMax=" + retryMax +
-                ", retryIndex=" + retryIndex +
                 '}';
     }
 
     public static class Builder implements Serializable {
 
-
-        @PlayerType.RetryType
-        private int retryType = PlayerType.RetryType.SELF;
+        private int retryCount;
         private List<RetryUrl> retryUrls = Collections.emptyList();
 
-        // 重试次数 默认3次
-        private int retryMax = 3;
-
-        private int retryIndex = 0;
-
-        public Builder setRetryIndex(int v) {
-            this.retryIndex = v;
-            return this;
-        }
-
-        public Builder setRetryMax(int v) {
-            this.retryMax = v;
+        public Builder setRetryCount(int v) {
+            this.retryCount = v;
             return this;
         }
 
         public Builder setRetryUrls(List<RetryUrl> v) {
             if (null != v && !v.isEmpty()) {
-                this.retryType = PlayerType.RetryType.OTHER;
                 this.retryUrls = v;
             }
             return this;

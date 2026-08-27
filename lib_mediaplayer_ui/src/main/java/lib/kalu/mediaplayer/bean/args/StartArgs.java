@@ -249,13 +249,6 @@ public class StartArgs implements Serializable {
     }
 
 
-    // 重试类型
-    private int retryType;
-
-    public int getRetryType() {
-        return retryType;
-    }
-
     // 重试策略
     private RetryConfiguration retryConfiguration;
 
@@ -294,7 +287,6 @@ public class StartArgs implements Serializable {
                 ", stuckConfiguration=" + stuckConfiguration +
                 ", bufferConfiguration=" + bufferConfiguration +
                 ", timeoutConfiguration=" + timeoutConfiguration +
-                ", retryType=" + retryType +
                 ", retryConfiguration=" + retryConfiguration +
                 '}';
     }
@@ -327,7 +319,6 @@ public class StartArgs implements Serializable {
         this.adaptiveConfiguration = builder.adaptiveConfiguration;
         this.bufferConfiguration = builder.bufferConfiguration;
         this.timeoutConfiguration = builder.timeoutConfiguration;
-        this.retryType = builder.retryType;
         this.retryConfiguration = builder.retryConfiguration;
     }
 
@@ -360,7 +351,6 @@ public class StartArgs implements Serializable {
         builder.stuckConfiguration = stuckConfiguration;
         builder.bufferConfiguration = bufferConfiguration;
         builder.timeoutConfiguration = timeoutConfiguration;
-        builder.retryType = 0;
         builder.retryConfiguration = retryConfiguration;
         return builder;
     }
@@ -591,13 +581,6 @@ public class StartArgs implements Serializable {
 
         public Builder setTimeoutConfiguration(TimeoutConfiguration v) {
             this.timeoutConfiguration = v;
-            return this;
-        }
-
-        private int retryType;
-
-        public Builder setRetryType(int v) {
-            this.retryType = v;
             return this;
         }
 

@@ -3156,9 +3156,9 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
                 .setAllowChunklessPreparation(true);
 
 
-        int retryMax = args.getRetryConfiguration().getRetryMax();
+        int retryCount = args.getRetryConfiguration().getRetryCount();
         //
-        hlsMediaSource.setLoadErrorHandlingPolicy(new CusHlsLoadErrorHandlingPolicy(retryMax));
+        hlsMediaSource.setLoadErrorHandlingPolicy(new CusHlsLoadErrorHandlingPolicy(retryCount));
         // setPlaylistParserFactory
         hlsMediaSource.setPlaylistParserFactory(new CusHlsPlaylistParserFactory(args.getProxyUrl()));
 

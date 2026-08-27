@@ -119,19 +119,6 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
             if (!containsVideoUrl)
                 throw new UrlEmptyError("error: containsVideoUrl false");
 
-            int retryType = startArgs.getRetryType();
-            if (LogUtil.DEBUG) {
-                LogUtil.log(TAG, "start -> retryType = " + retryType);
-            }
-
-            if (retryType == PlayerType.EventType.RETRY_CUR_URL) {
-                callEvent(PlayerType.EventType.RETRY_CUR_URL);
-            } else if (retryType == PlayerType.EventType.RETRY_OTHER_URL) {
-                callEvent(PlayerType.EventType.RETRY_OTHER_URL);
-            } else if (retryType == PlayerType.EventType.RETRY_RELOAD) {
-                callEvent(PlayerType.EventType.RETRY_RELOAD);
-            }
-
             // 8
             initDecoder();
         } catch (NetworkError e) {
@@ -297,7 +284,6 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
             }
             StartArgs newArgs = startArgs.newBuilderSelf()
                     .setPlayWhenReadySeekToPosition(0L)
-                    .setRetryType(PlayerType.EventType.RETRY_RELOAD)
                     .build();
             start(newArgs);
         } catch (Exception e) {
@@ -330,7 +316,6 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
                 position = getPosition();
             }
             StartArgs newArgs = startArgs.newBuilderSelf()
-                    .setRetryType(PlayerType.EventType.RETRY_RELOAD)
                     .setPlayWhenReadySeekToPosition(position)
                     .build();
             start(newArgs);
@@ -773,268 +758,22 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
                 @Override
                 public void onEvent(@PlayerType.KernelType.Value int kernel, @PlayerType.EventType.Value int playState) {
 
-                    if (LogUtil.DEBUG) {
-                        LogUtil.log(TAG, "initKernel, onEvent = " + kernel + ", playState = " + playState);
-                    }
-
-                    // 暂停外部轮训消息
-                    if (playState == PlayerType.EventType.STOP) {
-                        kernelApi.removeAllMessages();
-                    }
-
                     boolean errorNeedRetry = PlayStateUtil.isErrorNeedRetry(playState);
+                    if (LogUtil.DEBUG) {
+                        LogUtil.log(TAG, "initKernel -> onEvent -> kernel = " + kernel + ", playState = " + playState + ", errorNeedRetry = " + errorNeedRetry);
+                    }
 
                     // 播放错误, 检查重试策略
                     if (errorNeedRetry) {
-
-                        //
-                        try {
-
-                            UrlArgs oldUrlArgs = getStartArgs().getUrlArgs();
-                            RetryConfiguration oldRetryConfiguration = getStartArgs().getRetryConfiguration();
-
-                            int retryType = oldRetryConfiguration.getRetryType();
-                            int retryIndex = oldRetryConfiguration.getRetryIndex();
-                            int retryMax = oldRetryConfiguration.getRetryMax();
-                            List<RetryConfiguration.RetryUrl> retryUrls = oldRetryConfiguration.getRetryUrls();
-
-                            if (LogUtil.DEBUG) {
-                                LogUtil.log(TAG, "initKernel, RetryConfiguration, retryIndex = " + retryIndex + ", retryMax = " + retryMax);
-                            }
-
-                            // 播放错误 重试其他url
-                            if (retryType == PlayerType.RetryType.OTHER && (null == retryUrls || retryUrls.isEmpty()))
-                                throw new Exception("error: PlayerType.RetryType.OTHER, retryUrls isEmpty");
-
-                            if (retryType == PlayerType.RetryType.SELF && retryIndex >= retryMax)
-                                throw new Exception("error: PlayerType.RetryType.SELF, retryIndex >= retryMax");
-
-                            // 播放错误 重试其他url
-                            if (retryType == PlayerType.RetryType.OTHER) {
-
-                                int retryUrlCount = retryUrls.size();
-                                if (LogUtil.DEBUG) {
-                                    LogUtil.log(TAG, "initKernel, RetryConfiguration, retryType == PlayerType.RetryType.OTHER, retryIndex = " + retryIndex + ", retryUrlCount = " + retryUrlCount);
-                                }
-
-//                                stop(false);
-//                                release(false, false);
-
-                                RetryConfiguration.RetryUrl retryUrl = retryUrls.get(retryIndex);
-                                Proxy nextRetryProxy = retryUrl.getProxy();
-                                String nextRetryUrl = retryUrl.getUrl();
-                                int nextRetryIndex = retryIndex + 1;
-                                if (LogUtil.DEBUG) {
-                                    LogUtil.log(TAG, "initKernel, RetryConfiguration, retryType == PlayerType.RetryType.OTHER, nextRetryIndex = " + nextRetryIndex + ", nextRetryUrl = " + nextRetryUrl + ", nextRetryProxy = " + nextRetryProxy);
-                                }
-
-                                if (null == nextRetryUrl || nextRetryUrl.isEmpty()) {
-                                    // 透传
-                                    callEvent(playState);
-                                    // 埋点
-                                    onBuriedError(playState);
-                                    // 执行
-                                    setScreenKeep(false);
-                                    //
-                                    stop(false);
-                                    release(false, false);
-                                } else {
-                                    RetryConfiguration newRetryConfiguration = oldRetryConfiguration.newBuilderSelf()
-                                            .setRetryIndex(nextRetryIndex)
-                                            .build();
-                                    UrlArgs newRetryUrlArgs = oldUrlArgs.newBuilderSelf().setUrl(nextRetryUrl).build();
-                                    StartArgs newStartArgs = getStartArgs().newBuilderSelf()
-                                            .setUrl(newRetryUrlArgs)
-                                            .setProxy(nextRetryProxy)
-                                            .setRetryType(PlayerType.EventType.RETRY_OTHER_URL)
-                                            .setRetryConfiguration(newRetryConfiguration)
-                                            .build();
-                                    start(newStartArgs);
-                                }
-                            }
-                            // 播放错误 重试自己url
-                            else if (retryType == PlayerType.RetryType.SELF) {
-
-                                if (LogUtil.DEBUG) {
-                                    LogUtil.log(TAG, "initKernel, RetryConfiguration, retryType == PlayerType.RetryType.SELF, retryIndex = " + retryIndex + ", retryMax = " + retryMax);
-                                }
-
-//                                stop(false);
-//                                release(false, false);
-
-
-                                String nextRetryUrl = getStartArgs().getUrl();
-                                int nextRetryIndex = retryIndex + 1;
-                                if (LogUtil.DEBUG) {
-                                    LogUtil.log(TAG, "initKernel, RetryConfiguration2, nextRetryIndex = " + nextRetryIndex + ", retryMax = " + retryMax + ", nextRetryUrl = " + nextRetryUrl);
-                                }
-
-                                RetryConfiguration newRetryConfiguration = oldRetryConfiguration.newBuilderSelf()
-                                        .setRetryIndex(nextRetryIndex)
-                                        .build();
-
-                                if (LogUtil.DEBUG) {
-                                    LogUtil.log(TAG, "initKernel, RetryConfiguration2, newRetryConfiguration = " + newRetryConfiguration);
-                                }
-
-                                StartArgs newStartArgs = getStartArgs().newBuilderSelf()
-                                        .setRetryType(PlayerType.EventType.RETRY_CUR_URL)
-                                        .setRetryConfiguration(newRetryConfiguration)
-                                        .build();
-                                if (LogUtil.DEBUG) {
-                                    LogUtil.log(TAG, "initKernel, RetryConfiguration2, newStartArgs = " + newStartArgs);
-                                }
-
-                                start(newStartArgs);
-                            } else {
-                                throw new Exception();
-                            }
-
-                        } catch (Exception e) {
-
-                            if (LogUtil.DEBUG) {
-                                LogUtil.log(TAG, "initKernel, RetryConfiguration, not need, playState = " + playState);
-                            }
-
-                            // 透传
-                            callEvent(playState);
-                            // 埋点
-                            onBuriedError(playState);
-                            // 执行
-                            setScreenKeep(false);
-
-//                            //
-//                            kernelApi.removeAllMessages();
-//                            stop(false);
-//                            release(false, false);
-                        }
-                    }
-                    //
-                    else {
-
-                        // 透传
-                        callEvent(playState);
-
-                        boolean error = PlayStateUtil.isError(playState);
-                        if (error) {
-                            // 埋点
-                            onBuriedError(playState);
-                            // 执行
-                            setScreenKeep(false);
+                        StartArgs retryStartArgs = nextRetryStartArgs(kernel, playState);
+                        if (null == retryStartArgs) {
+                            nextEvent(kernel, playState);
                         } else {
-
-                            switch (playState) {
-                                // 检测：启播超时
-//                        case PlayerType.EventType.INIT:
-                                case PlayerType.EventType.READY:
-
-
-                                    if (LogUtil.DEBUG) {
-                                        String url = getStartArgs().getUrl();
-                                        LogUtil.log(TAG, "initKernel, PlayerType.EventType.READY, url = " + url);
-                                    }
-
-                                    // TODO: 2026/8/14
-//                                    boolean showSpeed = args.isShowSpeed();
-//                                    if (showSpeed) {
-//                                        kernelApi.sendMessageSpeedUpdate(kernel, false);
-//                                    }
-                                    long timeMillis = System.currentTimeMillis();
-                                    kernelApi.removeAllMessages();
-                                    kernelApi.sendMessageConnectTimeout(kernelType, timeMillis, connectTimeoutMs, false);
-                                    break;
-                                // 轮训：视频进度条
-                                case PlayerType.EventType.MEDIA_INFO_PREPARE:
-                                    kernelApi.removeAllMessages();
-                                    kernelApi.sendMessageProgressUpdate(kernel, false);
-                                    break;
-                                // 视频：首帧画面
-                                case PlayerType.EventType.MEDIA_INFO_VIDEO_RENDERING_START:
-                                    // 埋点
-                                    onBuriedVideoRenderingStart();
-                                    break;
-                                // 缓冲开始
-                                case PlayerType.EventType.MEDIA_INFO_BUFFERING_START:
-                                    // 埋点
-                                    onBuriedBufferingStart();
-                                    // 检测：缓冲超时
-                                    kernelApi.startMessageBufferingTimeout(kernel, connectTimeoutMs);
-                                    break;
-                                // 缓冲结束
-                                case PlayerType.EventType.MEDIA_INFO_BUFFERING_STOP:
-                                    // 埋点
-                                    onBuriedBufferingStop();
-                                    //
-                                    kernelApi.closeMessagesBufferingTimeout();
-                                    break;
-                                // 播放开始-默认
-                                case PlayerType.EventType.START:
-                                    // 埋点
-                                    onBuriedStart();
-                                    // ijk需要刷新RenderView
-                                    initRenderView();
-//                          // 检查View是否可见
-                                    checkVideoVisibility();
-                                    break;
-                                // 快进
-                                case PlayerType.EventType.MEDIA_INFO_UPDATE_SEEK_START_FORWARD:
-                                    // 埋点
-                                    onBuriedSeekStartForward();
-                                    break;
-                                // 快退
-                                case PlayerType.EventType.MEDIA_INFO_UPDATE_SEEK_START_REWIND:
-                                    // 埋点
-                                    onBuriedSeekStartRewind();
-                                    break;
-                                // 快进
-                                case PlayerType.EventType.MEDIA_INFO_UPDATE_SEEK_FINISH:
-                                    // 埋点
-                                    onBuriedSeekFinish();
-                                    break;
-                                //
-                                case PlayerType.EventType.PAUSE:
-                                    // 停止轮训
-                                    kernelApi.removeMessagesProgressUpdate();
-                                    break;
-                                //
-                                case PlayerType.EventType.RESUME:
-                                    // 停止轮训
-                                    kernelApi.sendMessageProgressUpdate(kernel, false);
-                                    break;
-                                // 播放结束
-                                case PlayerType.EventType.END:
-                                    // 埋点
-                                    onBuriedComplete();
-                                    // 关闭屏幕常亮
-                                    setScreenKeep(false);
-                                    //
-                                    boolean looping = getStartArgs().isLooping();
-                                    if (looping) {
-                                        restart();
-                                    }
-//                            // 多剧集
-//                            int episodeItemCount = args.getEpisodeItemCount();
-//                            OnPlayerEpisodeListener onPlayerEpisodeListener = getOnPlayerEpisodeListener();
-//                            if (episodeItemCount > 0 && null != onPlayerEpisodeListener) {
-//                                int episodePlayingIndex = args.getEpisodePlayingIndex();
-//                                int nextPlayIndex = episodePlayingIndex + 1;
-//                                if (nextPlayIndex >= episodeItemCount) {
-//                                    onPlayerEpisodeListener.onEnd();
-//                                } else {
-//                                    onPlayerEpisodeListener.onEpisode(nextPlayIndex);
-//                                }
-//                            }
-//                            // 单剧集
-//                            else {
-//                                boolean looping = args.isLooping();
-//                                if (looping) {
-//                                    restart();
-//                                }
-//                            }
-
-                                    break;
-                            }
+                            callEvent(PlayerType.EventType.ERROR_RELOAD_RETRY);
+                            start(retryStartArgs);
                         }
+                    } else {
+                        nextEvent(kernel, playState);
                     }
                 }
 
@@ -1237,6 +976,184 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
             if (LogUtil.DEBUG) {
                 LogUtil.log(TAG, "getSegmentsMs -> " + e.getMessage());
             }
+            return null;
+        }
+    }
+
+    default void nextEvent(@PlayerType.KernelType.Value int kernelType, @PlayerType.EventType.Value int playState) {
+
+        if (LogUtil.DEBUG) {
+            LogUtil.log(TAG, "nextEvent -> kernelType = " + kernelType + ", playState = " + playState);
+        }
+
+        VideoKernelApi videoKernel = getVideoKernel();
+        if (null == videoKernel)
+            return;
+
+        // 透传
+        callEvent(playState);
+
+
+        // 播放错误
+        if (PlayStateUtil.isError(playState)) {
+            // 埋点
+            onBuriedError(playState);
+            // 执行
+            setScreenKeep(false);
+        }
+        // // 检测：启播超时      case PlayerType.EventType.INIT:
+        // 初始化准备
+        else if (playState == PlayerType.EventType.READY) {
+            if (LogUtil.DEBUG) {
+                String url = getStartArgs().getUrl();
+                LogUtil.log(TAG, "nextEvent,  PlayerType.EventType.READY, url = " + url);
+            }
+
+            // TODO: 2026/8/14
+//                                    boolean showSpeed = args.isShowSpeed();
+//                                    if (showSpeed) {
+//                                        kernelApi.sendMessageSpeedUpdate(kernel, false);
+//                                    }
+            long timeMillis = System.currentTimeMillis();
+            int connectTimeoutMs = getStartArgs().getTimeoutConfiguration().getConnectTimeoutMs();
+            videoKernel.removeAllMessages();
+            videoKernel.sendMessageConnectTimeout(kernelType, timeMillis, connectTimeoutMs, false);
+        }
+        // 轮训：视频进度条
+        else if (playState == PlayerType.EventType.MEDIA_INFO_PREPARE) {
+            videoKernel.removeAllMessages();
+            videoKernel.sendMessageProgressUpdate(kernelType, false);
+        }
+        // 视频：首帧画面
+        else if (playState == PlayerType.EventType.MEDIA_INFO_VIDEO_RENDERING_START) {
+            onBuriedVideoRenderingStart();
+        }
+        // 缓冲开始
+        else if (playState == PlayerType.EventType.MEDIA_INFO_BUFFERING_START) {
+            int connectTimeoutMs = getStartArgs().getTimeoutConfiguration().getConnectTimeoutMs();
+            onBuriedBufferingStart();
+            videoKernel.startMessageBufferingTimeout(kernelType, connectTimeoutMs);
+        }
+        // 缓冲结束
+        else if (playState == PlayerType.EventType.MEDIA_INFO_BUFFERING_STOP) {
+            onBuriedBufferingStop();
+            videoKernel.closeMessagesBufferingTimeout();
+        }
+        // 播放开始-默认
+        else if (playState == PlayerType.EventType.START) {
+            // 埋点
+            onBuriedStart();
+            // ijk需要刷新RenderView
+            initRenderView();
+            // 检查View是否可见
+            checkVideoVisibility();
+        }
+        // 快进
+        else if (playState == PlayerType.EventType.MEDIA_INFO_UPDATE_SEEK_START_FORWARD) {
+            onBuriedSeekStartForward();
+        }
+        // 快退
+        else if (playState == PlayerType.EventType.MEDIA_INFO_UPDATE_SEEK_START_REWIND) {
+            onBuriedSeekStartRewind();
+        }
+        // 快进 & 快退 OK
+        else if (playState == PlayerType.EventType.MEDIA_INFO_UPDATE_SEEK_FINISH) {
+            onBuriedSeekFinish();
+        }
+        // 暂停
+        else if (playState == PlayerType.EventType.PAUSE) {
+            videoKernel.removeMessagesProgressUpdate();
+        }
+        // 恢复播放
+        else if (playState == PlayerType.EventType.RESUME) {
+            videoKernel.sendMessageProgressUpdate(kernelType, false);
+        }
+        // 播放结束
+        else if (playState == PlayerType.EventType.END) {
+            // 埋点
+            onBuriedComplete();
+            // 关闭屏幕常亮
+            setScreenKeep(false);
+            //
+            boolean looping = getStartArgs().isLooping();
+            if (looping) {
+                restart();
+            }
+//                            // 多剧集
+//                            int episodeItemCount = args.getEpisodeItemCount();
+//                            OnPlayerEpisodeListener onPlayerEpisodeListener = getOnPlayerEpisodeListener();
+//                            if (episodeItemCount > 0 && null != onPlayerEpisodeListener) {
+//                                int episodePlayingIndex = args.getEpisodePlayingIndex();
+//                                int nextPlayIndex = episodePlayingIndex + 1;
+//                                if (nextPlayIndex >= episodeItemCount) {
+//                                    onPlayerEpisodeListener.onEnd();
+//                                } else {
+//                                    onPlayerEpisodeListener.onEpisode(nextPlayIndex);
+//                                }
+//                            }
+//                            // 单剧集
+//                            else {
+//                                boolean looping = args.isLooping();
+//                                if (looping) {
+//                                    restart();
+//                                }
+//                            }
+        }
+    }
+
+    default StartArgs nextRetryStartArgs(@PlayerType.KernelType.Value int kernelType, @PlayerType.EventType.Value int playState) {
+
+        if (LogUtil.DEBUG) {
+            LogUtil.log(TAG, "nextRetryStartArgs -> kernelType = " + kernelType + ", playState = " + playState);
+        }
+
+        try {
+
+            VideoKernelApi videoKernel = getVideoKernel();
+            if (null == videoKernel)
+                return null;
+
+            // 暂停外部轮训消息
+            videoKernel.removeAllMessages();
+
+            String oldUrl = getStartArgs().getUrl();
+            RetryConfiguration oldRetryConfiguration = getStartArgs().getRetryConfiguration();
+            List<RetryConfiguration.RetryUrl> retryUrls = oldRetryConfiguration.getRetryUrls();
+
+            // todo 2026-08-27 当前重试多路流 仅针对 androidx media exoplayer
+            if (kernelType != PlayerType.KernelType.MEDIA_V3 && retryUrls.isEmpty())
+                return null;
+
+            int retryUrlsCount = retryUrls.size();
+            int retryIndex = retryUrlsCount - 1;
+            for (int i = 0; i < retryUrlsCount; i++) {
+                RetryConfiguration.RetryUrl retryUrl = retryUrls.get(i);
+                String url = retryUrl.getUrl();
+                if (null == url)
+                    continue;
+                if (url.isEmpty())
+                    continue;
+                if (!url.equals(oldUrl))
+                    continue;
+                retryIndex = i;
+                break;
+            }
+
+            if (LogUtil.DEBUG) {
+                LogUtil.log(TAG, "nextRetryStartArgs, RetryConfiguration, retryIndex = " + retryIndex + ", retryUrlsCount = " + retryUrlsCount + ", oldUrl = " + oldUrl + ", retryUrls = " + retryUrls);
+            }
+
+            if (retryIndex + 1 >= retryUrlsCount)
+                return null;
+
+            Proxy nextRetryProxy = getStartArgs().getRetryConfiguration().getRetryUrls().get(retryIndex).getProxy();
+            String nextRetryUrl = getStartArgs().getRetryConfiguration().getRetryUrls().get(retryIndex).getUrl();
+            UrlArgs newRetryUrlArgs = getStartArgs().getUrlArgs().newBuilderSelf().setUrl(nextRetryUrl).build();
+            return getStartArgs().newBuilderSelf()
+                    .setUrl(newRetryUrlArgs)
+                    .setProxy(nextRetryProxy)
+                    .build();
+        } catch (Exception e) {
             return null;
         }
     }
