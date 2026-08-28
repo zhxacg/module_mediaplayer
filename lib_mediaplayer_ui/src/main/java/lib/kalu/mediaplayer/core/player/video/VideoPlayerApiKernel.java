@@ -1114,18 +1114,15 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
             // 暂停外部轮训消息
             videoKernel.removeAllMessages();
 
-            String oldUrl = getStartArgs().getUrl();
             RetryConfiguration oldRetryConfiguration = getStartArgs().getRetryConfiguration();
             List<RetryConfiguration.RetryUrl> retryUrls = oldRetryConfiguration.getRetryUrls();
 
-            // todo 2026-08-27 当前重试多路流 仅针对 androidx media exoplayer
-            if (kernelType != PlayerType.KernelType.MEDIA_V3 && retryUrls.isEmpty())
+            if (retryUrls.isEmpty())
                 return null;
 
-            int retryUrlsCount = retryUrls.size();
-            int retryIndex = retryUrlsCount - 1;
-            for (int i = 0; i < retryUrlsCount; i++) {
-                RetryConfiguration.RetryUrl retryUrl = retryUrls.get(i);
+            boolean isMasterUrl = true;
+            String oldUrl = getStartArgs().getUrl();
+            for (RetryConfiguration.RetryUrl retryUrl : retryUrls) {
                 String url = retryUrl.getUrl();
                 if (null == url)
                     continue;
@@ -1133,15 +1130,35 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
                     continue;
                 if (!url.equals(oldUrl))
                     continue;
-                retryIndex = i;
+                isMasterUrl = false;
                 break;
             }
 
-            if (LogUtil.DEBUG) {
-                LogUtil.log(TAG, "nextRetryStartArgs, RetryConfiguration, retryIndex = " + retryIndex + ", retryUrlsCount = " + retryUrlsCount + ", oldUrl = " + oldUrl + ", retryUrls = " + retryUrls);
+            int retryIndex;
+            int retryUrlsCount = retryUrls.size();
+            if (isMasterUrl) {
+                retryIndex = 0;
+            } else {
+                retryIndex = retryUrlsCount;
+                for (int i = 0; i < retryUrlsCount; i++) {
+                    RetryConfiguration.RetryUrl retryUrl = retryUrls.get(i);
+                    String url = retryUrl.getUrl();
+                    if (null == url)
+                        continue;
+                    if (url.isEmpty())
+                        continue;
+                    if (!url.equals(oldUrl))
+                        continue;
+                    retryIndex = i;
+                    break;
+                }
             }
 
-            if (retryIndex + 1 >= retryUrlsCount)
+            if (LogUtil.DEBUG) {
+                LogUtil.log(TAG, "nextRetryStartArgs, RetryConfiguration, isMasterUrl = " + isMasterUrl + ", retryIndex = " + retryIndex + ", retryUrlsCount = " + retryUrlsCount + ", oldUrl = " + oldUrl + ", retryUrls = " + retryUrls);
+            }
+
+            if (!isMasterUrl && retryIndex + 1 >= retryUrlsCount)
                 return null;
 
             // 透传
@@ -1150,6 +1167,11 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
             Proxy nextRetryProxy = getStartArgs().getRetryConfiguration().getRetryUrls().get(retryIndex).getProxy();
             String nextRetryUrl = getStartArgs().getRetryConfiguration().getRetryUrls().get(retryIndex).getUrl();
             UrlArgs newRetryUrlArgs = getStartArgs().getUrlArgs().newBuilderSelf().setUrl(nextRetryUrl).build();
+
+            if (LogUtil.DEBUG) {
+                LogUtil.log(TAG, "nextRetryStartArgs, RetryConfiguration, nextRetryUrl = " + nextRetryUrl);
+            }
+
             return getStartArgs().newBuilderSelf()
                     .setUrl(newRetryUrlArgs)
                     .setProxy(nextRetryProxy)
