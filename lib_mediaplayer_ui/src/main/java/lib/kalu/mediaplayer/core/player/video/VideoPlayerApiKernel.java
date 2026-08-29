@@ -765,11 +765,16 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
 
                     // 播放错误, 检查重试策略
                     if (errorNeedRetry) {
-                        StartArgs retryStartArgs = nextRetryStartArgs(kernel, playState);
-                        if (null == retryStartArgs) {
-                            nextEvent(kernel, playState);
+                        StartArgs startArgsOther = formatRetryOtherUrl(kernelType, playState);
+                        if (null != startArgsOther) {
+                            start(startArgsOther);
                         } else {
-                            start(retryStartArgs);
+                            StartArgs startArgsSelf = formatRetrySelfUrl(kernelType, playState);
+                            if (null != startArgsSelf) {
+                                start(startArgsSelf);
+                            } else {
+                                nextEvent(kernel, playState);
+                            }
                         }
                     } else {
                         nextEvent(kernel, playState);
@@ -1099,10 +1104,10 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
         }
     }
 
-    default StartArgs nextRetryStartArgs(@PlayerType.KernelType.Value int kernelType, @PlayerType.EventType.Value int playState) {
+    default StartArgs formatRetryOtherUrl(@PlayerType.KernelType.Value int kernelType, @PlayerType.EventType.Value int playState) {
 
         if (LogUtil.DEBUG) {
-            LogUtil.log(TAG, "nextRetryStartArgs -> kernelType = " + kernelType + ", playState = " + playState);
+            LogUtil.log(TAG, "formatRetryOtherUrl -> kernelType = " + kernelType + ", playState = " + playState);
         }
 
         try {
@@ -1155,7 +1160,7 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
             }
 
             if (LogUtil.DEBUG) {
-                LogUtil.log(TAG, "nextRetryStartArgs, RetryConfiguration, isMasterUrl = " + isMasterUrl + ", retryIndex = " + retryIndex + ", retryUrlsCount = " + retryUrlsCount + ", oldUrl = " + oldUrl + ", retryUrls = " + retryUrls);
+                LogUtil.log(TAG, "formatRetryOtherUrl, RetryConfiguration, isMasterUrl = " + isMasterUrl + ", retryIndex = " + retryIndex + ", retryUrlsCount = " + retryUrlsCount + ", oldUrl = " + oldUrl + ", retryUrls = " + retryUrls);
             }
 
             if (!isMasterUrl && retryIndex + 1 >= retryUrlsCount)
@@ -1169,7 +1174,7 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
             UrlArgs newRetryUrlArgs = getStartArgs().getUrlArgs().newBuilderSelf().setUrl(nextRetryUrl).build();
 
             if (LogUtil.DEBUG) {
-                LogUtil.log(TAG, "nextRetryStartArgs, RetryConfiguration, nextRetryUrl = " + nextRetryUrl);
+                LogUtil.log(TAG, "formatRetryOtherUrl, RetryConfiguration, nextRetryUrl = " + nextRetryUrl);
             }
 
             return getStartArgs().newBuilderSelf()
@@ -1179,5 +1184,20 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
         } catch (Exception e) {
             return null;
         }
+    }
+
+    default StartArgs formatRetrySelfUrl(@PlayerType.KernelType.Value int kernelType, @PlayerType.EventType.Value int playState) {
+
+        if (LogUtil.DEBUG) {
+            LogUtil.log(TAG, "formatRetrySelfUrl -> kernelType = " + kernelType + ", playState = " + playState);
+        }
+
+        if (kernelType == PlayerType.KernelType.MEDIA_V3)
+            return null;
+
+        if (kernelType == PlayerType.KernelType.EXO_V2)
+            return null;
+
+        return null;
     }
 }

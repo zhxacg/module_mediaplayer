@@ -1418,6 +1418,7 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
                 }
             } else {
                 mExoPlayer.setVideoSurface(null);
+                mExoPlayer.stop();
                 mExoPlayer.release();
                 mExoPlayer = null;
             }
