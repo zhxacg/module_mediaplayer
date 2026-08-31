@@ -7,8 +7,8 @@ import android.os.Build;
 import android.view.KeyEvent;
 import android.view.Surface;
 import android.view.TextureView;
-import android.view.View;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 
@@ -17,15 +17,12 @@ import lib.kalu.mediaplayer.core.kernel.video.VideoKernelApi;
 import lib.kalu.mediaplayer.core.render.VideoRenderApi;
 import lib.kalu.mediaplayer.util.LogUtil;
 
-
 /**
- * <pre>
- *     desc  : 重写TextureView，适配视频的宽高和旋转
- *     revise: 1.继承View，具有view的特性，比如移动，旋转，缩放，动画等变化。支持截图
- *             8.必须在硬件加速的窗口中使用，占用内存比SurfaceView高，在5.0以前在主线程渲染，5.0以后有单独的渲染线程。
- * </pre>
+ * desc: 重写TextureView，适配视频的宽高和旋转
  */
 public class VideoTextureView extends TextureView implements VideoRenderApi {
+
+    private static final String TAG = "VideoTextureView";
 
     @Nullable
     private VideoKernelApi mKernel;
@@ -37,6 +34,11 @@ public class VideoTextureView extends TextureView implements VideoRenderApi {
     private int mVideoBitrate = -1;
     private int mVideoRotation = PlayerType.RotationType.DEFAULT;
     private int mVideoScaleType = PlayerType.ScaleType.DEFAULT;
+
+    public VideoTextureView(Context context) {
+        super(context);
+        init();
+    }
 
     @Override
     public void updateVideoWidth(int videoWidth) {
@@ -88,15 +90,9 @@ public class VideoTextureView extends TextureView implements VideoRenderApi {
         return mVideoScaleType;
     }
 
-    public VideoTextureView(Context context) {
-        super(context);
-        init();
-    }
-
     @Override
     public void init() {
         VideoRenderApi.super.init();
-        //        setDrawingCacheEnabled(true);
         setFocusable(false);
         setFocusableInTouchMode(false);
         registListener();
@@ -107,9 +103,7 @@ public class VideoTextureView extends TextureView implements VideoRenderApi {
         try {
             setSurfaceTextureListener(mListener);
         } catch (Exception e) {
-            if (LogUtil.DEBUG) {
-                LogUtil.log("VideoTextureView -> registListener -> Exception " + e.getMessage());
-            }
+            LogUtil.log(TAG, "registListener -> " + e.getMessage());
         }
     }
 
@@ -118,80 +112,63 @@ public class VideoTextureView extends TextureView implements VideoRenderApi {
         try {
             setSurfaceTextureListener(null);
         } catch (Exception e) {
-            if (LogUtil.DEBUG) {
-                LogUtil.log("VideoTextureView -> unRegistListener -> Exception " + e.getMessage());
-            }
+            LogUtil.log(TAG, "unRegistListener -> " + e.getMessage());
         }
     }
 
     @Override
     public void setSurface(boolean release) {
+        if (mKernel == null) {
+            if (LogUtil.DEBUG) {
+                LogUtil.log(TAG, "setSurface -> mKernel is null, skip");
+            }
+            return;
+        }
 
         try {
-            if (null == mKernel) {
-                if (LogUtil.DEBUG) {
-                    LogUtil.log("VideoTextureView", "setSurface -> mKernel warning: null");
-                }
-                return;
-            }
             if (release) {
                 mKernel.setSurface(null, 0, 0);
             } else {
-                mKernel.setSurface(mSurface, 0, 0);
+                if (mSurfaceTexture != null) {
+                    if (mSurface != null) {
+                        mSurface.release();
+                    }
+                    mSurface = new Surface(mSurfaceTexture);
+                    mKernel.setSurface(mSurface, 0, 0);
+                }
             }
         } catch (Exception e) {
-            if (LogUtil.DEBUG) {
-                LogUtil.log("VideoTextureView -> setSurface -> " + e.getMessage());
-            }
+            LogUtil.log(TAG, "setSurface -> " + e.getMessage());
         }
-
-//        if (release) {
-//            if (mSurface != null) {
-//                mSurface.release();
-//                mSurface = null;
-//            }
-//            mSurface = new Surface(mSurfaceTexture);
-//        }
-//        if (mKernel != null) {
-//            int w = getWidth();
-//            int h = getHeight();
-//            mKernel.setSurface(mSurface, w, h);
-//        }
     }
 
     @Override
     public void reset() {
         if (LogUtil.DEBUG) {
-            LogUtil.log("VideoTextureView -> reset ->");
+            LogUtil.log(TAG, "reset");
         }
         setSurface(false);
     }
 
-    /**
-     * 释放资源
-     */
     @Override
     public void release() {
         if (LogUtil.DEBUG) {
-            LogUtil.log("VideoTextureView -> release ->");
+            LogUtil.log(TAG, "release");
         }
-
         unRegistListener();
         setSurface(true);
-//        try {
-//            if (mSurfaceTexture != null) {
-//                mSurfaceTexture.release();
-//                mSurfaceTexture = null;
-//            }
-//            if (mSurface != null) {
-//                mSurface.release();
-//                mSurface = null;
-//            }
-//        } catch (Exception e) {
-//            if (LogUtil.DEBUG) {
-//                LogUtil.log("VideoTextureView -> release -> Exception " + e.getMessage());
-//            }
-//        }
+        try {
+            if (mSurfaceTexture != null) {
+                mSurfaceTexture.release();
+                mSurfaceTexture = null;
+            }
+            if (mSurface != null) {
+                mSurface.release();
+                mSurface = null;
+            }
+        } catch (Exception e) {
+            LogUtil.log(TAG, "release -> " + e.getMessage());
+        }
     }
 
     @Override
@@ -206,20 +183,12 @@ public class VideoTextureView extends TextureView implements VideoRenderApi {
 
     @Override
     public String screenshot(String url, long position) {
-        Context context = getContext();
         Bitmap bitmap = getBitmap();
-//        //设置缓存
-//        setDrawingCacheEnabled(true);
-//        buildDrawingCache();
-//        //从缓存中获取当前屏幕的图片
-//        Context context = getContext();
-//        Bitmap bitmap = getDrawingCache();
-        return saveBitmap(context, bitmap);
+        return saveBitmap(getContext(), bitmap);
     }
 
     @Override
     public void setFixedSize(int width, int height) {
-
     }
 
     @Override
@@ -249,110 +218,63 @@ public class VideoTextureView extends TextureView implements VideoRenderApi {
 
     @Override
     public void setRotation(float rotation) {
-//        if (rotation != getRotation()) {
-//            super.setRotation(rotation);
-//            requestLayout();
-//        }
     }
 
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-
         try {
             int screenWidth = MeasureSpec.getSize(widthMeasureSpec);
             int screenHeight = MeasureSpec.getSize(heightMeasureSpec);
             int[] measureSpec = doMeasureSpec(screenWidth, screenHeight);
-            if (null == measureSpec) {
-                if (LogUtil.DEBUG) {
-                    LogUtil.log("VideoTextureView", "onMeasure -> warning: measureSpec null");
-                }
+            if (measureSpec == null) {
                 super.onMeasure(widthMeasureSpec, heightMeasureSpec);
                 return;
             }
             int width = measureSpec[0];
             int height = measureSpec[1];
-            int specW = MeasureSpec.makeMeasureSpec(width, MeasureSpec.EXACTLY);
-            int specH = MeasureSpec.makeMeasureSpec(height, MeasureSpec.EXACTLY);
-            super.onMeasure(specW, specH);
-//            getHolder().setFixedSize(measureSpec, measureSpec[1]);
+            setMeasuredDimension(width, height);
         } catch (Exception e) {
-            if (LogUtil.DEBUG) {
-                LogUtil.log("VideoTextureView -> onMeasure -> Exception " + e.getMessage());
-            }
+            LogUtil.log(TAG, "onMeasure -> " + e.getMessage());
             super.onMeasure(widthMeasureSpec, heightMeasureSpec);
         }
     }
 
     private final SurfaceTextureListener mListener = new SurfaceTextureListener() {
-        /**
-         * SurfaceTexture准备就绪
-         * @param surfaceTexture            surface
-         * @param width                     WIDTH
-         * @param height                    HEIGHT
-         */
         @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
         @Override
-        public void onSurfaceTextureAvailable(SurfaceTexture surfaceTexture, int width, int height) {
+        public void onSurfaceTextureAvailable(@NonNull SurfaceTexture surfaceTexture, int width, int height) {
             if (LogUtil.DEBUG) {
-                LogUtil.log("VideoTextureView -> onSurfaceTextureAvailable -> " + this);
+                LogUtil.log(TAG, "onSurfaceTextureAvailable -> " + VideoTextureView.this);
             }
-//                VideoRenderTextureView.this.mSurfaceTexture = surfaceTexture;
-//                setSurfaceTexture(VideoRenderTextureView.this.mSurfaceTexture);
-//                setSurface(true);
             mSurfaceTexture = surfaceTexture;
-            setSurface(true);
+            setSurface(false);
         }
 
-        /**
-         * SurfaceTexture即将被销毁
-         * @param surface                   surface
-         */
         @Override
-        public boolean onSurfaceTextureDestroyed(SurfaceTexture surface) {
+        public boolean onSurfaceTextureDestroyed(@NonNull SurfaceTexture surface) {
             if (LogUtil.DEBUG) {
-                LogUtil.log("VideoTextureView -> onSurfaceTextureDestroyed -> " + this);
+                LogUtil.log(TAG, "onSurfaceTextureDestroyed -> " + VideoTextureView.this);
             }
             if (mKernel != null) {
                 mKernel.setSurface(null, 0, 0);
             }
+            if (mSurface != null) {
+                mSurface.release();
+                mSurface = null;
+            }
+            mSurfaceTexture = null;
             return true;
         }
 
-        /**
-         * SurfaceTexture缓冲大小变化
-         * @param surface                   surface
-         * @param width                     WIDTH
-         * @param height                    HEIGHT
-         */
         @Override
-        public void onSurfaceTextureSizeChanged(SurfaceTexture surface, int width, int height) {
+        public void onSurfaceTextureSizeChanged(@NonNull SurfaceTexture surface, int width, int height) {
             if (LogUtil.DEBUG) {
-                LogUtil.log("VideoTextureView -> onSurfaceTextureSizeChanged -> width = " + width + ", height = " + height + ", this = " + this);
+                LogUtil.log(TAG, "onSurfaceTextureSizeChanged -> width = " + width + ", height = " + height);
             }
-
-//            post(new Runnable() {
-//                @Override
-//                public void run() {
-//                    setVisibility(View.GONE);
-//                }
-//            });
-//            postDelayed(new Runnable() {
-//                @Override
-//                public void run() {
-//                    setVisibility(View.VISIBLE);
-//                }
-//            }, 100);
         }
 
-        /**
-         * SurfaceTexture通过updateImage更新
-         * @param surface                   surface
-         */
         @Override
-        public void onSurfaceTextureUpdated(SurfaceTexture surface) {
-            if (LogUtil.DEBUG) {
-                LogUtil.log("VideoTextureView -> onSurfaceTextureUpdated -> " + this);
-            }
+        public void onSurfaceTextureUpdated(@NonNull SurfaceTexture surface) {
         }
     };
 }
