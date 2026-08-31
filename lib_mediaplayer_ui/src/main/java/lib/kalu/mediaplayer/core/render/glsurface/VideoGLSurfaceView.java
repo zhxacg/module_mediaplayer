@@ -3,7 +3,6 @@ package lib.kalu.mediaplayer.core.render.glsurface;
 import android.content.Context;
 import android.opengl.GLSurfaceView;
 import android.view.KeyEvent;
-import android.view.Surface;
 import android.view.SurfaceHolder;
 
 import androidx.annotation.Nullable;
@@ -183,52 +182,23 @@ public class VideoGLSurfaceView extends GLSurfaceView implements VideoRenderApi 
 
     @Override
     public void release() {
-        unRegistListener();
-
+        if (LogUtil.DEBUG) {
+            LogUtil.log("VideoGLSurfaceView -> release ->");
+        }
         try {
+            setSurface(true);
+            unRegistListener();
+
             if (null != mRender) {
                 mRender = null;
             }
-        } catch (Exception e) {
-            if (LogUtil.DEBUG) {
-                LogUtil.log("VideoGLSurfaceView -> release -> Exception1 " + e.getMessage());
-            }
-        }
-
-        try {
             if (null != mDrawer) {
                 mDrawer.release();
                 mDrawer = null;
             }
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
-                LogUtil.log("VideoGLSurfaceView -> release -> Exception2 " + e.getMessage());
-            }
-        }
-
-        try {
-            SurfaceHolder surfaceHolder = getHolder();
-            if (null == surfaceHolder) {
-                if (LogUtil.DEBUG) {
-                    LogUtil.log("VideoGLSurfaceView", "release -> surfaceHolder error: null");
-                }
-                return;
-            }
-            Surface surface = surfaceHolder.getSurface();
-            if (null == surface) {
-                if (LogUtil.DEBUG) {
-                    LogUtil.log("VideoGLSurfaceView", "release -> surface error: null");
-                }
-                return;
-            }
-//            clearSurface(surface);
-            surface.release();
-            if (LogUtil.DEBUG) {
-                LogUtil.log("VideoGLSurfaceView -> release ->");
-            }
-        } catch (Exception e) {
-            if (LogUtil.DEBUG) {
-                LogUtil.log("VideoGLSurfaceView -> release -> Exception3 " + e.getMessage());
+                LogUtil.log("VideoGLSurfaceView -> release -> " + e.getMessage());
             }
         }
     }

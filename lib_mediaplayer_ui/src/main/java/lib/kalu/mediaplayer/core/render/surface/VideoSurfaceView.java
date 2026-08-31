@@ -2,7 +2,6 @@ package lib.kalu.mediaplayer.core.render.surface;
 
 import android.content.Context;
 import android.view.KeyEvent;
-import android.view.Surface;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
@@ -174,31 +173,15 @@ public class VideoSurfaceView extends SurfaceView implements VideoRenderApi {
 
     @Override
     public void release() {
-        unRegistListener();
-        // step1
+        if (LogUtil.DEBUG) {
+            LogUtil.log("VideoSurfaceView -> release ->");
+        }
         try {
-            SurfaceHolder surfaceHolder = getHolder();
-            if (null == surfaceHolder) {
-                if (LogUtil.DEBUG) {
-                    LogUtil.log("VideoSurfaceView", "release -> surfaceHolder error: null");
-                }
-                return;
-            }
-            Surface surface = surfaceHolder.getSurface();
-            if (null == surface) {
-                if (LogUtil.DEBUG) {
-                    LogUtil.log("VideoSurfaceView", "release -> surface error: null");
-                }
-                return;
-            }
-//            clearSurface(surface);
-            surface.release();
-            if (LogUtil.DEBUG) {
-                LogUtil.log("VideoSurfaceView -> release -> removeSurface -> succ");
-            }
+            setSurface(true);
+            unRegistListener();
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
-                LogUtil.log("VideoSurfaceView -> release -> removeSurface -> " + e.getMessage());
+                LogUtil.log("VideoSurfaceView -> release -> " + e.getMessage());
             }
         }
     }
@@ -297,7 +280,6 @@ public class VideoSurfaceView extends SurfaceView implements VideoRenderApi {
 
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
 
         try {
             int screenWidth = MeasureSpec.getSize(widthMeasureSpec);
@@ -307,6 +289,7 @@ public class VideoSurfaceView extends SurfaceView implements VideoRenderApi {
                 if (LogUtil.DEBUG) {
                     LogUtil.log("VideoSurfaceView", "onMeasure -> warning: measureSpec null");
                 }
+                super.onMeasure(widthMeasureSpec, heightMeasureSpec);
                 return;
             }
             int width = measureSpec[0];
@@ -320,6 +303,7 @@ public class VideoSurfaceView extends SurfaceView implements VideoRenderApi {
             if (LogUtil.DEBUG) {
                 LogUtil.log("VideoSurfaceView -> onMeasure -> Exception " + e.getMessage());
             }
+            super.onMeasure(widthMeasureSpec, heightMeasureSpec);
         }
     }
 
