@@ -172,22 +172,26 @@ public class VideoTextureView extends TextureView implements VideoRenderApi {
      */
     @Override
     public void release() {
+        if (LogUtil.DEBUG) {
+            LogUtil.log("VideoTextureView -> release ->");
+        }
+
         unRegistListener();
         setSurface(true);
-        try {
-            if (mSurfaceTexture != null) {
-                mSurfaceTexture.release();
-                mSurfaceTexture = null;
-            }
-            if (mSurface != null) {
-                mSurface.release();
-                mSurface = null;
-            }
-        } catch (Exception e) {
-            if (LogUtil.DEBUG) {
-                LogUtil.log("VideoTextureView -> release -> Exception " + e.getMessage());
-            }
-        }
+//        try {
+//            if (mSurfaceTexture != null) {
+//                mSurfaceTexture.release();
+//                mSurfaceTexture = null;
+//            }
+//            if (mSurface != null) {
+//                mSurface.release();
+//                mSurface = null;
+//            }
+//        } catch (Exception e) {
+//            if (LogUtil.DEBUG) {
+//                LogUtil.log("VideoTextureView -> release -> Exception " + e.getMessage());
+//            }
+//        }
     }
 
     @Override

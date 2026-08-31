@@ -2,6 +2,7 @@ package lib.kalu.mediaplayer.core.render.surface;
 
 import android.content.Context;
 import android.view.KeyEvent;
+import android.view.SurfaceControl;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
@@ -176,14 +177,8 @@ public class VideoSurfaceView extends SurfaceView implements VideoRenderApi {
         if (LogUtil.DEBUG) {
             LogUtil.log("VideoSurfaceView -> release ->");
         }
-        try {
-            setSurface(true);
-            unRegistListener();
-        } catch (Exception e) {
-            if (LogUtil.DEBUG) {
-                LogUtil.log("VideoSurfaceView -> release -> " + e.getMessage());
-            }
-        }
+        unRegistListener();
+        setSurface(true);
     }
 
     @Override
