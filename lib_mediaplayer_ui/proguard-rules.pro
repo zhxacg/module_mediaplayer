@@ -50,6 +50,9 @@
 -keep class lib.kalu.mediaplayer.proxy.ProxyUrl {
     public <methods>;
 }
+-keep class lib.kalu.mediaplayer.proxy.ProxyRetry {
+    public <methods>;
+}
 -keep class lib.kalu.mediaplayer.proxy.ProxyTrack {
     public <methods>;
 }

@@ -18,6 +18,7 @@ import lib.kalu.mediaplayer.core.kernel.video.VideoKernelFactoryManager;
 import lib.kalu.mediaplayer.error.NetworkError;
 import lib.kalu.mediaplayer.error.UrlEmptyError;
 import lib.kalu.mediaplayer.proxy.Proxy;
+import lib.kalu.mediaplayer.proxy.ProxyRetry;
 import lib.kalu.mediaplayer.proxy.ProxyTrack;
 import lib.kalu.mediaplayer.util.LogUtil;
 import lib.kalu.mediaplayer.util.NetworkUtil;
@@ -767,7 +768,17 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
                     if (errorNeedRetry) {
                         StartArgs startArgsOther = formatRetryOtherUrl(kernelType, playState);
                         if (null != startArgsOther) {
-                            start(startArgsOther);
+                            Proxy proxy = startArgsOther.getProxy();
+                            if (null != proxy) {
+                                ProxyRetry proxyRetry = proxy.getProxyRetry();
+                                if (null != proxyRetry) {
+                                    start(proxyRetry.formatRetry(startArgsOther));
+                                } else {
+                                    start(startArgsOther);
+                                }
+                            } else {
+                                start(startArgsOther);
+                            }
                         } else {
                             StartArgs startArgsSelf = formatRetrySelfUrl(kernelType, playState);
                             if (null != startArgsSelf) {
