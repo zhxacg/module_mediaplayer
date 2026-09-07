@@ -6,7 +6,7 @@ import lib.kalu.mediaplayer.bean.args.StartArgs;
 
 public interface ProxyRetry extends Serializable {
 
-    default StartArgs formatRetry(StartArgs startArgs) {
+    default StartArgs formatRetryOther(StartArgs startArgs) {
         return startArgs;
     }
 }

@@ -768,17 +768,7 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
                     if (errorNeedRetry) {
                         StartArgs startArgsOther = formatRetryOtherUrl(kernelType, playState);
                         if (null != startArgsOther) {
-                            Proxy proxy = startArgsOther.getProxy();
-                            if (null != proxy) {
-                                ProxyRetry proxyRetry = proxy.getProxyRetry();
-                                if (null != proxyRetry) {
-                                    start(proxyRetry.formatRetry(startArgsOther));
-                                } else {
-                                    start(startArgsOther);
-                                }
-                            } else {
-                                start(startArgsOther);
-                            }
+                            start(startArgsOther);
                         } else {
                             StartArgs startArgsSelf = formatRetrySelfUrl(kernelType, playState);
                             if (null != startArgsSelf) {
@@ -1115,7 +1105,8 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
         }
     }
 
-    default StartArgs formatRetryOtherUrl(@PlayerType.KernelType.Value int kernelType, @PlayerType.EventType.Value int playState) {
+    default StartArgs formatRetryOtherUrl(@PlayerType.KernelType.Value int kernelType,
+                                          @PlayerType.EventType.Value int playState) {
 
         if (LogUtil.DEBUG) {
             LogUtil.log(TAG, "formatRetryOtherUrl -> kernelType = " + kernelType + ", playState = " + playState);
@@ -1180,10 +1171,23 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
                     LogUtil.log(TAG, "formatRetryOtherUrl, RetryConfiguration, nextRetryUrl = " + nextRetryUrl);
                 }
 
-                return getStartArgs().newBuilderSelf()
+
+                StartArgs startArgs = getStartArgs().newBuilderSelf()
                         .setUrl(newRetryUrlArgs)
                         .setProxy(nextRetryProxy)
                         .build();
+
+                Proxy proxy = getStartArgs().getProxy();
+                if (null == proxy) {
+                    return startArgs;
+                } else {
+                    ProxyRetry proxyRetry = proxy.getProxyRetry();
+                    if (null == proxyRetry) {
+                        return startArgs;
+                    } else {
+                        return proxyRetry.formatRetryOther(startArgs);
+                    }
+                }
             }
         } catch (Exception e) {
             return null;
