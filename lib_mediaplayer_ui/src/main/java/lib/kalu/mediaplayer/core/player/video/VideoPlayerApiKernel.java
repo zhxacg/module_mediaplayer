@@ -1125,9 +1125,11 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
             if (retryUrls.isEmpty())
                 return null;
 
-            boolean isMasterUrl = true;
+            int nextRetryIndex = 0;
+            int retryUrlsCount = retryUrls.size();
             String oldUrl = getStartArgs().getUrl();
-            for (RetryConfiguration.RetryUrl retryUrl : retryUrls) {
+            for (int i = 0; i < retryUrlsCount; i++) {
+                RetryConfiguration.RetryUrl retryUrl = retryUrls.get(i);
                 String url = retryUrl.getUrl();
                 if (null == url)
                     continue;
@@ -1135,52 +1137,43 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
                     continue;
                 if (!url.equals(oldUrl))
                     continue;
-                isMasterUrl = false;
+                nextRetryIndex = i + 1;
                 break;
             }
 
-            int retryIndex;
-            int retryUrlsCount = retryUrls.size();
-            if (isMasterUrl) {
-                retryIndex = 0;
-            } else {
-                retryIndex = retryUrlsCount;
-                for (int i = 0; i < retryUrlsCount; i++) {
-                    RetryConfiguration.RetryUrl retryUrl = retryUrls.get(i);
-                    String url = retryUrl.getUrl();
-                    if (null == url)
-                        continue;
-                    if (url.isEmpty())
-                        continue;
-                    if (!url.equals(oldUrl))
-                        continue;
-                    retryIndex = i;
-                    break;
+            if (LogUtil.DEBUG) {
+                LogUtil.log(TAG, "formatRetryOtherUrl, RetryConfiguration, nextRetryIndex = " + nextRetryIndex + ", retryUrlsCount = " + retryUrlsCount + ", oldUrl = " + oldUrl + ", retryUrls = " + retryUrls);
+            }
+
+            if (nextRetryIndex >= retryUrlsCount) {
+
+                if (LogUtil.DEBUG) {
+                    LogUtil.log(TAG, "formatRetryOtherUrl, RetryConfiguration, retry end");
                 }
-            }
 
-            if (LogUtil.DEBUG) {
-                LogUtil.log(TAG, "formatRetryOtherUrl, RetryConfiguration, isMasterUrl = " + isMasterUrl + ", retryIndex = " + retryIndex + ", retryUrlsCount = " + retryUrlsCount + ", oldUrl = " + oldUrl + ", retryUrls = " + retryUrls);
-            }
-
-            if (!isMasterUrl && retryIndex + 1 >= retryUrlsCount)
                 return null;
+            } else {
 
-            // 透传
-            callEvent(PlayerType.EventType.ERROR_RELOAD_RETRY_URL);
+                if (LogUtil.DEBUG) {
+                    LogUtil.log(TAG, "formatRetryOtherUrl, RetryConfiguration, retry next, nextRetryIndex = " + nextRetryIndex);
+                }
 
-            Proxy nextRetryProxy = getStartArgs().getRetryConfiguration().getRetryUrls().get(retryIndex).getProxy();
-            String nextRetryUrl = getStartArgs().getRetryConfiguration().getRetryUrls().get(retryIndex).getUrl();
-            UrlArgs newRetryUrlArgs = getStartArgs().getUrlArgs().newBuilderSelf().setUrl(nextRetryUrl).build();
+                // 透传
+                callEvent(PlayerType.EventType.ERROR_RELOAD_RETRY_URL);
 
-            if (LogUtil.DEBUG) {
-                LogUtil.log(TAG, "formatRetryOtherUrl, RetryConfiguration, nextRetryUrl = " + nextRetryUrl);
+                Proxy nextRetryProxy = retryUrls.get(nextRetryIndex).getProxy();
+                String nextRetryUrl = retryUrls.get(nextRetryIndex).getUrl();
+                UrlArgs newRetryUrlArgs = getStartArgs().getUrlArgs().newBuilderSelf().setUrl(nextRetryUrl).build();
+
+                if (LogUtil.DEBUG) {
+                    LogUtil.log(TAG, "formatRetryOtherUrl, RetryConfiguration, nextRetryUrl = " + nextRetryUrl);
+                }
+
+                return getStartArgs().newBuilderSelf()
+                        .setUrl(newRetryUrlArgs)
+                        .setProxy(nextRetryProxy)
+                        .build();
             }
-
-            return getStartArgs().newBuilderSelf()
-                    .setUrl(newRetryUrlArgs)
-                    .setProxy(nextRetryProxy)
-                    .build();
         } catch (Exception e) {
             return null;
         }
