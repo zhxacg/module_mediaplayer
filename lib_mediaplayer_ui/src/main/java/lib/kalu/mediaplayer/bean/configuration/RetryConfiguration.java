@@ -4,7 +4,6 @@ import java.io.Serializable;
 import java.util.Collections;
 import java.util.List;
 
-import lib.kalu.mediaplayer.bean.type.PlayerType;
 import lib.kalu.mediaplayer.proxy.Proxy;
 
 /**
@@ -12,6 +11,7 @@ import lib.kalu.mediaplayer.proxy.Proxy;
  */
 public final class RetryConfiguration implements Serializable {
 
+    private boolean retryEnable;
     private int retryCount;
     private List<RetryUrl> retryUrls;
 
@@ -24,12 +24,14 @@ public final class RetryConfiguration implements Serializable {
     }
 
     public RetryConfiguration(Builder builder) {
+        this.retryEnable = builder.retryEnable;
         this.retryCount = builder.retryCount;
         this.retryUrls = builder.retryUrls;
     }
 
     public Builder newBuilderSelf() {
         Builder builder = new Builder();
+        builder.retryEnable = retryEnable;
         builder.retryCount = retryCount;
         builder.retryUrls = retryUrls;
         return builder;
@@ -42,15 +44,22 @@ public final class RetryConfiguration implements Serializable {
     @Override
     public String toString() {
         return "RetryConfiguration{" +
-                "retryCount=" + retryCount +
+                "retryEnable=" + retryEnable +
+                ", retryCount=" + retryCount +
                 ", retryUrls=" + retryUrls +
                 '}';
     }
 
     public static class Builder implements Serializable {
 
+        private boolean retryEnable = true;
         private int retryCount;
         private List<RetryUrl> retryUrls = Collections.emptyList();
+
+        public Builder setRetryEnable(boolean v) {
+            this.retryEnable = v;
+            return this;
+        }
 
         public Builder setRetryCount(int v) {
             this.retryCount = v;

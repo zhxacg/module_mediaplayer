@@ -4,7 +4,6 @@ package lib.kalu.mediaplayer.bean.args;
 import org.json.JSONObject;
 
 import java.io.Serializable;
-import java.util.Map;
 
 import lib.kalu.mediaplayer.PlayerSDK;
 import lib.kalu.mediaplayer.bean.configuration.AdaptiveConfiguration;
@@ -353,6 +352,14 @@ public class StartArgs implements Serializable {
         builder.timeoutConfiguration = timeoutConfiguration;
         builder.retryConfiguration = retryConfiguration;
         return builder;
+    }
+
+    public Builder closeRetryConfiguration() {
+        return newBuilderSelf().setRetryConfiguration(retryConfiguration.newBuilderSelf().setRetryEnable(false).build());
+    }
+
+    public Builder openRetryConfiguration() {
+        return newBuilderSelf().setRetryConfiguration(retryConfiguration.newBuilderSelf().setRetryEnable(true).build());
     }
 
     public static Builder newBuilder() {
