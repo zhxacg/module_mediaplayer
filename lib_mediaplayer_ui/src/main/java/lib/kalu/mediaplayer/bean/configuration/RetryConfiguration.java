@@ -15,6 +15,10 @@ public final class RetryConfiguration implements Serializable {
     private int retryCount;
     private List<RetryUrl> retryUrls;
 
+    public boolean isRetryEnable() {
+        return retryEnable;
+    }
+
     public int getRetryCount() {
         return retryCount;
     }

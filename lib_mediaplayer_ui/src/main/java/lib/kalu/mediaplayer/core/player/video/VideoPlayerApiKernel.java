@@ -1122,6 +1122,10 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
             videoKernel.removeAllMessages();
 
             RetryConfiguration oldRetryConfiguration = getStartArgs().getRetryConfiguration();
+            boolean retryEnable = oldRetryConfiguration.isRetryEnable();
+            if (!retryEnable)
+                return null;
+
             List<RetryConfiguration.RetryUrl> retryUrls = oldRetryConfiguration.getRetryUrls();
 
             if (retryUrls.isEmpty())
