@@ -99,7 +99,6 @@ public @interface PlayerType {
         int MEDIA_INFO_PLAY_WHEN_READY_DELAYED_TIME_START = 3_212; // 延迟播放 倒计时开始
         int MEDIA_INFO_PLAY_WHEN_READY_DELAYED_TIME_END = 3_213; // 延迟播放 倒计时结束
 
-
         // 错误
         int ERROR_NETWORK = 3_301; // 网络未连接
         int ERROR_URL_EMPTY = 3_302; // 缓冲超时
@@ -109,8 +108,6 @@ public @interface PlayerType {
         int ERROR_TIMEOUT_BUFFER = 3_306; // 缓冲超时
         int ERROR_INIT = 3_307; // 初始化错误
         int ERROR_DECODE = 3_308; // 解码
-        int ERROR_RELOAD_RETRY_URL = 3_309; // 重试其他url
-        int ERROR_RELOAD_SELF_URL = 3_310; // 重试其他url
 
         // 窗口模式
         int WINDOW_FULL_START = 3_401;
@@ -130,6 +127,10 @@ public @interface PlayerType {
         int TRY_SEE_START = 3_601;
         int TRY_SEE_END = 3_602;
 
+        // 重试
+        int RETRY_URL_OTHER = 3_701; // 重试其他url
+        int RETRY_URL_SELF = 3_702; // 重试其他url
+
         @Documented
         @Retention(CLASS)
         @Target({METHOD, PARAMETER, FIELD, LOCAL_VARIABLE, ANNOTATION_TYPE, PACKAGE})
@@ -142,6 +143,8 @@ public @interface PlayerType {
                 RESUME,
                 STOP,
                 RELEASE,
+                RETRY_URL_OTHER,
+                RETRY_URL_SELF,
                 MEDIA_INFO_PREPARE, // 起播加载
                 MEDIA_INFO_UPDATE_PLAYBACLK_SPEED, // 切换倍速
                 MEDIA_INFO_VIDEO_RENDERING_START,    // 视频出画面
@@ -174,8 +177,6 @@ public @interface PlayerType {
                 ERROR_TIMEOUT_BUFFER, // 缓冲超时
                 ERROR_INIT, // 初始化错误
                 ERROR_DECODE, // 解码
-                ERROR_RELOAD_RETRY_URL,
-                ERROR_RELOAD_SELF_URL
         })
         @interface Value {
         }

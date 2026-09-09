@@ -1165,7 +1165,7 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
                 }
 
                 // 透传
-                callEvent(PlayerType.EventType.ERROR_RELOAD_RETRY_URL);
+                callEvent(PlayerType.EventType.RETRY_URL_OTHER);
 
                 Proxy nextRetryProxy = retryUrls.get(nextRetryIndex).getProxy();
                 String nextRetryUrl = retryUrls.get(nextRetryIndex).getUrl();
