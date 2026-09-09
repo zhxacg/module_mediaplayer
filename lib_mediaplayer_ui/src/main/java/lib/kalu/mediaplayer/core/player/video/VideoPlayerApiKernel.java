@@ -123,20 +123,20 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
             // 8
             initDecoder();
         } catch (NetworkError e) {
+            stop(true);
             callEvent(PlayerType.EventType.ERROR_NETWORK);
-            stop(false);
             if (LogUtil.DEBUG) {
                 LogUtil.log(TAG, "start -> " + e.getMessage());
             }
         } catch (UrlEmptyError e) {
+            stop(true);
             callEvent(PlayerType.EventType.ERROR_URL_EMPTY);
-            stop(false);
             if (LogUtil.DEBUG) {
                 LogUtil.log(TAG, "start -> " + e.getMessage());
             }
         } catch (Exception e) {
+            stop(true);
             callEvent(PlayerType.EventType.ERROR_INIT);
-            stop(false);
             if (LogUtil.DEBUG) {
                 LogUtil.log(TAG, "start -> " + e.getMessage());
             }
