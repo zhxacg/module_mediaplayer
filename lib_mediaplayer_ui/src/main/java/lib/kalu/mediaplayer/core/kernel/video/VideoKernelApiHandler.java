@@ -528,6 +528,8 @@ public interface VideoKernelApiHandler extends VideoKernelApiBase, VideoKernelAp
                     }
 
                     removeAllMessages();
+
+                    getPlayerApi().stop(true);
                     onEvent(msg.arg1, PlayerType.EventType.ERROR_TIMEOUT_BUFFER);
 
                     if (LogUtil.DEBUG) {

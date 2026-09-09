@@ -525,8 +525,9 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
                         LogUtil.log(TAG, "startDecoder -> error: listMediaSource isEmpty");
                     }
 
-                    onEvent(PlayerType.KernelType.MEDIA_V3, PlayerType.EventType.ERROR_DECODE);
                     stop();
+                    onEvent(PlayerType.KernelType.MEDIA_V3, PlayerType.EventType.STOP);
+                    onEvent(PlayerType.KernelType.MEDIA_V3, PlayerType.EventType.ERROR_DECODE);
                     return;
                 }
 
@@ -556,8 +557,9 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
                         LogUtil.log(TAG, "startDecoder -> error: multivariantMediaSource null");
                     }
 
-                    onEvent(PlayerType.KernelType.MEDIA_V3, PlayerType.EventType.ERROR_DECODE);
                     stop();
+                    onEvent(PlayerType.KernelType.MEDIA_V3, PlayerType.EventType.STOP);
+                    onEvent(PlayerType.KernelType.MEDIA_V3, PlayerType.EventType.ERROR_DECODE);
                     return;
                 }
                 mExoPlayer.setMediaSource(multivariantMediaSource);
@@ -574,8 +576,9 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
                         LogUtil.log(TAG, "startDecoder -> error: defaultItem null");
                     }
 
-                    onEvent(PlayerType.KernelType.MEDIA_V3, PlayerType.EventType.ERROR_DECODE);
                     stop();
+                    onEvent(PlayerType.KernelType.MEDIA_V3, PlayerType.EventType.STOP);
+                    onEvent(PlayerType.KernelType.MEDIA_V3, PlayerType.EventType.ERROR_DECODE);
                     return;
                 }
 
@@ -585,8 +588,9 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
                         LogUtil.log(TAG, "startDecoder -> error: onlyMainMediaSource null");
                     }
 
-                    onEvent(PlayerType.KernelType.MEDIA_V3, PlayerType.EventType.ERROR_DECODE);
                     stop();
+                    onEvent(PlayerType.KernelType.MEDIA_V3, PlayerType.EventType.STOP);
+                    onEvent(PlayerType.KernelType.MEDIA_V3, PlayerType.EventType.ERROR_DECODE);
                     return;
                 }
 
@@ -603,6 +607,8 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
                 LogUtil.log(TAG, "startDecoder -> completed");
             }
         } catch (Exception e) {
+            stop();
+            onEvent(PlayerType.KernelType.MEDIA_V3, PlayerType.EventType.STOP);
             onEvent(PlayerType.KernelType.MEDIA_V3, PlayerType.EventType.ERROR_DECODE);
             if (LogUtil.DEBUG) {
                 LogUtil.log(TAG, "startDecoder -> Exception " + e.getMessage());
