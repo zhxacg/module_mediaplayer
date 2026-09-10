@@ -174,10 +174,7 @@ public class VideoTextureView extends TextureView implements VideoRenderApi {
 
         } catch (Exception e) {
 
-            LogUtil.log(
-                    TAG,
-                    "registListener -> " + e.getMessage()
-            );
+            LogUtil.log( TAG, "registListener -> " + e.getMessage() );
         }
     }
 
@@ -200,10 +197,7 @@ public class VideoTextureView extends TextureView implements VideoRenderApi {
 
         } catch (Exception e) {
 
-            LogUtil.log(
-                    TAG,
-                    "unRegistListener -> " + e.getMessage()
-            );
+            LogUtil.log( TAG, "unRegistListener -> " + e.getMessage() );
         }
     }
 
@@ -280,10 +274,7 @@ public class VideoTextureView extends TextureView implements VideoRenderApi {
 
         } catch (Exception e) {
 
-            LogUtil.log(
-                    TAG,
-                    "syncSurfaceTexture -> " + e.getMessage()
-            );
+            LogUtil.log( TAG, "syncSurfaceTexture -> " + e.getMessage() );
         }
     }
 
@@ -314,10 +305,7 @@ public class VideoTextureView extends TextureView implements VideoRenderApi {
                 if (!isAvailable()) {
 
                     if (LogUtil.DEBUG) {
-                        LogUtil.log(
-                                TAG,
-                                "attachSurface -> TextureView unavailable"
-                        );
+                        LogUtil.log( TAG, "attachSurface -> TextureView unavailable" );
                     }
 
                     return;
@@ -331,10 +319,7 @@ public class VideoTextureView extends TextureView implements VideoRenderApi {
             if (surfaceTexture == null) {
 
                 if (LogUtil.DEBUG) {
-                    LogUtil.log(
-                            TAG,
-                            "attachSurface -> SurfaceTexture is null"
-                    );
+                    LogUtil.log( TAG, "attachSurface -> SurfaceTexture is null" );
                 }
 
                 return;
@@ -357,20 +342,13 @@ public class VideoTextureView extends TextureView implements VideoRenderApi {
                 mSurface = new Surface(surfaceTexture);
 
                 if (LogUtil.DEBUG) {
-                    LogUtil.log(
-                            TAG,
-                            "attachSurface -> create new Surface = "
-                                    + mSurface
-                    );
+                    LogUtil.log( TAG, "attachSurface -> create new Surface = " + mSurface );
                 }
             }
 
             if (!mSurface.isValid()) {
 
-                LogUtil.log(
-                        TAG,
-                        "attachSurface -> Surface invalid"
-                );
+                LogUtil.log( TAG, "attachSurface -> Surface invalid" );
 
                 releaseSurface();
 
@@ -383,39 +361,24 @@ public class VideoTextureView extends TextureView implements VideoRenderApi {
             if (mSurfaceAttached) {
 
                 if (LogUtil.DEBUG) {
-                    LogUtil.log(
-                            TAG,
-                            "attachSurface -> already attached"
-                    );
+                    LogUtil.log( TAG, "attachSurface -> already attached" );
                 }
 
                 return;
             }
 
-            kernel.setSurface(
-                    mSurface,
-                    0,
-                    0
-            );
+            kernel.setSurface( mSurface, 0, 0 );
 
             mSurfaceAttached = true;
 
             if (LogUtil.DEBUG) {
 
-                LogUtil.log(
-                        TAG,
-                        "attachSurface -> succ"
-                                + ", surface = " + mSurface
-                                + ", valid = " + mSurface.isValid()
-                );
+                LogUtil.log( TAG, "attachSurface -> succ" + ", surface = " + mSurface + ", valid = " + mSurface.isValid() );
             }
 
         } catch (Exception e) {
 
-            LogUtil.log(
-                    TAG,
-                    "attachSurface -> " + e.getMessage()
-            );
+            LogUtil.log( TAG, "attachSurface -> " + e.getMessage() );
         }
     }
 
@@ -433,11 +396,7 @@ public class VideoTextureView extends TextureView implements VideoRenderApi {
 
         try {
 
-            kernel.setSurface(
-                    null,
-                    0,
-                    0
-            );
+            kernel.setSurface( null, 0, 0 );
 
             if (LogUtil.DEBUG) {
                 LogUtil.log(TAG, "detachSurface -> succ");
@@ -445,10 +404,7 @@ public class VideoTextureView extends TextureView implements VideoRenderApi {
 
         } catch (Exception e) {
 
-            LogUtil.log(
-                    TAG,
-                    "detachSurface -> " + e.getMessage()
-            );
+            LogUtil.log( TAG, "detachSurface -> " + e.getMessage() );
 
         } finally {
 
@@ -484,10 +440,7 @@ public class VideoTextureView extends TextureView implements VideoRenderApi {
 
         } catch (Exception e) {
 
-            LogUtil.log(
-                    TAG,
-                    "releaseSurface -> " + e.getMessage()
-            );
+            LogUtil.log( TAG, "releaseSurface -> " + e.getMessage() );
         }
     }
 
@@ -527,10 +480,7 @@ public class VideoTextureView extends TextureView implements VideoRenderApi {
         if (mSurfaceAttached) {
 
             if (LogUtil.DEBUG) {
-                LogUtil.log(
-                        TAG,
-                        "reset -> already attached"
-                );
+                LogUtil.log( TAG, "reset -> already attached" );
             }
 
             return;
@@ -585,23 +535,11 @@ public class VideoTextureView extends TextureView implements VideoRenderApi {
             new SurfaceTextureListener() {
 
                 @Override
-                public void onSurfaceTextureAvailable(
-                        @NonNull SurfaceTexture surfaceTexture,
-                        int width,
-                        int height
-                ) {
+                public void onSurfaceTextureAvailable( @NonNull SurfaceTexture surfaceTexture, int width, int height ) {
 
                     if (LogUtil.DEBUG) {
 
-                        LogUtil.log(
-                                TAG,
-                                "onSurfaceTextureAvailable"
-                                        + ", texture = " + surfaceTexture
-                                        + ", size = "
-                                        + width
-                                        + "x"
-                                        + height
-                        );
+                        LogUtil.log( TAG, "onSurfaceTextureAvailable" + ", texture = " + surfaceTexture + ", size = " + width + "x" + height );
                     }
 
                     /*
@@ -624,20 +562,11 @@ public class VideoTextureView extends TextureView implements VideoRenderApi {
                 }
 
                 @Override
-                public void onSurfaceTextureSizeChanged(
-                        @NonNull SurfaceTexture surfaceTexture,
-                        int width,
-                        int height
-                ) {
+                public void onSurfaceTextureSizeChanged( @NonNull SurfaceTexture surfaceTexture, int width, int height ) {
 
                     if (LogUtil.DEBUG) {
 
-                        LogUtil.log(
-                                TAG,
-                                "onSurfaceTextureSizeChanged"
-                                        + ", width = " + width
-                                        + ", height = " + height
-                        );
+                        LogUtil.log( TAG, "onSurfaceTextureSizeChanged" + ", width = " + width + ", height = " + height );
                     }
 
                     /*
@@ -650,17 +579,11 @@ public class VideoTextureView extends TextureView implements VideoRenderApi {
                 }
 
                 @Override
-                public boolean onSurfaceTextureDestroyed(
-                        @NonNull SurfaceTexture surfaceTexture
-                ) {
+                public boolean onSurfaceTextureDestroyed( @NonNull SurfaceTexture surfaceTexture ) {
 
                     if (LogUtil.DEBUG) {
 
-                        LogUtil.log(
-                                TAG,
-                                "onSurfaceTextureDestroyed"
-                                        + ", texture = " + surfaceTexture
-                        );
+                        LogUtil.log( TAG, "onSurfaceTextureDestroyed" + ", texture = " + surfaceTexture );
                     }
 
                     /*
@@ -691,9 +614,7 @@ public class VideoTextureView extends TextureView implements VideoRenderApi {
                 }
 
                 @Override
-                public void onSurfaceTextureUpdated(
-                        @NonNull SurfaceTexture surfaceTexture
-                ) {
+                public void onSurfaceTextureUpdated( @NonNull SurfaceTexture surfaceTexture ) {
                 }
             };
 
@@ -702,10 +623,7 @@ public class VideoTextureView extends TextureView implements VideoRenderApi {
     // -------------------------------------------------------------------------
 
     @Override
-    protected void onMeasure(
-            int widthMeasureSpec,
-            int heightMeasureSpec
-    ) {
+    protected void onMeasure( int widthMeasureSpec, int heightMeasureSpec ) {
 
         try {
 
@@ -716,18 +634,11 @@ public class VideoTextureView extends TextureView implements VideoRenderApi {
                     MeasureSpec.getSize(heightMeasureSpec);
 
             int[] measureSpec =
-                    doMeasureSpec(
-                            screenWidth,
-                            screenHeight
-                    );
+                    doMeasureSpec( screenWidth, screenHeight );
 
-            if (measureSpec == null
-                    || measureSpec.length < 2) {
+            if (measureSpec == null || measureSpec.length < 2) {
 
-                super.onMeasure(
-                        widthMeasureSpec,
-                        heightMeasureSpec
-                );
+                super.onMeasure( widthMeasureSpec, heightMeasureSpec );
 
                 return;
             }
@@ -737,30 +648,18 @@ public class VideoTextureView extends TextureView implements VideoRenderApi {
 
             if (width <= 0 || height <= 0) {
 
-                super.onMeasure(
-                        widthMeasureSpec,
-                        heightMeasureSpec
-                );
+                super.onMeasure( widthMeasureSpec, heightMeasureSpec );
 
                 return;
             }
 
-            setMeasuredDimension(
-                    width,
-                    height
-            );
+            setMeasuredDimension( width, height );
 
         } catch (Exception e) {
 
-            LogUtil.log(
-                    TAG,
-                    "onMeasure -> " + e.getMessage()
-            );
+            LogUtil.log( TAG, "onMeasure -> " + e.getMessage() );
 
-            super.onMeasure(
-                    widthMeasureSpec,
-                    heightMeasureSpec
-            );
+            super.onMeasure( widthMeasureSpec, heightMeasureSpec );
         }
     }
 
@@ -769,10 +668,7 @@ public class VideoTextureView extends TextureView implements VideoRenderApi {
     // -------------------------------------------------------------------------
 
     @Override
-    public String screenshot(
-            String url,
-            long position
-    ) {
+    public String screenshot( String url, long position ) {
 
         Bitmap bitmap = null;
 
@@ -786,17 +682,11 @@ public class VideoTextureView extends TextureView implements VideoRenderApi {
                 return null;
             }
 
-            return saveBitmap(
-                    getContext(),
-                    bitmap
-            );
+            return saveBitmap( getContext(), bitmap );
 
         } catch (Exception e) {
 
-            LogUtil.log(
-                    TAG,
-                    "screenshot -> " + e.getMessage()
-            );
+            LogUtil.log( TAG, "screenshot -> " + e.getMessage() );
 
             if (bitmap != null && !bitmap.isRecycled()) {
                 bitmap.recycle();

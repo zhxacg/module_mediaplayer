@@ -191,10 +191,7 @@ public class VideoSurfaceView extends SurfaceView implements VideoRenderApi {
 
         } catch (Exception e) {
 
-            LogUtil.log(
-                    TAG,
-                    "registListener -> " + e.getMessage()
-            );
+            LogUtil.log( TAG, "registListener -> " + e.getMessage() );
         }
     }
 
@@ -217,10 +214,7 @@ public class VideoSurfaceView extends SurfaceView implements VideoRenderApi {
 
         } catch (Exception e) {
 
-            LogUtil.log(
-                    TAG,
-                    "unRegistListener -> " + e.getMessage()
-            );
+            LogUtil.log( TAG, "unRegistListener -> " + e.getMessage() );
         }
     }
 
@@ -267,10 +261,7 @@ public class VideoSurfaceView extends SurfaceView implements VideoRenderApi {
             if (!surface.isValid()) {
 
                 if (LogUtil.DEBUG) {
-                    LogUtil.log(
-                            TAG,
-                            "attachSurface -> surface invalid"
-                    );
+                    LogUtil.log( TAG, "attachSurface -> surface invalid" );
                 }
 
                 return;
@@ -285,20 +276,13 @@ public class VideoSurfaceView extends SurfaceView implements VideoRenderApi {
             if (mSurfaceAttached) {
 
                 if (LogUtil.DEBUG) {
-                    LogUtil.log(
-                            TAG,
-                            "attachSurface -> already attached"
-                    );
+                    LogUtil.log( TAG, "attachSurface -> already attached" );
                 }
 
                 return;
             }
 
-            kernel.setSurface(
-                    surface,
-                    0,
-                    0
-            );
+            kernel.setSurface( surface, 0, 0 );
 
             mSurfaceAttached = true;
 
@@ -315,10 +299,7 @@ public class VideoSurfaceView extends SurfaceView implements VideoRenderApi {
 
         } catch (Exception e) {
 
-            LogUtil.log(
-                    TAG,
-                    "attachSurface -> " + e.getMessage()
-            );
+            LogUtil.log( TAG, "attachSurface -> " + e.getMessage() );
         }
     }
 
@@ -344,11 +325,7 @@ public class VideoSurfaceView extends SurfaceView implements VideoRenderApi {
              *
              * 保证 decoder 不再持有旧 Surface。
              */
-            kernel.setSurface(
-                    null,
-                    0,
-                    0
-            );
+            kernel.setSurface( null, 0, 0 );
 
             if (LogUtil.DEBUG) {
                 LogUtil.log(TAG, "detachSurface -> succ");
@@ -356,10 +333,7 @@ public class VideoSurfaceView extends SurfaceView implements VideoRenderApi {
 
         } catch (Exception e) {
 
-            LogUtil.log(
-                    TAG,
-                    "detachSurface -> " + e.getMessage()
-            );
+            LogUtil.log( TAG, "detachSurface -> " + e.getMessage() );
 
         } finally {
 
@@ -371,21 +345,13 @@ public class VideoSurfaceView extends SurfaceView implements VideoRenderApi {
             new SurfaceHolder.Callback() {
 
                 @Override
-                public void surfaceCreated(
-                        @NonNull SurfaceHolder holder
-                ) {
+                public void surfaceCreated( @NonNull SurfaceHolder holder ) {
 
                     if (LogUtil.DEBUG) {
 
                         Surface surface = holder.getSurface();
 
-                        LogUtil.log(
-                                TAG,
-                                "surfaceCreated"
-                                        + ", surface = " + surface
-                                        + ", valid = "
-                                        + (surface != null && surface.isValid())
-                        );
+                        LogUtil.log( TAG, "surfaceCreated" + ", surface = " + surface + ", valid = " + (surface != null && surface.isValid()) );
                     }
 
                     /*
@@ -397,24 +363,11 @@ public class VideoSurfaceView extends SurfaceView implements VideoRenderApi {
                 }
 
                 @Override
-                public void surfaceChanged(
-                        @NonNull SurfaceHolder holder,
-                        int format,
-                        int width,
-                        int height
-                ) {
+                public void surfaceChanged( @NonNull SurfaceHolder holder, int format, int width, int height ) {
 
                     if (LogUtil.DEBUG) {
 
-                        LogUtil.log(
-                                TAG,
-                                "surfaceChanged"
-                                        + ", format = " + format
-                                        + ", size = "
-                                        + width
-                                        + "x"
-                                        + height
-                        );
+                        LogUtil.log( TAG, "surfaceChanged" + ", format = " + format + ", size = " + width + "x" + height );
                     }
 
                     /*
@@ -427,18 +380,11 @@ public class VideoSurfaceView extends SurfaceView implements VideoRenderApi {
                 }
 
                 @Override
-                public void surfaceDestroyed(
-                        @NonNull SurfaceHolder holder
-                ) {
+                public void surfaceDestroyed( @NonNull SurfaceHolder holder ) {
 
                     if (LogUtil.DEBUG) {
 
-                        LogUtil.log(
-                                TAG,
-                                "surfaceDestroyed"
-                                        + ", surface = "
-                                        + holder.getSurface()
-                        );
+                        LogUtil.log( TAG, "surfaceDestroyed" + ", surface = " + holder.getSurface() );
                     }
 
                     /*
@@ -525,13 +471,7 @@ public class VideoSurfaceView extends SurfaceView implements VideoRenderApi {
         if (width <= 0 || height <= 0) {
 
             if (LogUtil.DEBUG) {
-                LogUtil.log(
-                        TAG,
-                        "setFixedSize -> invalid size = "
-                                + width
-                                + "x"
-                                + height
-                );
+                LogUtil.log( TAG, "setFixedSize -> invalid size = " + width + "x" + height );
             }
 
             return;
@@ -540,26 +480,14 @@ public class VideoSurfaceView extends SurfaceView implements VideoRenderApi {
         try {
 
             if (LogUtil.DEBUG) {
-                LogUtil.log(
-                        TAG,
-                        "setFixedSize -> "
-                                + width
-                                + "x"
-                                + height
-                );
+                LogUtil.log( TAG, "setFixedSize -> " + width + "x" + height );
             }
 
-            getHolder().setFixedSize(
-                    width,
-                    height
-            );
+            getHolder().setFixedSize( width, height );
 
         } catch (Exception e) {
 
-            LogUtil.log(
-                    TAG,
-                    "setFixedSize -> " + e.getMessage()
-            );
+            LogUtil.log( TAG, "setFixedSize -> " + e.getMessage() );
         }
     }
 
@@ -568,10 +496,7 @@ public class VideoSurfaceView extends SurfaceView implements VideoRenderApi {
     // -------------------------------------------------------------------------
 
     @Override
-    protected void onMeasure(
-            int widthMeasureSpec,
-            int heightMeasureSpec
-    ) {
+    protected void onMeasure( int widthMeasureSpec, int heightMeasureSpec ) {
 
         try {
 
@@ -582,18 +507,11 @@ public class VideoSurfaceView extends SurfaceView implements VideoRenderApi {
                     MeasureSpec.getSize(heightMeasureSpec);
 
             int[] measureSpec =
-                    doMeasureSpec(
-                            screenWidth,
-                            screenHeight
-                    );
+                    doMeasureSpec( screenWidth, screenHeight );
 
-            if (measureSpec == null
-                    || measureSpec.length < 2) {
+            if (measureSpec == null || measureSpec.length < 2) {
 
-                super.onMeasure(
-                        widthMeasureSpec,
-                        heightMeasureSpec
-                );
+                super.onMeasure( widthMeasureSpec, heightMeasureSpec );
 
                 return;
             }
@@ -603,30 +521,18 @@ public class VideoSurfaceView extends SurfaceView implements VideoRenderApi {
 
             if (width <= 0 || height <= 0) {
 
-                super.onMeasure(
-                        widthMeasureSpec,
-                        heightMeasureSpec
-                );
+                super.onMeasure( widthMeasureSpec, heightMeasureSpec );
 
                 return;
             }
 
-            setMeasuredDimension(
-                    width,
-                    height
-            );
+            setMeasuredDimension( width, height );
 
         } catch (Exception e) {
 
-            LogUtil.log(
-                    TAG,
-                    "onMeasure -> " + e.getMessage()
-            );
+            LogUtil.log( TAG, "onMeasure -> " + e.getMessage() );
 
-            super.onMeasure(
-                    widthMeasureSpec,
-                    heightMeasureSpec
-            );
+            super.onMeasure( widthMeasureSpec, heightMeasureSpec );
         }
     }
 
@@ -635,10 +541,7 @@ public class VideoSurfaceView extends SurfaceView implements VideoRenderApi {
     // -------------------------------------------------------------------------
 
     @Override
-    public String screenshot(
-            String url,
-            long position
-    ) {
+    public String screenshot( String url, long position ) {
 
         /*
          * SurfaceView 截图：
