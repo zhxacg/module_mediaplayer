@@ -141,7 +141,7 @@ final class GLRender implements GLSurfaceView.Renderer {
     }
 
     void addDrawer(
-            @NonNull GLDrawer drawer
+            GLDrawer drawer
     ) {
 
         if (mDrawers.contains(drawer)) {
@@ -152,7 +152,7 @@ final class GLRender implements GLSurfaceView.Renderer {
     }
 
     void removeDrawer(
-            @NonNull GLDrawer drawer
+            GLDrawer drawer
     ) {
 
         mDrawers.remove(drawer);
