@@ -12,67 +12,149 @@ import javax.microedition.khronos.opengles.GL10;
 import lib.kalu.mediaplayer.util.LogUtil;
 
 final class GLRender implements GLSurfaceView.Renderer {
-    private final List<GLDrawer> drawers = new ArrayList<GLDrawer>();
+
+    private static final String TAG = "GLRender";
+
+    private final List<GLDrawer> mDrawers =
+            new ArrayList<>();
 
     @Override
-    public void onSurfaceCreated(GL10 gl, EGLConfig config) {
+    public void onSurfaceCreated(
+            GL10 gl,
+            EGLConfig config
+    ) {
+
         try {
-            GLES20.glClearColor(0f, 0f, 0f, 0f);
-            //开启混合，即半透明
-            GLES20.glEnable(GLES20.GL_BLEND);
-            GLES20.glBlendFunc(GLES20.GL_SRC_ALPHA, GLES20.GL_ONE_MINUS_SRC_ALPHA);
-            int[] textureIds = GLTool.getInstance().createTextureIds(drawers.size());
-            for (int i = 0; i < textureIds.length; i++) {
-                drawers.get(i).setTextureID(textureIds[i]);
+
+            GLES20.glClearColor(
+                    0F,
+                    0F,
+                    0F,
+                    1F
+            );
+
+            /*
+             * 普通视频渲染不需要 Blend。
+             */
+            GLES20.glDisable(
+                    GLES20.GL_BLEND
+            );
+
+            int count =
+                    mDrawers.size();
+
+            if (count <= 0) {
+                return;
             }
+
+            int[] textureIds =
+                    GLTool.getInstance()
+                            .createTextureIds(
+                                    count
+                            );
+
+            for (int i = 0; i < count; i++) {
+
+                mDrawers
+                        .get(i)
+                        .setTextureID(
+                                textureIds[i]
+                        );
+            }
+
         } catch (Exception e) {
+
             if (LogUtil.DEBUG) {
-                LogUtil.log("GLRender -> onSurfaceCreated -> Exception " + e.getMessage());
+                LogUtil.log(
+                        TAG,
+                        "onSurfaceCreated -> "
+                                + e.getMessage()
+                );
             }
         }
     }
 
     @Override
-    public void onSurfaceChanged(GL10 gl, int width, int height) {
+    public void onSurfaceChanged(
+            GL10 gl,
+            int width,
+            int height
+    ) {
+
+        if (width <= 0
+                || height <= 0) {
+            return;
+        }
+
         try {
-            GLES20.glViewport(0, 0, width, height);
-            for (GLDrawer drawer : drawers) {
-                drawer.setWorldSize(width, height);
+
+            GLES20.glViewport(
+                    0,
+                    0,
+                    width,
+                    height
+            );
+
+            for (GLDrawer drawer : mDrawers) {
+
+                drawer.setWorldSize(
+                        width,
+                        height
+                );
             }
+
         } catch (Exception e) {
+
             if (LogUtil.DEBUG) {
-                LogUtil.log("GLRender -> onSurfaceChanged -> Exception " + e.getMessage());
+                LogUtil.log(
+                        TAG,
+                        "onSurfaceChanged -> "
+                                + e.getMessage()
+                );
             }
         }
     }
 
     @Override
     public void onDrawFrame(GL10 gl) {
-        //清除颜色缓冲和深度缓冲
+
         try {
-            GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT | GLES20.GL_DEPTH_BUFFER_BIT);
-            for (int i = 0; i < drawers.size(); i++) {
-                drawers.get(i).draw();
+
+            GLES20.glClear(
+                    GLES20.GL_COLOR_BUFFER_BIT
+            );
+
+            for (GLDrawer drawer : mDrawers) {
+                drawer.draw();
             }
+
         } catch (Exception e) {
+
             if (LogUtil.DEBUG) {
-                LogUtil.log("GLRender -> onDrawFrame -> Exception " + e.getMessage());
+                LogUtil.log(
+                        TAG,
+                        "onDrawFrame -> "
+                                + e.getMessage()
+                );
             }
         }
     }
 
-    /**
-     * 添加渲染器
-     *
-     * @param drawer
-     */
-    public void addDrawer(GLDrawer drawer) {
-        try {
-            drawers.add(drawer);
-        } catch (Exception e) {
-            if (LogUtil.DEBUG) {
-                LogUtil.log("GLRender -> addDrawer -> Exception " + e.getMessage());
-            }
+    void addDrawer(
+            @NonNull GLDrawer drawer
+    ) {
+
+        if (mDrawers.contains(drawer)) {
+            return;
         }
+
+        mDrawers.add(drawer);
+    }
+
+    void removeDrawer(
+            @NonNull GLDrawer drawer
+    ) {
+
+        mDrawers.remove(drawer);
     }
 }

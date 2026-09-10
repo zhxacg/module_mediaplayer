@@ -2,8 +2,7 @@ package lib.kalu.mediaplayer.core.render.glsurface;
 
 import android.content.Context;
 import android.opengl.GLSurfaceView;
-import android.view.KeyEvent;
-import android.view.SurfaceHolder;
+import android.view.Surface;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -13,19 +12,25 @@ import lib.kalu.mediaplayer.core.kernel.video.VideoKernelApi;
 import lib.kalu.mediaplayer.core.render.VideoRenderApi;
 import lib.kalu.mediaplayer.util.LogUtil;
 
-/**
- * desc: 基于 GLSurfaceView 的渲染器
- */
 public class VideoGLSurfaceView extends GLSurfaceView implements VideoRenderApi {
 
     private static final String TAG = "VideoGLSurfaceView";
 
     @Nullable
     private GLDrawer mDrawer;
+
     @Nullable
     private GLRender mRender;
+
     @Nullable
     private VideoKernelApi mKernel;
+
+    @Nullable
+    private Surface mVideoSurface;
+
+    private boolean mSurfaceAttached = false;
+    private boolean mListenerRegistered = false;
+    private boolean mReleased = false;
 
     private int mVideoWidth = -1;
     private int mVideoHeight = -1;
@@ -39,8 +44,452 @@ public class VideoGLSurfaceView extends GLSurfaceView implements VideoRenderApi 
     }
 
     @Override
+    public void init() {
+
+        VideoRenderApi.super.init();
+
+        setFocusable(false);
+        setFocusableInTouchMode(false);
+
+        setEGLContextClientVersion(2);
+
+        /*
+         * 减少 pause/resume 导致 EGL Context 频繁重建。
+         */
+        setPreserveEGLContextOnPause(true);
+
+        mDrawer = new GLDrawer();
+
+        mRender = new GLRender();
+        mRender.addDrawer(mDrawer);
+
+        /*
+         * GLSurfaceView生命周期内只能调用一次。
+         */
+        setRenderer(mRender);
+
+        /*
+         * 视频帧到来后通过 requestRender() 主动绘制。
+         */
+        setRenderMode(RENDERMODE_WHEN_DIRTY);
+
+        mReleased = false;
+
+        registListener();
+    }
+
+    // -------------------------------------------------------------------------
+    // Listener
+    // -------------------------------------------------------------------------
+
+    private final GLDrawer.SurfaceListener mSurfaceListener =
+            new GLDrawer.SurfaceListener() {
+
+                @Override
+                public void onSurfaceAvailable(@NonNull Surface surface) {
+
+                    if (mReleased) {
+                        return;
+                    }
+
+                    if (LogUtil.DEBUG) {
+                        LogUtil.log(
+                                TAG,
+                                "onSurfaceAvailable -> surface="
+                                        + surface
+                                        + ", valid="
+                                        + surface.isValid()
+                        );
+                    }
+
+                    /*
+                     * EGL Context 重建时可能产生新 Surface。
+                     */
+                    if (mVideoSurface != null
+                            && mVideoSurface != surface
+                            && mSurfaceAttached) {
+
+                        detachSurface();
+                    }
+
+                    mVideoSurface = surface;
+                    mSurfaceAttached = false;
+
+                    attachSurfaceIfValid();
+                }
+
+                @Override
+                public void onSurfaceDestroyed() {
+
+                    if (LogUtil.DEBUG) {
+                        LogUtil.log(
+                                TAG,
+                                "onSurfaceDestroyed"
+                        );
+                    }
+
+                    detachSurface();
+
+                    mVideoSurface = null;
+                }
+
+                @Override
+                public void onFrameAvailable() {
+
+                    if (mReleased) {
+                        return;
+                    }
+
+                    try {
+
+                        requestRender();
+
+                    } catch (Exception e) {
+
+                        if (LogUtil.DEBUG) {
+                            LogUtil.log(
+                                    TAG,
+                                    "onFrameAvailable -> "
+                                            + e.getMessage()
+                            );
+                        }
+                    }
+                }
+            };
+
+    @Override
+    public void registListener() {
+
+        if (mListenerRegistered) {
+            return;
+        }
+
+        GLDrawer drawer = mDrawer;
+
+        if (drawer == null) {
+            return;
+        }
+
+        try {
+
+            drawer.addSurfaceListener(
+                    mSurfaceListener
+            );
+
+            mListenerRegistered = true;
+
+            if (LogUtil.DEBUG) {
+                LogUtil.log(
+                        TAG,
+                        "registListener -> succ"
+                );
+            }
+
+        } catch (Exception e) {
+
+            LogUtil.log(
+                    TAG,
+                    "registListener -> "
+                            + e.getMessage()
+            );
+        }
+    }
+
+    @Override
+    public void unRegistListener() {
+
+        if (!mListenerRegistered) {
+            return;
+        }
+
+        try {
+
+            /*
+             * 先让 MediaCodec 停止使用 Surface。
+             */
+            detachSurface();
+
+            GLDrawer drawer = mDrawer;
+
+            if (drawer != null) {
+
+                drawer.removeSurfaceListener(
+                        mSurfaceListener
+                );
+            }
+
+        } catch (Exception e) {
+
+            LogUtil.log(
+                    TAG,
+                    "unRegistListener -> "
+                            + e.getMessage()
+            );
+
+        } finally {
+
+            mListenerRegistered = false;
+            mVideoSurface = null;
+        }
+    }
+
+    // -------------------------------------------------------------------------
+    // Kernel
+    // -------------------------------------------------------------------------
+
+    @Override
+    public void setVideoKernel(@Nullable VideoKernelApi kernel) {
+
+        if (mKernel == kernel) {
+            return;
+        }
+
+        /*
+         * 旧 Kernel 先解绑。
+         */
+        if (mKernel != null) {
+            detachSurface();
+        }
+
+        mKernel = kernel;
+
+        if (kernel != null) {
+            attachSurfaceIfValid();
+        }
+    }
+
+    @Nullable
+    @Override
+    public VideoKernelApi getVideoKernel() {
+        return mKernel;
+    }
+
+    // -------------------------------------------------------------------------
+    // Surface
+    // -------------------------------------------------------------------------
+
+    private void attachSurfaceIfValid() {
+
+        if (mReleased) {
+            return;
+        }
+
+        if (mSurfaceAttached) {
+            return;
+        }
+
+        VideoKernelApi kernel = mKernel;
+        Surface surface = mVideoSurface;
+
+        if (kernel == null
+                || surface == null
+                || !surface.isValid()) {
+
+            return;
+        }
+
+        try {
+
+            kernel.setSurface(
+                    surface,
+                    0,
+                    0
+            );
+
+            mSurfaceAttached = true;
+
+            if (LogUtil.DEBUG) {
+                LogUtil.log(
+                        TAG,
+                        "attachSurface -> succ"
+                                + ", surface="
+                                + surface
+                );
+            }
+
+        } catch (Exception e) {
+
+            LogUtil.log(
+                    TAG,
+                    "attachSurface -> "
+                            + e.getMessage()
+            );
+        }
+    }
+
+    private void detachSurface() {
+
+        if (!mSurfaceAttached) {
+            return;
+        }
+
+        VideoKernelApi kernel = mKernel;
+
+        try {
+
+            if (kernel != null) {
+
+                kernel.setSurface(
+                        null,
+                        0,
+                        0
+                );
+            }
+
+        } catch (Exception e) {
+
+            LogUtil.log(
+                    TAG,
+                    "detachSurface -> "
+                            + e.getMessage()
+            );
+
+        } finally {
+
+            mSurfaceAttached = false;
+        }
+    }
+
+    @Override
+    public void setSurface(boolean release) {
+
+        if (release) {
+            detachSurface();
+        } else {
+            attachSurfaceIfValid();
+        }
+    }
+
+    @Override
+    public void reset() {
+
+        if (LogUtil.DEBUG) {
+            LogUtil.log(TAG, "reset");
+        }
+
+        /*
+         * 不重建 Surface。
+         */
+        attachSurfaceIfValid();
+    }
+
+    // -------------------------------------------------------------------------
+    // Lifecycle
+    // -------------------------------------------------------------------------
+
+    public void resumeRender() {
+
+        if (mReleased) {
+            return;
+        }
+
+        try {
+
+            onResume();
+
+        } catch (Exception e) {
+
+            LogUtil.log(
+                    TAG,
+                    "resumeRender -> "
+                            + e.getMessage()
+            );
+        }
+    }
+
+    public void pauseRender() {
+
+        if (mReleased) {
+            return;
+        }
+
+        try {
+
+            onPause();
+
+        } catch (Exception e) {
+
+            LogUtil.log(
+                    TAG,
+                    "pauseRender -> "
+                            + e.getMessage()
+            );
+        }
+    }
+
+    @Override
+    public void release() {
+
+        if (mReleased) {
+            return;
+        }
+
+        mReleased = true;
+
+        if (LogUtil.DEBUG) {
+            LogUtil.log(
+                    TAG,
+                    "release"
+            );
+        }
+
+        /*
+         * 内部会先 detachSurface。
+         */
+        unRegistListener();
+
+        final GLDrawer drawer = mDrawer;
+
+        if (drawer != null) {
+
+            try {
+
+                /*
+                 * GLES资源必须GL线程释放。
+                 */
+                queueEvent(
+                        drawer::release
+                );
+
+            } catch (Exception e) {
+
+                LogUtil.log(
+                        TAG,
+                        "release -> queueEvent -> "
+                                + e.getMessage()
+                );
+            }
+        }
+
+        try {
+            onPause();
+        } catch (Exception e) {
+
+            LogUtil.log(
+                    TAG,
+                    "release -> onPause -> "
+                            + e.getMessage()
+            );
+        }
+
+        mSurfaceAttached = false;
+        mVideoSurface = null;
+
+        mKernel = null;
+        mDrawer = null;
+        mRender = null;
+    }
+
+    // -------------------------------------------------------------------------
+    // Video
+    // -------------------------------------------------------------------------
+
+    @Override
     public void updateVideoWidth(int videoWidth) {
-        this.mVideoWidth = videoWidth;
+
+        mVideoWidth = videoWidth;
+
+        updateDrawerVideoSize();
     }
 
     @Override
@@ -50,7 +499,10 @@ public class VideoGLSurfaceView extends GLSurfaceView implements VideoRenderApi 
 
     @Override
     public void updateVideoHeight(int videoHeight) {
-        this.mVideoHeight = videoHeight;
+
+        mVideoHeight = videoHeight;
+
+        updateDrawerVideoSize();
     }
 
     @Override
@@ -58,9 +510,41 @@ public class VideoGLSurfaceView extends GLSurfaceView implements VideoRenderApi 
         return mVideoHeight;
     }
 
+    private void updateDrawerVideoSize() {
+
+        final GLDrawer drawer = mDrawer;
+
+        if (drawer == null
+                || mVideoWidth <= 0
+                || mVideoHeight <= 0
+                || mReleased) {
+            return;
+        }
+
+        try {
+
+            queueEvent(
+                    () -> drawer.setVideoSize(
+                            mVideoWidth,
+                            mVideoHeight
+                    )
+            );
+
+            requestRender();
+
+        } catch (Exception e) {
+
+            LogUtil.log(
+                    TAG,
+                    "updateDrawerVideoSize -> "
+                            + e.getMessage()
+            );
+        }
+    }
+
     @Override
     public void updateVideoBitrate(int videoBitrate) {
-        this.mVideoBitrate = videoBitrate;
+        mVideoBitrate = videoBitrate;
     }
 
     @Override
@@ -70,7 +554,7 @@ public class VideoGLSurfaceView extends GLSurfaceView implements VideoRenderApi 
 
     @Override
     public void updateVideoRotation(int videoRotation) {
-        this.mVideoRotation = videoRotation;
+        mVideoRotation = videoRotation;
     }
 
     @Override
@@ -80,7 +564,7 @@ public class VideoGLSurfaceView extends GLSurfaceView implements VideoRenderApi 
 
     @Override
     public void updateVideoScaleType(int scaleType) {
-        this.mVideoScaleType = scaleType;
+        mVideoScaleType = scaleType;
     }
 
     @Override
@@ -88,196 +572,106 @@ public class VideoGLSurfaceView extends GLSurfaceView implements VideoRenderApi 
         return mVideoScaleType;
     }
 
-    @Override
-    public void init() {
-        VideoRenderApi.super.init();
-        setFocusable(false);
-        setFocusableInTouchMode(false);
-        setWillNotDraw(true);
-        setZOrderOnTop(true);
-        setZOrderMediaOverlay(true);
-
-        // 设置OpenGl ES的版本为2.0
-        setEGLContextClientVersion(2);
-        //初始化绘制器
-        mDrawer = new GLDrawer();
-        //初始化渲染器
-        mRender = new GLRender();
-        mRender.addDrawer(mDrawer);
-        setRenderer(mRender);
-        // 设置渲染的模式
-        setRenderMode(RENDERMODE_WHEN_DIRTY);
-
-        registListener();
-    }
+    // -------------------------------------------------------------------------
+    // Measure
+    // -------------------------------------------------------------------------
 
     @Override
-    public void registListener() {
-        try {
-            getHolder().addCallback(mCallback);
-        } catch (Exception e) {
-            LogUtil.log(TAG, "registListener -> " + e.getMessage());
-        }
-    }
-
-    @Override
-    public void unRegistListener() {
-        try {
-            getHolder().removeCallback(mCallback);
-        } catch (Exception e) {
-            LogUtil.log(TAG, "unRegistListener -> " + e.getMessage());
-        }
-    }
-
-    @Override
-    public void setSurface(boolean release) {
-        if (mKernel == null) {
-            if (LogUtil.DEBUG) {
-                LogUtil.log(TAG, "setSurface -> mKernel is null, skip");
-            }
-            return;
-        }
+    protected void onMeasure(
+            int widthMeasureSpec,
+            int heightMeasureSpec
+    ) {
 
         try {
-            if (release) {
-                mKernel.setSurface(null, 0, 0);
-            } else {
-                mKernel.setSurface(getHolder().getSurface(), 0, 0);
+
+            int screenWidth =
+                    MeasureSpec.getSize(
+                            widthMeasureSpec
+                    );
+
+            int screenHeight =
+                    MeasureSpec.getSize(
+                            heightMeasureSpec
+                    );
+
+            int[] measureSpec =
+                    doMeasureSpec(
+                            screenWidth,
+                            screenHeight
+                    );
+
+            if (measureSpec == null
+                    || measureSpec.length < 2
+                    || measureSpec[0] <= 0
+                    || measureSpec[1] <= 0) {
+
+                super.onMeasure(
+                        widthMeasureSpec,
+                        heightMeasureSpec
+                );
+
+                return;
             }
+
+            setMeasuredDimension(
+                    measureSpec[0],
+                    measureSpec[1]
+            );
+
         } catch (Exception e) {
-            LogUtil.log(TAG, "setSurface -> " + e.getMessage());
+
+            LogUtil.log(
+                    TAG,
+                    "onMeasure -> "
+                            + e.getMessage()
+            );
+
+            super.onMeasure(
+                    widthMeasureSpec,
+                    heightMeasureSpec
+            );
         }
     }
 
-    @Override
-    public void reset() {
-        if (LogUtil.DEBUG) {
-            LogUtil.log(TAG, "reset");
-        }
-        setSurface(false);
-    }
+    // -------------------------------------------------------------------------
+    // Other
+    // -------------------------------------------------------------------------
 
     @Override
-    public void release() {
-        if (LogUtil.DEBUG) {
-            LogUtil.log(TAG, "release");
-        }
+    public void setRotation(float rotation) {
+
         try {
-            setSurface(true);
-            unRegistListener();
 
-            if (null != mRender) {
-                mRender = null;
+            if (getRotation() == rotation) {
+                return;
             }
-            if (null != mDrawer) {
-                mDrawer.release();
-                mDrawer = null;
-            }
+
+            super.setRotation(rotation);
+
+            requestLayout();
+
         } catch (Exception e) {
-            LogUtil.log(TAG, "release -> " + e.getMessage());
+
+            LogUtil.log(
+                    TAG,
+                    "setRotation -> "
+                            + e.getMessage()
+            );
         }
     }
 
     @Override
-    public void setVideoKernel(VideoKernelApi kernel) {
-        this.mKernel = kernel;
-    }
-
-    @Override
-    public VideoKernelApi getVideoKernel() {
-        return this.mKernel;
-    }
-
-    @Override
-    public String screenshot(String url, long position) {
+    public String screenshot(
+            String url,
+            long position
+    ) {
         return null;
     }
 
     @Override
-    public void setFixedSize(int width, int height) {
+    public void setFixedSize(
+            int width,
+            int height
+    ) {
     }
-
-    @Override
-    public boolean hasFocus() {
-        return false;
-    }
-
-    @Override
-    public boolean hasFocusable() {
-        return false;
-    }
-
-    @Override
-    public boolean hasExplicitFocusable() {
-        return false;
-    }
-
-    @Override
-    public boolean hasWindowFocus() {
-        return false;
-    }
-
-    @Override
-    public boolean dispatchKeyEvent(KeyEvent event) {
-        return false;
-    }
-
-    @Override
-    public void setRotation(float rotation) {
-        try {
-            float v = getRotation();
-            if (v == rotation) {
-                return;
-            }
-            super.setRotation(rotation);
-            requestLayout();
-        } catch (Exception e) {
-            LogUtil.log(TAG, "setRotation -> " + e.getMessage());
-        }
-    }
-
-    @Override
-    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        try {
-            int screenWidth = MeasureSpec.getSize(widthMeasureSpec);
-            int screenHeight = MeasureSpec.getSize(heightMeasureSpec);
-            int[] measureSpec = doMeasureSpec(screenWidth, screenHeight);
-            if (measureSpec == null) {
-                super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-                return;
-            }
-            int width = measureSpec[0];
-            int height = measureSpec[1];
-            setMeasuredDimension(width, height);
-        } catch (Exception e) {
-            LogUtil.log(TAG, "onMeasure -> " + e.getMessage());
-            super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-        }
-    }
-
-    private final SurfaceHolder.Callback mCallback = new SurfaceHolder.Callback() {
-
-        @Override
-        public void surfaceCreated(@NonNull SurfaceHolder holder) {
-            if (LogUtil.DEBUG) {
-                LogUtil.log(TAG, "surfaceCreated");
-            }
-            setSurface(false);
-        }
-
-        @Override
-        public void surfaceChanged(@NonNull SurfaceHolder holder, int format, int width, int height) {
-            if (LogUtil.DEBUG) {
-                LogUtil.log(TAG, "surfaceChanged -> size = " + width + "x" + height);
-            }
-        }
-
-        @Override
-        public void surfaceDestroyed(@NonNull SurfaceHolder holder) {
-            if (LogUtil.DEBUG) {
-                LogUtil.log(TAG, "surfaceDestroyed");
-            }
-            setSurface(true);
-        }
-    };
 }

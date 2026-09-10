@@ -3,67 +3,241 @@ package lib.kalu.mediaplayer.core.render.glsurface;
 import android.opengl.GLES20;
 
 final class GLTool {
+
+    private static volatile GLTool sInstance;
+
     private GLTool() {
     }
 
-    private static GLTool instance = null;
+    static GLTool getInstance() {
 
-    public static GLTool getInstance() {
-        synchronized (GLTool.class) {
-            if (instance == null) {
-                instance = new GLTool();
+        if (sInstance == null) {
+
+            synchronized (GLTool.class) {
+
+                if (sInstance == null) {
+                    sInstance = new GLTool();
+                }
             }
         }
-        return instance;
+
+        return sInstance;
     }
 
-    public int[] createTextureIds(int count) {
-        int[] texture = new int[count];
-        GLES20.glGenTextures(count, texture, 0);//生成纹理
-        return texture;
+    int[] createTextureIds(int count) {
+
+        if (count <= 0) {
+            return new int[0];
+        }
+
+        int[] textureIds =
+                new int[count];
+
+        GLES20.glGenTextures(
+                count,
+                textureIds,
+                0
+        );
+
+        return textureIds;
     }
 
-    public int createFBOTexture(int width, int height) {
-        int[] textures = new int[1];
-        GLES20.glGenTextures(1, textures, 0);
-        GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, textures[0]);
-        GLES20.glTexImage2D(GLES20.GL_TEXTURE_2D, 0, GLES20.GL_RGBA, width, height,
-                0, GLES20.GL_RGBA, GLES20.GL_UNSIGNED_BYTE, null);
-        GLES20.glTexParameterf(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_MIN_FILTER, GLES20.GL_NEAREST);
-        GLES20.glTexParameterf(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_MAG_FILTER, GLES20.GL_LINEAR);
-        GLES20.glTexParameterf(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_WRAP_S, GLES20.GL_CLAMP_TO_EDGE);
-        GLES20.glTexParameterf(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_WRAP_T, GLES20.GL_CLAMP_TO_EDGE);
-        GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, 0);
-        return textures[0];
+    int createTextureId() {
+
+        int[] textureIds =
+                createTextureIds(1);
+
+        if (textureIds.length == 0) {
+            return -1;
+        }
+
+        return textureIds[0];
     }
 
-    public int createFrameBuffer() {
-        int[] fbs = new int[1];
-        GLES20.glGenFramebuffers(1, fbs, 0);
-        return fbs[0];
+    void deleteTexture(int textureId) {
+
+        if (textureId <= 0) {
+            return;
+        }
+
+        GLES20.glDeleteTextures(
+                1,
+                new int[]{
+                        textureId
+                },
+                0
+        );
     }
 
-    public void bindFBO(int fb, int textureId) {
-        GLES20.glBindFramebuffer(GLES20.GL_FRAMEBUFFER, fb);
-        GLES20.glFramebufferTexture2D(GLES20.GL_FRAMEBUFFER, GLES20.GL_COLOR_ATTACHMENT0,
-                GLES20.GL_TEXTURE_2D, textureId, 0);
+    int createFBOTexture(
+            int width,
+            int height
+    ) {
+
+        if (width <= 0
+                || height <= 0) {
+            return -1;
+        }
+
+        int textureId =
+                createTextureId();
+
+        if (textureId <= 0) {
+            return -1;
+        }
+
+        GLES20.glBindTexture(
+                GLES20.GL_TEXTURE_2D,
+                textureId
+        );
+
+        GLES20.glTexImage2D(
+                GLES20.GL_TEXTURE_2D,
+                0,
+                GLES20.GL_RGBA,
+                width,
+                height,
+                0,
+                GLES20.GL_RGBA,
+                GLES20.GL_UNSIGNED_BYTE,
+                null
+        );
+
+        GLES20.glTexParameteri(
+                GLES20.GL_TEXTURE_2D,
+                GLES20.GL_TEXTURE_MIN_FILTER,
+                GLES20.GL_LINEAR
+        );
+
+        GLES20.glTexParameteri(
+                GLES20.GL_TEXTURE_2D,
+                GLES20.GL_TEXTURE_MAG_FILTER,
+                GLES20.GL_LINEAR
+        );
+
+        GLES20.glTexParameteri(
+                GLES20.GL_TEXTURE_2D,
+                GLES20.GL_TEXTURE_WRAP_S,
+                GLES20.GL_CLAMP_TO_EDGE
+        );
+
+        GLES20.glTexParameteri(
+                GLES20.GL_TEXTURE_2D,
+                GLES20.GL_TEXTURE_WRAP_T,
+                GLES20.GL_CLAMP_TO_EDGE
+        );
+
+        GLES20.glBindTexture(
+                GLES20.GL_TEXTURE_2D,
+                0
+        );
+
+        return textureId;
     }
 
-    public void unbindFBO() {
-        GLES20.glBindRenderbuffer(GLES20.GL_RENDERBUFFER, GLES20.GL_NONE);
-        GLES20.glBindFramebuffer(GLES20.GL_FRAMEBUFFER, GLES20.GL_NONE);
-        GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, 0);
+    int createFrameBuffer() {
+
+        int[] frameBuffers =
+                new int[1];
+
+        GLES20.glGenFramebuffers(
+                1,
+                frameBuffers,
+                0
+        );
+
+        return frameBuffers[0];
     }
 
-    public void deleteFBO(int[] frame, int[] texture) {
-        //删除Render Buffer
-        GLES20.glBindRenderbuffer(GLES20.GL_RENDERBUFFER, GLES20.GL_NONE);
-//        GLES20.glDeleteRenderbuffers(1, fRender, 0)
-        //删除Frame Buffer
-        GLES20.glBindFramebuffer(GLES20.GL_FRAMEBUFFER, GLES20.GL_NONE);
-        GLES20.glDeleteFramebuffers(1, frame, 0);
-        //删除纹理
-        GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, 0);
-        GLES20.glDeleteTextures(1, texture, 0);
+    boolean bindFBO(
+            int frameBufferId,
+            int textureId
+    ) {
+
+        if (frameBufferId <= 0
+                || textureId <= 0) {
+            return false;
+        }
+
+        GLES20.glBindFramebuffer(
+                GLES20.GL_FRAMEBUFFER,
+                frameBufferId
+        );
+
+        GLES20.glFramebufferTexture2D(
+                GLES20.GL_FRAMEBUFFER,
+                GLES20.GL_COLOR_ATTACHMENT0,
+                GLES20.GL_TEXTURE_2D,
+                textureId,
+                0
+        );
+
+        int status =
+                GLES20.glCheckFramebufferStatus(
+                        GLES20.GL_FRAMEBUFFER
+                );
+
+        if (status != GLES20.GL_FRAMEBUFFER_COMPLETE) {
+
+            GLES20.glBindFramebuffer(
+                    GLES20.GL_FRAMEBUFFER,
+                    0
+            );
+
+            return false;
+        }
+
+        return true;
+    }
+
+    void unbindFBO() {
+
+        GLES20.glBindFramebuffer(
+                GLES20.GL_FRAMEBUFFER,
+                0
+        );
+
+        GLES20.glBindTexture(
+                GLES20.GL_TEXTURE_2D,
+                0
+        );
+    }
+
+    void deleteFBO(
+            int frameBufferId,
+            int textureId
+    ) {
+
+        GLES20.glBindFramebuffer(
+                GLES20.GL_FRAMEBUFFER,
+                0
+        );
+
+        GLES20.glBindTexture(
+                GLES20.GL_TEXTURE_2D,
+                0
+        );
+
+        if (frameBufferId > 0) {
+
+            GLES20.glDeleteFramebuffers(
+                    1,
+                    new int[]{
+                            frameBufferId
+                    },
+                    0
+            );
+        }
+
+        if (textureId > 0) {
+
+            GLES20.glDeleteTextures(
+                    1,
+                    new int[]{
+                            textureId
+                    },
+                    0
+            );
+        }
     }
 }
