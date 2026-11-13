@@ -1,7 +1,6 @@
 package lib.kalu.mediaplayer;
 
 import androidx.media3.common.C;
-import androidx.media3.common.util.Util;
 
 import lib.kalu.mediaplayer.bean.type.PlayerType;
 
@@ -141,12 +140,12 @@ public class PlayerConst {
         // =================================================================
 
         // // 卡顿后延迟增加 500ms
-        // private long targetLiveOffsetIncrementOnRebufferUs = Util.msToUs(500L);
-        public static final long BOX_TARGET_LIVE_OFFSET_INCREMENT_ON_REBUFFER_US = Util.msToUs(500L);
+        // private long targetLiveOffsetIncrementOnRebufferUs = 500_000L;
+        public static final long BOX_TARGET_LIVE_OFFSET_INCREMENT_ON_REBUFFER_US = 500_000L;
         // private float minPossibleLiveOffsetSmoothingFactor = 0.999F;
         public static final float BOX_MIN_POSSIBLE_LIVE_OFFSET_SMOOTHING_FACTOR = 0.999F;
-        // private long maxLiveOffsetErrorUsForUnitSpeed = Util.msToUs(20L);
-        public static final long BOX_MAX_LIVE_OFFSET_ERROR_US_FOR_UNIT_SPEED = Util.msToUs(20L);
+        // private long maxLiveOffsetErrorUsForUnitSpeed = 20_000L;
+        public static final long BOX_MAX_LIVE_OFFSET_ERROR_US_FOR_UNIT_SPEED = 20_000L;
         //  private long minUpdateIntervalMs = 1000L;
         public static final long BOX_MIN_UPDATE_INTERVAL_MS = 1000L;
         // private float proportionalControlFactorUs = 1.0E-7F;
@@ -182,12 +181,12 @@ public class PlayerConst {
         // =================================================================
 
         // // 卡顿后延迟增加 500ms
-        // private long targetLiveOffsetIncrementOnRebufferUs = Util.msToUs(500L);
-        public static final long PHONE_TARGET_LIVE_OFFSET_INCREMENT_ON_REBUFFER_US = Util.msToUs(500L);
+        // private long targetLiveOffsetIncrementOnRebufferUs = 500_000L;
+        public static final long PHONE_TARGET_LIVE_OFFSET_INCREMENT_ON_REBUFFER_US = 500_000L;
         // private float minPossibleLiveOffsetSmoothingFactor = 0.999F;
         public static final float PHONE_MIN_POSSIBLE_LIVE_OFFSET_SMOOTHING_FACTOR = 0.999F;
-        // private long maxLiveOffsetErrorUsForUnitSpeed = Util.msToUs(20L);
-        public static final long PHONE_MAX_LIVE_OFFSET_ERROR_US_FOR_UNIT_SPEED = Util.msToUs(20L);
+        // private long maxLiveOffsetErrorUsForUnitSpeed = 20_000L;
+        public static final long PHONE_MAX_LIVE_OFFSET_ERROR_US_FOR_UNIT_SPEED = 20_000L;
         //  private long minUpdateIntervalMs = 1000L;
         public static final long PHONE_MIN_UPDATE_INTERVAL_MS = 1000L;
         // private float proportionalControlFactorUs = 1.0E-7F;

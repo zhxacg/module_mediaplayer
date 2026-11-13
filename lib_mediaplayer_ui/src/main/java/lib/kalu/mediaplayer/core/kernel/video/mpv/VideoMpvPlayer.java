@@ -119,7 +119,11 @@ public final class VideoMpvPlayer extends VideoBasePlayer {
             }
             onEvent(PlayerType.KernelType.FFPLAYER, PlayerType.EventType.READY);
             mMpvPlayer.setDataSource(context, Uri.parse(args.getUrl()), null);
-            mMpvPlayer.prepare();
+            if (args.isPrepareAsync()) {
+                mMpvPlayer.prepareAsync();
+            } else {
+                mMpvPlayer.prepare();
+            }
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
                 LogUtil.log(TAG, "startDecoder -> " + e.getMessage());

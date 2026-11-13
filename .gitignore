@@ -20,3 +20,7 @@ local.properties
 
 # mpv
 /lib_mediaplayer_mpv*
+
+# Compose player and optional sample build outputs
+/lib_mediaplayer_ui_compose/build/
+/lib_mediaplayer_ui_compose/sample/build/

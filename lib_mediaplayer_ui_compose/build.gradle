@@ -1,0 +1,24 @@
+apply plugin: 'com.android.library'
+apply plugin: 'org.jetbrains.kotlin.android'
+
+android {
+    namespace 'lib.kalu.mediaplayer.compose'
+    compileSdk 34
+    defaultConfig { minSdk 23 }
+    buildFeatures { compose true }
+    composeOptions { kotlinCompilerExtensionVersion '1.5.10' }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+    kotlinOptions { jvmTarget = '1.8' }
+}
+
+dependencies {
+    // Reuse public arguments/listeners and decoder adapters, never the legacy PlayerView.
+    api project(':lib_mediaplayer_ui')
+    api 'androidx.compose.foundation:foundation:1.6.8'
+    implementation 'androidx.compose.material3:material3:1.2.1'
+    implementation 'androidx.lifecycle:lifecycle-runtime:2.6.2'
+    testImplementation 'junit:junit:4.13.2'
+}

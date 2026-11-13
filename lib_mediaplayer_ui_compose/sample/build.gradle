@@ -1,0 +1,26 @@
+apply plugin: 'com.android.application'
+apply plugin: 'org.jetbrains.kotlin.android'
+android {
+    namespace 'lib.kalu.mediaplayer.compose.sample'
+    compileSdk 34
+    defaultConfig {
+        applicationId 'lib.kalu.mediaplayer.compose.sample'
+        minSdk 23
+        targetSdk 34
+        versionCode 1
+        versionName '1.0'
+    }
+    buildFeatures { compose true }
+    composeOptions { kotlinCompilerExtensionVersion '1.5.10' }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+    kotlinOptions { jvmTarget = '1.8' }
+}
+dependencies {
+    implementation project(':lib_mediaplayer_ui_compose')
+    implementation 'androidx.activity:activity-compose:1.8.2'
+    implementation 'androidx.compose.material3:material3:1.2.1'
+    implementation files('../../repo/aar/lib_mediaplayer_mpv_0.41.0_merged_release.aar')
+}

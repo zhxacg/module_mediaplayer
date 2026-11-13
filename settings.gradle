@@ -1,2 +1,8 @@
 include ':app'
 include ':lib_mediaplayer_ui'
+include ':lib_mediaplayer_ui_compose'
+// Optional runnable Compose example; keep the existing app's build unchanged.
+if (gradle.startParameter.projectProperties.containsKey('composeSample')) {
+    include ':compose_sample'
+    project(':compose_sample').projectDir = file('lib_mediaplayer_ui_compose/sample')
+}
