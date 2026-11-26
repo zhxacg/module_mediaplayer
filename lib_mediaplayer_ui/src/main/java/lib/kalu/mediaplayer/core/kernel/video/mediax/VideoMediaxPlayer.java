@@ -1898,6 +1898,7 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
                      */
                     case PlaybackException.ERROR_CODE_BEHIND_LIVE_WINDOW: {
                         seekToDefaultPosition();
+                        break;
                     }
                     /**
                      * 网络连接异常
@@ -1911,6 +1912,7 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
                         stop();
                         onEvent(PlayerType.KernelType.MEDIA_V3, PlayerType.EventType.STOP);
                         onEvent(PlayerType.KernelType.MEDIA_V3, PlayerType.EventType.ERROR_NETWORK);
+                        break;
                     }
                     /** 拉流 加载超时
                      *
@@ -1922,6 +1924,7 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
                         stop();
                         onEvent(PlayerType.KernelType.MEDIA_V3, PlayerType.EventType.STOP);
                         onEvent(PlayerType.KernelType.MEDIA_V3, PlayerType.EventType.ERROR_TIMEOUT_LOAD);
+                        break;
                     }
                     /**
                      * 视频源 拉流异常
@@ -1946,6 +1949,7 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
                         stop();
                         onEvent(PlayerType.KernelType.MEDIA_V3, PlayerType.EventType.STOP);
                         onEvent(PlayerType.KernelType.MEDIA_V3, PlayerType.EventType.ERROR_STREAM_SOURCE);
+                        break;
                     }
                     /** 解码及渲染异常
                      *
@@ -1981,12 +1985,14 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
                         stop();
                         onEvent(PlayerType.KernelType.MEDIA_V3, PlayerType.EventType.STOP);
                         onEvent(PlayerType.KernelType.MEDIA_V3, PlayerType.EventType.ERROR_DECODE);
+                        break;
                     }
                     // 兜底错误
                     default: {
                         stop();
                         onEvent(PlayerType.KernelType.MEDIA_V3, PlayerType.EventType.STOP);
                         onEvent(PlayerType.KernelType.MEDIA_V3, PlayerType.EventType.ERROR_PLAY);
+                        break;
                     }
                 }
             } catch (Exception e) {
