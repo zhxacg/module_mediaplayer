@@ -69,7 +69,6 @@ import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Constructor;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -1893,34 +1892,102 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
             }
 
             try {
-                if (error.errorCode == PlaybackException.ERROR_CODE_BEHIND_LIVE_WINDOW) {
-                    seekToDefaultPosition();
-                }
-                // timeout
-                else if (error.errorCode == PlaybackException.ERROR_CODE_TIMEOUT) {
-                    // seekToDefaultPosition();
-                    stop();
-                    onEvent(PlayerType.KernelType.MEDIA_V3, PlayerType.EventType.STOP);
-                    onEvent(PlayerType.KernelType.MEDIA_V3, PlayerType.EventType.ERROR_STREAM_SOURCE);
-                }
-                // timeout
-                else if (error.errorCode == PlaybackException.ERROR_CODE_IO_NETWORK_CONNECTION_TIMEOUT) {
-                    // seekToDefaultPosition();
-                    stop();
-                    onEvent(PlayerType.KernelType.MEDIA_V3, PlayerType.EventType.STOP);
-                    onEvent(PlayerType.KernelType.MEDIA_V3, PlayerType.EventType.ERROR_STREAM_SOURCE);
-                }
-                // errorCode=-9 的常见原因分析 媒体资源 URL 无效 / 过期：URL 拼写错误、资源被删除、CDN 节点失效；
-                else if (error.errorCode == -9) {
-                    stop();
-                    onEvent(PlayerType.KernelType.MEDIA_V3, PlayerType.EventType.STOP);
-                    onEvent(PlayerType.KernelType.MEDIA_V3, PlayerType.EventType.ERROR_PLAY);
-                } else {
-//                    if (!(error instanceof ExoPlaybackException))
-//                        throw new Exception("PlaybackException error: not instanceof ExoPlaybackException");
-                    stop();
-                    onEvent(PlayerType.KernelType.MEDIA_V3, PlayerType.EventType.STOP);
-                    onEvent(PlayerType.KernelType.MEDIA_V3, PlayerType.EventType.ERROR_PLAY);
+                switch (error.errorCode) {
+                    /**
+                     * 1002	BEHIND_LIVE_WINDOW	播放位置超出直播窗口
+                     */
+                    case PlaybackException.ERROR_CODE_BEHIND_LIVE_WINDOW: {
+                        seekToDefaultPosition();
+                    }
+                    /**
+                     * 网络连接异常
+                     *
+                     * -100	DISCONNECTED	连接断开
+                     * 2001	IO_NETWORK_CONNECTION_FAILED	网络连接失败
+                     */
+                    case PlaybackException.ERROR_CODE_DISCONNECTED:
+                    case PlaybackException.ERROR_CODE_IO_NETWORK_CONNECTION_FAILED: {
+                        // seekToDefaultPosition();
+                        stop();
+                        onEvent(PlayerType.KernelType.MEDIA_V3, PlayerType.EventType.STOP);
+                        onEvent(PlayerType.KernelType.MEDIA_V3, PlayerType.EventType.ERROR_NETWORK);
+                    }
+                    /** 拉流 加载超时
+                     *
+                     * 1003	TIMEOUT	播放器操作超时
+                     * 2002	IO_NETWORK_CONNECTION_TIMEOUT	网络连接或读取超时
+                     */
+                    case PlaybackException.ERROR_CODE_TIMEOUT:
+                    case PlaybackException.ERROR_CODE_IO_NETWORK_CONNECTION_TIMEOUT: {
+                        stop();
+                        onEvent(PlayerType.KernelType.MEDIA_V3, PlayerType.EventType.STOP);
+                        onEvent(PlayerType.KernelType.MEDIA_V3, PlayerType.EventType.ERROR_TIMEOUT_LOAD);
+                    }
+                    /**
+                     * 视频源 拉流异常
+                     *
+                     * 1001	REMOTE_ERROR	远程调用异常
+                     * 2000	IO_UNSPECIFIED	未明确分类的 IO 异常
+                     * 2004	IO_BAD_HTTP_STATUS	HTTP 状态码异常
+                     * 2003	IO_INVALID_HTTP_CONTENT_TYPE	HTTP 内容类型无效
+                     * 2005	IO_FILE_NOT_FOUND	媒体文件不存在
+                     * 2008	IO_READ_POSITION_OUT_OF_RANGE	媒体读取位置越界
+                     * 3001	PARSING_CONTAINER_MALFORMED	媒体容器格式损坏
+                     * 3002	PARSING_MANIFEST_MALFORMED	M3U8 等清单格式异常
+                     */
+                    case PlaybackException.ERROR_CODE_REMOTE_ERROR:
+                    case PlaybackException.ERROR_CODE_IO_UNSPECIFIED:
+                    case PlaybackException.ERROR_CODE_IO_BAD_HTTP_STATUS:
+                    case PlaybackException.ERROR_CODE_IO_INVALID_HTTP_CONTENT_TYPE:
+                    case PlaybackException.ERROR_CODE_IO_FILE_NOT_FOUND:
+                    case PlaybackException.ERROR_CODE_IO_READ_POSITION_OUT_OF_RANGE:
+                    case PlaybackException.ERROR_CODE_PARSING_CONTAINER_MALFORMED:
+                    case PlaybackException.ERROR_CODE_PARSING_MANIFEST_MALFORMED: {
+                        stop();
+                        onEvent(PlayerType.KernelType.MEDIA_V3, PlayerType.EventType.STOP);
+                        onEvent(PlayerType.KernelType.MEDIA_V3, PlayerType.EventType.ERROR_STREAM_SOURCE);
+                    }
+                    /** 解码及渲染异常
+                     *
+                     * 4001	DECODER_INIT_FAILED	解码器初始化失败
+                     * 4002	DECODER_QUERY_FAILED	解码器查询失败
+                     * 4003	DECODING_FAILED	解码失败
+                     * 4004	DECODING_FORMAT_EXCEEDS_CAPABILITIES	超出设备解码能力
+                     * 4005	DECODING_FORMAT_UNSUPPORTED	不支持的解码格式
+                     * 4006	DECODING_RESOURCES_RECLAIMED	解码资源被系统回收
+                     * 5001	AUDIO_TRACK_INIT_FAILED	音频轨道初始化失败
+                     * 5002	AUDIO_TRACK_WRITE_FAILED	音频数据写入失败
+                     * 5003	AUDIO_TRACK_OFFLOAD_WRITE_FAILED	音频卸载写入失败
+                     * 5004	AUDIO_TRACK_OFFLOAD_INIT_FAILED	音频卸载初始化失败
+                     * 7000	VIDEO_FRAME_PROCESSOR_INIT_FAILED	视频帧处理器初始化失败
+                     * 7001	VIDEO_FRAME_PROCESSING_FAILED	视频帧处理失败
+                     * 3003 PARSING_CONTAINER_UNSUPPORTED	不支持的媒体容器
+                     * 3004	PARSING_MANIFEST_UNSUPPORTED	不支持的媒体清单
+                     */
+                    case PlaybackException.ERROR_CODE_DECODER_INIT_FAILED:
+                    case PlaybackException.ERROR_CODE_DECODER_QUERY_FAILED:
+                    case PlaybackException.ERROR_CODE_DECODING_FAILED:
+                    case PlaybackException.ERROR_CODE_DECODING_FORMAT_EXCEEDS_CAPABILITIES:
+                    case PlaybackException.ERROR_CODE_DECODING_FORMAT_UNSUPPORTED:
+                    case PlaybackException.ERROR_CODE_DECODING_RESOURCES_RECLAIMED:
+                    case PlaybackException.ERROR_CODE_AUDIO_TRACK_INIT_FAILED:
+                    case PlaybackException.ERROR_CODE_AUDIO_TRACK_WRITE_FAILED:
+                    case PlaybackException.ERROR_CODE_AUDIO_TRACK_OFFLOAD_WRITE_FAILED:
+                    case PlaybackException.ERROR_CODE_AUDIO_TRACK_OFFLOAD_INIT_FAILED:
+                    case PlaybackException.ERROR_CODE_VIDEO_FRAME_PROCESSOR_INIT_FAILED:
+                    case PlaybackException.ERROR_CODE_VIDEO_FRAME_PROCESSING_FAILED:
+                    case PlaybackException.ERROR_CODE_PARSING_CONTAINER_UNSUPPORTED:
+                    case PlaybackException.ERROR_CODE_PARSING_MANIFEST_UNSUPPORTED: {
+                        stop();
+                        onEvent(PlayerType.KernelType.MEDIA_V3, PlayerType.EventType.STOP);
+                        onEvent(PlayerType.KernelType.MEDIA_V3, PlayerType.EventType.ERROR_DECODE);
+                    }
+                    // 兜底错误
+                    default: {
+                        stop();
+                        onEvent(PlayerType.KernelType.MEDIA_V3, PlayerType.EventType.STOP);
+                        onEvent(PlayerType.KernelType.MEDIA_V3, PlayerType.EventType.ERROR_PLAY);
+                    }
                 }
             } catch (Exception e) {
                 if (LogUtil.DEBUG) {
