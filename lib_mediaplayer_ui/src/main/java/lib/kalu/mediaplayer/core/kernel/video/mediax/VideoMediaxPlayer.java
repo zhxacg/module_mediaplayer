@@ -98,6 +98,7 @@ import lib.kalu.mediaplayer.core.kernel.video.mediax.hls.CusHlsPlaylistParserFac
 import lib.kalu.mediaplayer.proxy.ProxyUrl;
 import lib.kalu.mediaplayer.util.LogUtil;
 import lib.kalu.mediaplayer.util.M3u8GeneratorUtil;
+import lib.kalu.mediaplayer.util.NetworkUtil;
 import lib.kalu.mediax.subtitle.OffsetMsTextRenderer;
 
 public final class VideoMediaxPlayer extends VideoBasePlayer {
@@ -1908,12 +1909,25 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
                      */
                     case PlaybackException.ERROR_CODE_DISCONNECTED:
                     case PlaybackException.ERROR_CODE_IO_NETWORK_CONNECTION_FAILED: {
-                        // seekToDefaultPosition();
+                        Context context = getPlayerApi() == null
+                                ? null
+                                : getPlayerApi().getBaseContext();
+
+                        // true：系统已验证互联网连接
+                        // false：无默认网络，或互联网连接尚未通过验证
+                        // null：无法判断
+                        Boolean internetAvailable = NetworkUtil.checkInternetAvailable(context);
+
+                        int event = Boolean.FALSE.equals(internetAvailable)
+                                ? PlayerType.EventType.ERROR_NETWORK
+                                : PlayerType.EventType.ERROR_STREAM_SOURCE;
+
                         stop();
                         onEvent(PlayerType.KernelType.MEDIA_V3, PlayerType.EventType.STOP);
-                        onEvent(PlayerType.KernelType.MEDIA_V3, PlayerType.EventType.ERROR_NETWORK);
-                        break;
+                        onEvent(PlayerType.KernelType.MEDIA_V3, event);
+                        return;
                     }
+
                     /** 拉流 加载超时
                      *
                      * 1003	TIMEOUT	播放器操作超时

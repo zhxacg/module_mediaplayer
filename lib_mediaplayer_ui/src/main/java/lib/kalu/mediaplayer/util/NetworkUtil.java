@@ -4,9 +4,9 @@ import android.content.Context;
 import android.content.pm.PackageManager;
 import android.net.ConnectivityManager;
 import android.net.Network;
+import android.net.NetworkCapabilities;
 import android.net.NetworkInfo;
 import android.os.Build;
-import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 
 public class NetworkUtil {
@@ -194,6 +194,49 @@ public class NetworkUtil {
             return var1;
         }
     }
+
+    public static Boolean checkInternetAvailable(Context context) {
+        if (context == null) {
+            return null;
+        }
+
+        try {
+            ConnectivityManager manager = (ConnectivityManager)
+                    context.getSystemService(Context.CONNECTIVITY_SERVICE);
+
+            if (manager == null) {
+                return null;
+            }
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                Network network = manager.getActiveNetwork();
+                if (network == null) {
+                    return false;
+                }
+
+                NetworkCapabilities capabilities =
+                        manager.getNetworkCapabilities(network);
+
+                if (capabilities == null) {
+                    return null; // 网络切换期间可能暂时获取不到
+                }
+
+                return capabilities.hasCapability(
+                        NetworkCapabilities.NET_CAPABILITY_INTERNET)
+                        && capabilities.hasCapability(
+                        NetworkCapabilities.NET_CAPABILITY_VALIDATED);
+            }
+
+            // Android 6.0 以下只能判断连接状态：
+            // 未连接可判为网络错误；已连接仍无法确认互联网可用。
+            NetworkInfo info = manager.getActiveNetworkInfo();
+            return info == null || !info.isConnected() ? Boolean.FALSE : null;
+
+        } catch (SecurityException e) {
+            return null;
+        }
+    }
+
 }
 
 //public final class NetworkUtil {
