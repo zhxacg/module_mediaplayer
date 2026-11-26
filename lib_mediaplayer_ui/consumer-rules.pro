@@ -4,6 +4,7 @@
 -dontwarn lib.kalu.exoplayer2.**
 -dontwarn lib.kalu.ijkplayer.**
 -dontwarn lib.kalu.media3.**
+-dontwarn lib.kalu.mpvplayer.**
 
 -dontwarn com.google.common.util.concurrent.internal.InternalFutureFailureAccess
 -dontwarn com.google.common.util.concurrent.internal.InternalFutures
